@@ -5,9 +5,9 @@ import Hero from "../components/hero/TwoColumnWithVideo.js";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 import HeroImage from "../images/hero.jpg"
 import MainFeature from "../components/features/TwoColWithButton.js";
-// import founder from "../images/ceo.jpg";
+import TabGrid from "../components/cards/TabCardGrid.js";
 import ceo from "../images/founder.jpg"
-import { MyVerticallyCenteredModal } from "../components/features/modal";
+import Modal from "../components/features/modal1";
 
 const Home = () => {
     const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -17,7 +17,7 @@ const Home = () => {
     const imageCss = tw`rounded-[2.5rem]`;
     const [modalShow, setModalShow] = useState(false);
     return(
-        <div>
+        <div className="overflow-x-hidden">
             <AnimationRevealPage>
             <NavBar/>
             <Hero
@@ -41,7 +41,6 @@ const Home = () => {
                     <Description>
                         Founder and CEO Rabiatu Gurunpaga Abukari started Maltiti as a very small business two decades ago.
                         <br />
-                        <br />
                         Rabiatu is an inspiring woman. She makes sure that the women produce good quality, she trains them, and she on a mission to mechanize the manual processes.
                     </Description>
                 }
@@ -54,11 +53,15 @@ const Home = () => {
                 imageDecoratorBlobCss={tw`-translate-x-1/2 opacity-25 left-1/2 md:w-32 md:h-32`}
                 modal={() => setModalShow(true)}
             />
-            </AnimationRevealPage>
-            <MyVerticallyCenteredModal 
-            show={modalShow}
-            onHide={() => setModalShow(false)}
+            <TabGrid
+                heading={
+                    <>
+                        Checkout our <HighlightedText>Products</HighlightedText>
+                    </>
+                }
             />
+            </AnimationRevealPage>
+            <Modal modalShow={modalShow} onClick={() => setModalShow(false)}/>
         </div>
     );
 }

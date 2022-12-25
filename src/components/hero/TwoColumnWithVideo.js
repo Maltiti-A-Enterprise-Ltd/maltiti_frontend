@@ -38,7 +38,7 @@ const IllustrationContainer = tw.div`flex justify-center md:justify-end items-ce
 
 // Random Decorator Blobs (shapes that you see in background)
 const DecoratorBlob1 = styled(SvgDecoratorBlob1)`
-  ${tw`absolute bottom-0 left-0 w-64 h-64 transform pointer-events-none opacity-5 -translate-x-2/3 -z-10`}
+  ${tw`absolute bottom-0 left-0 w-64 h-64 transform pointer-events-none opacity-5 -translate-x-1 -z-10`}
 `;
 const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
   ${tw`absolute bottom-0 right-0 w-32 h-32 text-green-500 transform translate-x-10 translate-y-10 opacity-25 pointer-events-none z-10`}
