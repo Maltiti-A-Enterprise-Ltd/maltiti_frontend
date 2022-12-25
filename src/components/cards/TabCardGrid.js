@@ -267,7 +267,69 @@ export default ({
         url: "#"
       }
     ],
-    Others: getRandomCards()
+    Others: [
+      {
+        imageSrc:"dawadawa tea.jpg",
+        title: "Dawadawa tea",
+        content: "Big size",
+        price: "18",
+        price_retail: "20",
+        rating: "5.0",
+        reviews: "87",
+        url: "#"
+      },
+      {
+        imageSrc:"dawadawa powder.jpg",
+        title: "Dawadawa spices",
+        content: "Specially made",
+        price: "9",
+        price_retail: "10",
+        rating: "4.8",
+        reviews: "32",
+        url: "#"
+      },
+      {
+        imageSrc:"ginger powder.jpg",
+        title: "Ginger Poweder",
+        content: "Specially made",
+        price: "10",
+        price_retail: "12",
+        rating: "4.9",
+        reviews: "89",
+        url: "#"
+      },
+      {
+        imageSrc: "pepper powder.jpg",
+        title: "Pepper powder",
+        content: "Specially made",
+        price: "300",
+        price_retail: "310",
+        rating: "4.6",
+        reviews: "12",
+        url: "#"
+      },
+      {
+        imageSrc: "tumeric powder.jpg",
+        title: "Tumeric Powder",
+        content: "Special",
+        price: "18",
+        price_retail: "20",
+        rating: "100",
+        reviews: "19",
+        url: "#"
+      },
+      {
+        imageSrc: "honey.jpeg",
+        title: "Honey",
+        content: "500ml",
+        price: "22",
+        price_retail: "25",
+        rating: "20",
+        reviews: "61",
+        url: "#"
+      },
+    ],
+    // Others: getRandomCards()
   }
 }) => {
 
