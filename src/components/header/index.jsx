@@ -9,6 +9,8 @@ import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import logo from "../../images/logo.svg";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
+import { AiOutlineShoppingCart } from "react-icons/ai"
+import AnchorLink from "react-anchor-link-smooth-scroll";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -57,10 +59,10 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
 
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink href="/#">About</NavLink>
-      <NavLink href="/#">Blog</NavLink>
-      <NavLink href="/#">Pricing</NavLink>
-      <NavLink href="/#">Contact Us</NavLink>
+      <NavLink><AnchorLink href="#about">About</AnchorLink></NavLink>
+      <NavLink><AnchorLink href="#shop">Shop</AnchorLink></NavLink>
+      <NavLink><AnchorLink href="#faqs">Faqs</AnchorLink></NavLink>
+      <NavLink><AnchorLink href="#contactus">Contact Us</AnchorLink></NavLink>
       <NavLink href="/login" tw="lg:ml-12!">
         Login
       </NavLink>
@@ -81,12 +83,11 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
   links = links || defaultLinks;
 
   return (
-    <Header className={className || "header-light border-b-2"}>
+    <Header className={className || "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"}>
       <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
         {links}
       </DesktopNavLinks>
-
       <MobileNavLinksContainer css={collapseBreakpointCss.mobileNavLinksContainer}>
         {logoLink}
         <MobileNavLinks initial={{ x: "150%", display: "none" }} animate={animation} css={collapseBreakpointCss.mobileNavLinks}>
@@ -96,6 +97,7 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
           {showNavLinks ? <CloseIcon tw="w-6 h-6" /> : <MenuIcon tw="w-6 h-6" />}
         </NavToggle>
       </MobileNavLinksContainer>
+      <NavLink href="#g" className="mr-[5%]"><AiOutlineShoppingCart size={40}/></NavLink>
     </Header>
   );
 };

@@ -62,7 +62,7 @@ export default ({
 }) => {
  
   return (
-    <div>
+    <div id="about">
     <Container>
       <TwoColumn>
         <ImageColumn>
@@ -81,7 +81,6 @@ export default ({
         </TextColumn>
       </TwoColumn>
     </Container>
-    
   </div>
   );
 };
