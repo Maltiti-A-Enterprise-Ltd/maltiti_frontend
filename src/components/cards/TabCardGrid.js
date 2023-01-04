@@ -40,7 +40,7 @@ const CardRating = styled.div`
 
 const CardHoverOverlay = styled(motion.div)`
   background-color: rgba(255, 255, 255, 0.5);
-  ${tw`absolute inset-0 flex justify-center items-center`}
+  ${tw`absolute inset-12 grid`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
 
@@ -393,7 +393,8 @@ export default ({
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <CardButton>Buy Now</CardButton>
+                      <CardButton>Add to Cart</CardButton><br/>
+                      <CardButton>View Details</CardButton>
                     </CardHoverOverlay>
                   </CardImageContainer>
                   <CardText>

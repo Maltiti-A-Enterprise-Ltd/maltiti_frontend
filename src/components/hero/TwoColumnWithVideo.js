@@ -64,7 +64,7 @@ export default ({
   primaryButtonText="Get Started",
   primaryButtonUrl="#",
   watchVideoButtonText="Watch Video",
-  watchVideoYoutubeUrl="https://www.youtube.com/embed/_GuOjXYl5ew",
+  watchVideoYoutubeUrl="https://www.youtube.com/embed/urqDElN7gzo",
   imageSrc=DesignIllustration,
   imageCss=null,
   imageDecoratorBlob = false,
@@ -75,7 +75,7 @@ export default ({
 
   return (
     <>
-      <Container id="home">
+      <Container id="home" className="mt-[5%]">
         <TwoColumn>
           <LeftColumn>
             <Heading>{heading}</Heading>

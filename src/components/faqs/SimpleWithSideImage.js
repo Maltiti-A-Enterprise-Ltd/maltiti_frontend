@@ -54,22 +54,22 @@ export default ({
     {
       question: "Are your products organic?",
       answer:
-        "Yes, All our products are naturally made or processed using organic materialss"
+        "Yes, All our products are naturally made or processed using organic. We also possess an ecocert certification"
     },
     {
-      question: "Do you have 2 Bedroom suites ?",
+      question: "Where are you located?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Malshegu, behind star fuel station on the Kumbungu Road."
     },
     {
-      question: "Are Wi-Fi costs included in the price ?",
+      question: "Are your products certified ?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Yes, our products are certified by FDA, GSA and other necessary certifications"
     },
     {
-      question: "Where can I reach you for support ?",
+      question: "Can you ship in Ghana as well as across the globe?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "We ship to every corner of Ghana and the world at large."
     }
   ];
 

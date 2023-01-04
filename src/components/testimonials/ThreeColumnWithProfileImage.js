@@ -34,7 +34,7 @@ export default ({
     {
       imageSrc:ceo,
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+        "It is my utmost believe that I can change the lives of many with power of shea nuts and so help me God",
       customerName: "Rabiatu Abukari",
       role: "CEO / Founder"
     },
@@ -48,7 +48,7 @@ export default ({
     {
       imageSrc:titi,
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+        "Maltiti is on its way to breaking strongly into the european market and digitization and social media is going to be very key to achieving such a goal",
       customerName: "Bilal Abubakari",
       role: "Board Secretary / Board Member"
     }
@@ -65,7 +65,7 @@ export default ({
       imageSrc:
         "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+        "Maltiti is strongly involved to the bottom so every woman is paid and treated fairly on activities regarding production. This puts smiles on women in the communties producing shea butter.",
       customerName: "Abubakari Mohammed Suhuyini",
       role: "Financial Accountant / Board Member"
     },

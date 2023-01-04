@@ -120,11 +120,11 @@ const Home = () => {
                     },
                     {
                         key: "Awards and Certificates",
-                        value: "60+"
+                        value: "30+"
                     }
                 ]}
                 primaryButtonText="Order Now"
-                primaryButtonUrl="https://order.now.com"
+                primaryButtonUrl="#shop"
                 imageInsideDiv={false}
                 imageSrc={alternate}
                 imageCss={Object.assign(tw`bg-cover`, imageCss)}
@@ -140,7 +140,7 @@ const Home = () => {
                     Our Clients <span tw="text-primary-500">Love Us.</span>
                     </>
                 }
-                description="Here are what some of our amazing customers are saying about our marketing professionals. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                description="Here are what some of our amazing customers are saying about our marketing professionals."
                 testimonials={[
                     {
                     imageSrc:
