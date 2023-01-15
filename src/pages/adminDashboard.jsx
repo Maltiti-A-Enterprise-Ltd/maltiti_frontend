@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Aside } from "../components/aside";
@@ -6,7 +5,6 @@ import DashboardHeader from "../components/dashboardHeader";
 
 const Dashboard = () => {
     const [isSideBarOpen, setIsSideBarOpen] = useState(false)
-    const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate()
 
     const hamburger = () => {
