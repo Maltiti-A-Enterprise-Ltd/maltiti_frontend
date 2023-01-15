@@ -58,7 +58,7 @@ export default ({
     {
       imageSrc:muhammed,
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+        "I have been working with Maltiti for more than 5 years and it has indeed been a very enriching experience. This organization offers opportunities for everyone especially women",
       customerName: "Kantako Muhammed",
       role: "Operations Manager / Board Member"
     },
