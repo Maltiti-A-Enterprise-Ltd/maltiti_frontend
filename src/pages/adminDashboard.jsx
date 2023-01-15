@@ -34,9 +34,9 @@ const Dashboard = () => {
                 <div class="fixed inset-0 z-10 bg-black bg-opacity-20 lg:hidden"
                     style={{backdropFilter:"blur(14px)"}}
                 ></div> */}
-                <Aside isSideBarOpen={isSideBarOpen}/>
+                <Aside isSideBarOpen={isSideBarOpen} onClick={hamburger} logout={logout}/>
                 <div className="flex flex-col flex-1 h-full overflow-hidden">
-                    <DashboardHeader onClick={hamburger} isSideBarOpen={isSideBarOpen}/>
+                    <DashboardHeader onClick={hamburger} isSideBarOpen={isSideBarOpen} logout={logout}/>
                 </div>
             </div>
         {/* Welcome to Admin Dashboard<br/>

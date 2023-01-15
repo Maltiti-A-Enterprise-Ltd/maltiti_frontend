@@ -88,9 +88,9 @@ export const Login = ({
         let data = {email, password}
       
         // reset email and password to null after input
-        axios.post(`${backendUrl}api/login`, data)
+        axios.post(`${backendUrl}/api/login`, data)
         .then(function(response){
-            return axios.get(`${backendUrl}api/profile`, {
+            return axios.get(`${backendUrl}/api/profile`, {
               headers: {
                 'Authorization': `Bearer ${response.data["token"]}` 
               }

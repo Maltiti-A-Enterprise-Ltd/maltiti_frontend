@@ -6,12 +6,12 @@ import Logo from "../logo";
 
 export const Aside = (props) => {
     return(
-        <aside className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-green-100 border-r shadow-lg  lg:z-auto lg:static lg:shadow-none ${props.isSideBarOpen? "" : "lg:w-20"}`}>
+        <aside className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-green-100 border-r shadow-lg  lg:z-auto lg:static lg:shadow-none ${props.isSideBarOpen ? "" : "w-20"}`}>
         <div className={`flex items-center justify-between flex-shrink-0 p-2 ${props.isSideBarOpen ? "" : "lg:justify-center"}`}>
           <span className={`p-2 ${props.isSideBarOpen ? "ml-16" : ""}`}>
             <span><Logo/></span>
           </span>
-          <button className="p-2 rounded-md lg:hidden">
+          <button onClick={props.onClick} className={`${props.isSideBarOpen ? "max-[1024px]:relative" : "hidden"} p-2 rounded-md lg:hidden`}>
             <AiOutlineClose size={20}/>
           </button>
         </div>
@@ -25,7 +25,7 @@ export const Aside = (props) => {
                 <span>
                 <AiFillHome size={25}/>
                 </span>
-                <span className={`${props.isSideBarOpen ? "" : "lg:hidden"}`}>Home</span>
+                <span className={`${props.isSideBarOpen ? "" : "hidden"}`}>Home</span>
               </a>
             </li>
           </ul>
@@ -33,12 +33,13 @@ export const Aside = (props) => {
        
         <div className="flex-shrink-0 p-2 border-t max-h-14">
           <button
+            onClick={props.logout}
             className="flex items-center justify-center w-full px-4 py-2 space-x-1 font-medium tracking-wider uppercase bg-gray-100 border rounded-md  focus:outline-none focus:ring"
           >
             <span>
               <MdLogout size={25}/>
             </span>
-            <span className={`${props.isSideBarOpen ? "" : "lg:hidden"}`}> Logout </span>
+            <span className={`${props.isSideBarOpen ? "" : "hidden"}`}> Logout </span>
           </button>
         </div>
       </aside>

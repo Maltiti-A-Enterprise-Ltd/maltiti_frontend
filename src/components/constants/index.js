@@ -6,4 +6,4 @@ export const linkedin = "https://www.linkedin.com/company/maltiti-a-enterprise/"
 
 export const email = "abubakaribilal99@gmail.com";
 
-export const backendUrl = "https://127.0.0.1:8000/"
+export const backendUrl = "https://127.0.0.1:8000"

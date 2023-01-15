@@ -1,10 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../../components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "../../components/misc/Buttons.js";
 import EmailIllustrationSrc from "../../images/email-illustration.svg";
+import axios from "axios";
+import { backendUrl } from "../constants/index.js";
+import { CircularProgress } from "@mui/material";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -25,12 +30,12 @@ const Subheading = tw(SubheadingBase)`text-center md:text-left`;
 const Heading = tw(SectionHeading)`mt-4 font-black text-left text-3xl sm:text-4xl lg:text-5xl text-center md:text-left leading-tight`;
 const Description = tw.p`mt-4 text-center md:text-left text-sm md:text-base lg:text-lg font-medium leading-relaxed text-secondary-100`
 
-const Form = tw.form`mt-8 md:mt-10 text-sm flex flex-col lg:flex-row`
-const Input = tw.input`border-2 px-5 py-3 rounded focus:outline-none font-medium transition duration-300 hocus:border-green-500`
+const Form = tw.form`mt-8 md:mt-10 text-sm flex flex-col`
+const Input = tw.input`md:w-96 border-2 px-4 py-3 rounded focus:outline-none font-medium transition duration-300 hocus:border-green-500`
 
-const SubmitButton = tw(PrimaryButtonBase)`inline-block lg:ml-6 mt-6 lg:mt-0`
+const SubmitButton = tw(PrimaryButtonBase)`md:w-96 inline-block mt-6 lg:mt-0`
 
-export default ({
+const Contactus = ({
   subheading = "Contact Us",
   heading = <>Feel free to <span tw="text-green-500">get in touch</span><wbr/> with us.</>,
   description = "Send us a message, enquiry or concern by entering your email and message below.",
@@ -39,7 +44,37 @@ export default ({
   formMethod = "get",
   textOnLeft = true,
 }) => {
-  // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
+  const [fullName,setFullName] = useState('');
+  const [email,setEmail] = useState('');
+  const [number,setNumber] = useState('');
+  const [message,setMessage] = useState('');
+  const [error, setError] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async(event) => {
+    setIsLoading(true)
+    event.preventDefault();
+    let data = {fullName, email, number, message};
+    console.log(data)
+    axios.post(`${backendUrl}/contactus`, data)
+    .then(function(response){
+      setAlertMessage(response.data["message"]);
+      setError(false);
+      setFullName('')
+      setEmail('')
+      setNumber('')
+      setMessage('')
+      setIsLoading(false)
+    })
+    .catch(function(error){
+      setError(true);
+      setAlertMessage("Oopps!!! Something Went Wrong, Try again!!!")
+      setIsLoading(false)
+    })
+    
+  }
 
   return (
     <Container id="contactus">
@@ -52,14 +87,25 @@ export default ({
             {subheading && <Subheading>{subheading}</Subheading>}
             <Heading>{heading}</Heading>
             <Description>{description}</Description>
-            <Form action={formAction} method={formMethod}>
-              <Input type="email" name="email" placeholder="Your Email Address" />&nbsp;&nbsp;&nbsp;
-              <textarea className="border-2 font-medium" placeholder="Enter message"></textarea>
-              <SubmitButton type="submit">{submitButtonText}</SubmitButton>
+            <Form onSubmit={handleSubmit}>
+            {alertMessage ?
+                  <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Alert severity={`${error ? "error":"success"}`}>{alertMessage}</Alert>
+                  </Stack>
+                  :
+                  <></>
+                }<br/>
+              <Input type="text"  name="name" value={fullName} placeholder="Enter full name" onChange={(event) => setFullName(event.target.value)}/><br/>
+              <Input type="email" name="email" value={email} placeholder="Your Email Address" onChange={(event) => setEmail(event.target.value)} /><br/>
+              <Input type="number" name="phone" value={number} placeholder="Enter phone number" onChange={(event) => setNumber(event.target.value)}/><br/>
+              <textarea name="message" value={message} className="w-96 border-2 font-medium" placeholder="Enter message" onChange={(event) => setMessage(event.target.value)} required></textarea><br/>
+                  <SubmitButton type="submit">{isLoading ? <CircularProgress color="inherit"/> : submitButtonText}</SubmitButton>
             </Form>
           </TextContent>
         </TextColumn>
       </TwoColumn>
     </Container>
   );
-};
+}
+
+export default Contactus;

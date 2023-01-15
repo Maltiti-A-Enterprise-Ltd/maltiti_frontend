@@ -16,10 +16,12 @@ import MainFeature2 from "../components/features/TwoColSingleFeatureWithStats2.j
 import alternate from "../images/alternate.jpg";
 import Testimonial from "../components/testimonials/ThreeColumnWithProfileImage.js";
 import Footer from "../components/footers/MiniCenteredFooter.js";
-import ContactUsForm from "../components/forms/TwoColContactUsWithIllustration.js";
+import Contactus from "../components/forms/TwoColContactUsWithIllustration";
 import FAQ from "../components/faqs/SimpleWithSideImage.js";
 import customerSupportIllustrationSrc from "../images/customer-support-illustration.svg";
 import Testimonial1 from "../components/testimonials/TwoColumnWithImageAndProfilePictureReview.js";
+import SimpleSlider from "../components/partners/index"
+import { Blog } from "../components/blog";
 
 const Home = () => {
     const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -180,7 +182,9 @@ const Home = () => {
                     </>
                 }
             />
-            <ContactUsForm/>
+            <Contactus/>
+            <Blog/>
+            <SimpleSlider/>
             <Footer />
             </AnimationRevealPage>
             <Modal modalShow={modalShow} onClick={() => setModalShow(false)}/>

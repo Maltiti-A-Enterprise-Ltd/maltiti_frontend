@@ -11,6 +11,7 @@ import ceo from "../../images/founder.jpg";
 import titi from "../../images/titi.jpg";
 import muhammed from "../../images/muhammed.jpg";
 import kasim from "../../images/kasim.png";
+import suhuyini from "../../images/suhuyini.jpg";
 
 const Subheading = tw(SubheadingBase)`text-center`;
 const Testimonials = tw.div`flex flex-col lg:flex-row items-center lg:items-stretch`;
@@ -62,8 +63,7 @@ export default ({
       role: "Operations Manager / Board Member"
     },
     {
-      imageSrc:
-        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
+      imageSrc:suhuyini,
       quote:
         "Maltiti is strongly involved to the bottom so every woman is paid and treated fairly on activities regarding production. This puts smiles on women in the communties producing shea butter.",
       customerName: "Abubakari Mohammed Suhuyini",
