@@ -22,6 +22,9 @@ import customerSupportIllustrationSrc from "../images/customer-support-illustrat
 import Testimonial1 from "../components/testimonials/TwoColumnWithImageAndProfilePictureReview.js";
 import SimpleSlider from "../components/partners/index"
 import { Blog } from "../components/blog";
+import { Location } from "../components/features/Location";
+import darnisha from "../images/darnisha.jpg";
+import darnishaSide from "../images/darnishaSide.jpg";
 
 const Home = () => {
     const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -145,14 +148,12 @@ const Home = () => {
                 description="Here are what some of our amazing customers are saying about our marketing professionals."
                 testimonials={[
                     {
-                    imageSrc:
-                        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
-                    profileImageSrc:
-                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80",
+                    imageSrc:darnishaSide,
+                    profileImageSrc:darnisha,
                     quote:
-                        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
-                    customerName: "Charlotte Hale",
-                    customerTitle: "CEO, Tesla Inc."
+                        "I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, sopas and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality",
+                    customerName: "Darnisha Wright",
+                    customerTitle: "CEO, Ubuntu1865 African Marketplace, Oakland CA - USA"
                     },
                     {
                     imageSrc:
@@ -166,6 +167,14 @@ const Home = () => {
                     }
                 ]}
                 textOnLeft={true}
+            />
+            <Location
+                subheading="Find us using google map"
+                heading={
+                    <>
+                        Our <HighlightedText>Location</HighlightedText>
+                    </>
+                }
             />
             <Testimonial
                 subheading=""

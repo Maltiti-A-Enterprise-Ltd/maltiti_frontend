@@ -48,7 +48,7 @@ const HeadingTitle = tw(SectionHeading)`lg:text-left leading-tight`;
 const Description = tw.p`max-w-md text-center mx-auto lg:mx-0 lg:text-left lg:max-w-none leading-relaxed text-sm sm:text-base lg:text-lg font-medium mt-4 text-secondary-100`;
 
 const QuoteContainer = tw.div`relative mt-10 lg:mt-20 text-secondary-100`;
-const Quote = tw.blockquote`text-center lg:text-left text-sm sm:text-lg lg:text-xl xl:text-2xl`;
+const Quote = tw.blockquote`text-center lg:text-left text-sm sm:text-base lg:text-lg xl:text-xl`;
 const CustomerInfo = tw.div`mt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start`;
 const CustomerProfilePicture = tw.img`rounded-full w-20 h-20`;
 const CustomerTextInfo = tw.div`text-center text-secondary-100 lg:text-left sm:ml-6 mt-2 sm:mt-0`;
@@ -83,9 +83,9 @@ export default ({
       profileImageSrc:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80",
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
-      customerName: "Charlotte Hale",
-      customerTitle: "CEO, Delos Inc."
+        "I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, sopas and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality",
+      customerName: "Darnisha Wright",
+      customerTitle: "CEO, Ubuntu1865 African Marketplace, Oakland CA - USA"
     },
     {
       imageSrc:
