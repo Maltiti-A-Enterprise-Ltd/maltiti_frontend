@@ -42,7 +42,7 @@ export default ({
     {
       imageSrc:kasim,
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+        "I want to be an active change agent to many rural communities in Northern Ghana with a strong ability to research and communicate effectively",
       customerName: "Kassim Imoro",
       role: "Manager / Board Member"
     },

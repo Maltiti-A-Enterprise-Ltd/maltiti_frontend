@@ -113,19 +113,19 @@ const Home = () => {
                 statistics={[
                     {
                         key: "Orders",
-                        value: "5000+",
+                        value: "1000+",
                     },
                     {
                         key: "Rural women",
-                        value: "10000+"
+                        value: "5000+"
                     },
                     {
                         key: "Communities",
-                        value: "50+"
+                        value: "30+"
                     },
                     {
                         key: "Awards and Certificates",
-                        value: "30+"
+                        value: "20+"
                     }
                 ]}
                 primaryButtonText="Order Now"
@@ -151,20 +151,20 @@ const Home = () => {
                     imageSrc:darnishaSide,
                     profileImageSrc:darnisha,
                     quote:
-                        "I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, sopas and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality",
+                        "I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, soaps and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality",
                     customerName: "Darnisha Wright",
                     customerTitle: "CEO, Ubuntu1865 African Marketplace, Oakland CA - USA"
                     },
-                    {
-                    imageSrc:
-                        "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-                    profileImageSrc:
-                        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
-                    quote:
-                        "Sinor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
-                    customerName: "Adam Cuppy",
-                    customerTitle: "Founder, Nestle"
-                    }
+                    // {
+                    // imageSrc:
+                    //     "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+                    // profileImageSrc:
+                    //     "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
+                    // quote:
+                    //     "Sinor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+                    // customerName: "Adam Cuppy",
+                    // customerTitle: "Founder, Nestle"
+                    // }
                 ]}
                 textOnLeft={true}
             />
