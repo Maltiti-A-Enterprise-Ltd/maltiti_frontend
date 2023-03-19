@@ -1,6 +1,7 @@
 import React from "react";
 import { AiFillHome, AiOutlineClose } from "react-icons/ai";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { NavLink } from "react-router-dom";
 import Logo from "../logo";
 
 
@@ -18,15 +19,28 @@ export const Aside = (props) => {
         <nav className="flex-1 overflow-hidden hover:overflow-y-auto">
           <ul className="p-3 overflow-hidden">
             <li>
-              <a
-                href="#g"
+              <NavLink
+                to="home"
+                style={({ isActive }) => isActive ? {color:"white", backgroundColor:"#0F6938"} : undefined}
                 className={`${props.isSideBarOpen ? "justify-start" : "justify-center"} flex items-center p-2 text-xl space-x-2 rounded-md hover:bg-green-100 hover:text-white`}
               >
                 <span>
                 <AiFillHome size={25}/>
                 </span>
                 <span className={`${props.isSideBarOpen ? "" : "hidden"}`}>Home</span>
-              </a>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="products"
+                style={({ isActive }) => isActive ? {color:"white", backgroundColor:"#0F6938"} : undefined}
+                className={`${props.isSideBarOpen ? "justify-start" : "justify-center"} flex items-center p-2 text-xl space-x-2 rounded-md hover:bg-green-100 hover:text-white`}
+              >
+                <span>
+                <MdOutlineProductionQuantityLimits size={25}/>
+                </span>
+                <span className={`${props.isSideBarOpen ? "" : "hidden"}`}>Prdocuts</span>
+              </NavLink>
             </li>
           </ul>
         </nav>

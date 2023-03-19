@@ -26,7 +26,7 @@ const DashboardHeader = (props) => {
         };
     }, [wrapperRef]);
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('maltiti-user'));
   
 
   // function for toggling profile menu
@@ -163,8 +163,8 @@ const DashboardHeader = (props) => {
                 className={`${isProfileMenuOpen ? "" : "hidden"} absolute z-50 w-48 max-w-md mt-3 transform bg-white rounded-md shadow-lg  -translate-x-3/4 min-w-max`}
                 >
                 <div className="flex flex-col p-4 space-y-1 font-medium border-b">
-                    <span className="text-gray-800">{user['name']}</span>
-                    <span className="text-sm text-gray-400">{user['email']}</span>
+                    <span className="text-gray-800"></span>
+                    <span className="text-sm text-gray-400"></span>
                 </div>
                 <ul className="flex flex-col p-2 my-2 space-y-1">
                     <li>

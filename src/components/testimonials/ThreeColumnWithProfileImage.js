@@ -7,7 +7,6 @@ import { SectionHeading as Heading, Subheading as SubheadingBase } from "../../c
 import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-7.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "../../images/svg-decorator-blob-8.svg";
 import ceo from "../../images/founder.jpg";
-// import rabi from "../../images/rabi.png";
 import titi from "../../images/titi.jpg";
 import muhammed from "../../images/muhammed.jpg";
 import kasim from "../../images/kasim.png";

@@ -9,12 +9,16 @@ import logo from "../images/logo.svg";
 import googleIconImageSrc from "../images/google-icon.png";
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
 import axios from "axios";
-import { backendUrl } from "../components/constants/index.js";
 import { CircularProgress } from "@mui/material";
 import Box from '@mui/material/Box';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { load, setAuth, setMessages, unload } from "../actions/index.js";
+import IconButton from '@mui/material/IconButton';
+import { MdClose } from "react-icons/md";
 
 const Container = tw(ContainerBase)`min-h-fit text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -73,48 +77,81 @@ export const Login = ({
   signupUrl = "#",
 }) => {
 
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
-    // email useState set to null
-   const [email,setEmail] = useState('');
+  const spinner = useSelector(state => state.spinner)
+  const message = useSelector(state => state.messages)
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromAdmin = location.state?.from?.pathname || "/admin/home";
+  const from = location.state?.from?.pathname || "/customer"
 
-   //  password useState set to nul
-    const [password,setPassword] = useState('')
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('')
 
-    const handleSubmit = async (event) => {
-      setIsLoading(true)
-        event.preventDefault();
-        let data = {email, password}
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    dispatch(load())
+    let data = {email, password}
+
+    try{
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, JSON.stringify(data),
+        {
+          headers: { 'Content-Type' : 'application/json'},
+        }
+      );
+      const accessToken = response?.data?.token;
+      const roles = response?.data?.roles
+      dispatch(setAuth({email, password, roles, accessToken}))
+      if(roles.includes("ROLE_SUPER_ADMIN" || "ROLE_ADMIN")){
+        navigate(fromAdmin, {replace: true})
+      }
+      else{
+        navigate(from, {replace: true})
+      }
       
-        // reset email and password to null after input
-        axios.post(`${backendUrl}/api/login`, data)
-        .then(function(response){
-            return axios.get(`${backendUrl}/api/profile`, {
-              headers: {
-                'Authorization': `Bearer ${response.data["token"]}` 
-              }
-            })
-            .then(profileResponse => {
-              localStorage.setItem("token", response.data["token"])
-              localStorage.setItem("user", profileResponse.data["user"])
-              navigate("/admin") 
-            }).catch(function(error){
-              setError("Oops! Something went wrong");
-              setIsLoading(false);
-            })
-            
-        })
-        .catch(function(error){
-          if(error["response"]["status"] === 401){
-            setError("Incorrect email or password") 
-          }
-          else{
-            setError("Oops! Something went wrong")
-          }
-          setIsLoading(false)
-        })
+    } catch(error){
+      if(!error.response){
+        dispatch(setMessages("Oops! Server Error"))
+      }
+      else{
+        dispatch(setMessages(error.response.data.message))
+      }
+
+    } finally{
+      dispatch(unload())
     }
+  }
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   dispatch(load())
+  //   let data = {email, password}
+      
+  //   // reset email and password to null after input
+  //   axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, data)
+  //   .then(function(response){
+  //       return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/profile`, {
+  //         headers: {
+  //           'Authorization': `Bearer ${response.data["token"]}` 
+  //         }
+  //       })
+  //       .then(profileResponse => {
+  //         localStorage.setItem("maltiti-token", response.data["token"])
+  //         localStorage.setItem("maltiti-user", profileResponse.data["user"])
+  //         dispatch(logIn())
+  //         dispatch(unload())
+  //         navigate("/home") 
+  //       }).catch(function(error){
+  //         dispatch(unload())
+  //         dispatch(setMessages("Oops! Something went wrong"))
+  //       })
+        
+  //   })
+  //   .catch(function(error){
+  //       dispatch(setMessages(error.response.data.message))
+  //       dispatch(unload())
+  //   })
+  // }
 
 return(
   <AnimationRevealPage>
@@ -141,16 +178,27 @@ return(
                 <DividerText>Or Sign in with your e-mail</DividerText>
               </DividerTextContainer>
               <Form onSubmit={handleSubmit}>
-                {error ?
+                {message  ?
                   <Stack sx={{ width: '100%' }} spacing={2}>
-                    <Alert severity="error">{error}</Alert>
+                    <Alert severity="error" action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    dispatch(setMessages(""))
+                                }}
+                            >
+                            <MdClose />
+                            </IconButton>
+                        }>{message}</Alert>
                   </Stack>
                   :
                   <></>
                 }
                 <Input type="email" placeholder="Email" value={email} name="email" onChange={(event) => setEmail(event.target.value)} required/>
                 <Input type="password" placeholder="Password" value={password} name="password" onChange={(event) => setPassword(event.target.value)} required/>
-                {isLoading ?
+                {spinner ?
                   <Box sx={{ textAlign: 'center', marginTop: "1rem" }}>
                     <CircularProgress />
                   </Box>

@@ -54,7 +54,7 @@ export default ({
     {
       question: "Are your products organic?",
       answer:
-        "Yes, All our products are naturally made or processed using organic. We also possess an ecocert certification"
+        "Yes, All our products are naturally made or processed organically. We also possess an ecocert certification"
     },
     {
       question: "Where are you located?",
