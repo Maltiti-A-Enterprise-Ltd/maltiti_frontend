@@ -25,8 +25,6 @@ const DashboardHeader = (props) => {
           document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [wrapperRef]);
-
-    const user = JSON.parse(localStorage.getItem('maltiti-user'));
   
 
   // function for toggling profile menu
@@ -46,7 +44,6 @@ const DashboardHeader = (props) => {
         <header className="flex-shrink-0 border-b border-green-100">
         <div className="flex items-center justify-between p-2">
             <div className="flex items-center space-x-3">
-            <span className="p-2 text-xl font-semibold tracking-wider uppercase lg:hidden">K-WD</span>
             <button onClick={props.onClick} className="p-2 rounded-md hover:text-green-100">
                 <GiHamburgerMenu size={25}/>
             </button>
@@ -172,7 +169,7 @@ const DashboardHeader = (props) => {
                     </li>
                 </ul>
                 <div className="flex items-center justify-center p-4 text-blue-700 underline border-t">
-                    <a href="#g" onClick={props.logout}>Logout</a>
+                    <li className="cursor-pointer list-none" onClick={props.signOut}>Logout</li>
                 </div>
                 </div>
             </div>

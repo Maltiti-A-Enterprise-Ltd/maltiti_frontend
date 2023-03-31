@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "../components/misc/Layouts";
 import tw from "twin.macro";
-import styled from "styled-components";
-import {css} from "styled-components/macro"; //eslint-disable-line
+import styled from "styled-components";//eslint-disable-line
 import illustration from "../images/login-illustration.svg";
 import logo from "../images/logo.svg";
 import googleIconImageSrc from "../images/google-icon.png";
@@ -14,9 +13,8 @@ import Box from '@mui/material/Box';
 import { useLocation, useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { load, setAuth, setMessages, unload } from "../actions/index.js";
+import { useSelector, useDispatch } from "react-redux";
+import { load, setAuth, setMessages, setPersist, unload } from "../actions/index.js";
 import IconButton from '@mui/material/IconButton';
 import { MdClose } from "react-icons/md";
 
@@ -79,6 +77,7 @@ export const Login = ({
 
   const spinner = useSelector(state => state.spinner)
   const message = useSelector(state => state.messages)
+  const persist = useSelector(state => state.persist)
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const location = useLocation();
@@ -97,11 +96,12 @@ export const Login = ({
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, JSON.stringify(data),
         {
           headers: { 'Content-Type' : 'application/json'},
+          withCredentials: true
         }
       );
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles
-      dispatch(setAuth({email, password, roles, accessToken}))
+      dispatch(setAuth({roles, accessToken}))
       if(roles.includes("ROLE_SUPER_ADMIN" || "ROLE_ADMIN")){
         navigate(fromAdmin, {replace: true})
       }
@@ -122,36 +122,13 @@ export const Login = ({
     }
   }
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   dispatch(load())
-  //   let data = {email, password}
-      
-  //   // reset email and password to null after input
-  //   axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, data)
-  //   .then(function(response){
-  //       return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/profile`, {
-  //         headers: {
-  //           'Authorization': `Bearer ${response.data["token"]}` 
-  //         }
-  //       })
-  //       .then(profileResponse => {
-  //         localStorage.setItem("maltiti-token", response.data["token"])
-  //         localStorage.setItem("maltiti-user", profileResponse.data["user"])
-  //         dispatch(logIn())
-  //         dispatch(unload())
-  //         navigate("/home") 
-  //       }).catch(function(error){
-  //         dispatch(unload())
-  //         dispatch(setMessages("Oops! Something went wrong"))
-  //       })
-        
-  //   })
-  //   .catch(function(error){
-  //       dispatch(setMessages(error.response.data.message))
-  //       dispatch(unload())
-  //   })
-  // }
+  const togglePersist = () => {
+    dispatch((setPersist()))
+  }
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist)
+  }, [persist])
 
 return(
   <AnimationRevealPage>
@@ -208,15 +185,20 @@ return(
                     <span className="text">{submitButtonText}</span>
                   </SubmitButton>
                 }
+                <div className="flex gap-x-2 mt-2">
+                  <input className="text-xs text-gray-600" type="checkbox" id="persist" onChange={() => togglePersist()} checked={persist}/>
+                  <label className="text-sm text-gray-600" htmlFor="persist">Trust This Device?</label>
+                </div>
               </Form>
-              <p tw="mt-6 text-xs text-gray-600 text-center">
-                <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
+              
+              <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
+                <a href={forgotPasswordUrl} className="border- border-green-500 border-dotted">
                   Forgot Password ?
                 </a>
               </p>
-              <p tw="mt-8 text-sm text-gray-600 text-center">
+              <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
                 Dont have an account?{" "}
-                <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
+                <a href={signupUrl} className="border-b border-green-100 border-dotted">
                   Sign Up
                 </a>
               </p>

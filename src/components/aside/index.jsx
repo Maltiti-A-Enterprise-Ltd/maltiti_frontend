@@ -1,13 +1,23 @@
 import React from "react";
 import { AiFillHome, AiOutlineClose } from "react-icons/ai";
 import { MdLogout, MdOutlineProductionQuantityLimits } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import useLogout from "../../utility/useLogout";
 import Logo from "../logo";
 
 
 export const Aside = (props) => {
+
+  const logout = useLogout();
+  const navigate = useNavigate();
+
+  const signOut = async () => {
+    console.log("Yes")
+    await logout()
+    navigate("/login")
+  }
     return(
-        <aside className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-green-100 border-r shadow-lg  lg:z-auto lg:static lg:shadow-none ${props.isSideBarOpen ? "" : "w-20"}`}>
+        <aside className={`relative inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-green-100 border-r shadow-lg  lg:z-auto lg:static lg:shadow-none ${props.isSideBarOpen ? "" : "w-20"}`}>
         <div className={`flex items-center justify-between flex-shrink-0 p-2 ${props.isSideBarOpen ? "" : "lg:justify-center"}`}>
           <span className={`p-2 ${props.isSideBarOpen ? "ml-16" : ""}`}>
             <span><Logo/></span>
@@ -17,7 +27,7 @@ export const Aside = (props) => {
           </button>
         </div>
         <nav className="flex-1 overflow-hidden hover:overflow-y-auto">
-          <ul className="p-3 overflow-hidden">
+          <ul className="p-3 overflow-hidden flex flex-col gap-y-4">
             <li>
               <NavLink
                 to="home"
@@ -47,7 +57,7 @@ export const Aside = (props) => {
        
         <div className="flex-shrink-0 p-2 border-t max-h-14">
           <button
-            onClick={props.logout}
+            onClick={props.signOut}
             className="flex items-center justify-center w-full px-4 py-2 space-x-1 font-medium tracking-wider uppercase bg-gray-100 border rounded-md  focus:outline-none focus:ring"
           >
             <span>

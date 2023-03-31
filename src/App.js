@@ -8,6 +8,7 @@ import { ProtectedAuth, ProtectedRoute } from './utility/protected';
 import Unauthorized from './components/unauthorized';
 import RequireAuth from './utility/requiredAuth';
 import Customer from './pages/userDashboard';
+import PersistLogin from './utility/persistLogin';
 
 const ROLES = {
   user: 'ROLE_USER',
@@ -29,16 +30,23 @@ function App() {
               // </ProtectedAuth>
             }
           />
-          <Route element={<RequireAuth allowedRoles={[ROLES.admin, ROLES.superAdmin]} />}>
-            <Route path='/admin/*' element={<Dashboard />} />
-          </Route>
-          <Route element={<RequireAuth allowedRoles={[ROLES.user]} />}>
-            <Route path='/customer' element={<Customer />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+
+          <Route element={<PersistLogin/>}>
+            
+            <Route element={<RequireAuth allowedRoles={[ROLES.admin, ROLES.superAdmin]} />}>
+              <Route path='/admin/*' element={<Dashboard />} />
+            </Route>
+
+            <Route element={<RequireAuth allowedRoles={[ROLES.user]} />}>
+              <Route path='/customer' element={<Customer />} />
+            </Route>
+
           </Route>
       
           {/* catch all */}
           <Route path="/*" element={<Missing />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+          
         </Routes>
       </Router>
     </div>

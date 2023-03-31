@@ -7,7 +7,7 @@ export const TableHead = (props) => {
             {props.heads.map((head) => (
                 <th key={head}
                 scope="col"
-                className="px-6 py-5 text-xs font-semibold tracking-wider text-left text-gray_500"
+                className="px-6 py-5 text-xs font-semibold tracking-wider text-left text-gray-700"
                 >
                 {head}
                 </th>
@@ -32,7 +32,7 @@ export const TableDataImage = (props) => {
                 />
                 </div>
                 <div className="ml-4">
-                <div className="text-sm text-gray_900">{props.name}</div>
+                <div className="text-sm text-gray-900">{props.name}</div>
                 </div>
             </div>
          </td>
@@ -42,7 +42,7 @@ export const TableDataImage = (props) => {
 export const TableData = (props) => {
     return(
         
-        <td className="px-6 py-4 text-sm text-gray_500 whitespace-nowrap">
+        <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
             {props.name}
         </td>
     );

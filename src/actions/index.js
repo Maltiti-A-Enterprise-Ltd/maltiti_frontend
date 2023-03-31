@@ -62,3 +62,37 @@ export const unsetAuth = () => {
         type: 'UNSET_AUTH'
     }
 }
+
+export const setProducts = (input) => {
+    return {
+        type: 'SET_PRODUCTS',
+        payload: input
+    }
+}
+
+export const updateAccessToken = (accessToken) =>{
+    return{
+        type: 'UPDATE_ACCESS_TOKEN',
+        payload: accessToken
+    }
+}
+
+export const updateRoles = (roles) =>{
+    return{
+        type: 'UPDATE_ROLES',
+        payload: roles
+    }
+}
+
+
+export const setPersist = () => {
+    return{
+        type: 'SET_PERSIST',
+    }
+}
+
+export const togglePersist = () => {
+    return {
+        type: 'TOGGLE_PERSIST',
+    }
+};
