@@ -1,24 +1,27 @@
-// export const Select = (props) => {
-//     return(
-//         <div className="inline-flex outline-none rounded-md mb-3 border border-gray_300 px-2">
-//             <select 
-//                 id="specialization" 
-//                 className="rounded-lg block w-full py-3 px-6"
-//                 onChange={(event)=> props.setService(event.target.value)}
-//                 value={props.service} 
-//             >
-//                 {isLoading ? 
-//                 <option value="" disabled>Loading... Please Wait</option>
-//                 :
-//                 <>
-//                 <option value="" disabled>Select speciality</option>
-//                 <option value="">All</option>
-//                 {speciality.map((speciality, key) => (
-//                 <option key={speciality.id} value={speciality.speciality}>{speciality.speciality}</option>
-//                 ))}
-//                 </>
-//                 }
-//             </select>
-//         </div>
-//     );
-// }
+export const Select = (props) => {
+  
+  return ( 
+      <select
+        onChange={props.onChange}
+        value={props.value}
+        className="w-full px-8 py-4 text-gray-700 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-700 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+      >
+        {props.isLoading ? (
+          <option value="" disabled defaultValue selected>
+            Loading... Please Wait
+          </option>
+        ) : (
+          <>
+            <option className="text-green-100" value="" defaultValue selected disabled>
+              {props.label}
+            </option>
+            {props.lists.map((option) => (
+              <option key={option.id} value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </>
+        )}
+      </select>
+  );
+};

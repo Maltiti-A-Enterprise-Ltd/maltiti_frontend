@@ -70,6 +70,20 @@ export const setProducts = (input) => {
     }
 }
 
+export const updateProducts = (input) => {
+    return {
+        type: 'UPDATE_PRODUCTS',
+        payload: input
+    }
+}
+
+export const deleteProduct = (id) => {
+    return {
+      type: 'DELETE_PRODUCT',
+      payload: { id },
+    };
+  };
+
 export const updateAccessToken = (accessToken) =>{
     return{
         type: 'UPDATE_ACCESS_TOKEN',

@@ -7,15 +7,7 @@ import Logo from "../logo";
 
 
 export const Aside = (props) => {
-
-  const logout = useLogout();
-  const navigate = useNavigate();
-
-  const signOut = async () => {
-    console.log("Yes")
-    await logout()
-    navigate("/login")
-  }
+ 
     return(
         <aside className={`relative inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-green-100 border-r shadow-lg  lg:z-auto lg:static lg:shadow-none ${props.isSideBarOpen ? "" : "w-20"}`}>
         <div className={`flex items-center justify-between flex-shrink-0 p-2 ${props.isSideBarOpen ? "" : "lg:justify-center"}`}>
@@ -49,7 +41,7 @@ export const Aside = (props) => {
                 <span>
                 <MdOutlineProductionQuantityLimits size={25}/>
                 </span>
-                <span className={`${props.isSideBarOpen ? "" : "hidden"}`}>Prdocuts</span>
+                <span className={`${props.isSideBarOpen ? "" : "hidden"}`}>Products</span>
               </NavLink>
             </li>
           </ul>

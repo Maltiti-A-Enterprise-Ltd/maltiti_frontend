@@ -17,7 +17,7 @@ const useRefreshToken = () => {
             const requestProfile = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/profile`, {
                 headers: { 
                     'Content-Type' : 'application/json',
-                    'Authorization': `Bearer ${refreshResponse.data.token}`
+                    'Authorization': `Bearer ${refreshResponse.data.token}`,
                 },
                 withCredentials: true
             });
