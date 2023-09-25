@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import useRefreshToken from "./useRefreshToken";
 import GrowingSpinner from "../components/spinner";
-import { CircularProgress } from "@mui/material";
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
