@@ -8,7 +8,7 @@ import {
   decreaseItemQuantity,
   increaseItemQuantity,
 } from "../../redux/cartSlice";
-import swal from "sweetalert";
+//import swal from "sweetalert";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
@@ -23,22 +23,22 @@ const Cart = () => {
   }, [cart, dispatch]);
 
   const handleRemove = (id) => {
-    swal({
-      title: "Are you sure?",
-      text: "You want delete it?,No problem,Add other Products!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        dispatch(removeToCart(id));
-        swal("Poof! Your Product has been deleted!", {
-          icon: "success",
-        });
-      } else {
-        swal("Your Product is safe, Enjoy Shopping!");
-      }
-    });
+    // swal({
+    //   title: "Are you sure?",
+    //   text: "You want delete it?,No problem,Add other Products!",
+    //   icon: "warning",
+    //   buttons: true,
+    //   dangerMode: true,
+    // }).then((willDelete) => {
+    //   if (willDelete) {
+    //     dispatch(removeToCart(id));
+    //     swal("Poof! Your Product has been deleted!", {
+    //       icon: "success",
+    //     });
+    //   } else {
+    //     swal("Your Product is safe, Enjoy Shopping!");
+    //   }
+    // });
   };
 
   return (
