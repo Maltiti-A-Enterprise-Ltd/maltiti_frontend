@@ -58,26 +58,26 @@ const Cart = () => {
                 >
                   <path
                     fill="#000"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M12 3.5C16.6944 3.5 20.5 7.30558 20.5 12C20.5 16.6944 16.6944 20.5 12 20.5C7.30558 20.5 3.5 
          16.6944 3.5 12C3.5 7.30558 7.30558 3.5 12 3.5ZM21.5 12C21.5 6.75329 17.2467 2.5 12 2.5C6.75329
           2.5 2.5 6.75329 2.5 12C2.5 17.2467 6.75329 21.5 12 21.5C17.2467 21.5 21.5 17.2467 21.5 12Z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                   <path
                     fill="#000"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M17.5 12C17.5 11.7239 
           17.2761 11.5 17 11.5H7.5C7.22386 11.5 7 11.7239 7 12C7 12.2761 7.22386 12.5 7.5 12.5H17C
           17.2761 12.5 17.5 12.2761 17.5 12Z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                   <path
                     fill="#000"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M10.8536 8.14645C10.6583 7.95118 10.3417 7.95118 10.1464 8.14645L6.64645 11.6464C6.45118 11.8417 6.45118 12.1583 6.64645 12.3536L10.1464 15.8536C10.3417 16.0488 10.6583 16.0488 10.8536 15.8536C11.0488 15.6583 11.0488 15.3417 10.8536 15.1464L7.70711 12L10.8536 8.
         85355C11.0488 8.65829 11.0488 8.34171 10.8536 8.14645Z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                 </svg>
               </Link>
@@ -115,9 +115,9 @@ const Cart = () => {
                           <path
                             fill="none"
                             stroke="#000"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M20 6H10M20 11H10M10 6h2a5 5 0 0 1 5 5h0a5 5 0 0 1-5 5h-2l8 8"
                           ></path>
                         </svg>
