@@ -104,7 +104,7 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
         </NavToggle>
       </MobileNavLinksContainer>
       <NavLink href="#g" className="mr-[5%] flex border-none" onClick={toggleCart}>
-        <span aria-hidden="true" className="text-center leading-tight inline-block w-5 h-5 transform translate-x-12 translate-y-0 bg-red-600 rounded-full">
+        <span aria-hidden="true" className="inline-block w-5 h-5 leading-tight text-center transform translate-x-12 translate-y-0 bg-red-600 rounded-full">
             0
         </span>
         <AiOutlineShoppingCart size={40}/>
@@ -118,7 +118,7 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
           leave="transition transform duration-300"
           leaveFrom="translate-x-0 opacity-100 ease-out"
           leaveTo="translate-x-full opacity-0 ease-in"
-          className="fixed inset-y-0 right-0 flex flex-col font-normal bg-white text-black shadow-lg w-144 z-50 max-md:w-96 max-sm:w-72"
+          className="fixed inset-y-0 right-0 z-50 flex flex-col font-normal text-black bg-white shadow-lg w-144 max-md:w-96 max-sm:w-72"
           // style={{backdropFilter:"blur(14px)"}}
         >
           <div className="flex items-center justify-between flex-shrink-0 p-2 ml-[2%]">
@@ -137,7 +137,8 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
           </div>
           <span className="ml-[4%] uppercase flex"><AiOutlineShoppingCart/>&nbsp;&nbsp;0 Products in your cart</span>
           <div className="ml-[2%] flex justify-center items-center max-h-full p-4 overflow-hidden hover:overflow-y-scroll">           
-              <span className="">Your cart is empty</span>
+              <span className="">Your cart is empty</span> 
+              {/* Todo */}
           </div>
         </Transition>
         :
