@@ -10,6 +10,8 @@ import RequireAuth from "./utility/requiredAuth";
 import Customer from "./pages/userDashboard";
 import PersistLogin from "./utility/persistLogin";
 import Cart from "./components/addTocart/Cart";
+import ProductDetails from "./components/productDetail";
+
 
 const ROLES = {
   user: "ROLE_USER",
@@ -34,6 +36,7 @@ function App() {
           />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/detail" element={<ProductDetails />} />
 
           <Route element={<PersistLogin />}>
             <Route
