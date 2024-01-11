@@ -79,7 +79,7 @@ export default ({
         price_retail: "25",
         rating: "5.0",
         reviews: "87",
-        url: "cart",
+        url: "detail",
       },
       {
         id: 2,
@@ -90,7 +90,7 @@ export default ({
         price_retail: "6",
         rating: "4.8",
         reviews: "32",
-        url: "#",
+        url: "detail",
       },
       {
         id: 3,
@@ -101,7 +101,7 @@ export default ({
         price_retail: "20",
         rating: "4.9",
         reviews: "89",
-        url: "#",
+        url: "detail",
       },
       {
         id: 4,
@@ -112,7 +112,7 @@ export default ({
         price_retail: "25",
         rating: "4.6",
         reviews: "12",
-        url: "#",
+        url: "detail",
       },
       {
         imageSrc: "hair food-white.jpg",
@@ -122,7 +122,7 @@ export default ({
         price_retail: "10",
         rating: "100",
         reviews: "19",
-        url: "#",
+        url: "detail",
       },
       {
         imageSrc: "malti baby shea-white.jpg",
@@ -132,7 +132,7 @@ export default ({
         price_retail: "20",
         rating: "20",
         reviews: "61",
-        url: "#",
+        url: "detail",
       },
       {
         imageSrc: "shea-white.jpeg",
@@ -420,7 +420,10 @@ export default ({
                       transition={{ duration: 0.3 }}
                     >
                       {/* <CardButton>Add to Cart</CardButton> */}
-                      <button onClick={() => handleAdd()} className="px-8 py-3 text-sm font-bold text-gray-100 transition duration-300 bg-green-500 rounded hocus:bg-green-700 hocus:text-gray-200 focus:outline focus:outline-none ">
+                      <button
+                        onClick={() => handleAdd()}
+                        className="px-8 py-3 text-sm font-bold text-gray-100 transition duration-300 bg-green-500 rounded hocus:bg-green-700 hocus:text-gray-200 focus:outline focus:outline-none "
+                      >
                         {/* onClick={() => handleAdd(ele)} */}
                         Add to Cart
                       </button>
