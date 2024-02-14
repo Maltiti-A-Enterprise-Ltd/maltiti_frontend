@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
+import { ProductPage } from "./pages/products";
 import { Login } from "./pages/login";
 import Dashboard from "./pages/adminDashboard";
 import Missing from "./components/missing";
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* login routes */}
+          <Route path="/products" element={<ProductPage />} />
           <Route
             path="/login"
             element={

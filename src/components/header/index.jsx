@@ -8,7 +8,8 @@ import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import logo from "../../images/logo.svg";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
-import { AiOutlineShoppingCart } from "react-icons/ai"
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 
 const Header = tw.header`
@@ -54,23 +55,42 @@ export const DesktopNavLinks = tw.nav`
   hidden lg:flex flex-1 justify-between items-center
 `;
 
-export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
-
+export const NavBar = ({
+  roundedHeaderButton = false,
+  logoLink,
+  links,
+  className,
+  collapseBreakpointClass = "lg",
+}) => {
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink><AnchorLink href="#about">About</AnchorLink></NavLink>
-      <NavLink><AnchorLink href="#shop">Shop</AnchorLink></NavLink>
-      <NavLink><AnchorLink href="#faqs">Faqs</AnchorLink></NavLink>
-      <NavLink><AnchorLink href="#contactus">Contact Us</AnchorLink></NavLink>
+      <NavLink>
+        <AnchorLink href="#about">About</AnchorLink>
+      </NavLink>
+      <NavLink>
+        <AnchorLink href="#shop">Shop</AnchorLink>
+      </NavLink>
+      <NavLink>
+        <Link to="/products">Products</Link>
+      </NavLink>
+      <NavLink>
+        <AnchorLink href="#faqs">Faqs</AnchorLink>
+      </NavLink>
+      <NavLink>
+        <AnchorLink href="#contactus">Contact Us</AnchorLink>
+      </NavLink>
       <NavLink href="/login" tw="lg:ml-12!">
         Login
       </NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`}href="/signup">Sign Up</PrimaryLink>
-    </NavLinks>
+      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} href="/signup">
+        Sign Up
+      </PrimaryLink>
+    </NavLinks>,
   ];
 
   const { showNavLinks, animation, toggleNavbar } = useAnimatedNavToggler();
-  const collapseBreakpointCss = collapseBreakPointCssMap[collapseBreakpointClass];
+  const collapseBreakpointCss =
+    collapseBreakPointCssMap[collapseBreakpointClass];
 
   const defaultLogoLink = (
     <LogoLink href="/login">
@@ -85,31 +105,56 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
 
   // function for toggling notification menu
   const toggleCart = (event) => {
-    setIsCartOpen(opened => !opened)
-  }
+    setIsCartOpen((opened) => !opened);
+  };
 
   return (
-    <Header className={className || "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"}>
+    <Header
+      className={
+        className ||
+        "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"
+      }
+    >
       <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
         {links}
       </DesktopNavLinks>
-      <MobileNavLinksContainer css={collapseBreakpointCss.mobileNavLinksContainer}>
+      <MobileNavLinksContainer
+        css={collapseBreakpointCss.mobileNavLinksContainer}
+      >
         {logoLink}
-        <MobileNavLinks initial={{ x: "150%", display: "none" }} animate={animation} css={collapseBreakpointCss.mobileNavLinks}>
+        <MobileNavLinks
+          initial={{ x: "150%", display: "none" }}
+          animate={animation}
+          css={collapseBreakpointCss.mobileNavLinks}
+        >
           {links}
         </MobileNavLinks>
-        <NavToggle onClick={toggleNavbar} className={showNavLinks ? "open" : "closed"}>
-          {showNavLinks ? <CloseIcon tw="w-6 h-6" /> : <MenuIcon tw="w-6 h-6" />}
+        <NavToggle
+          onClick={toggleNavbar}
+          className={showNavLinks ? "open" : "closed"}
+        >
+          {showNavLinks ? (
+            <CloseIcon tw="w-6 h-6" />
+          ) : (
+            <MenuIcon tw="w-6 h-6" />
+          )}
         </NavToggle>
       </MobileNavLinksContainer>
-      <NavLink href="#g" className="mr-[5%] flex border-none" onClick={toggleCart}>
-        <span aria-hidden="true" className="inline-block w-5 h-5 leading-tight text-center transform translate-x-12 translate-y-0 bg-red-600 rounded-full">
-            0
+      <NavLink
+        href="#g"
+        className="mr-[5%] flex border-none"
+        onClick={toggleCart}
+      >
+        <span
+          aria-hidden="true"
+          className="inline-block w-5 h-5 leading-tight text-center transform translate-x-12 translate-y-0 bg-red-600 rounded-full"
+        >
+          0
         </span>
-        <AiOutlineShoppingCart size={40}/>
+        <AiOutlineShoppingCart size={40} />
       </NavLink>
-      {isCartOpen ?
+      {isCartOpen ? (
         <Transition
           show={isCartOpen}
           enter="transition transform duration-300"
@@ -123,7 +168,10 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
         >
           <div className="flex items-center justify-between flex-shrink-0 p-2 ml-[2%]">
             <h6 className="p-2 text-lg">Your cart</h6>
-            <button className="p-2 rounded-md focus:outline-none focus:ring" onClick={toggleCart}>
+            <button
+              className="p-2 rounded-md focus:outline-none focus:ring"
+              onClick={toggleCart}
+            >
               <svg
                 className="w-6 h-6 text-gray-600 hover:text-red-600"
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,19 +179,27 @@ export const NavBar = ({ roundedHeaderButton = false, logoLink, links, className
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
-          <span className="ml-[4%] uppercase flex"><AiOutlineShoppingCart/>&nbsp;&nbsp;0 Products in your cart</span>
-          <div className="ml-[2%] flex justify-center items-center max-h-full p-4 overflow-hidden hover:overflow-y-scroll">           
-              <span className="">Your cart is empty</span> 
-              {/* Todo */}
+          <span className="ml-[4%] uppercase flex">
+            <AiOutlineShoppingCart />
+            &nbsp;&nbsp;0 Products in your cart
+          </span>
+          <div className="ml-[2%] flex justify-center items-center max-h-full p-4 overflow-hidden hover:overflow-y-scroll">
+            <span className="">Your cart is empty</span>
+            {/* Todo */}
           </div>
         </Transition>
-        :
+      ) : (
         <></>
-      }
+      )}
     </Header>
   );
 };
@@ -152,21 +208,21 @@ const collapseBreakPointCssMap = {
   sm: {
     mobileNavLinks: tw`sm:hidden`,
     desktopNavLinks: tw`sm:flex`,
-    mobileNavLinksContainer: tw`sm:hidden`
+    mobileNavLinksContainer: tw`sm:hidden`,
   },
   md: {
     mobileNavLinks: tw`md:hidden`,
     desktopNavLinks: tw`md:flex`,
-    mobileNavLinksContainer: tw`md:hidden`
+    mobileNavLinksContainer: tw`md:hidden`,
   },
   lg: {
     mobileNavLinks: tw`lg:hidden`,
     desktopNavLinks: tw`lg:flex`,
-    mobileNavLinksContainer: tw`lg:hidden`
+    mobileNavLinksContainer: tw`lg:hidden`,
   },
   xl: {
     mobileNavLinks: tw`lg:hidden`,
     desktopNavLinks: tw`lg:flex`,
-    mobileNavLinksContainer: tw`lg:hidden`
-  }
+    mobileNavLinksContainer: tw`lg:hidden`,
+  },
 };
