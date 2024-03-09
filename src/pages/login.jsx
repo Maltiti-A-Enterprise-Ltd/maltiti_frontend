@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
-import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
-import { Container as ContainerBase } from "../components/misc/Layouts";
-import tw from "twin.macro";
-import styled from "styled-components";//eslint-disable-line
-import illustration from "../images/login-illustration.svg";
-import logo from "../images/logo.svg";
-import googleIconImageSrc from "../images/google-icon.png";
-import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
-import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import tw from 'twin.macro';
+import styled from 'styled-components'; //eslint-disable-line
+import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
+import axios from 'axios';
+import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { useSelector, useDispatch } from "react-redux";
-import { load, setAuth, setMessages, setPersist, unload } from "../actions/index.js";
+import { useSelector, useDispatch } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
-import { MdClose } from "react-icons/md";
+import { MdClose } from 'react-icons/md';
+import { load, setAuth, setMessages, setPersist, unload } from '../actions/index.js';
+import googleIconImageSrc from '../images/google-icon.png';
+import logo from '../images/logo.svg';
+import illustration from '../images/login-illustration.svg';
+import { Container as ContainerBase } from '../components/misc/Layouts';
+import AnimationRevealPage from '../helpers/AnimationRevealPage.js';
 
 const Container = tw(ContainerBase)`min-h-fit text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -54,162 +54,183 @@ const SubmitButton = styled.button`
 `;
 const IllustrationContainer = tw.div`sm:rounded-r-lg flex-1 bg-white text-center hidden lg:flex justify-center`;
 const IllustrationImage = styled.div`
-  ${props => `background-image: url("${props.imageSrc}");`}
+  ${(props) => `background-image: url("${props.imageSrc}");`}
   ${tw`w-full max-w-sm m-12 bg-center bg-no-repeat bg-contain xl:m-16`}
 `;
-export const Login = ({
-
-  logoLinkUrl = "#",
+export function Login({
+  logoLinkUrl = '#',
   illustrationImageSrc = illustration,
-  headingText = "Sign In To Maltiti",
+  headingText = 'Sign In To Maltiti',
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: "Sign In With Google",
-      url: "https://google.com"
+      text: 'Sign In With Google',
+      url: 'https://google.com'
     }
   ],
-  submitButtonText = "Sign In",
+  submitButtonText = 'Sign In',
   SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = "#",
-  signupUrl = "#",
-}) => {
-
-  const spinner = useSelector(state => state.spinner)
-  const message = useSelector(state => state.messages)
-  const persist = useSelector(state => state.persist)
-  const dispatch = useDispatch()
+  forgotPasswordUrl = '#',
+  signupUrl = '#'
+}) {
+  const spinner = useSelector((state) => state.spinner);
+  const message = useSelector((state) => state.messages);
+  const persist = useSelector((state) => state.persist);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const fromAdmin = location.state?.from?.pathname || "/admin/home";
-  const from = location.state?.from?.pathname || "/customer"
+  const fromAdmin = location.state?.from?.pathname || '/admin/home';
+  const from = location.state?.from?.pathname || '/customer';
 
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(load())
-    let data = {email, password}
+    dispatch(load());
+    const data = { email, password };
 
-    try{
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, JSON.stringify(data),
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/login`,
+        JSON.stringify(data),
         {
-          headers: { 'Content-Type' : 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
       const accessToken = response?.data?.token;
-      const roles = response?.data?.roles
-      dispatch(setAuth({roles, accessToken}))
-      if(roles.includes("ROLE_SUPER_ADMIN" || "ROLE_ADMIN")){
-        navigate(fromAdmin, {replace: true})
+      const roles = response?.data?.roles;
+      dispatch(setAuth({ roles, accessToken }));
+      if (roles.includes('ROLE_SUPER_ADMIN' || 'ROLE_ADMIN')) {
+        navigate(fromAdmin, { replace: true });
+      } else {
+        navigate(from, { replace: true });
       }
-      else{
-        navigate(from, {replace: true})
+    } catch (error) {
+      if (!error.response) {
+        dispatch(setMessages('Oops! Server Error'));
+      } else {
+        dispatch(setMessages(error.response.data.message));
       }
-      
-    } catch(error){
-      if(!error.response){
-        dispatch(setMessages("Oops! Server Error"))
-      }
-      else{
-        dispatch(setMessages(error.response.data.message))
-      }
-
-    } finally{
-      dispatch(unload())
+    } finally {
+      dispatch(unload());
     }
-  }
+  };
 
   const togglePersist = () => {
-    dispatch((setPersist()))
-  }
+    dispatch(setPersist());
+  };
 
   useEffect(() => {
-    localStorage.setItem("persist", persist)
-  }, [persist])
+    localStorage.setItem('persist', persist);
+  }, [persist]);
 
-return(
-  <AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <LogoLink href={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </LogoLink>
-          <MainContent>
-            <Heading>{headingText}</Heading>
-            <FormContainer>
-              <SocialButtonsContainer>
-                {socialButtons.map((socialButton, index) => (
-                  <SocialButton key={index} href={socialButton.url}>
-                    <span className="iconContainer">
-                      <img src={socialButton.iconImageSrc} className="icon" alt=""/>
-                    </span>
-                    <span className="text">{socialButton.text}</span>
-                  </SocialButton>
-                ))}
-              </SocialButtonsContainer>
-              <DividerTextContainer>
-                <DividerText>Or Sign in with your e-mail</DividerText>
-              </DividerTextContainer>
-              <Form onSubmit={handleSubmit}>
-                {message  ?
-                  <Stack sx={{ width: '100%' }} spacing={2}>
-                    <Alert severity="error" action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    dispatch(setMessages(""))
-                                }}
-                            >
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <LogoLink href={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </LogoLink>
+            <MainContent>
+              <Heading>{headingText}</Heading>
+              <FormContainer>
+                <SocialButtonsContainer>
+                  {socialButtons.map((socialButton) => (
+                    <SocialButton key={socialButton} href={socialButton.url}>
+                      <span className="iconContainer">
+                        <img src={socialButton.iconImageSrc} className="icon" alt="" />
+                      </span>
+                      <span className="text">{socialButton.text}</span>
+                    </SocialButton>
+                  ))}
+                </SocialButtonsContainer>
+                <DividerTextContainer>
+                  <DividerText>Or Sign in with your e-mail</DividerText>
+                </DividerTextContainer>
+                <Form onSubmit={handleSubmit}>
+                  {message ? (
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert
+                        severity="error"
+                        action={
+                          <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                              dispatch(setMessages(''));
+                            }}>
                             <MdClose />
-                            </IconButton>
-                        }>{message}</Alert>
-                  </Stack>
-                  :
-                  <></>
-                }
-                <Input type="email" placeholder="Email" value={email} name="email" onChange={(event) => setEmail(event.target.value)} required/>
-                <Input type="password" placeholder="Password" value={password} name="password" onChange={(event) => setPassword(event.target.value)} required/>
-                {spinner ?
-                  <Box sx={{ textAlign: 'center', marginTop: "1rem" }}>
-                    <CircularProgress />
-                  </Box>
-                  :
-                  <SubmitButton type="submit">
-                    <SubmitButtonIcon className="icon" />
-                    <span className="text">{submitButtonText}</span>
-                  </SubmitButton>
-                }
-                <div className="flex gap-x-2 mt-2">
-                  <input className="text-xs text-gray-600" type="checkbox" id="persist" onChange={() => togglePersist()} checked={persist}/>
-                  <label className="text-sm text-gray-600" htmlFor="persist">Trust This Device?</label>
-                </div>
-              </Form>
-              
-              <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
-                <a href={forgotPasswordUrl} className="border- border-green-500 border-dotted">
-                  Forgot Password ?
-                </a>
-              </p>
-              <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
-                Dont have an account?{" "}
-                <a href={signupUrl} className="border-b border-green-100 border-dotted">
-                  Sign Up
-                </a>
-              </p>
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-);
+                          </IconButton>
+                        }>
+                        {message}
+                      </Alert>
+                    </Stack>
+                  ) : (
+                    <span />
+                  )}
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    name="email"
+                    onChange={(event) => setEmail(event.target.value)}
+                    required
+                  />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    name="password"
+                    onChange={(event) => setPassword(event.target.value)}
+                    required
+                  />
+                  {spinner ? (
+                    <Box sx={{ textAlign: 'center', marginTop: '1rem' }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    <SubmitButton type="submit">
+                      <SubmitButtonIcon className="icon" />
+                      <span className="text">{submitButtonText}</span>
+                    </SubmitButton>
+                  )}
+                  <div className="flex gap-x-2 mt-2">
+                    <input
+                      className="text-xs text-gray-600"
+                      type="checkbox"
+                      id="persist"
+                      onChange={() => togglePersist()}
+                      checked={persist}
+                    />
+                    <label className="text-sm text-gray-600" htmlFor="persist">
+                      Trust This Device?
+                    </label>
+                  </div>
+                </Form>
+
+                <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
+                  <a href={forgotPasswordUrl} className="border- border-green-500 border-dotted">
+                    Forgot Password ?
+                  </a>
+                </p>
+                <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
+                  Dont have an account?{' '}
+                  <a href={signupUrl} className="border-b border-green-100 border-dotted">
+                    Sign Up
+                  </a>
+                </p>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  );
 }
