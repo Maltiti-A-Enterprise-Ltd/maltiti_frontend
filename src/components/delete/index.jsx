@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { AiFillDelete } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
@@ -10,7 +11,7 @@ const DeleteAlert = (props) => {
   const deleteProduct = async (id) => {
     try {
       await axiosPrivate.delete(`${props.endpoint}${id}`);
-      dispatch(props.reduxAction(id))
+      dispatch(props.reduxAction(id));
       // Return true to indicate success
       return true;
     } catch (error) {
@@ -19,7 +20,7 @@ const DeleteAlert = (props) => {
         title: 'Error deleting product',
         text: error,
         icon: 'error',
-        confirmButtonColor: 'red',
+        confirmButtonColor: 'red'
       });
       return false;
     }
@@ -42,20 +43,20 @@ const DeleteAlert = (props) => {
             Swal.fire({
               title: 'Deleted Successfully',
               icon: 'success',
-              confirmButtonColor: 'green',
+              confirmButtonColor: 'green'
             });
           } else {
             Swal.fire({
               title: 'Error deleting product',
               text: result.message,
               icon: 'error',
-              confirmButtonColor: 'red',
+              confirmButtonColor: 'red'
             });
           }
         },
-        allowOutsideClick: () => !Swal.isLoading(),
+        allowOutsideClick: () => !Swal.isLoading()
       });
-  
+
       if (!confirmed.isConfirmed) {
         Swal.close();
       }
@@ -65,7 +66,9 @@ const DeleteAlert = (props) => {
   };
 
   return (
-    <button onClick={() => handleDelete(props.id)} className="text-green-100 hover:text-red-900"><AiFillDelete/></button>
+    <button onClick={() => handleDelete(props.id)} className="text-green-100 hover:text-red-900">
+      <AiFillDelete />
+    </button>
   );
 };
 

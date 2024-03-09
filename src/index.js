@@ -1,22 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import allReducers from './reducers';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
+import store from './app/store';
 
-const store = createStore(
-  allReducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  // eslint-disable-next-line react/jsx-filename-extension
   <Provider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <App />
+    {/* </React.StrictMode> */}
   </Provider>
 );
 

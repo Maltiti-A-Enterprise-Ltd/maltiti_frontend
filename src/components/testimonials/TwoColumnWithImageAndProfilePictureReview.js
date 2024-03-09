@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import Slider from "react-slick";
-import styled from "styled-components";
-import tw from "twin.macro";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
-import { PrimaryButton } from "../misc/Buttons.js";
-import { ReactComponent as QuotesLeftIcon } from "../../images/quotes-l.svg";
-import { ReactComponent as QuotesRightIcon } from "../../images/quotes-r.svg";
-import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
-import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
-import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-4.svg";
-import { ReactComponent as SvgDecoratorBlob2 } from "../../images/svg-decorator-blob-5.svg";
+import React, { useState } from 'react';
+import Slider from 'react-slick';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { css } from 'styled-components/macro'; //eslint-disable-line
+import { ReactComponent as ChevronLeftIcon } from 'feather-icons/dist/icons/chevron-left.svg';
+import { ReactComponent as ChevronRightIcon } from 'feather-icons/dist/icons/chevron-right.svg';
+import { SectionHeading, Subheading as SubheadingBase } from '../misc/Headings.js';
+import { PrimaryButton } from '../misc/Buttons.js';
+import { ReactComponent as QuotesLeftIcon } from '../../images/quotes-l.svg';
+import { ReactComponent as QuotesRightIcon } from '../../images/quotes-r.svg';
+import { ReactComponent as SvgDecoratorBlob1 } from '../../images/svg-decorator-blob-4.svg';
+import { ReactComponent as SvgDecoratorBlob2 } from '../../images/svg-decorator-blob-5.svg';
 
-import "slick-carousel/slick/slick.css";
+import 'slick-carousel/slick/slick.css';
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -25,7 +25,7 @@ const TestimonialTextSlider = tw(Slider)``;
 const TestimonialText = tw.div`outline-none`;
 
 const ImageAndControlContainer = tw.div`relative outline-none`;
-const Image = styled.div(props => [
+const Image = styled.div((props) => [
   `background-image: url("${props.imageSrc}");`,
   tw`rounded bg-cover bg-center h-80 sm:h-96 lg:h-144`
 ]);
@@ -38,7 +38,7 @@ const ControlButton = styled(PrimaryButton)`
   }
 `;
 
-const TextContainer = styled.div(props => [
+const TextContainer = styled.div((props) => [
   tw`flex flex-col w-full lg:w-7/12`,
   props.textOnLeft ? tw`lg:pr-12 lg:order-first` : tw`lg:pl-12 lg:order-last`
 ]);
@@ -65,13 +65,13 @@ const DecoratorBlob2 = tw(
   SvgDecoratorBlob2
 )`absolute w-32 bottom-0 right-0 -z-10 text-pink-500 opacity-20 transform translate-x-2/3 translate-y-8`;
 
-export default ({
-  subheading = "",
-  heading = "Testimonials",
-  description = "Here are what some of our amazing customers are saying about our hotels & tours. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+export default function ({
+  subheading = '',
+  heading = 'Testimonials',
+  description = 'Here are what some of our amazing customers are saying about our hotels & tours. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   testimonials = null,
   textOnLeft = false
-}) => {
+}) {
   /*
    * You can modify the testimonials shown by modifying the array below or passing in the testimonials prop above
    * You can add or remove objects from the array as you need.
@@ -79,23 +79,23 @@ export default ({
   const defaultTestimonials = [
     {
       imageSrc:
-        "https://images.unsplash.com/photo-1512100356356-de1b84283e18?ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+        'https://images.unsplash.com/photo-1512100356356-de1b84283e18?ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80',
       profileImageSrc:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80",
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80',
       quote:
-        "I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, sopas and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality",
-      customerName: "Darnisha Wright",
-      customerTitle: "CEO, Ubuntu1865 African Marketplace, Oakland CA - USA"
+        'I travel to Tamale, Ghana to meet with Maltiti annually for the last several years. I purchase their incredibly quality shea butter alone with oils, sopas and even delicious honey! Comparing with other cooperatives the quality and service does not compare with that of Maltiti. I am welcomed, treated like a family and provided with excellent service and outstanding products. I proudly brag in Oakland that I carry the finest, purest Shea butter in the world. I believe that to be true. I have yet to experience Shea butter quality better than what Maltiti provides. The soaps and oils are also of excellent price and quality',
+      customerName: 'Darnisha Wright',
+      customerTitle: 'CEO, Ubuntu1865 African Marketplace, Oakland CA - USA'
     },
     {
       imageSrc:
-        "https://images.unsplash.com/photo-1523952578875-e6bb18b26645?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
+        'https://images.unsplash.com/photo-1523952578875-e6bb18b26645?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80',
       profileImageSrc:
-        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
+        'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80',
       quote:
-        "Sinor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
-      customerName: "Adam Cuppy",
-      customerTitle: "Founder, EventsNYC"
+        'Sinor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
+      customerName: 'Adam Cuppy',
+      customerTitle: 'Founder, EventsNYC'
     }
   ];
 
@@ -108,13 +108,22 @@ export default ({
   return (
     <Container>
       <Content>
-        <HeadingInfo tw="text-center lg:hidden" subheading={subheading} heading={heading} description={description} />
+        <HeadingInfo
+          tw="text-center lg:hidden"
+          subheading={subheading}
+          heading={heading}
+          description={description}
+        />
         <TestimonialsContainer>
           <Testimonials>
             <Testimonial>
-              <TestimonialImageSlider arrows={false} ref={setImageSliderRef} asNavFor={textSliderRef} fade={true}>
-                {testimonials.map((testimonial, index) => (
-                  <ImageAndControlContainer key={index}>
+              <TestimonialImageSlider
+                arrows={false}
+                ref={setImageSliderRef}
+                asNavFor={textSliderRef}
+                fade>
+                {testimonials.map((testimonial) => (
+                  <ImageAndControlContainer key={testimonial.customerName}>
                     <Image imageSrc={testimonial.imageSrc} />
                     <ControlContainer>
                       <ControlButton onClick={imageSliderRef?.slickPrev}>
@@ -128,10 +137,19 @@ export default ({
                 ))}
               </TestimonialImageSlider>
               <TextContainer textOnLeft={textOnLeft}>
-                <HeadingInfo tw="hidden lg:block" subheading={subheading} heading={heading} description={description} />
-                <TestimonialTextSlider arrows={false} ref={setTextSliderRef} asNavFor={imageSliderRef} fade={true}>
-                  {testimonials.map((testimonial, index) => (
-                    <TestimonialText key={index}>
+                <HeadingInfo
+                  tw="hidden lg:block"
+                  subheading={subheading}
+                  heading={heading}
+                  description={description}
+                />
+                <TestimonialTextSlider
+                  arrows={false}
+                  ref={setTextSliderRef}
+                  asNavFor={imageSliderRef}
+                  fade>
+                  {testimonials.map((testimonial) => (
+                    <TestimonialText key={testimonial.customerName}>
                       <QuoteContainer>
                         <Quote>
                           <QuotesLeft />
@@ -140,7 +158,10 @@ export default ({
                         </Quote>
                       </QuoteContainer>
                       <CustomerInfo>
-                        <CustomerProfilePicture src={testimonial.profileImageSrc} alt={testimonial.customerName} />
+                        <CustomerProfilePicture
+                          src={testimonial.profileImageSrc}
+                          alt={testimonial.customerName}
+                        />
                         <CustomerTextInfo>
                           <CustomerName>{testimonial.customerName}</CustomerName>
                           <CustomerTitle>{testimonial.customerTitle}</CustomerTitle>
@@ -158,12 +179,14 @@ export default ({
       <DecoratorBlob2 />
     </Container>
   );
-};
+}
 
-const HeadingInfo = ({ subheading, heading, description, ...props }) => (
-  <div {...props}>
-    {subheading ? <Subheading>{subheading}</Subheading> : null}
-    <HeadingTitle>{heading}</HeadingTitle>
-    <Description>{description}</Description>
-  </div>
-);
+function HeadingInfo({ subheading, heading, description, ...props }) {
+  return (
+    <div {...props}>
+      {subheading ? <Subheading>{subheading}</Subheading> : null}
+      <HeadingTitle>{heading}</HeadingTitle>
+      <Description>{description}</Description>
+    </div>
+  );
+}

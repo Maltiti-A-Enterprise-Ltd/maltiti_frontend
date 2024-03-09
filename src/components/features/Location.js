@@ -1,11 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "../../components/misc/Headings.js";
-import { Container, ContentWithPaddingXl } from "../../components/misc/Layouts.js";
-import { ReactComponent as SvgDecoratorBlob3 } from "../../images/svg-decorator-blob-3.svg";
-import { GoogleMap, MarkerF, LoadScript } from "@react-google-maps/api";
+import React from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { GoogleMap, MarkerF, LoadScript } from '@react-google-maps/api';
+import { SectionHeading, Subheading as SubheadingBase } from '../misc/Headings';
+import { Container, ContentWithPaddingXl } from '../misc/Layouts';
+import { ReactComponent as SvgDecoratorBlob3 } from '../../images/svg-decorator-blob-3.svg';
 
 const Heading = tw(SectionHeading)``;
 const Subheading = tw(SubheadingBase)`text-center mb-3`;
@@ -23,12 +22,7 @@ const center = {
   lng: -0.88135407
 };
 
-export const Location = ({
-  heading = "",
-  subheading = "",
-  description = "",
-}) => {
-
+export function Location({ heading = '', subheading = '' }) {
   /*
    * This componets accepts a prop - `cards` which is an array of object denoting the cards. Each object in the cards array can have the following keys (Change it according to your need, you can also add more objects to have more cards in this feature component):
    *  1) imageSrc - the image shown at the top of the card
@@ -42,19 +36,13 @@ export const Location = ({
         {subheading && <Subheading>{subheading}</Subheading>}
         {heading && <Heading>{heading}</Heading>}
       </ContentWithPaddingXl>
-      <LoadScript
-        googleMapsApiKey="AIzaSyC7kp94PJXor3UxV6ThQRZeqmQRn7LaFao"
-      >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={14}
-        >
-          <MarkerF position={{ lat: 9.4778122, lng: -0.88135407}}/>
+      <LoadScript googleMapsApiKey="AIzaSyC7kp94PJXor3UxV6ThQRZeqmQRn7LaFao">
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
+          <MarkerF position={{ lat: 9.4778122, lng: -0.88135407 }} />
         </GoogleMap>
       </LoadScript>
 
       <DecoratorBlob />
     </Container>
   );
-};
+}
