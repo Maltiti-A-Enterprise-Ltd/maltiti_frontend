@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign,no-use-before-define */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "../../utility/axios";
+import axios, { axiosPrivate } from "../../utility/axios";
 import { SERVER_ERROR } from "../../utility/constants";
 import { setToast } from "../toast/toastSlice";
 
@@ -58,6 +58,26 @@ export const login = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (userData, { dispatch }) => {
+    try {
+      await axiosPrivate.post(`/authentication/invalidate-token`, userData);
+      dispatch(resetUser());
+      window.location.href = `/`;
+    } catch (error) {
+      dispatch(resetUser());
+      window.location.href = `/`;
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
+    }
+  },
+);
+
 export const verifying = createAsyncThunk(
   "user/verifying",
   async ({ id, token }) => {
@@ -78,6 +98,10 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       localStorage.setItem("$maltitiUser", JSON.stringify(action.payload));
       state.user = action.payload;
+    },
+    resetUser: (state) => {
+      localStorage.clear();
+      state.user = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -102,6 +126,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, resetUser } = userSlice.actions;
 
 export default userSlice.reducer;
