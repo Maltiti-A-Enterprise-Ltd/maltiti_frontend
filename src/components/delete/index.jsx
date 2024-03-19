@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { AiFillDelete } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
-import Swal from 'sweetalert2';
-import useAxiosPrivate from '../../utility/useAxiosPrivate';
+import { AiFillDelete } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import useAxiosPrivate from "../../utility/useAxiosPrivate";
 
 const DeleteAlert = (props) => {
   const axiosPrivate = useAxiosPrivate();
@@ -17,10 +17,10 @@ const DeleteAlert = (props) => {
     } catch (error) {
       // Return the error object to handle it in the calling function
       Swal.fire({
-        title: 'Error deleting product',
+        title: "Error deleting product",
         text: error,
-        icon: 'error',
-        confirmButtonColor: 'red'
+        icon: "error",
+        confirmButtonColor: "red",
       });
       return false;
     }
@@ -29,32 +29,32 @@ const DeleteAlert = (props) => {
   const handleDelete = async (id) => {
     try {
       const confirmed = await Swal.fire({
-        title: 'Are you sure?',
+        title: "Are you sure?",
         text: "You won't be able to revert this!",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: 'green',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "green",
+        confirmButtonText: "Yes, delete it!",
         preConfirm: async () => {
           Swal.showLoading();
           const result = await deleteProduct(id);
           if (result === true) {
             Swal.fire({
-              title: 'Deleted Successfully',
-              icon: 'success',
-              confirmButtonColor: 'green'
+              title: "Deleted Successfully",
+              icon: "success",
+              confirmButtonColor: "green",
             });
           } else {
             Swal.fire({
-              title: 'Error deleting product',
+              title: "Error deleting product",
               text: result.message,
-              icon: 'error',
-              confirmButtonColor: 'red'
+              icon: "error",
+              confirmButtonColor: "red",
             });
           }
         },
-        allowOutsideClick: () => !Swal.isLoading()
+        allowOutsideClick: () => !Swal.isLoading(),
       });
 
       if (!confirmed.isConfirmed) {
@@ -66,7 +66,10 @@ const DeleteAlert = (props) => {
   };
 
   return (
-    <button onClick={() => handleDelete(props.id)} className="text-green-100 hover:text-red-900">
+    <button
+      onClick={() => handleDelete(props.id)}
+      className="text-green-100 hover:text-red-900"
+    >
       <AiFillDelete />
     </button>
   );

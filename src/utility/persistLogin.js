@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import useRefreshToken from './useRefreshToken';
-import GrowingSpinner from '../components/spinner';
+import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import useRefreshToken from "./useRefreshToken";
+import GrowingSpinner from "../components/spinner";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);

@@ -1,5 +1,5 @@
-import React from 'react';
-import { GoPrimitiveDot } from 'react-icons/go';
+import React from "react";
+import { GoPrimitiveDot } from "react-icons/go";
 
 export function TableHead(props) {
   return (
@@ -9,11 +9,11 @@ export function TableHead(props) {
           <th
             key={head}
             scope="col"
-            className="px-6 py-5 text-xs font-semibold tracking-wider text-left text-gray-700">
+            className="px-6 py-5 text-xs font-semibold tracking-wider text-left text-gray-700"
+          >
             {head}
           </th>
         ))}
-        {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
         <th scope="col" className="relative px-6 py-3">
           <span className="sr-only" />
         </th>
@@ -24,7 +24,10 @@ export function TableHead(props) {
 
 export function TableDataImage(props) {
   return (
-    <td onClick={props.onClick} className="cursor-pointer px-6 py-4 whitespace-nowrap">
+    <td
+      onClick={props.onClick}
+      className="cursor-pointer px-6 py-4 whitespace-nowrap"
+    >
       <div className="flex items-center">
         <div className="flex-shrink-0 w-10 h-10">
           <img
@@ -42,14 +45,19 @@ export function TableDataImage(props) {
 }
 
 export function TableData(props) {
-  return <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">{props.name}</td>;
+  return (
+    <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+      {props.name}
+    </td>
+  );
 }
 
 export function TableStatus(props) {
   return (
     <td className="px-6 py-4 whitespace-nowrap">
       <span
-        className={`inline-flex items-center gap-x-1 px-4 py-2 text-xs leading-5 ${props.status === 'Active' ? 'text-[#027A48] bg-[#ECFDF3]' : 'text-[#B42318] bg-[#FEF3F2]'} rounded-full`}>
+        className={`inline-flex items-center gap-x-1 px-4 py-2 text-xs leading-5 ${props.status === "Active" ? "text-[#027A48] bg-[#ECFDF3]" : "text-[#B42318] bg-[#FEF3F2]"} rounded-full`}
+      >
         <span>
           <GoPrimitiveDot />
         </span>

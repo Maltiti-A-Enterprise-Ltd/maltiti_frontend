@@ -1,29 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components"; //eslint-disable-line
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
-import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import IconButton from "@mui/material/IconButton";
-import { MdClose } from "react-icons/md";
-import {
-  load,
-  setAuth,
-  setMessages,
-  setPersist,
-  unload,
-} from "../actions/index.js";
 import googleIconImageSrc from "../images/google-icon.png";
 import logo from "../images/logo.svg";
 import illustration from "../images/login-illustration.svg";
 import { Container as ContainerBase } from "../components/misc/Layouts";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 import { signUp } from "../features/user/userSlice";
+import {
+  confirmPasswordValidator,
+  emailValidator,
+  passwordValidator,
+  requiredValidator,
+} from "../utility/validator";
 
 const Container = tw(
   ContainerBase,
@@ -81,11 +75,46 @@ export function SignUp({
   SubmitButtonIcon = LoginIcon,
 }) {
   const status = useSelector((state) => state.user.status);
+  console.log(status, "status");
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const onSubmit = () => {
+    if (
+      name &&
+      email &&
+      password &&
+      confirmPassword &&
+      !passwordError &&
+      !nameError &&
+      !confirmPasswordError &&
+      !emailError
+    ) {
+      dispatch(
+        signUp({
+          name,
+          email,
+          password,
+          confirmPassword,
+          userType: "user",
+        }),
+      );
+    } else {
+      setNameError(requiredValidator(name));
+      setEmailError(emailValidator(email));
+      setPasswordError(passwordValidator(password));
+      setConfirmPasswordError(
+        confirmPasswordValidator(password, confirmPassword),
+      );
+    }
+  };
 
   return (
     <AnimationRevealPage>
@@ -98,79 +127,103 @@ export function SignUp({
             <MainContent>
               <Heading>{headingText}</Heading>
               <FormContainer>
-                <SocialButtonsContainer>
-                  {socialButtons.map((socialButton) => (
-                    <SocialButton key={socialButton} href={socialButton.url}>
-                      <span className="iconContainer">
-                        <img
-                          src={socialButton.iconImageSrc}
-                          className="icon"
-                          alt=""
-                        />
-                      </span>
-                      <span className="text">{socialButton.text}</span>
-                    </SocialButton>
-                  ))}
-                </SocialButtonsContainer>
+                {/*<SocialButtonsContainer>*/}
+                {/*  {socialButtons.map((socialButton) => (*/}
+                {/*    <SocialButton key={socialButton} href={socialButton.url}>*/}
+                {/*      <span className="iconContainer">*/}
+                {/*        <img*/}
+                {/*          src={socialButton.iconImageSrc}*/}
+                {/*          className="icon"*/}
+                {/*          alt=""*/}
+                {/*        />*/}
+                {/*      </span>*/}
+                {/*      <span className="text">{socialButton.text}</span>*/}
+                {/*    </SocialButton>*/}
+                {/*  ))}*/}
+                {/*</SocialButtonsContainer>*/}
                 <DividerTextContainer>
-                  <DividerText>Or Sign Up with your e-mail</DividerText>
+                  <DividerText>Sign Up with your e-mail</DividerText>
                 </DividerTextContainer>
-                <Form
-                  onSubmit={() =>
-                    dispatch(
-                      signUp({
-                        name,
-                        email,
-                        password,
-                        confirmPassword,
-                        userType: "user",
-                      }),
-                    )
-                  }
-                >
+                <div>
                   <Input
+                    className="capitalize"
                     type="text"
                     placeholder="Full Name"
                     value={name}
                     name="name"
-                    onChange={(event) => setName(event.target.value)}
-                    required
+                    onChange={(event) => {
+                      setName(event.target.value);
+                      if (nameError) {
+                        setNameError(requiredValidator(event.target.value));
+                      }
+                    }}
+                    onBlur={() => setNameError(requiredValidator(name))}
                   />
+                  <span className="text-xs text-red-700">{nameError}</span>
                   <Input
                     type="email"
                     placeholder="Email"
                     value={email}
                     name="email"
-                    onChange={(event) => setEmail(event.target.value)}
-                    required
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      if (emailError) {
+                        setEmailError(emailValidator(event.target.value));
+                      }
+                    }}
+                    onBlur={() => setEmailError(emailValidator(email))}
                   />
+                  <span className="text-xs text-red-700">{emailError}</span>
                   <Input
                     type="password"
                     placeholder="Password"
                     value={password}
                     name="password"
-                    onChange={(event) => setPassword(event.target.value)}
-                    required
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      if (passwordError) {
+                        setPasswordError(passwordValidator(event.target.value));
+                      }
+                    }}
+                    onBlur={() => setPasswordError(passwordValidator(password))}
                   />
+                  <span className="text-xs text-red-700">{passwordError}</span>
                   <Input
                     type="password"
                     placeholder="Confirm Password"
                     value={confirmPassword}
                     name="confirmPassword "
-                    onChange={(event) => setConfirmPassword(event.target.value)}
-                    required
+                    onChange={(event) => {
+                      setConfirmPassword(event.target.value);
+                      if (confirmPasswordError) {
+                        setConfirmPasswordError(
+                          confirmPasswordValidator(
+                            password,
+                            event.target.value,
+                          ),
+                        );
+                      }
+                    }}
+                    onBlur={() =>
+                      setConfirmPasswordError(
+                        confirmPasswordValidator(password, confirmPassword),
+                      )
+                    }
                   />
+                  <span className="text-xs text-red-700">
+                    {confirmPasswordError}
+                  </span>
                   {status === "loading" ? (
                     <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
                       <CircularProgress />
                     </Box>
                   ) : (
-                    <SubmitButton type="submit">
+                    <SubmitButton onClick={onSubmit}>
                       <SubmitButtonIcon className="icon" />
                       <span className="text">{submitButtonText}</span>
                     </SubmitButton>
                   )}
-                </Form>
+                </div>
                 <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
                   Already have an account?{" "}
                   <Link

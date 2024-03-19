@@ -1,8 +1,8 @@
 /* eslint-disable */
-import React from 'react';
-import tw from 'twin.macro';
-import { motion } from 'framer-motion';
-import useInView from './useInView';
+import React from "react";
+import tw from "twin.macro";
+import { motion } from "framer-motion";
+import useInView from "./useInView";
 
 const StyledDiv = tw.div`font-black min-h-screen text-green-500 p-8`;
 function AnimationReveal({ disabled, children }) {
@@ -13,10 +13,13 @@ function AnimationReveal({ disabled, children }) {
 
   if (!Array.isArray(children)) children = [children];
 
-  const directions = ['left', 'right'];
+  const directions = ["left", "right"];
   const childrenWithAnimation = children.map((child, i) => {
     return (
-      <AnimatedSlideInComponent key={i} direction={directions[i % directions.length]}>
+      <AnimatedSlideInComponent
+        key={i}
+        direction={directions[i % directions.length]}
+      >
         {child}
       </AnimatedSlideInComponent>
     );
@@ -24,13 +27,17 @@ function AnimationReveal({ disabled, children }) {
   return <>{childrenWithAnimation}</>;
 }
 
-function AnimatedSlideInComponent({ direction = 'left', offset = 30, children }) {
+function AnimatedSlideInComponent({
+  direction = "left",
+  offset = 30,
+  children,
+}) {
   const [ref, inView] = useInView({ margin: `-${offset}px 0px 0px 0px` });
 
-  const x = { target: '0%' };
+  const x = { target: "0%" };
 
-  if (direction === 'left') x.initial = '-150%';
-  else x.initial = '150%';
+  if (direction === "left") x.initial = "-150%";
+  else x.initial = "150%";
 
   return (
     <div ref={ref}>
@@ -39,10 +46,11 @@ function AnimatedSlideInComponent({ direction = 'left', offset = 30, children })
         animate={{
           x: inView && x.target,
           transitionEnd: {
-            x: inView && 0
-          }
+            x: inView && 0,
+          },
         }}
-        transition={{ type: 'spring', damping: 19 }}>
+        transition={{ type: "spring", damping: 19 }}
+      >
         {children}
       </motion.section>
     </div>

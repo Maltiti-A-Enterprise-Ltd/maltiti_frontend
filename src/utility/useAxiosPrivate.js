@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { axiosPrivate } from './axios';
-import useRefreshToken from './useRefreshToken';
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { axiosPrivate } from "./axios";
+import useRefreshToken from "./useRefreshToken";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
@@ -16,7 +16,7 @@ const useAxiosPrivate = () => {
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     const responseIntercept = axiosPrivate.interceptors.response.use(
@@ -31,7 +31,7 @@ const useAxiosPrivate = () => {
           return axiosPrivate(prevRequest);
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return () => {

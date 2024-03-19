@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isOpen: false,
   message: "",
-  type: "",
+  type: "info",
 };
 
 export const toastSlice = createSlice({
@@ -19,7 +19,6 @@ export const toastSlice = createSlice({
     },
     resetToast: (state, action) => {
       state.message = "";
-      state.type = "";
       state.isOpen = false;
     },
   },

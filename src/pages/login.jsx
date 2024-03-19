@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import tw from 'twin.macro';
-import styled from 'styled-components'; //eslint-disable-line
-import { ReactComponent as LoginIcon } from 'feather-icons/dist/icons/log-in.svg';
-import axios from 'axios';
-import { CircularProgress } from '@mui/material';
-import Box from '@mui/material/Box';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import { useSelector, useDispatch } from 'react-redux';
-import IconButton from '@mui/material/IconButton';
-import { MdClose } from 'react-icons/md';
-import { load, setAuth, setMessages, setPersist, unload } from '../actions/index.js';
-import googleIconImageSrc from '../images/google-icon.png';
-import logo from '../images/logo.svg';
-import illustration from '../images/login-illustration.svg';
-import { Container as ContainerBase } from '../components/misc/Layouts';
-import AnimationRevealPage from '../helpers/AnimationRevealPage.js';
+import React, { useEffect, useState } from "react";
+import tw from "twin.macro";
+import styled from "styled-components"; //eslint-disable-line
+import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+import axios from "axios";
+import { CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
+import { useLocation, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import { useSelector, useDispatch } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import { MdClose } from "react-icons/md";
+import {
+  load,
+  setAuth,
+  setMessages,
+  setPersist,
+  unload,
+} from "../actions/index.js";
+import googleIconImageSrc from "../images/google-icon.png";
+import logo from "../images/logo.svg";
+import illustration from "../images/login-illustration.svg";
+import { Container as ContainerBase } from "../components/misc/Layouts";
+import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
 
-const Container = tw(ContainerBase)`min-h-fit text-white font-medium flex justify-center -m-8`;
+const Container = tw(
+  ContainerBase,
+)`min-h-fit text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
@@ -58,20 +66,20 @@ const IllustrationImage = styled.div`
   ${tw`w-full max-w-sm m-12 bg-center bg-no-repeat bg-contain xl:m-16`}
 `;
 export function Login({
-  logoLinkUrl = '#',
+  logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = 'Sign In To Maltiti',
+  headingText = "Sign In To Maltiti",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: 'Sign In With Google',
-      url: 'https://google.com'
-    }
+      text: "Sign In With Google",
+      url: "https://google.com",
+    },
   ],
-  submitButtonText = 'Sign In',
+  submitButtonText = "Sign In",
   SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = '#',
-  signupUrl = '#'
+  forgotPasswordUrl = "#",
+  signupUrl = "#",
 }) {
   const spinner = useSelector((state) => state.spinner);
   const message = useSelector((state) => state.messages);
@@ -79,11 +87,11 @@ export function Login({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const fromAdmin = location.state?.from?.pathname || '/admin/home';
-  const from = location.state?.from?.pathname || '/customer';
+  const fromAdmin = location.state?.from?.pathname || "/admin/home";
+  const from = location.state?.from?.pathname || "/customer";
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -95,21 +103,21 @@ export function Login({
         `${process.env.REACT_APP_BACKEND_URL}/api/login`,
         JSON.stringify(data),
         {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        },
       );
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles;
       dispatch(setAuth({ roles, accessToken }));
-      if (roles.includes('ROLE_SUPER_ADMIN' || 'ROLE_ADMIN')) {
+      if (roles.includes("ROLE_SUPER_ADMIN" || "ROLE_ADMIN")) {
         navigate(fromAdmin, { replace: true });
       } else {
         navigate(from, { replace: true });
       }
     } catch (error) {
       if (!error.response) {
-        dispatch(setMessages('Oops! Server Error'));
+        dispatch(setMessages("Oops! Server Error"));
       } else {
         dispatch(setMessages(error.response.data.message));
       }
@@ -123,7 +131,7 @@ export function Login({
   };
 
   useEffect(() => {
-    localStorage.setItem('persist', persist);
+    localStorage.setItem("persist", persist);
   }, [persist]);
 
   return (
@@ -141,7 +149,11 @@ export function Login({
                   {socialButtons.map((socialButton) => (
                     <SocialButton key={socialButton} href={socialButton.url}>
                       <span className="iconContainer">
-                        <img src={socialButton.iconImageSrc} className="icon" alt="" />
+                        <img
+                          src={socialButton.iconImageSrc}
+                          className="icon"
+                          alt=""
+                        />
                       </span>
                       <span className="text">{socialButton.text}</span>
                     </SocialButton>
@@ -152,7 +164,7 @@ export function Login({
                 </DividerTextContainer>
                 <Form onSubmit={handleSubmit}>
                   {message ? (
-                    <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Stack sx={{ width: "100%" }} spacing={2}>
                       <Alert
                         severity="error"
                         action={
@@ -161,11 +173,13 @@ export function Login({
                             color="inherit"
                             size="small"
                             onClick={() => {
-                              dispatch(setMessages(''));
-                            }}>
+                              dispatch(setMessages(""));
+                            }}
+                          >
                             <MdClose />
                           </IconButton>
-                        }>
+                        }
+                      >
                         {message}
                       </Alert>
                     </Stack>
@@ -189,7 +203,7 @@ export function Login({
                     required
                   />
                   {spinner ? (
-                    <Box sx={{ textAlign: 'center', marginTop: '1rem' }}>
+                    <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
                       <CircularProgress />
                     </Box>
                   ) : (
@@ -213,13 +227,19 @@ export function Login({
                 </Form>
 
                 <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
-                  <a href={forgotPasswordUrl} className="border- border-green-500 border-dotted">
+                  <a
+                    href={forgotPasswordUrl}
+                    className="border- border-green-500 border-dotted"
+                  >
                     Forgot Password ?
                   </a>
                 </p>
                 <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
-                  Dont have an account?{' '}
-                  <a href={signupUrl} className="border-b border-green-100 border-dotted">
+                  Dont have an account?{" "}
+                  <a
+                    href={signupUrl}
+                    className="border-b border-green-100 border-dotted"
+                  >
                     Sign Up
                   </a>
                 </p>

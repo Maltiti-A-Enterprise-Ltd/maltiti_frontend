@@ -1,12 +1,15 @@
 /* eslint-disable react/no-unknown-property */
-import React from 'react';
-import tw from 'twin.macro';
-import styled from 'styled-components';
-import { css } from 'styled-components/macro'; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from '../misc/Headings.js';
-import { PrimaryButton as PrimaryButtonBase } from '../misc/Buttons.js';
-import StatsIllustrationSrc from '../../images/stats-illustration.svg';
-import { ReactComponent as SvgDotPattern } from '../../images/dot-pattern.svg';
+import React from "react";
+import tw from "twin.macro";
+import styled from "styled-components";
+import { css } from "styled-components/macro"; //eslint-disable-line
+import {
+  SectionHeading,
+  Subheading as SubheadingBase,
+} from "../misc/Headings.js";
+import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons.js";
+import StatsIllustrationSrc from "../../images/stats-illustration.svg";
+import { ReactComponent as SvgDotPattern } from "../../images/dot-pattern.svg";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -14,18 +17,20 @@ const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
 const ImageColumn = tw(Column)`md:w-5/12 flex-shrink-0 h-80 md:h-auto relative`;
 const TextColumn = styled(Column)((props) => [
   tw`md:w-7/12 mt-16 md:mt-0`,
-  props.textOnLeft ? tw`md:mr-12 lg:mr-16 md:order-first` : tw`md:ml-12 lg:ml-16 md:order-last`
+  props.textOnLeft
+    ? tw`md:mr-12 lg:mr-16 md:order-first`
+    : tw`md:ml-12 lg:ml-16 md:order-last`,
 ]);
 
 const Image = styled.div((props) => [
   `background-image: url("${props.imageSrc}");`,
-  tw`rounded bg-contain bg-no-repeat bg-center h-full`
+  tw`rounded bg-contain bg-no-repeat bg-center h-full`,
 ]);
 const TextContent = tw.div`lg:py-8 text-center md:text-left`;
 
 const Subheading = tw(SubheadingBase)`text-center md:text-left`;
 const Heading = tw(
-  SectionHeading
+  SectionHeading,
 )`mt-4 font-black text-left text-3xl sm:text-4xl lg:text-5xl text-center md:text-left leading-tight`;
 const Description = tw.p`mt-4 text-center md:text-left text-sm md:text-base lg:text-lg font-medium leading-relaxed text-secondary-100`;
 
@@ -34,22 +39,25 @@ const Statistic = tw.div`text-left sm:inline-block sm:mr-12 last:mr-0 mt-4`;
 const Value = tw.div`font-bold text-lg sm:text-xl lg:text-2xl text-secondary-500 tracking-wide`;
 const Key = tw.div`font-medium text-primary-700`;
 
-const PrimaryButton = tw(PrimaryButtonBase)`mt-8 md:mt-10 text-sm inline-block mx-auto md:mx-0`;
+const PrimaryButton = tw(
+  PrimaryButtonBase,
+)`mt-8 md:mt-10 text-sm inline-block mx-auto md:mx-0`;
 
 const DecoratorBlob = styled(SvgDotPattern)(() => [
-  tw`w-20 h-20 absolute right-0 bottom-0 transform translate-x-1/2 translate-y-1/2 fill-green-100 text-green-500 -z-10`
+  tw`w-20 h-20 absolute right-0 bottom-0 transform translate-x-1/2 translate-y-1/2 fill-green-100 text-green-500 -z-10`,
 ]);
 
 export default function ({
-  subheading = 'Our Track Record',
+  subheading = "Our Track Record",
   heading = (
     <>
-      We have been doing this <wbr /> since <span tw="text-green-500">1999.</span>
+      We have been doing this <wbr /> since{" "}
+      <span tw="text-green-500">1999.</span>
     </>
   ),
-  description = 'The unparalled quality of all our products speaks for itself. We are not just a profit based company, but helping rural women and communities is our priority as well hence buying from us goes a long way to help people',
-  primaryButtonText = 'Learn More',
-  primaryButtonUrl = '#',
+  description = "The unparalled quality of all our products speaks for itself. We are not just a profit based company, but helping rural women and communities is our priority as well hence buying from us goes a long way to help people",
+  primaryButtonText = "Learn More",
+  primaryButtonUrl = "#",
   imageSrc = StatsIllustrationSrc,
   imageCss = null,
   imageContainerCss = null,
@@ -57,23 +65,23 @@ export default function ({
   imageDecoratorBlobCss = null,
   imageInsideDiv = true,
   statistics = null,
-  textOnLeft = false
+  textOnLeft = false,
 }) {
   // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
   // Change the statistics variable as you like, add or delete objects
   const defaultStatistics = [
     {
-      key: 'Clients',
-      value: '2282+'
+      key: "Clients",
+      value: "2282+",
     },
     {
-      key: 'Projects',
-      value: '3891+'
+      key: "Projects",
+      value: "3891+",
     },
     {
-      key: 'Awards',
-      value: '1000+'
-    }
+      key: "Awards",
+      value: "1000+",
+    },
   ];
 
   if (!statistics) statistics = defaultStatistics;

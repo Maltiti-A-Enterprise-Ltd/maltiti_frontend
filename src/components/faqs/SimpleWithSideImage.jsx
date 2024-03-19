@@ -1,11 +1,11 @@
 /* eslint-disable */
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import tw from 'twin.macro';
-import styled from 'styled-components';
-import { ReactComponent as PlusIcon } from 'feather-icons/dist/icons/plus.svg';
-import { ReactComponent as MinusIcon } from 'feather-icons/dist/icons/minus.svg';
-import { SectionHeading, Subheading as SubheadingBase } from '../misc/Headings';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import tw from "twin.macro";
+import styled from "styled-components";
+import { ReactComponent as PlusIcon } from "feather-icons/dist/icons/plus.svg";
+import { ReactComponent as MinusIcon } from "feather-icons/dist/icons/minus.svg";
+import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
@@ -17,7 +17,7 @@ const Image = styled.div((props) => [
   `background-image: url("${props.imageSrc}");`,
   props.imageContain ? tw`bg-contain bg-no-repeat` : tw`bg-cover`,
   props.imageShadow ? tw`shadow` : tw`shadow-none`,
-  tw`hidden lg:block rounded h-144 bg-center`
+  tw`hidden lg:block rounded h-144 bg-center`,
 ]);
 
 const FAQContent = tw.div`lg:ml-12`;
@@ -36,17 +36,17 @@ const QuestionToggleIcon = styled.span`
   }
 `;
 const Answer = motion(
-  tw.dd`pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed`
+  tw.dd`pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed`,
 );
 
 export default function ({
-  subheading = '',
-  heading = 'Questions',
-  description = 'Here are some frequently asked questions about our products and services from our loving customers. Should you have any other questions, feel free to reach out via the contact form below.',
-  imageSrc = 'https://images.unsplash.com/photo-1579427421635-a0015b804b2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80',
+  subheading = "",
+  heading = "Questions",
+  description = "Here are some frequently asked questions about our products and services from our loving customers. Should you have any other questions, feel free to reach out via the contact form below.",
+  imageSrc = "https://images.unsplash.com/photo-1579427421635-a0015b804b2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
   imageContain = false,
   imageShadow = true,
-  faqs = null
+  faqs = null,
 }) {
   /*
    * You can modify FAQs either by modifying the below defaultFaqs array or by passing a custom array of FAQs using
@@ -54,22 +54,23 @@ export default function ({
    */
   const defaultFaqs = [
     {
-      question: 'Are your products organic?',
+      question: "Are your products organic?",
       answer:
-        'Yes, All our products are naturally made or processed organically. We also possess an ecocert certification'
+        "Yes, All our products are naturally made or processed organically. We also possess an ecocert certification",
     },
     {
-      question: 'Where are you located?',
-      answer: 'Malshegu, behind star fuel station on the Kumbungu Road.'
+      question: "Where are you located?",
+      answer: "Malshegu, behind star fuel station on the Kumbungu Road.",
     },
     {
-      question: 'Are your products certified ?',
-      answer: 'Yes, our products are certified by FDA, GSA and other necessary certifications'
+      question: "Are your products certified ?",
+      answer:
+        "Yes, our products are certified by FDA, GSA and other necessary certifications",
     },
     {
-      question: 'Can you ship in Ghana as well as across the globe?',
-      answer: 'We ship to every corner of Ghana and the world at large.'
-    }
+      question: "Can you ship in Ghana as well as across the globe?",
+      answer: "We ship to every corner of Ghana and the world at large.",
+    },
   ];
 
   if (!faqs || faqs.length === 0) faqs = defaultFaqs;
@@ -86,7 +87,11 @@ export default function ({
       <Content>
         <TwoColumn>
           <Column tw="hidden lg:block w-5/12 flex-shrink-0">
-            <Image imageContain={imageContain} imageShadow={imageShadow} imageSrc={imageSrc} />
+            <Image
+              imageContain={imageContain}
+              imageShadow={imageShadow}
+              imageSrc={imageSrc}
+            />
           </Column>
           <Column>
             <FAQContent>
@@ -100,21 +105,32 @@ export default function ({
                     onClick={() => {
                       toggleQuestion(index);
                     }}
-                    className="group">
+                    className="group"
+                  >
                     <Question>
                       <QuestionText>{faq.question}</QuestionText>
                       <QuestionToggleIcon>
-                        {activeQuestionIndex === index ? <MinusIcon /> : <PlusIcon />}
+                        {activeQuestionIndex === index ? (
+                          <MinusIcon />
+                        ) : (
+                          <PlusIcon />
+                        )}
                       </QuestionToggleIcon>
                     </Question>
                     <Answer
                       variants={{
-                        open: { opacity: 1, height: 'auto', marginTop: '16px' },
-                        collapsed: { opacity: 0, height: 0, marginTop: '0px' }
+                        open: { opacity: 1, height: "auto", marginTop: "16px" },
+                        collapsed: { opacity: 0, height: 0, marginTop: "0px" },
                       }}
                       initial="collapsed"
-                      animate={activeQuestionIndex === index ? 'open' : 'collapsed'}
-                      transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}>
+                      animate={
+                        activeQuestionIndex === index ? "open" : "collapsed"
+                      }
+                      transition={{
+                        duration: 0.3,
+                        ease: [0.04, 0.62, 0.23, 0.98],
+                      }}
+                    >
                       {faq.answer}
                     </Answer>
                   </FAQ>

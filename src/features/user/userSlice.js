@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../utility/axios";
 import { SERVER_ERROR } from "../../utility/constants";
+import { setToast } from "../toast/toastSlice";
 
 const initialState = {
   status: "idle",
@@ -13,15 +14,38 @@ export const signUp = createAsyncThunk(
   async (userData, { dispatch }) => {
     try {
       const response = await axios.post(
-        `/products/all-products?page`,
+        `/authentication/customer-signup`,
         userData,
       );
-      dispatch(setUser(response.data.data));
+      dispatch(
+        setToast({
+          type: "success",
+          message: response.data.message,
+        }),
+      );
     } catch (error) {
-      dispatch(setError(error.error.message || SERVER_ERROR));
+      console.log("error", error);
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.error || SERVER_ERROR,
+        }),
+      );
     }
   },
 );
+
+export const verifying = createAsyncThunk(
+  "user/verifying",
+  async ({ id, token }) => {
+    try {
+      return await axios.get(`/authentication/verify/${id}/${token}`);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,

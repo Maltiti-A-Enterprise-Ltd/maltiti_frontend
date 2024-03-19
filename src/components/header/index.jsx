@@ -1,17 +1,17 @@
 /* eslint-disable */
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import tw from 'twin.macro';
-import styled from 'styled-components';
-import { css } from 'styled-components/macro'; //eslint-disable-line
-import { Transition } from '@headlessui/react';
-import { ReactComponent as MenuIcon } from 'feather-icons/dist/icons/menu.svg';
-import { ReactComponent as CloseIcon } from 'feather-icons/dist/icons/x.svg';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { Link, useLocation } from 'react-router-dom';
-import logo from '../../images/logo.svg';
-import useAnimatedNavToggler from '../../helpers/useAnimatedNavToggler.js';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import tw from "twin.macro";
+import styled from "styled-components";
+import { css } from "styled-components/macro"; //eslint-disable-line
+import { Transition } from "@headlessui/react";
+import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
+import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import AnchorLink from "react-anchor-link-smooth-scroll";
+import { Link, useLocation } from "react-router-dom";
+import logo from "../../images/logo.svg";
+import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -61,12 +61,12 @@ export function NavBar({
   logoLink,
   links,
   className,
-  collapseBreakpointClass = 'lg'
+  collapseBreakpointClass = "lg",
 }) {
   const location = useLocation();
   const defaultLinks = [
     <NavLinks key={1}>
-      {location.pathname === '/' ? (
+      {location.pathname === "/" ? (
         <>
           <NavLink>
             <AnchorLink href="#about">About</AnchorLink>
@@ -99,11 +99,12 @@ export function NavBar({
       <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} href="/signup">
         Sign Up
       </PrimaryLink>
-    </NavLinks>
+    </NavLinks>,
   ];
 
   const { showNavLinks, animation, toggleNavbar } = useAnimatedNavToggler();
-  const collapseBreakpointCss = collapseBreakPointCssMap[collapseBreakpointClass];
+  const collapseBreakpointCss =
+    collapseBreakPointCssMap[collapseBreakpointClass];
 
   const defaultLogoLink = (
     <LogoLink href="/login">
@@ -124,28 +125,45 @@ export function NavBar({
   return (
     <Header
       className={
-        className || 'header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32'
-      }>
+        className ||
+        "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"
+      }
+    >
       <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
         {links}
       </DesktopNavLinks>
-      <MobileNavLinksContainer css={collapseBreakpointCss.mobileNavLinksContainer}>
+      <MobileNavLinksContainer
+        css={collapseBreakpointCss.mobileNavLinksContainer}
+      >
         {logoLink}
         <MobileNavLinks
-          initial={{ x: '150%', display: 'none' }}
+          initial={{ x: "150%", display: "none" }}
           animate={animation}
-          css={collapseBreakpointCss.mobileNavLinks}>
+          css={collapseBreakpointCss.mobileNavLinks}
+        >
           {links}
         </MobileNavLinks>
-        <NavToggle onClick={toggleNavbar} className={showNavLinks ? 'open' : 'closed'}>
-          {showNavLinks ? <CloseIcon tw="w-6 h-6" /> : <MenuIcon tw="w-6 h-6" />}
+        <NavToggle
+          onClick={toggleNavbar}
+          className={showNavLinks ? "open" : "closed"}
+        >
+          {showNavLinks ? (
+            <CloseIcon tw="w-6 h-6" />
+          ) : (
+            <MenuIcon tw="w-6 h-6" />
+          )}
         </NavToggle>
       </MobileNavLinksContainer>
-      <NavLink href="#g" className="mr-[5%] flex border-none" onClick={toggleCart}>
+      <NavLink
+        href="#g"
+        className="mr-[5%] flex border-none"
+        onClick={toggleCart}
+      >
         <span
           aria-hidden="true"
-          className="text-center leading-tight inline-block w-5 h-5 transform translate-x-12 translate-y-0 bg-red-600 rounded-full">
+          className="text-center leading-tight inline-block w-5 h-5 transform translate-x-12 translate-y-0 bg-red-600 rounded-full"
+        >
           0
         </span>
         <AiOutlineShoppingCart size={40} />
@@ -164,13 +182,17 @@ export function NavBar({
         >
           <div className="flex items-center justify-between flex-shrink-0 p-2 ml-[2%]">
             <h6 className="p-2 text-lg">Your cart</h6>
-            <button className="p-2 rounded-md focus:outline-none focus:ring" onClick={toggleCart}>
+            <button
+              className="p-2 rounded-md focus:outline-none focus:ring"
+              onClick={toggleCart}
+            >
               <svg
                 className="w-6 h-6 text-gray-600 hover:text-red-600"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -199,21 +221,21 @@ const collapseBreakPointCssMap = {
   sm: {
     mobileNavLinks: tw`sm:hidden`,
     desktopNavLinks: tw`sm:flex`,
-    mobileNavLinksContainer: tw`sm:hidden`
+    mobileNavLinksContainer: tw`sm:hidden`,
   },
   md: {
     mobileNavLinks: tw`md:hidden`,
     desktopNavLinks: tw`md:flex`,
-    mobileNavLinksContainer: tw`md:hidden`
+    mobileNavLinksContainer: tw`md:hidden`,
   },
   lg: {
     mobileNavLinks: tw`lg:hidden`,
     desktopNavLinks: tw`lg:flex`,
-    mobileNavLinksContainer: tw`lg:hidden`
+    mobileNavLinksContainer: tw`lg:hidden`,
   },
   xl: {
     mobileNavLinks: tw`lg:hidden`,
     desktopNavLinks: tw`lg:flex`,
-    mobileNavLinksContainer: tw`lg:hidden`
-  }
+    mobileNavLinksContainer: tw`lg:hidden`,
+  },
 };

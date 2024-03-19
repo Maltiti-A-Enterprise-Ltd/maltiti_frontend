@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { resetToast } from "./features/toast/toastSlice";
+import Results from "./components/results";
+import LoadingPage from "./components/loadingPage";
 
 function App() {
   const message = useSelector((state) => state.toast.message);
@@ -26,8 +28,9 @@ function App() {
     <div className="App">
       <Snackbar
         open={isOpen}
-        autoHideDuration={6000}
+        autoHideDuration={10000}
         onClose={() => dispatch(resetToast())}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={() => dispatch(resetToast())}
@@ -43,6 +46,15 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
+          <Route path="verify/:id/:token" element={<LoadingPage />} />
+          <Route
+            path="/verification-success"
+            element={<Results type={"success"} />}
+          />
+          <Route
+            path="/verification-error"
+            element={<Results type={"error"} />}
+          />
           {/* login routes */}
           <Route
             path="/login"

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import './index.css';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Skeleton } from '@mui/material';
-import { getProduct } from '../../features/shop/shopSlice';
-import { convertGramUnits } from '../../utility/unitConverter';
+import React, { useEffect } from "react";
+import "./index.css";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Skeleton } from "@mui/material";
+import { getProduct } from "../../features/shop/shopSlice";
+import { convertGramUnits } from "../../utility/unitConverter";
 
 function ProductDetails() {
   const dispatch = useDispatch();
@@ -18,15 +18,20 @@ function ProductDetails() {
   return (
     <main className="container">
       <div className="left-column">
-        {status === 'loading' ? (
-          <Skeleton variant="rectangular" className="mt-32" width="100%" height={400} />
+        {status === "loading" ? (
+          <Skeleton
+            variant="rectangular"
+            className="mt-32"
+            width="100%"
+            height={400}
+          />
         ) : (
           <img className="active" src={product.image} alt="" />
         )}
       </div>
       <div className="right-column">
         <div className="product-description">
-          {status === 'loading' ? (
+          {status === "loading" ? (
             <>
               <Skeleton variant="text" width="40%" height={15} />
               <Skeleton variant="text" width="60%" height={30} />
@@ -42,24 +47,25 @@ function ProductDetails() {
         </div>
         <div className="product-configuration">
           <div className="product-color">
-            {status === 'loading' ? (
+            {status === "loading" ? (
               <Skeleton variant="text" width="30%" height={15} />
             ) : (
               <span>Weight</span>
             )}
 
             <div className="color-choose">
-              {status === 'loading' ? (
+              {status === "loading" ? (
                 <Skeleton variant="text" width="30%" height={15} />
               ) : (
                 <span>
-                  {String(product.size).toUpperCase()} ({convertGramUnits(product.weight)})
+                  {String(product.size).toUpperCase()} (
+                  {convertGramUnits(product.weight)})
                 </span>
               )}
             </div>
           </div>
           <div className="cable-config">
-            {status === 'loading' ? (
+            {status === "loading" ? (
               <>
                 <Skeleton variant="text" width="30%" height={15} />
                 <Skeleton variant="text" width="80%" height={40} />
@@ -68,7 +74,7 @@ function ProductDetails() {
               <>
                 <span className="mb-2">Ingredients</span>
                 <div className="cable-choose">
-                  {product.ingredients?.split(',').map((ingredient) => (
+                  {product.ingredients?.split(",").map((ingredient) => (
                     <button key={ingredient}>{ingredient}</button>
                   ))}
                 </div>
@@ -77,7 +83,7 @@ function ProductDetails() {
             )}
           </div>
         </div>
-        {status === 'loading' ? (
+        {status === "loading" ? (
           <Skeleton variant="text" width="80%" height={50} />
         ) : (
           <div className="product-price">

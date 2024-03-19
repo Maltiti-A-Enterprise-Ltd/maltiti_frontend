@@ -1,8 +1,8 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiArrowLeftCircle } from 'react-icons/fi';
-import logo from '../../images/logo.svg';
-import missing from '../../images/404.svg';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FiArrowLeftCircle } from "react-icons/fi";
+import logo from "../../images/logo.svg";
+import missing from "../../images/404.svg";
 
 function Missing() {
   const navigate = useNavigate();
@@ -26,7 +26,8 @@ function Missing() {
             <div className="mb-20 md:mb-0">
               <button
                 onClick={goBack}
-                className="text-xl outline-none transform transition-all flex hover:scale-100 text-green-500 hover:text-black gap-x-2">
+                className="text-xl outline-none transform transition-all flex hover:scale-100 text-green-500 hover:text-black gap-x-2"
+              >
                 <FiArrowLeftCircle className="self-center" /> Go back
               </button>
             </div>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Skeleton, Snackbar } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import Alert from '@mui/material/Alert';
-import { Link } from 'react-router-dom';
-import { NavBar } from '../components/header';
-import AnimationRevealPage from '../helpers/AnimationRevealPage';
-import Footer from '../components/footers/MiniCenteredFooter';
+import React, { useEffect, useState } from "react";
+import { Container, Skeleton, Snackbar } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import Alert from "@mui/material/Alert";
+import { Link } from "react-router-dom";
+import { NavBar } from "../components/header";
+import AnimationRevealPage from "../helpers/AnimationRevealPage";
+import Footer from "../components/footers/MiniCenteredFooter";
 import {
   Card,
   CardButton,
@@ -22,21 +22,25 @@ import {
   HeaderRow,
   HighlightedText,
   TabControl,
-  TabsControl
-} from '../components/styleTW';
-import { Header } from '../components/misc/Headings';
-import { ContentWithPaddingXl } from '../components/misc/Layouts';
-import { ReactComponent as StarIcon } from '../images/star-icon.svg';
-import { getProducts, toggleShowError, updateCurrentPage } from '../features/shop/shopSlice';
-import { convertGramUnits } from '../utility/unitConverter';
+  TabsControl,
+} from "../components/styleTW";
+import { Header } from "../components/misc/Headings";
+import { ContentWithPaddingXl } from "../components/misc/Layouts";
+import { ReactComponent as StarIcon } from "../images/star-icon.svg";
+import {
+  getProducts,
+  toggleShowError,
+  updateCurrentPage,
+} from "../features/shop/shopSlice";
+import { convertGramUnits } from "../utility/unitConverter";
 
 function Shop() {
   const tabs = [
-    { name: 'All', value: '' },
-    { name: 'Shea butter', value: 'shea butter' },
-    { name: 'Soap', value: 'soap' },
-    { name: 'Essential Oils', value: 'essential oil' },
-    { name: 'Others', value: 'others' }
+    { name: "All", value: "" },
+    { name: "Shea butter", value: "shea butter" },
+    { name: "Soap", value: "soap" },
+    { name: "Essential Oils", value: "essential oil" },
+    { name: "Others", value: "others" },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].value);
   const products = useSelector((state) => state.shop.products);
@@ -51,8 +55,8 @@ function Shop() {
       getProducts({
         category: activeTab,
         page: currentPage,
-        searchTerm: ''
-      })
+        searchTerm: "",
+      }),
     );
   }, [currentPage, activeTab]);
 
@@ -61,16 +65,16 @@ function Shop() {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     if (scrollY + windowHeight >= documentHeight - 250) {
-      if (currentPage < totalPages && status !== 'loading') {
+      if (currentPage < totalPages && status !== "loading") {
         dispatch(updateCurrentPage(currentPage + 1));
       }
     }
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [totalPages, status]);
 
@@ -79,12 +83,14 @@ function Shop() {
       <Snackbar
         open={showError}
         autoHideDuration={6000}
-        onClose={() => dispatch(toggleShowError(''))}>
+        onClose={() => dispatch(toggleShowError(""))}
+      >
         <Alert
-          onClose={() => dispatch(toggleShowError(''))}
+          onClose={() => dispatch(toggleShowError(""))}
           severity="error"
           variant="filled"
-          sx={{ width: '100%' }}>
+          sx={{ width: "100%" }}
+        >
           {errorMessage}
         </Alert>
       </Snackbar>
@@ -105,7 +111,8 @@ function Shop() {
                     <TabControl
                       key={tab.value}
                       active={activeTab === tab.value}
-                      onClick={() => setActiveTab(tab.value)}>
+                      onClick={() => setActiveTab(tab.value)}
+                    >
                       {tab.name}
                     </TabControl>
                   ))}
@@ -113,13 +120,17 @@ function Shop() {
               </HeaderRow>
             </div>
             <div className="mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12">
-              {status === 'loading' && !products.length
+              {status === "loading" && !products.length
                 ? Array.from({ length: 8 }).map((item) => (
                     // eslint-disable-next-line react/no-array-index-key
                     <CardContainer key={item}>
                       <Card className="group">
                         <CardImageContainer>
-                          <Skeleton variant="rectangular" width="100%" height={200} />
+                          <Skeleton
+                            variant="rectangular"
+                            width="100%"
+                            height={200}
+                          />
                         </CardImageContainer>
                         <CardText>
                           <Skeleton variant="text" width="80%" height={20} />
@@ -137,7 +148,8 @@ function Shop() {
                         href="#"
                         initial="rest"
                         whileHover="hover"
-                        animate="rest">
+                        animate="rest"
+                      >
                         <CardImageContainer imageSrc={product.image}>
                           <img
                             className="h-56 xl:h-64 bg-center bg-contain relative w-full rounded-t"
@@ -155,14 +167,15 @@ function Shop() {
                             variants={{
                               hover: {
                                 opacity: 1,
-                                height: 'auto'
+                                height: "auto",
                               },
                               rest: {
                                 opacity: 0,
-                                height: 0
-                              }
+                                height: 0,
+                              },
                             }}
-                            transition={{ duration: 0.3 }}>
+                            transition={{ duration: 0.3 }}
+                          >
                             <CardButton>Add to Cart</CardButton>
                             <br />
                             <CardButton type="button">
@@ -173,8 +186,8 @@ function Shop() {
                         <CardText>
                           <CardTitle>{product.name}</CardTitle>
                           <CardContent>
-                            {String(product.size).toUpperCase()} ({convertGramUnits(product.weight)}
-                            )
+                            {String(product.size).toUpperCase()} (
+                            {convertGramUnits(product.weight)})
                           </CardContent>
                           <CardPrice>GH₵ {product.retail}</CardPrice>
                           {/* <CardPrice>Retail: GH₵ {card.price_retail}</CardPrice> */}
