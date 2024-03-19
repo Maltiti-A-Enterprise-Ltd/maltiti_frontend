@@ -1,19 +1,19 @@
-import React from 'react';
-import tw from 'twin.macro';
-import styled from 'styled-components';
-import { AiFillInstagram } from 'react-icons/ai';
-import { MdEmail } from 'react-icons/md';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { Container as ContainerBase } from '../misc/Layouts.js';
-import logo from '../../images/logo.svg';
-import { ReactComponent as FacebookIcon } from '../../images/facebook-icon.svg';
-import { ReactComponent as LinkedInIcon } from '../../images/linkedin-icon.svg';
-import { email, facebook, instagram, linkedin } from '../constants/index.js';
+import React from "react";
+import tw from "twin.macro";
+import styled from "styled-components";
+import { AiFillInstagram } from "react-icons/ai";
+import { MdEmail } from "react-icons/md";
+import AnchorLink from "react-anchor-link-smooth-scroll";
+import { Container as ContainerBase } from "../misc/Layouts.js";
+import logo from "../../images/logo.svg";
+import { ReactComponent as FacebookIcon } from "../../images/facebook-icon.svg";
+import { ReactComponent as LinkedInIcon } from "../../images/linkedin-icon.svg";
+import { email, facebook, instagram, linkedin } from "../constants/index.js";
 
 const Container = tw(ContainerBase)`bg-gray-100 text-gray-100 -mx-8 -mb-8`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 const date = new Date();
-const year = date.toLocaleString('en-us', { year: 'numeric' });
+const year = date.toLocaleString("en-us", { year: "numeric" });
 
 const Row = tw.div`flex items-center justify-center flex-col px-8`;
 
@@ -74,7 +74,8 @@ export default function () {
             </SocialLink>
           </SocialLinksContainer>
           <CopyrightText>
-            &copy; Copyright {year}, Maltiti A. Enterprise Limited. All Rights Reserved.
+            &copy; Copyright {year}, Maltiti A. Enterprise Limited. All Rights
+            Reserved.
           </CopyrightText>
         </Row>
       </Content>

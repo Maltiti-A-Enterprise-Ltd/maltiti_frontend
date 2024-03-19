@@ -1,31 +1,60 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import React from 'react';
-import Home from './pages/home';
-import { Login } from './pages/login';
-import Dashboard from './pages/adminDashboard';
-import Missing from './components/missing';
-import Unauthorized from './components/unauthorized';
-import RequireAuth from './utility/requiredAuth';
-import Customer from './pages/userDashboard';
-import PersistLogin from './utility/persistLogin';
-import Shop from './pages/shop';
-import Product from './pages/product';
-
-const ROLES = {
-  user: 'ROLE_USER',
-  admin: 'ROLE_ADMIN',
-  superAdmin: 'ROLE_SUPER_ADMIN'
-};
+import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+import Home from "./pages/home";
+import { Login } from "./pages/login";
+import Dashboard from "./pages/adminDashboard";
+import Missing from "./components/missing";
+import Unauthorized from "./components/unauthorized";
+import RequireAuth from "./utility/requiredAuth";
+import Customer from "./pages/userDashboard";
+import PersistLogin from "./utility/persistLogin";
+import Shop from "./pages/shop";
+import Product from "./pages/product";
+import { SignUp } from "./pages/signUp";
+import { useDispatch, useSelector } from "react-redux";
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import { resetToast } from "./features/toast/toastSlice";
+import Results from "./components/results";
+import LoadingPage from "./components/loadingPage";
 
 function App() {
+  const message = useSelector((state) => state.toast.message);
+  const type = useSelector((state) => state.toast.type);
+  const isOpen = useSelector((state) => state.toast.isOpen);
+  const dispatch = useDispatch();
   return (
     <div className="App">
+      <Snackbar
+        open={isOpen}
+        autoHideDuration={10000}
+        onClose={() => dispatch(resetToast())}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => dispatch(resetToast())}
+          severity={type}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
+          <Route path="verify/:id/:token" element={<LoadingPage />} />
+          <Route
+            path="/verification-success"
+            element={<Results type={"success"} />}
+          />
+          <Route
+            path="/verification-error"
+            element={<Results type={"error"} />}
+          />
           {/* login routes */}
           <Route
             path="/login"
@@ -35,14 +64,15 @@ function App() {
               // </ProtectedAuth>
             }
           />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           <Route element={<PersistLogin />}>
-            <Route element={<RequireAuth allowedRoles={[ROLES.admin, ROLES.superAdmin]} />}>
+            <Route element={<RequireAuth allowedRoles={[]} />}>
               <Route path="/admin/*" element={<Dashboard />} />
             </Route>
 
-            <Route element={<RequireAuth allowedRoles={[ROLES.user]} />}>
+            <Route element={<RequireAuth allowedRoles={[]} />}>
               <Route path="/customer" element={<Customer />} />
             </Route>
           </Route>

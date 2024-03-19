@@ -1,7 +1,7 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 // import { GiHamburgerMenu } from 'react-icons/gi';
-import { HiSearch } from 'react-icons/hi';
+import { HiSearch } from "react-icons/hi";
 
 function DashboardHeader(props) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -18,10 +18,10 @@ function DashboardHeader(props) {
       }
     }
     // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [wrapperRef]);
 
@@ -50,7 +50,8 @@ function DashboardHeader(props) {
           <button
             type="button"
             onClick={toggleSearchMenu}
-            className="md:hidden p-2 bg-gray-100 rounded-full focus:outline-none focus:ring hover:bg-gray-200">
+            className="md:hidden p-2 bg-gray-100 rounded-full focus:outline-none focus:ring hover:bg-gray-200"
+          >
             <HiSearch size={20} />
           </button>
 
@@ -60,13 +61,15 @@ function DashboardHeader(props) {
               <div className="absolute right-0 p-1 bg-red-400 border rounded-full" />
               <button
                 onClick={toggleNotificationMenu}
-                className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring">
+                className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring"
+              >
                 <svg
                   className="w-6 h-6 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -78,7 +81,8 @@ function DashboardHeader(props) {
 
               <div
                 ref={wrapperRef}
-                className={`${isNotificationMenuOpen ? '' : 'hidden'} absolute z-50 w-48 max-w-md mt-3 transform bg-white rounded-md shadow-lg  -translate-x-3/4 min-w-max`}>
+                className={`${isNotificationMenuOpen ? "" : "hidden"} absolute z-50 w-48 max-w-md mt-3 transform bg-white rounded-md shadow-lg  -translate-x-3/4 min-w-max`}
+              >
                 <div className="p-4 font-medium border-b">
                   <span className="text-gray-800">Notification</span>
                 </div>
@@ -86,14 +90,16 @@ function DashboardHeader(props) {
                   <li>
                     <a
                       href="#g"
-                      className="block px-2 py-1 transition rounded-md hover:bg-gray-100">
+                      className="block px-2 py-1 transition rounded-md hover:bg-gray-100"
+                    >
                       Link
                     </a>
                   </li>
                   <li>
                     <a
                       href="#g"
-                      className="block px-2 py-1 transition rounded-md hover:bg-gray-100">
+                      className="block px-2 py-1 transition rounded-md hover:bg-gray-100"
+                    >
                       Another Link
                     </a>
                   </li>
@@ -108,7 +114,8 @@ function DashboardHeader(props) {
             <button
               type="button"
               onClick={toggleProfileMenu}
-              className="p-1 bg-gray-200 rounded-full focus:outline-none focus:ring">
+              className="p-1 bg-gray-200 rounded-full focus:outline-none focus:ring"
+            >
               <img
                 className="object-cover w-8 h-8 rounded-full"
                 src="https://avatars0.githubusercontent.com/u/57622665?s=460&u=8f581f4c4acd4c18c33a87b3e6476112325e8b38&v=4"
@@ -120,21 +127,28 @@ function DashboardHeader(props) {
 
             <div
               ref={wrapperRef}
-              className={`${isProfileMenuOpen ? '' : 'hidden'} absolute z-50 w-48 max-w-md mt-3 transform bg-white rounded-md shadow-lg  -translate-x-3/4 min-w-max`}>
+              className={`${isProfileMenuOpen ? "" : "hidden"} absolute z-50 w-48 max-w-md mt-3 transform bg-white rounded-md shadow-lg  -translate-x-3/4 min-w-max`}
+            >
               <div className="flex flex-col p-4 space-y-1 font-medium border-b">
                 <span className="text-gray-800" />
                 <span className="text-sm text-gray-400" />
               </div>
               <ul className="flex flex-col p-2 my-2 space-y-1">
                 <li>
-                  <a href="#g" className="block px-2 py-1 transition rounded-md hover:bg-gray-100">
+                  <a
+                    href="#g"
+                    className="block px-2 py-1 transition rounded-md hover:bg-gray-100"
+                  >
                     Settings
                   </a>
                 </li>
               </ul>
               <div className="flex items-center justify-center p-4 text-blue-700 underline border-t">
                 {/* eslint-disable-next-line react/destructuring-assignment,react/prop-types */}
-                <li className="cursor-pointer list-none" onClick={props.signOut}>
+                <li
+                  className="cursor-pointer list-none"
+                  onClick={props.signOut}
+                >
                   Logout
                 </li>
               </div>

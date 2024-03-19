@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import { GoogleMap, MarkerF, LoadScript } from '@react-google-maps/api';
-import { SectionHeading, Subheading as SubheadingBase } from '../misc/Headings';
-import { Container, ContentWithPaddingXl } from '../misc/Layouts';
-import { ReactComponent as SvgDecoratorBlob3 } from '../../images/svg-decorator-blob-3.svg';
+import React from "react";
+import styled from "styled-components";
+import tw from "twin.macro";
+import { GoogleMap, MarkerF, LoadScript } from "@react-google-maps/api";
+import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
+import { Container, ContentWithPaddingXl } from "../misc/Layouts";
+import { ReactComponent as SvgDecoratorBlob3 } from "../../images/svg-decorator-blob-3.svg";
 
 const Heading = tw(SectionHeading)``;
 const Subheading = tw(SubheadingBase)`text-center mb-3`;
@@ -14,15 +14,15 @@ const DecoratorBlob = styled(SvgDecoratorBlob3)`
 `;
 
 const containerStyle = {
-  width: '100%',
-  height: '400px'
+  width: "100%",
+  height: "400px",
 };
 const center = {
   lat: 9.4778122,
-  lng: -0.88135407
+  lng: -0.88135407,
 };
 
-export function Location({ heading = '', subheading = '' }) {
+export function Location({ heading = "", subheading = "" }) {
   /*
    * This componets accepts a prop - `cards` which is an array of object denoting the cards. Each object in the cards array can have the following keys (Change it according to your need, you can also add more objects to have more cards in this feature component):
    *  1) imageSrc - the image shown at the top of the card

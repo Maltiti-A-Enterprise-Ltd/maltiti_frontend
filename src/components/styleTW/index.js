@@ -1,10 +1,10 @@
-import tw from 'twin.macro';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { css } from 'styled-components/macro';
-import { ReactComponent as SvgDecoratorBlob1 } from '../../images/svg-decorator-blob-5.svg';
-import { ReactComponent as SvgDecoratorBlob2 } from '../../images/svg-decorator-blob-7.svg';
-import { PrimaryButton as PrimaryButtonBase } from '../misc/Buttons';
+import tw from "twin.macro";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { css } from "styled-components/macro";
+import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-5.svg";
+import { ReactComponent as SvgDecoratorBlob2 } from "../../images/svg-decorator-blob-7.svg";
+import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons";
 
 export const HighlightedText = tw.span`bg-green-500 text-gray-100 px-4 transform -skew-x-12 inline-block mt-2`;
 
@@ -29,11 +29,11 @@ export const TabControl = styled.div`
 
 export const CardContainer = tw.div`mt-10 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:pr-10 md:pr-6 lg:pr-12`;
 export const Card = tw(
-  motion.a
+  motion.a,
 )`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0`;
 export const CardImageContainer = styled.div`
   ${(props) => css`
-    background-image: url('products/${props.imageSrc}');
+    background-image: url("products/${props.imageSrc}");
   `}
   ${tw`h-56 xl:h-64 bg-center bg-cover relative rounded-t`}
 `;

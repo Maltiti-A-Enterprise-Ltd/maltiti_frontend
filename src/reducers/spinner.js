@@ -1,8 +1,8 @@
 const spinnerReducer = (state = false, action) => {
   switch (action.type) {
-    case 'LOAD':
+    case "LOAD":
       return true;
-    case 'UNLOAD':
+    case "UNLOAD":
       return false;
     default:
       return state;

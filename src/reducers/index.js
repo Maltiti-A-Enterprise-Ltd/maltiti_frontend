@@ -1,11 +1,11 @@
-import { combineReducers } from 'redux';
-import { messagesReducer, messageTypeReducer } from './messages';
-import spinnerReducer from './spinner';
-import { loggedInReducer } from './login';
-import { searchReducer } from './search';
-import { authReducer } from './auth';
-import { productsReducer } from './products';
-import { persistReducer } from './persist';
+import { combineReducers } from "redux";
+import { messagesReducer, messageTypeReducer } from "./messages";
+import spinnerReducer from "./spinner";
+import { loggedInReducer } from "./login";
+import { searchReducer } from "./search";
+import { authReducer } from "./auth";
+import { productsReducer } from "./products";
+import { persistReducer } from "./persist";
 
 const allReducers = combineReducers({
   spinner: spinnerReducer,
@@ -15,7 +15,7 @@ const allReducers = combineReducers({
   search: searchReducer,
   auth: authReducer,
   products: productsReducer,
-  persist: persistReducer
+  persist: persistReducer,
 });
 
 export default allReducers;

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Skeleton } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { Container, ContentWithPaddingXl } from '../misc/Layouts';
-import { Header } from '../misc/Headings';
-import { ReactComponent as StarIcon } from '../../images/star-icon.svg';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Skeleton } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Container, ContentWithPaddingXl } from "../misc/Layouts";
+import { Header } from "../misc/Headings";
+import { ReactComponent as StarIcon } from "../../images/star-icon.svg";
 import {
   Card,
   CardButton,
@@ -20,15 +20,15 @@ import {
   CardTitle,
   DecoratorBlob1,
   DecoratorBlob2,
-  HeaderRow
-} from '../styleTW';
-import { getBestProducts } from '../../features/shop/shopSlice';
-import { convertGramUnits } from '../../utility/unitConverter';
+  HeaderRow,
+} from "../styleTW";
+import { getBestProducts } from "../../features/shop/shopSlice";
+import { convertGramUnits } from "../../utility/unitConverter";
 
 // eslint-disable-next-line react/display-name,func-names
 export default function ({
   // eslint-disable-next-line react/prop-types
-  heading = 'Checkout the Menu'
+  heading = "Checkout the Menu",
   // eslint-disable-next-line react/prop-types
 }) {
   const dispatch = useDispatch();
@@ -56,13 +56,17 @@ export default function ({
           {/* </TabsControl> */}
         </HeaderRow>
         <div className="mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12">
-          {status === 'loading' && !products.length
+          {status === "loading" && !products.length
             ? Array.from({ length: 8 }).map((item) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <CardContainer key={item}>
                   <Card className="group">
                     <CardImageContainer>
-                      <Skeleton variant="rectangular" width="100%" height={200} />
+                      <Skeleton
+                        variant="rectangular"
+                        width="100%"
+                        height={200}
+                      />
                     </CardImageContainer>
                     <CardText>
                       <Skeleton variant="text" width="80%" height={20} />
@@ -75,7 +79,13 @@ export default function ({
               ))
             : products.map((product) => (
                 <CardContainer key={product.id}>
-                  <Card className="group" href="#" initial="rest" whileHover="hover" animate="rest">
+                  <Card
+                    className="group"
+                    href="#"
+                    initial="rest"
+                    whileHover="hover"
+                    animate="rest"
+                  >
                     <CardImageContainer imageSrc={product.image}>
                       <img
                         className="h-56 xl:h-64 bg-center bg-contain relative w-full rounded-t"
@@ -93,14 +103,15 @@ export default function ({
                         variants={{
                           hover: {
                             opacity: 1,
-                            height: 'auto'
+                            height: "auto",
                           },
                           rest: {
                             opacity: 0,
-                            height: 0
-                          }
+                            height: 0,
+                          },
                         }}
-                        transition={{ duration: 0.3 }}>
+                        transition={{ duration: 0.3 }}
+                      >
                         <CardButton>Add to Cart</CardButton>
                         <br />
                         <CardButton type="button">
@@ -111,7 +122,8 @@ export default function ({
                     <CardText>
                       <CardTitle>{product.name}</CardTitle>
                       <CardContent>
-                        {String(product.size).toUpperCase()} ({convertGramUnits(product.weight)})
+                        {String(product.size).toUpperCase()} (
+                        {convertGramUnits(product.weight)})
                       </CardContent>
                       <CardPrice>GH₵ {product.retail}</CardPrice>
                       {/* <CardPrice>Retail: GH₵ {card.price_retail}</CardPrice> */}

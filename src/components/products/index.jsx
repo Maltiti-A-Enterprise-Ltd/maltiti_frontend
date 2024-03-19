@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
-import { FaEdit } from 'react-icons/fa';
-import Button from '../button';
-import SearchInput from '../search';
-import { TableData, TableHead } from '../table/table';
-import { deleteProduct, setProducts } from '../../actions';
-import useAxiosPrivate from '../../utility/useAxiosPrivate';
-import { AddProduct } from './modals';
-import DeleteAlert from '../delete';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { FaEdit } from "react-icons/fa";
+import Button from "../button";
+import SearchInput from "../search";
+import { TableData, TableHead } from "../table/table";
+import { deleteProduct, setProducts } from "../../actions";
+import useAxiosPrivate from "../../utility/useAxiosPrivate";
+import { AddProduct } from "./modals";
+import DeleteAlert from "../delete";
 
 function Products() {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
@@ -18,7 +18,7 @@ function Products() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchField, setSearchField] = useState('');
+  const [searchField, setSearchField] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   // const deleteProduct = async (id) => {
@@ -39,12 +39,12 @@ function Products() {
       setIsLoading(true);
       try {
         const response = await axiosPrivate.get(`/products/getProducts/`, {
-          signal: AbortSignal.timeout(10000)
+          signal: AbortSignal.timeout(10000),
         });
         // eslint-disable-next-line no-unused-expressions
         isMounted && dispatch(setProducts(JSON.parse(response.data.data)));
       } catch (err) {
-        navigate('/login', { state: { from: location }, replace: true });
+        navigate("/login", { state: { from: location }, replace: true });
       } finally {
         setIsLoading(false);
       }
@@ -85,7 +85,10 @@ function Products() {
           onChange={(event) => setSearchField(event.target.value)}
         />
         <div className="flex flex-wrap gap-4 items-end justify-end -mb-3">
-          <Button name="Add product" onClick={() => setAddModalIsOpen(!addModalIsOpen)} />
+          <Button
+            name="Add product"
+            onClick={() => setAddModalIsOpen(!addModalIsOpen)}
+          />
         </div>
       </div>
       <div className="flex flex-col mt-6">
@@ -94,13 +97,19 @@ function Products() {
             <div className="overflow-hidden border-b border-gray-200 rounded-md shadow-md">
               <table className="mt-8 min-w-full overflow-x-scroll divide-y divide-gray-200">
                 <TableHead
-                  heads={['Name', 'Price (GHS)', 'Category', 'Description', 'Weight', 'Status']}
+                  heads={[
+                    "Name",
+                    "Price (GHS)",
+                    "Category",
+                    "Description",
+                    "Weight",
+                    "Status",
+                  ]}
                 />
                 <tbody className="bg-white divide-y divide-gray-200 flex-">
                   {/* eslint-disable-next-line no-nested-ternary */}
                   {isLoading ? (
                     <tr>
-                      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
                       <td colSpan="6" className="grid text-center py-4">
                         <CircularProgress />
                       </td>
@@ -109,7 +118,8 @@ function Products() {
                     filteredProducts.map((product) => (
                       <tr
                         key={product.id}
-                        className="transition-all hover:bg-gray-100 hover:shadow-lg">
+                        className="transition-all hover:bg-gray-100 hover:shadow-lg"
+                      >
                         <TableData name={product.name} />
                         <TableData name={product.price} />
                         <TableData name={product.category} />
@@ -117,7 +127,6 @@ function Products() {
                         <TableData name={product.weight} />
                         <TableData name={product.status} />
                         <td className="space-x-2 text-green-400 text-lg">
-                          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
                           <button className="hover:text-gray-900">
                             <FaEdit />
                           </button>

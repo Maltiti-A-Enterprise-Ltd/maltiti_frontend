@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { useLocation, Navigate, Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function RequireAuth({ allowedRoles }) {
   const location = useLocation();

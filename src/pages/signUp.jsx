@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components"; //eslint-disable-line
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
-import axios from "axios";
 import {
   CircularProgress,
   FormControl,
@@ -12,32 +11,22 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useLocation, useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import IconButton from "@mui/material/IconButton";
-import { MdClose } from "react-icons/md";
-import {
-  load,
-  setAuth,
-  setMessages,
-  setPersist,
-  unload,
-} from "../actions/index.js";
 import googleIconImageSrc from "../images/google-icon.png";
 import logo from "../images/logo.svg";
 import illustration from "../images/login-illustration.svg";
 import { Container as ContainerBase } from "../components/misc/Layouts";
 import AnimationRevealPage from "../helpers/AnimationRevealPage.js";
+import { signUp } from "../features/user/userSlice";
 import {
   confirmPasswordValidator,
   emailValidator,
   passwordValidator,
   requiredValidator,
 } from "../utility/validator";
+import IconButton from "@mui/material/IconButton";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { login, signUp } from "../features/user/userSlice";
 
 const Container = tw(
   ContainerBase,
@@ -80,29 +69,30 @@ const IllustrationImage = styled.div`
   ${(props) => `background-image: url("${props.imageSrc}");`}
   ${tw`w-full max-w-sm m-12 bg-center bg-no-repeat bg-contain xl:m-16`}
 `;
-export function Login({
+export function SignUp({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign In To Maltiti",
+  headingText = "Sign Up To Maltiti",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: "Sign In With Google",
+      text: "Sign Up With Google",
       url: "https://google.com",
     },
   ],
-  submitButtonText = "Sign In",
+  submitButtonText = "Sign Up",
   SubmitButtonIcon = LoginIcon,
-  forgotPasswordUrl = "#",
-  signupUrl = "#",
 }) {
-  const dispatch = useDispatch();
   const status = useSelector((state) => state.user.status);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -112,16 +102,32 @@ export function Login({
   };
 
   const onSubmit = () => {
-    if (email && password && !emailError && !passwordError) {
+    if (
+      name &&
+      email &&
+      password &&
+      confirmPassword &&
+      !passwordError &&
+      !nameError &&
+      !confirmPasswordError &&
+      !emailError
+    ) {
       dispatch(
-        login({
+        signUp({
+          name,
           email,
           password,
+          confirmPassword,
+          userType: "user",
         }),
       );
     } else {
+      setNameError(requiredValidator(name));
       setEmailError(emailValidator(email));
-      setPasswordError(requiredValidator(password));
+      setPasswordError(passwordValidator(password));
+      setConfirmPasswordError(
+        confirmPasswordValidator(password, confirmPassword),
+      );
     }
   };
 
@@ -151,9 +157,38 @@ export function Login({
                 {/*  ))}*/}
                 {/*</SocialButtonsContainer>*/}
                 <DividerTextContainer>
-                  <DividerText>Sign in with your e-mail</DividerText>
+                  <DividerText>Sign Up with your e-mail</DividerText>
                 </DividerTextContainer>
                 <div>
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Full Name
+                    </InputLabel>
+                    <OutlinedInput
+                      className="capitalize"
+                      type="text"
+                      placeholder="Full Name"
+                      value={name}
+                      name="name"
+                      onChange={(event) => {
+                        setName(event.target.value);
+                        if (nameError) {
+                          setNameError(requiredValidator(event.target.value));
+                        }
+                      }}
+                      onBlur={() => setNameError(requiredValidator(name))}
+                      id="outlined-adornment-password"
+                      label="Full Name"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {nameError}
+                    </FormHelperText>
+                  </FormControl>
                   <FormControl
                     sx={{ mb: 3 }}
                     color={"success"}
@@ -198,15 +233,15 @@ export function Login({
                         setPassword(event.target.value);
                         if (passwordError) {
                           setPasswordError(
-                            requiredValidator(event.target.value),
+                            passwordValidator(event.target.value),
                           );
                         }
                       }}
+                      onBlur={() =>
+                        setPasswordError(passwordValidator(password))
+                      }
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
-                      onBlur={() =>
-                        setPasswordError(requiredValidator(password))
-                      }
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -225,6 +260,55 @@ export function Login({
                       {passwordError}
                     </FormHelperText>
                   </FormControl>
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Confirm Password
+                    </InputLabel>
+                    <OutlinedInput
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      name="confirmPassword "
+                      onChange={(event) => {
+                        setConfirmPassword(event.target.value);
+                        if (confirmPasswordError) {
+                          setConfirmPasswordError(
+                            confirmPasswordValidator(
+                              password,
+                              event.target.value,
+                            ),
+                          );
+                        }
+                      }}
+                      onBlur={() =>
+                        setConfirmPasswordError(
+                          confirmPasswordValidator(password, confirmPassword),
+                        )
+                      }
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Confirm Password"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {confirmPasswordError}
+                    </FormHelperText>
+                  </FormControl>
                   {status === "loading" ? (
                     <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
                       <CircularProgress color={"success"} />
@@ -235,37 +319,15 @@ export function Login({
                       <span className="text">{submitButtonText}</span>
                     </SubmitButton>
                   )}
-
-                  {/*<div className="flex gap-x-2 mt-2">*/}
-                  {/*  <input*/}
-                  {/*    className="text-xs text-gray-600"*/}
-                  {/*    type="checkbox"*/}
-                  {/*    id="persist"*/}
-                  {/*    onChange={() => togglePersist()}*/}
-                  {/*    checked={persist}*/}
-                  {/*  />*/}
-                  {/*  <label className="text-sm text-gray-600" htmlFor="persist">*/}
-                  {/*    Trust This Device?*/}
-                  {/*  </label>*/}
-                  {/*</div>*/}
                 </div>
-
-                <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
-                  <a
-                    href={forgotPasswordUrl}
-                    className="border- border-green-500 border-dotted"
-                  >
-                    Forgot Password ?
-                  </a>
-                </p>
                 <p className="mt-8 text-sm text-gray-600 hover:text-green-100 text-center">
-                  Dont have an account?{" "}
-                  <a
-                    href={signupUrl}
+                  Already have an account?{" "}
+                  <Link
+                    to={"/login"}
                     className="border-b border-green-100 border-dotted"
                   >
-                    Sign Up
-                  </a>
+                    Login
+                  </Link>
                 </p>
               </FormContainer>
             </MainContent>
