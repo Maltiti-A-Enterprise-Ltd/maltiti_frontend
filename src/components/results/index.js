@@ -33,7 +33,7 @@ const Results = ({ type }) => {
         <p>
           {type === "success"
             ? "You have successfully verified your account"
-            : "Verification failed. The link may have expired. Login to send another verification link"}
+            : "Verification failed. The link may have expired or invalid. Login to send another verification link"}
         </p>
         <div className="mt-4" onClick={login}>
           <Button variant="contained" color="success">

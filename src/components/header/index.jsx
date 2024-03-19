@@ -12,13 +12,15 @@ import AnchorLink from "react-anchor-link-smooth-scroll";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../images/logo.svg";
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
+import { useSelector } from "react-redux";
+import { Avatar, Menu, MenuItem } from "@mui/material";
 
 const Header = tw.header`
   flex justify-between items-center
    mx-auto
 `;
 
-export const NavLinks = tw.div`inline-block`;
+export const NavLinks = tw.div`flex justify-center items-center self-center`;
 
 export const NavLink = tw.a`
   text-lg text-black my-2 lg:text-sm lg:mx-6 lg:my-0
@@ -64,6 +66,46 @@ export function NavBar({
   collapseBreakpointClass = "lg",
 }) {
   const location = useLocation();
+  const user = useSelector((state) => state.user.user);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    };
+  }
+
   const defaultLinks = [
     <NavLinks key={1}>
       {location.pathname === "/" ? (
@@ -93,12 +135,49 @@ export function NavBar({
         </>
       )}
 
-      <NavLink href="/login" tw="lg:ml-12!">
-        Login
-      </NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`} href="/signup">
-        Sign Up
-      </PrimaryLink>
+      {user ? (
+        <div className={"pb-2"}>
+          {user.user.image ? (
+            <Avatar
+              className={"cursor-pointer"}
+              onClick={handleClick}
+              alt={user.user.name}
+              src={user.user.image}
+            />
+          ) : (
+            <Avatar
+              className={"cursor-pointer"}
+              onClick={handleClick}
+              {...stringAvatar(user.user.name)}
+            />
+          )}
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </Menu>
+        </div>
+      ) : (
+        <>
+          <NavLink href="/login" tw="lg:ml-12!">
+            Login
+          </NavLink>
+          <PrimaryLink
+            css={roundedHeaderButton && tw`rounded-full`}
+            href="/signup"
+          >
+            Sign Up
+          </PrimaryLink>
+        </>
+      )}
     </NavLinks>,
   ];
 

@@ -24,7 +24,6 @@ export const signUp = createAsyncThunk(
         }),
       );
     } catch (error) {
-      console.log("error", error);
       dispatch(
         setToast({
           type: "error",
@@ -35,12 +34,38 @@ export const signUp = createAsyncThunk(
   },
 );
 
+export const login = createAsyncThunk(
+  "user/login",
+  async (userData, { dispatch }) => {
+    try {
+      const response = await axios.post(`/authentication/login`, userData);
+      dispatch(setUser(response.data.data));
+      dispatch(
+        setToast({
+          type: "success",
+          message: `Welcome ${response.data.data.user.name}`,
+        }),
+      );
+      window.location.href = `/`;
+    } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
+    }
+  },
+);
+
 export const verifying = createAsyncThunk(
   "user/verifying",
   async ({ id, token }) => {
     try {
-      return await axios.get(`/authentication/verify/${id}/${token}`);
+      await axios.get(`/authentication/verify/${id}/${token}`);
+      window.location.href = `/verification-success`;
     } catch (error) {
+      window.location.href = `/verification-error`;
       throw new Error(error);
     }
   },
@@ -63,6 +88,15 @@ export const userSlice = createSlice({
       state.status = "loading";
     });
     builder.addCase(signUp.rejected, (state) => {
+      state.status = "error";
+    });
+    builder.addCase(login.fulfilled, (state) => {
+      state.status = "success";
+    });
+    builder.addCase(login.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(login.rejected, (state) => {
       state.status = "error";
     });
   },

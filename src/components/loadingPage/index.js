@@ -9,9 +9,7 @@ const LoadingPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const verify = async () => {
-      await dispatch(verifying({ id, token }));
-    };
+    dispatch(verifying({ id, token }));
   }, []);
   return (
     <div className="h-screen gap-y-4 flex-col flex items-center justify-center">

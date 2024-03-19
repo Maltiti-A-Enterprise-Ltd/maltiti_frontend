@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components"; //eslint-disable-line
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
-import { CircularProgress } from "@mui/material";
+import {
+  CircularProgress,
+  FormControl,
+  FormHelperText,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +25,8 @@ import {
   passwordValidator,
   requiredValidator,
 } from "../utility/validator";
+import IconButton from "@mui/material/IconButton";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Container = tw(
   ContainerBase,
@@ -75,7 +84,6 @@ export function SignUp({
   SubmitButtonIcon = LoginIcon,
 }) {
   const status = useSelector((state) => state.user.status);
-  console.log(status, "status");
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -85,6 +93,13 @@ export function SignUp({
   const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const onSubmit = () => {
     if (
@@ -145,77 +160,158 @@ export function SignUp({
                   <DividerText>Sign Up with your e-mail</DividerText>
                 </DividerTextContainer>
                 <div>
-                  <Input
-                    className="capitalize"
-                    type="text"
-                    placeholder="Full Name"
-                    value={name}
-                    name="name"
-                    onChange={(event) => {
-                      setName(event.target.value);
-                      if (nameError) {
-                        setNameError(requiredValidator(event.target.value));
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Full Name
+                    </InputLabel>
+                    <OutlinedInput
+                      className="capitalize"
+                      type="text"
+                      placeholder="Full Name"
+                      value={name}
+                      name="name"
+                      onChange={(event) => {
+                        setName(event.target.value);
+                        if (nameError) {
+                          setNameError(requiredValidator(event.target.value));
+                        }
+                      }}
+                      onBlur={() => setNameError(requiredValidator(name))}
+                      id="outlined-adornment-password"
+                      label="Full Name"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {nameError}
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Email
+                    </InputLabel>
+                    <OutlinedInput
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      name="email"
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        if (emailError) {
+                          setEmailError(emailValidator(event.target.value));
+                        }
+                      }}
+                      onBlur={() => setEmailError(emailValidator(email))}
+                      id="outlined-adornment-password"
+                      label="Email"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {emailError}
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      name={"password"}
+                      value={password}
+                      onChange={(event) => {
+                        setPassword(event.target.value);
+                        if (passwordError) {
+                          setPasswordError(
+                            passwordValidator(event.target.value),
+                          );
+                        }
+                      }}
+                      onBlur={() =>
+                        setPasswordError(passwordValidator(password))
                       }
-                    }}
-                    onBlur={() => setNameError(requiredValidator(name))}
-                  />
-                  <span className="text-xs text-red-700">{nameError}</span>
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    name="email"
-                    onChange={(event) => {
-                      setEmail(event.target.value);
-                      if (emailError) {
-                        setEmailError(emailValidator(event.target.value));
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
                       }
-                    }}
-                    onBlur={() => setEmailError(emailValidator(email))}
-                  />
-                  <span className="text-xs text-red-700">{emailError}</span>
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    name="password"
-                    onChange={(event) => {
-                      setPassword(event.target.value);
-                      if (passwordError) {
-                        setPasswordError(passwordValidator(event.target.value));
-                      }
-                    }}
-                    onBlur={() => setPasswordError(passwordValidator(password))}
-                  />
-                  <span className="text-xs text-red-700">{passwordError}</span>
-                  <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    name="confirmPassword "
-                    onChange={(event) => {
-                      setConfirmPassword(event.target.value);
-                      if (confirmPasswordError) {
+                      label="Password"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {passwordError}
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl
+                    sx={{ mb: 3 }}
+                    color={"success"}
+                    fullWidth
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Confirm Password
+                    </InputLabel>
+                    <OutlinedInput
+                      placeholder="Confirm Password"
+                      value={confirmPassword}
+                      name="confirmPassword "
+                      onChange={(event) => {
+                        setConfirmPassword(event.target.value);
+                        if (confirmPasswordError) {
+                          setConfirmPasswordError(
+                            confirmPasswordValidator(
+                              password,
+                              event.target.value,
+                            ),
+                          );
+                        }
+                      }}
+                      onBlur={() =>
                         setConfirmPasswordError(
-                          confirmPasswordValidator(
-                            password,
-                            event.target.value,
-                          ),
-                        );
+                          confirmPasswordValidator(password, confirmPassword),
+                        )
                       }
-                    }}
-                    onBlur={() =>
-                      setConfirmPasswordError(
-                        confirmPasswordValidator(password, confirmPassword),
-                      )
-                    }
-                  />
-                  <span className="text-xs text-red-700">
-                    {confirmPasswordError}
-                  </span>
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Confirm Password"
+                    />
+                    <FormHelperText error id="outlined-weight-helper-text">
+                      {confirmPasswordError}
+                    </FormHelperText>
+                  </FormControl>
                   {status === "loading" ? (
                     <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
-                      <CircularProgress />
+                      <CircularProgress color={"success"} />
                     </Box>
                   ) : (
                     <SubmitButton onClick={onSubmit}>
