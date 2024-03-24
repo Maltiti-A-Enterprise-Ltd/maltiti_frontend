@@ -5,6 +5,7 @@ const initialState = {
   isOpen: false,
   message: "",
   type: "info",
+  isBackDropOpen: false,
 };
 
 export const toastSlice = createSlice({
@@ -21,9 +22,16 @@ export const toastSlice = createSlice({
       state.message = "";
       state.isOpen = false;
     },
+    openBackDrop: (state) => {
+      state.isBackDropOpen = true;
+    },
+    closeBackDrop: (state) => {
+      state.isBackDropOpen = false;
+    },
   },
 });
 
-export const { setToast, resetToast } = toastSlice.actions;
+export const { setToast, resetToast, openBackDrop, closeBackDrop } =
+  toastSlice.actions;
 
 export default toastSlice.reducer;

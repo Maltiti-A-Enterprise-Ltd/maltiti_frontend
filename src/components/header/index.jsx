@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -13,9 +13,29 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "../../images/logo.svg";
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Divider, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import {
+  Avatar,
+  Divider,
+  LinearProgress,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import { Logout, Settings } from "@mui/icons-material";
 import { logout } from "../../features/user/userSlice";
+import {
+  getCart,
+  removeFromCart,
+  updateCartQuantity,
+  updateQuantity,
+} from "../../features/cart/cartSlice";
+import "./index.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import Button from "@mui/material/Button";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import InfoIcon from "@mui/icons-material/Info";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -69,9 +89,27 @@ export function NavBar({
 }) {
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
+  const cartTotal = useSelector((state) => state.cart.cartTotal);
+  const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const shake = useSelector((state) => state.cart.shake);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const removeStatus = useSelector((state) => state.cart.removeStatus);
+  const ref = useRef();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getCart(user.user.id));
+    }
+  }, []);
+
+  useEffect(() => {
+    shake
+      ? ref.current.classList.add("shake")
+      : ref.current.classList.remove("shake");
+  }, [shake]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -236,14 +274,34 @@ export function NavBar({
   links = links || defaultLinks;
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [timer, setTimer] = useState(null);
 
   // function for toggling notification menu
   const toggleCart = (event) => {
     setIsCartOpen((opened) => !opened);
   };
 
+  const handleQuantityUpdate = (id, quantity) => {
+    dispatch(
+      updateQuantity({
+        id,
+        quantity,
+      }),
+    );
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+      setTimeout(() => {
+        dispatch(updateCartQuantity({ id, quantity }));
+      }, 1000),
+    );
+  };
+
   return (
     <Header
+      id="header-shop"
       className={
         className ||
         "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"
@@ -276,15 +334,16 @@ export function NavBar({
         </NavToggle>
       </MobileNavLinksContainer>
       <NavLink
-        href="#g"
-        className="mr-[5%] flex border-none"
+        ref={ref}
+        id="cart"
+        className="mr-[5%] cursor-pointer flex border-none"
         onClick={toggleCart}
       >
         <span
           aria-hidden="true"
           className="text-center leading-tight inline-block w-5 h-5 transform translate-x-12 translate-y-0 bg-red-600 rounded-full"
         >
-          0
+          {cartTotal}
         </span>
         <AiOutlineShoppingCart size={40} />
       </NavLink>
@@ -297,38 +356,148 @@ export function NavBar({
           leave="transition transform duration-300"
           leaveFrom="translate-x-0 opacity-100 ease-out"
           leaveTo="translate-x-full opacity-0 ease-in"
-          className="fixed inset-y-0 right-0 flex flex-col font-normal bg-white text-black shadow-lg w-144 z-50 max-md:w-96 max-sm:w-72"
-          // style={{backdropFilter:"blur(14px)"}}
+          className="fixed overflow-y-auto inset-y-0 right-0 flex flex-col font-normal bg-white text-black shadow-lg w-144 z-50 max-md:w-96 max-sm:w-72"
+          style={{ backdropFilter: "blur(100px)", background: "#cefad0" }}
         >
-          <div className="flex items-center justify-between flex-shrink-0 p-2 ml-[2%]">
-            <h6 className="p-2 text-lg">Your cart</h6>
-            <button
-              className="p-2 rounded-md focus:outline-none focus:ring"
-              onClick={toggleCart}
-            >
-              <svg
-                className="w-6 h-6 text-gray-600 hover:text-red-600"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <div className={"sticky top-0 bg-white pb-5"}>
+            {removeStatus === "loading" && <LinearProgress color="success" />}
+            <div className="flex items-center justify-between flex-shrink-0 p-2 ml-[2%]">
+              <h6 className="p-2 text-lg">Your cart</h6>
+              <button
+                className="p-2 rounded-md focus:outline-none focus:ring"
+                onClick={toggleCart}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                <svg
+                  className="w-6 h-6 text-gray-600 hover:text-red-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className={"flex text-lg mb-2 justify-between mx-10"}>
+              <span className="flex font-bold">Subtotal</span>
+              {!!cart.length && (
+                <div className={"font-bold"}>
+                  <span>GH&#8373; {totalPrice}</span>
+                </div>
+              )}
+            </div>
+            <div
+              className={
+                "mx-10 mb-2 gap-x-1 flex items-center justify-center text-xs"
+              }
+            >
+              <InfoIcon color={"error"} fontSize={"small"} />
+              <span>
+                Shipping or delivery fees will be calculated during checkout
+              </span>
+            </div>
+            <div className={"flex justify-between mx-10"}>
+              <span className="uppercase flex">
+                <AiOutlineShoppingCart />
+                &nbsp;&nbsp;{cartTotal} Products in your cart
+              </span>
+              {!!cart.length && (
+                <div className={""}>
+                  <Button
+                    color={"success"}
+                    variant="contained"
+                    endIcon={<ShoppingCartCheckoutIcon />}
+                  >
+                    Checkout
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-          <span className="ml-[4%] uppercase flex">
-            <AiOutlineShoppingCart />
-            &nbsp;&nbsp;0 Products in your cart
-          </span>
-          <div className="ml-[2%] flex justify-center items-center max-h-full p-4 overflow-hidden hover:overflow-y-scroll">
-            <span className="">Your cart is empty</span>
+          <div className="ml-[2%] flex justify-center items-center max-h-full p-4">
+            {!cart.length && <span className="">Your cart is empty</span>}
           </div>
+          {!!cart.length && (
+            <ul
+              role="list"
+              className="-my-6 space-y-3 divide-y divide-gray-200"
+            >
+              {cart.map((item) => (
+                <li className="flex rounded-md bg-gray-200 px-3 mx-5 py-6">
+                  <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                    <img
+                      src={item.product.image}
+                      alt={item.product.name}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
+
+                  <div className="ml-4 flex flex-1 flex-col">
+                    <div>
+                      <div className="flex justify-between text-base font-medium text-gray-900">
+                        <h3>
+                          <a>{item.product.name}</a>
+                        </h3>
+                        <p className="ml-4 text-sm">
+                          GH&#8373; {item.product.retail}
+                        </p>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {item.product.weight}g
+                      </p>
+                    </div>
+                    <div className="flex flex-1 items-end justify-between text-sm">
+                      <div className={"space-x-2 items-center flex"}>
+                        <span
+                          className={
+                            "rounded-full hover:bg-green-100 cursor-pointer flex w-full h-full item-center justify-center text-white bg-gray-700"
+                          }
+                          onClick={() =>
+                            handleQuantityUpdate(item.id, item.quantity - 1)
+                          }
+                        >
+                          <RemoveIcon fontSize={"inherit"} />
+                        </span>
+                        <input
+                          value={item.quantity}
+                          className={
+                            "p-1 rounded-md outline-none w-[30px] text-center"
+                          }
+                          onChange={(event) =>
+                            handleQuantityUpdate(item.id, event.target.value)
+                          }
+                        />
+                        <span
+                          onClick={() =>
+                            handleQuantityUpdate(item.id, item.quantity + 1)
+                          }
+                          className={
+                            "rounded-full hover:bg-green-100 cursor-pointer flex w-full h-full item-center justify-center text-white bg-gray-700"
+                          }
+                        >
+                          <AddIcon fontSize={"inherit"} />
+                        </span>
+                      </div>
+                      <div className="flex">
+                        <button
+                          onClick={() => dispatch(removeFromCart(item.id))}
+                          type="button"
+                          className="font-medium text-red"
+                        >
+                          <DeleteIcon color={"error"} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </Transition>
       ) : (
         <></>

@@ -7,8 +7,8 @@ import ProductDetails from "../components/productDetails";
 function Product() {
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
+      <NavBar />
       <AnimationRevealPage>
-        <NavBar />
         <ProductDetails />
         <Footer />
       </AnimationRevealPage>

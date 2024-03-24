@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Skeleton, Snackbar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@mui/material/Alert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavBar } from "../components/header";
 import AnimationRevealPage from "../helpers/AnimationRevealPage";
 import Footer from "../components/footers/MiniCenteredFooter";
@@ -33,6 +33,8 @@ import {
   updateCurrentPage,
 } from "../features/shop/shopSlice";
 import { convertGramUnits } from "../utility/unitConverter";
+import { addToCart } from "../features/cart/cartSlice";
+import { setToast } from "../features/toast/toastSlice";
 
 function Shop() {
   const tabs = [
@@ -49,6 +51,8 @@ function Shop() {
   const errorMessage = useSelector((state) => state.shop.errorMessage);
   const totalPages = useSelector((state) => state.shop.totalPages);
   const currentPage = useSelector((state) => state.shop.currentPage);
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
@@ -145,7 +149,6 @@ function Shop() {
                     <CardContainer key={product.id}>
                       <Card
                         className="group"
-                        href="#"
                         initial="rest"
                         whileHover="hover"
                         animate="rest"
@@ -176,7 +179,29 @@ function Shop() {
                             }}
                             transition={{ duration: 0.3 }}
                           >
-                            <CardButton>Add to Cart</CardButton>
+                            <CardButton
+                              type={"button"}
+                              onClick={() => {
+                                if (user) {
+                                  dispatch(
+                                    addToCart({
+                                      productId: product.id,
+                                      userId: user.user.id,
+                                    }),
+                                  );
+                                } else {
+                                  navigate("/login");
+                                  dispatch(
+                                    setToast({
+                                      type: "info",
+                                      message: "Please login to continue",
+                                    }),
+                                  );
+                                }
+                              }}
+                            >
+                              Add to Cart
+                            </CardButton>
                             <br />
                             <CardButton type="button">
                               <Link to={`${product.id}`}>View Details</Link>

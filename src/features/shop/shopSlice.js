@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../utility/axios";
 import { SERVER_ERROR } from "../../utility/constants";
+import { setToast } from "../toast/toastSlice";
 
 const initialState = {
   status: "idle",
@@ -26,6 +27,12 @@ export const getProducts = createAsyncThunk(
       dispatch(updateProducts(response.data.data.products));
       dispatch(updateTotalPages(response.data.data.totalPages));
     } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
       dispatch(toggleShowError(error.error.message));
     }
   },
@@ -38,6 +45,12 @@ export const getProduct = createAsyncThunk(
       const response = await axios.get(`/products/product/${id}`);
       dispatch(updateProduct(response.data.data));
     } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
       dispatch(toggleShowError(error.error.message));
     }
   },

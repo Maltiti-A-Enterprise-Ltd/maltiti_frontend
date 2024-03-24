@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./pages/home";
 import { Login } from "./pages/login";
 import Dashboard from "./pages/adminDashboard";
@@ -13,19 +13,28 @@ import Shop from "./pages/shop";
 import Product from "./pages/product";
 import { SignUp } from "./pages/signUp";
 import { useDispatch, useSelector } from "react-redux";
-import { Snackbar } from "@mui/material";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { resetToast } from "./features/toast/toastSlice";
 import Results from "./components/results";
 import LoadingPage from "./components/loadingPage";
+import { NavBar } from "./components/header";
 
 function App() {
   const message = useSelector((state) => state.toast.message);
   const type = useSelector((state) => state.toast.type);
   const isOpen = useSelector((state) => state.toast.isOpen);
+  const isBackDropOpen = useSelector((state) => state.toast.isBackDropOpen);
   const dispatch = useDispatch();
+
   return (
     <div className="App">
+      <Backdrop
+        sx={{ color: "#cefad0", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isBackDropOpen}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Snackbar
         open={isOpen}
         autoHideDuration={10000}

@@ -35,8 +35,8 @@ function Home() {
   const [modalShow, setModalShow] = useState(false);
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
+      <NavBar />
       <AnimationRevealPage>
-        <NavBar />
         <Hero
           heading={
             <>
