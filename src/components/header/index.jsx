@@ -9,20 +9,29 @@ import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import AnchorLink from "react-anchor-link-smooth-scroll";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.svg";
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
+  CircularProgress,
   Divider,
   LinearProgress,
   ListItemIcon,
   Menu,
   MenuItem,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { Logout, Settings } from "@mui/icons-material";
-import { logout } from "../../features/user/userSlice";
+import {
+  generateOtp,
+  logout,
+  toggleOpenCodeVerification,
+  toggleOpenPhoneVerification,
+  verifyOtp,
+} from "../../features/user/userSlice";
 import {
   getCart,
   removeFromCart,
@@ -36,6 +45,10 @@ import Button from "@mui/material/Button";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import InfoIcon from "@mui/icons-material/Info";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import PhoneInput from "react-phone-input-2";
+import VerificationInput from "react-verification-input";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -89,7 +102,15 @@ export function NavBar({
 }) {
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
+  const verifyStatus = useSelector((state) => state.user.verifyStatus);
+  const generateStatus = useSelector((state) => state.user.generateStatus);
   const cartTotal = useSelector((state) => state.cart.cartTotal);
+  const openPhoneVerification = useSelector(
+    (state) => state.user.openPhoneVerification,
+  );
+  const openCodeVerification = useSelector(
+    (state) => state.user.openCodeVerification,
+  );
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -98,6 +119,7 @@ export function NavBar({
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const removeStatus = useSelector((state) => state.cart.removeStatus);
   const ref = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -275,6 +297,9 @@ export function NavBar({
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [code, setCode] = useState("");
+  const [error, setError] = useState(false);
 
   // function for toggling notification menu
   const toggleCart = (event) => {
@@ -307,6 +332,101 @@ export function NavBar({
         "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"
       }
     >
+      <Modal
+        open={openPhoneVerification}
+        onClose={() => dispatch(toggleOpenPhoneVerification())}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        disableEscapeKeyDown={generateStatus === "loading"}
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Phone Number Verification
+          </Typography>
+          <p className={"text-xs mb-5"}>
+            You need to verify your phone number to continue
+          </p>
+          <PhoneInput
+            specialLabel={"Enter your phone number"}
+            country={"gh"}
+            inputStyle={{
+              borderColor: "green",
+            }}
+            value={phoneNumber}
+            onChange={(phone) => setPhoneNumber(phone)}
+          />
+          {error && (
+            <p className={"text-xs mt-1 text-red-500"}>
+              Enter a valid phone number
+            </p>
+          )}
+          <div className={"mt-4"}>
+            {generateStatus === "loading" ? (
+              <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
+                <CircularProgress color={"success"} />
+              </Box>
+            ) : (
+              <Button
+                color={"success"}
+                variant="contained"
+                onClick={() => {
+                  if (phoneNumber.length > 10) {
+                    setError(false);
+                    dispatch(generateOtp(phoneNumber));
+                  } else {
+                    setError(true);
+                  }
+                }}
+              >
+                Verify
+              </Button>
+            )}
+          </div>
+        </Box>
+      </Modal>
+      <Modal
+        open={openCodeVerification}
+        onClose={() => dispatch(toggleOpenCodeVerification())}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        disableEscapeKeyDown={verifyStatus === "loading"}
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Phone Number Verification
+          </Typography>
+          <p className={"text-xs mb-5"}>Enter code to verify</p>
+          <VerificationInput
+            value={code}
+            onChange={(value) => setCode(value)}
+          />
+          {error && (
+            <p className={"text-xs mt-1 text-red-500"}>Enter a valid code</p>
+          )}
+          <div className={"mt-4"}>
+            {status === "loading" ? (
+              <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
+                <CircularProgress color={"success"} />
+              </Box>
+            ) : (
+              <Button
+                color={"success"}
+                variant="contained"
+                onClick={() => {
+                  if (code.length === 6) {
+                    setError(false);
+                    dispatch(verifyOtp({ phoneNumber, code }));
+                  } else {
+                    setError(true);
+                  }
+                }}
+              >
+                Verify
+              </Button>
+            )}
+          </div>
+        </Box>
+      </Modal>
       <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
         {links}
@@ -412,6 +532,13 @@ export function NavBar({
                     color={"success"}
                     variant="contained"
                     endIcon={<ShoppingCartCheckoutIcon />}
+                    onClick={() => {
+                      if (user.user.phoneNumber) {
+                        navigate(`/checkout/${user.user.id}`);
+                      } else {
+                        dispatch(toggleOpenPhoneVerification());
+                      }
+                    }}
                   >
                     Checkout
                   </Button>
@@ -505,6 +632,28 @@ export function NavBar({
     </Header>
   );
 }
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  borderRadius: 3,
+  boxShadow: 24,
+  outline: 0,
+  p: 4,
+};
+
+const phoneNumberStyles = (theme) => ({
+  field: {
+    margin: "10px 0",
+  },
+  countryList: {
+    ...theme.typography.body1,
+  },
+});
 
 const collapseBreakPointCssMap = {
   sm: {

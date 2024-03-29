@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "./pages/home";
 import { Login } from "./pages/login";
 import Dashboard from "./pages/adminDashboard";
@@ -13,12 +13,20 @@ import Shop from "./pages/shop";
 import Product from "./pages/product";
 import { SignUp } from "./pages/signUp";
 import { useDispatch, useSelector } from "react-redux";
-import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { resetToast } from "./features/toast/toastSlice";
 import Results from "./components/results";
 import LoadingPage from "./components/loadingPage";
-import { NavBar } from "./components/header";
+import Checkout from "./pages/checkout";
+import { toggleOpenPhoneVerification } from "./features/cart/cartSlice";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 function App() {
   const message = useSelector((state) => state.toast.message);
@@ -56,6 +64,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="verify/:id/:token" element={<LoadingPage />} />
+          <Route path="checkout/:id" element={<Checkout />} />
           <Route
             path="/verification-success"
             element={<Results type={"success"} />}

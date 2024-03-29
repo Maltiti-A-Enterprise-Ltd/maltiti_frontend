@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign,no-use-before-define */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios, { axiosPrivate } from "../../utility/axios";
+import { axiosPrivate } from "../../utility/axios";
 import { SERVER_ERROR } from "../../utility/constants";
 import { closeBackDrop, openBackDrop, setToast } from "../toast/toastSlice";
 
@@ -13,8 +13,23 @@ const initialState = {
   id: "",
   removeStatus: "idle",
   totalPrice: 0,
+  transportation: undefined,
 };
 
+export const completeCheckout = createAsyncThunk(
+  "cart/CompleteCheckout",
+  async (_, { getState, dispatch }) => {
+    const { cart } = getState();
+    if (!cart.transportation) {
+      dispatch(
+        setToast({
+          type: "info",
+          message: "Enter your location to get shipping/transport charges",
+        }),
+      );
+    }
+  },
+);
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (id, { dispatch }) => {
@@ -22,6 +37,29 @@ export const removeFromCart = createAsyncThunk(
     try {
       await axiosPrivate.delete(`/cart/${id}`);
       dispatch(removeCart(id));
+      dispatch(closeBackDrop());
+    } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
+      dispatch(closeBackDrop());
+    }
+  },
+);
+
+export const getTransportation = createAsyncThunk(
+  "cart/getTransportation",
+  async (location, { dispatch, getState }) => {
+    const { user } = getState();
+    dispatch(openBackDrop());
+    try {
+      const response = await axiosPrivate.get(
+        `/checkout/${user.user.user.id}/${location}`,
+      );
+      dispatch(updateTransportation(response.data.data));
       dispatch(closeBackDrop());
     } catch (error) {
       dispatch(
@@ -134,6 +172,9 @@ export const cartSlice = createSlice({
         parseInt(cart.product.retail) * parseInt(cart.quantity);
       state.cartTotal = state.cartTotal - 1;
     },
+    updateTransportation: (state, action) => {
+      state.transportation = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCart.fulfilled, (state) => {
@@ -167,12 +208,12 @@ export const cartSlice = createSlice({
 });
 
 export const {
-  updateProducts,
   updateQuantity,
   updateId,
   updateCart,
   setShake,
   removeCart,
+  updateTransportation,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
