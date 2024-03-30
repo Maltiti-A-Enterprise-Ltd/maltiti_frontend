@@ -42,12 +42,11 @@ export const signUp = createAsyncThunk(
 export const generateOtp = createAsyncThunk(
   "user/generateOtp",
   async (phoneNumber, { dispatch }) => {
-    dispatch(openBackDrop());
     try {
       const response = await defaultAxios.post(
         `https://sms.arkesel.com/api/otp/generate`,
         {
-          expiry: 15,
+          expiry: 10,
           length: 6,
           medium: "sms",
           message:
@@ -66,9 +65,7 @@ export const generateOtp = createAsyncThunk(
           message: "A verification code has been sent to your number",
         }),
       );
-      dispatch(openBackDrop());
     } catch (error) {
-      dispatch(openBackDrop());
       dispatch(
         setToast({
           type: "error",
@@ -79,51 +76,51 @@ export const generateOtp = createAsyncThunk(
   },
 );
 
-export const verifyOtp = createAsyncThunk(
-  "user/verifyOtp",
-  async ({ phoneNumber, code }, { dispatch }) => {
-    dispatch(openBackDrop());
-    try {
-      const response = await defaultAxios.post(
-        `https://sms.arkesel.com/api/otp/verify`,
-        {
-          number: phoneNumber,
-          code: code,
-          "api-key": `${process.env.REACT_APP_SMS_API_KEY}`,
-        },
-        { headers: { "api-key": `${process.env.REACT_APP_SMS_API_KEY}` } },
-      );
-      dispatch(
-        setToast({
-          type: "success",
-          message: response.data.message,
-        }),
-      );
-      dispatch(toggleOpenCodeVerification());
-      dispatch(savePhoneNumber(phoneNumber));
-    } catch (error) {
-      dispatch(openBackDrop());
-      dispatch(
-        setToast({
-          type: "error",
-          message: error.response?.data?.message || SERVER_ERROR,
-        }),
-      );
-    }
-  },
-);
+// export const verifyOtp = createAsyncThunk(
+//   "user/verifyOtp",
+//   async ({ phoneNumber, code }, { dispatch }) => {
+//     dispatch(openBackDrop());
+//     try {
+//       const response = await defaultAxios.post(
+//         `https://sms.arkesel.com/api/otp/verify`,
+//         {
+//           number: phoneNumber,
+//           code: code,
+//           "api-key": `${process.env.REACT_APP_SMS_API_KEY}`,
+//         },
+//         { headers: { "api-key": `${process.env.REACT_APP_SMS_API_KEY}` } },
+//       );
+//       dispatch(
+//         setToast({
+//           type: "success",
+//           message: response.data.message,
+//         }),
+//       );
+//       dispatch(toggleOpenCodeVerification());
+//       dispatch(savePhoneNumber(phoneNumber));
+//     } catch (error) {
+//       dispatch(openBackDrop());
+//       dispatch(
+//         setToast({
+//           type: "error",
+//           message: error.response?.data?.message || SERVER_ERROR,
+//         }),
+//       );
+//     }
+//   },
+// );
 
 export const savePhoneNumber = createAsyncThunk(
   "user/savePhoneNumber",
-  async (phoneNumber, { dispatch, getState }) => {
+  async ({ phoneNumber, code }, { dispatch, getState }) => {
     const { user } = getState();
     const id = user.user.user.id;
     try {
       const response = await axiosPrivate.post(
         `/authentication/verify-phone/${id}`,
-        { phoneNumber },
+        { phoneNumber, code },
       );
-      dispatch(openBackDrop());
+      dispatch(toggleOpenCodeVerification());
       dispatch(updateUser(response.data.data));
       dispatch(
         setToast({
@@ -132,7 +129,6 @@ export const savePhoneNumber = createAsyncThunk(
         }),
       );
     } catch (error) {
-      dispatch(openBackDrop());
       dispatch(
         setToast({
           type: "error",
@@ -242,13 +238,13 @@ export const userSlice = createSlice({
     builder.addCase(login.rejected, (state) => {
       state.status = "error";
     });
-    builder.addCase(verifyOtp.fulfilled, (state) => {
+    builder.addCase(savePhoneNumber.fulfilled, (state) => {
       state.verifyStatus = "success";
     });
-    builder.addCase(verifyOtp.pending, (state) => {
+    builder.addCase(savePhoneNumber.pending, (state) => {
       state.verifyStatus = "loading";
     });
-    builder.addCase(verifyOtp.rejected, (state) => {
+    builder.addCase(savePhoneNumber.rejected, (state) => {
       state.verifyStatus = "error";
     });
     builder.addCase(generateOtp.fulfilled, (state) => {

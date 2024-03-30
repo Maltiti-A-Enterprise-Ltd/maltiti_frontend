@@ -57,7 +57,7 @@ const CheckoutComponent = () => {
               <span style={{ color: "black" }}>Contact</span>
               <TextField
                 fullWidth
-                defaultValue={"0557309018"}
+                defaultValue={user.user.phoneNumber}
                 color="success"
                 disabled={true}
                 variant="outlined"

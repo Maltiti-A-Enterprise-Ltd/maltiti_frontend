@@ -28,6 +28,7 @@ import { Logout, Settings } from "@mui/icons-material";
 import {
   generateOtp,
   logout,
+  savePhoneNumber,
   toggleOpenCodeVerification,
   toggleOpenPhoneVerification,
   verifyOtp,
@@ -404,18 +405,19 @@ export function NavBar({
             <p className={"text-xs mt-1 text-red-500"}>Enter a valid code</p>
           )}
           <div className={"mt-4"}>
-            {status === "loading" ? (
+            {verifyStatus === "loading" ? (
               <Box sx={{ textAlign: "center", marginTop: "1rem" }}>
                 <CircularProgress color={"success"} />
               </Box>
             ) : (
               <Button
+                disabled={code.length !== 6}
                 color={"success"}
                 variant="contained"
                 onClick={() => {
                   if (code.length === 6) {
                     setError(false);
-                    dispatch(verifyOtp({ phoneNumber, code }));
+                    dispatch(savePhoneNumber({ phoneNumber, code }));
                   } else {
                     setError(true);
                   }
