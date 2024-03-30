@@ -27,6 +27,7 @@ import Checkout from "./pages/checkout";
 import { toggleOpenPhoneVerification } from "./features/cart/cartSlice";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { ProtectedAuth, ProtectedRoute } from "./utility/protected";
 
 function App() {
   const message = useSelector((state) => state.toast.message);
@@ -64,7 +65,14 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="verify/:id/:token" element={<LoadingPage />} />
-          <Route path="checkout/:id" element={<Checkout />} />
+          <Route
+            path="checkout/:id"
+            element={
+              <ProtectedRoute>
+                <Checkout />{" "}
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/verification-success"
             element={<Results type={"success"} />}
@@ -77,12 +85,19 @@ function App() {
           <Route
             path="/login"
             element={
-              // <ProtectedAuth>
-              <Login />
-              // </ProtectedAuth>
+              <ProtectedAuth>
+                <Login />
+              </ProtectedAuth>
             }
           />
-          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/signup"
+            element={
+              <ProtectedAuth>
+                <SignUp />{" "}
+              </ProtectedAuth>
+            }
+          />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           <Route element={<PersistLogin />}>

@@ -1,15 +1,11 @@
 import { Navigate } from "react-router-dom";
+import store from "../app/store";
 
-///function to protect admin dashboard pages if user is not logged in or not an admin
 export const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("maltiti-token");
-  const user = JSON.parse(localStorage.getItem("maltiti-user"));
+  const userData = store.getState().user.user;
 
-  if (!isAuthenticated) {
+  if (!userData) {
     return <Navigate to="/" replace />;
-  } else {
-    const userRole = user["roles"][0];
-    if (userRole === "user") return <Navigate to="/" replace />;
   }
 
   return children;
@@ -17,13 +13,10 @@ export const ProtectedRoute = ({ children }) => {
 
 //function to protect authentication pages if user is logged
 export const ProtectedAuth = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("maltiti-token");
-  const user = JSON.parse(localStorage.getItem("maltiti-user"));
+  const userData = store.getState().user.user;
 
-  if (isAuthenticated) {
-    const userRole = user["roles"][0];
-    if (userRole === "admin") return <Navigate to="/admin" replace />;
-    else return <Navigate to="/" replace />;
+  if (userData) {
+    return <Navigate to="/" replace />;
   }
   return children;
 };
