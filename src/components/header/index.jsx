@@ -31,7 +31,6 @@ import {
   savePhoneNumber,
   toggleOpenCodeVerification,
   toggleOpenPhoneVerification,
-  verifyOtp,
 } from "../../features/user/userSlice";
 import {
   getCart,
@@ -50,6 +49,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import PhoneInput from "react-phone-input-2";
 import VerificationInput from "react-verification-input";
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -75,13 +76,13 @@ export const LogoLink = styled(NavLink)`
   ${tw`flex items-center font-black border-b-0 text-sm! ml-16!`};
 
   img {
-    ${tw`w-16 mr-2`}
+    ${tw`w-10 mr-2`}
   }
 `;
 
 export const MobileNavLinksContainer = tw.nav`flex flex-1 items-center justify-between`;
 export const NavToggle = tw.button`
-  lg:hidden mr-20 z-20 focus:outline-none text-green-500 hocus:text-black transition duration-300
+  lg:hidden z-20 focus:outline-none text-green-500 hocus:text-black transition duration-300
 `;
 export const MobileNavLinks = motion(styled.div`
   ${tw`fixed inset-x-0 top-0 z-10 p-8 mx-4 my-6 text-center text-gray-900 bg-white border rounded-lg lg:hidden`}
@@ -198,21 +199,26 @@ export function NavBar({
           <NavLink></NavLink>
         </>
       )}
+    </NavLinks>,
+  ];
 
+  const userLinks = [
+    <NavLinks>
       {user ? (
-        <div className={"pb-2"}>
+        <div>
           {user.user.image ? (
             <Avatar
-              className={"cursor-pointer"}
               onClick={handleClick}
               alt={user.user.name}
               src={user.user.image}
+              sx={{ width: 24, height: 24 }}
             />
           ) : (
             <Avatar
               className={"cursor-pointer"}
               onClick={handleClick}
               {...stringAvatar(user.user.name)}
+              sx={{ width: 30, height: 30, fontSize: "small" }}
             />
           )}
           <Menu
@@ -330,7 +336,7 @@ export function NavBar({
       id="header-shop"
       className={
         className ||
-        "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-32"
+        "header-light border-b-2 fixed z-50 bg-white left-0 right-0 top-0 h-20"
       }
     >
       <Modal
@@ -431,6 +437,8 @@ export function NavBar({
       </Modal>
       <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
+      </DesktopNavLinks>
+      <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
         {links}
       </DesktopNavLinks>
       <MobileNavLinksContainer
@@ -446,29 +454,32 @@ export function NavBar({
         </MobileNavLinks>
         <NavToggle
           onClick={toggleNavbar}
-          className={showNavLinks ? "open" : "closed"}
+          className={showNavLinks ? "open ml-[100%] mt-4 w-full" : "closed"}
         >
-          {showNavLinks ? (
-            <CloseIcon tw="w-6 h-6" />
-          ) : (
-            <MenuIcon tw="w-6 h-6" />
-          )}
+          {showNavLinks && <CloseIcon tw="w-6 h-6" />}
         </NavToggle>
       </MobileNavLinksContainer>
+      <NavLink ref={ref} id="cart" className="cursor-pointer flex border-none">
+        {userLinks}{" "}
+      </NavLink>
       <NavLink
         ref={ref}
         id="cart"
-        className="mr-[5%] cursor-pointer flex border-none"
+        className="mx-5 cursor-pointer flex border-none"
         onClick={toggleCart}
       >
-        <span
-          aria-hidden="true"
-          className="text-center leading-tight inline-block w-5 h-5 transform translate-x-12 translate-y-0 bg-red-600 rounded-full"
-        >
-          {cartTotal}
-        </span>
-        <AiOutlineShoppingCart size={40} />
+        <Badge badgeContent={cartTotal} color="success">
+          <ShoppingCartIcon color="action" />
+        </Badge>
       </NavLink>
+      <div className={"mr-5"}>
+        <NavToggle
+          onClick={toggleNavbar}
+          className={showNavLinks ? "open" : "closed"}
+        >
+          {!showNavLinks && <MenuIcon tw="w-6 h-6" />}
+        </NavToggle>
+      </div>
       {isCartOpen ? (
         <Transition
           show={isCartOpen}
