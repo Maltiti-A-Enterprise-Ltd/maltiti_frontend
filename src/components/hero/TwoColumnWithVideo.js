@@ -72,7 +72,7 @@ export default function ({
   const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
   return (
-    <Container id="home" className="mt-[5%]">
+    <Container id="home">
       <TwoColumn>
         <LeftColumn>
           <Heading>{heading}</Heading>

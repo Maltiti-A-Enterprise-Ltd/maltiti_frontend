@@ -36,7 +36,7 @@ export function Location({ heading = "", subheading = "" }) {
         {subheading && <Subheading>{subheading}</Subheading>}
         {heading && <Heading>{heading}</Heading>}
       </ContentWithPaddingXl>
-      <LoadScript googleMapsApiKey="AIzaSyC7kp94PJXor3UxV6ThQRZeqmQRn7LaFao">
+      <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
           <MarkerF position={{ lat: 9.4778122, lng: -0.88135407 }} />
         </GoogleMap>

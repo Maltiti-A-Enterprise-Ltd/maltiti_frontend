@@ -1,20 +1,26 @@
 import React, { useEffect } from "react";
 import "./index.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@mui/material";
 import { getProduct } from "../../features/shop/shopSlice";
 import { convertGramUnits } from "../../utility/unitConverter";
+import { addToCart } from "../../features/cart/cartSlice";
+import { setToast } from "../../features/toast/toastSlice";
+import { CardButton } from "../styleTW";
 
 function ProductDetails() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const product = useSelector((state) => state.shop.product);
   const status = useSelector((state) => state.shop.statusProduct);
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getProduct(id));
   }, []);
+
   return (
     <main className="container">
       <div className="left-column">
@@ -88,9 +94,29 @@ function ProductDetails() {
         ) : (
           <div className="product-price">
             <span>GHC {product.retail}</span>
-            <a href="#" className="cart-btn">
-              Add to cart
-            </a>
+            <CardButton
+              type={"button"}
+              onClick={() => {
+                if (user) {
+                  dispatch(
+                    addToCart({
+                      productId: product.id,
+                      userId: user.user.id,
+                    }),
+                  );
+                } else {
+                  navigate("/login");
+                  dispatch(
+                    setToast({
+                      type: "info",
+                      message: "Please login to continue",
+                    }),
+                  );
+                }
+              }}
+            >
+              Add to Cart
+            </CardButton>
           </div>
         )}
       </div>

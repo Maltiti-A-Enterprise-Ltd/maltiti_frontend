@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Skeleton, Snackbar } from "@mui/material";
+import { Container, Skeleton, Snackbar, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@mui/material/Alert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavBar } from "../components/header";
 import AnimationRevealPage from "../helpers/AnimationRevealPage";
 import Footer from "../components/footers/MiniCenteredFooter";
@@ -29,10 +29,13 @@ import { ContentWithPaddingXl } from "../components/misc/Layouts";
 import { ReactComponent as StarIcon } from "../images/star-icon.svg";
 import {
   getProducts,
+  resetProducts,
   toggleShowError,
   updateCurrentPage,
 } from "../features/shop/shopSlice";
 import { convertGramUnits } from "../utility/unitConverter";
+import { addToCart } from "../features/cart/cartSlice";
+import { setToast } from "../features/toast/toastSlice";
 
 function Shop() {
   const tabs = [
@@ -43,19 +46,23 @@ function Shop() {
     { name: "Others", value: "others" },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].value);
+  const [search, setSearch] = useState("");
+  const [timer, setTimer] = useState(null);
   const products = useSelector((state) => state.shop.products);
   const status = useSelector((state) => state.shop.status);
   const showError = useSelector((state) => state.shop.showError);
   const errorMessage = useSelector((state) => state.shop.errorMessage);
   const totalPages = useSelector((state) => state.shop.totalPages);
   const currentPage = useSelector((state) => state.shop.currentPage);
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
       getProducts({
         category: activeTab,
         page: currentPage,
-        searchTerm: "",
+        searchTerm: search,
       }),
     );
   }, [currentPage, activeTab]);
@@ -105,13 +112,43 @@ function Shop() {
             </div>
             <div className="mt-4">
               <HeaderRow>
-                <Header />
+                <TextField
+                  id="standard-basic"
+                  label="Search"
+                  variant="standard"
+                  color={"success"}
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                    if (timer) {
+                      clearTimeout(timer);
+                      setTimer(null);
+                    }
+                    setTimer(
+                      setTimeout(() => {
+                        dispatch(resetProducts());
+                        dispatch(updateCurrentPage(1));
+                        dispatch(
+                          getProducts({
+                            category: activeTab,
+                            page: currentPage,
+                            searchTerm: search,
+                          }),
+                        );
+                      }, 1000),
+                    );
+                  }}
+                />
                 <TabsControl>
                   {tabs.map((tab) => (
                     <TabControl
                       key={tab.value}
                       active={activeTab === tab.value}
-                      onClick={() => setActiveTab(tab.value)}
+                      onClick={() => {
+                        dispatch(updateCurrentPage(1));
+                        setActiveTab(tab.value);
+                        dispatch(resetProducts());
+                      }}
                     >
                       {tab.name}
                     </TabControl>
@@ -145,7 +182,6 @@ function Shop() {
                     <CardContainer key={product.id}>
                       <Card
                         className="group"
-                        href="#"
                         initial="rest"
                         whileHover="hover"
                         animate="rest"
@@ -176,7 +212,29 @@ function Shop() {
                             }}
                             transition={{ duration: 0.3 }}
                           >
-                            <CardButton>Add to Cart</CardButton>
+                            <CardButton
+                              type={"button"}
+                              onClick={() => {
+                                if (user) {
+                                  dispatch(
+                                    addToCart({
+                                      productId: product.id,
+                                      userId: user.user.id,
+                                    }),
+                                  );
+                                } else {
+                                  navigate("/login");
+                                  dispatch(
+                                    setToast({
+                                      type: "info",
+                                      message: "Please login to continue",
+                                    }),
+                                  );
+                                }
+                              }}
+                            >
+                              Add to Cart
+                            </CardButton>
                             <br />
                             <CardButton type="button">
                               <Link to={`${product.id}`}>View Details</Link>
@@ -195,6 +253,11 @@ function Shop() {
                       </Card>
                     </CardContainer>
                   ))}
+              {status !== "loading" && !products.length && (
+                <div className={"flex item-center w-full mt-5 justify-center"}>
+                  <span>No products found</span>
+                </div>
+              )}
             </div>
           </ContentWithPaddingXl>
           {/* <DecoratorBlob1 /> */}
