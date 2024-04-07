@@ -235,21 +235,7 @@ export function Login({
                       <span className="text">{submitButtonText}</span>
                     </SubmitButton>
                   )}
-
-                  {/*<div className="flex gap-x-2 mt-2">*/}
-                  {/*  <input*/}
-                  {/*    className="text-xs text-gray-600"*/}
-                  {/*    type="checkbox"*/}
-                  {/*    id="persist"*/}
-                  {/*    onChange={() => togglePersist()}*/}
-                  {/*    checked={persist}*/}
-                  {/*  />*/}
-                  {/*  <label className="text-sm text-gray-600" htmlFor="persist">*/}
-                  {/*    Trust This Device?*/}
-                  {/*  </label>*/}
-                  {/*</div>*/}
                 </div>
-
                 <p className="mt-6 text-xs text-gray-600 hover:text-green-100 text-center">
                   <a
                     href={forgotPasswordUrl}

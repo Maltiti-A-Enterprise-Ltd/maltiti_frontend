@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.24.3",
+    "@babel/preset-env": "^7.24.3",
+    "@babel/preset-react": "^7.24.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@headlessui/react": "^1.7.7",
@@ -37,6 +40,7 @@
     "react-slick": "^0.29.0",
     "react-verification-input": "^4.1.1",
     "redux": "^4.2.1",
+    "save-dev": "^0.0.1-security",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.7.3",
@@ -50,9 +54,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "babel": "babel src -d build",
     "deploy": "yarn build && netlify deploy --prod --dir=build",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix .",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "eslintConfig": {
@@ -81,6 +86,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.24.1",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",

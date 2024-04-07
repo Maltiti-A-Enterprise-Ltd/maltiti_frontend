@@ -21,7 +21,6 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Logout, Settings } from "@mui/icons-material";
@@ -51,6 +50,7 @@ import PhoneInput from "react-phone-input-2";
 import VerificationInput from "react-verification-input";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { stringAvatar } from "../../utility/avatarUtils";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -67,7 +67,7 @@ export const NavLink = tw.a`
 
 export const PrimaryLink = tw(NavLink)`
   lg:mx-0
-  px-8 py-3 rounded bg-green-500 text-gray-100
+  lg:px-8 lg:py-3 px-3 py-1 rounded bg-green-500 text-gray-100
   hocus:bg-green-700 hocus:text-gray-200
   border-b-0 lg:mr-20!
 `;
@@ -120,6 +120,7 @@ export function NavBar({
   const shake = useSelector((state) => state.cart.shake);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const removeStatus = useSelector((state) => state.cart.removeStatus);
+  const addingStatus = useSelector((state) => state.cart.adding);
   const ref = useRef();
   const navigate = useNavigate();
 
@@ -141,35 +142,6 @@ export function NavBar({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-  }
-
-  function stringAvatar(name) {
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-    };
-  }
 
   const defaultLinks = [
     <NavLinks key={1}>
@@ -255,11 +227,11 @@ export function NavBar({
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleClose}>
-              <Avatar /> Profile
+            <MenuItem onClick={() => navigate("orders")}>
+              <Avatar /> My Orders
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={() => navigate("settings")}>
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
@@ -275,7 +247,7 @@ export function NavBar({
         </div>
       ) : (
         <>
-          <NavLink href="/login" tw="lg:ml-12!">
+          <NavLink href="/login" tw="lg:ml-12! max-lg:mr-3">
             Login
           </NavLink>
           <PrimaryLink
@@ -465,7 +437,7 @@ export function NavBar({
       <NavLink
         ref={ref}
         id="cart"
-        className="mx-5 cursor-pointer flex border-none"
+        className={`${addingStatus === "loading" ? "animate-bounce " : "animate-pulse "} mx-5 cursor-pointer flex border-none`}
         onClick={toggleCart}
       >
         <Badge badgeContent={cartTotal} color="success">
@@ -516,14 +488,14 @@ export function NavBar({
                 </svg>
               </button>
             </div>
-            <div className={"flex text-lg mb-2 justify-between mx-10"}>
-              <span className="flex font-bold">Subtotal</span>
-              {!!cart.length && (
+            {!!cart.length && (
+              <div className={"flex text-lg mb-2 justify-between mx-10"}>
+                <span className="flex font-bold">Subtotal</span>
                 <div className={"font-bold"}>
                   <span>GH&#8373; {totalPrice}</span>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
             <div
               className={
                 "mx-10 mb-2 gap-x-1 flex items-center justify-center text-xs"

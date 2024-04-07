@@ -13,13 +13,17 @@ const initialState = {
   id: "",
   removeStatus: "idle",
   totalPrice: 0,
+  confirmPaymentStatus: "loading",
   transportation: undefined,
+  orders: [],
+  order: undefined,
+  isOrderOpen: false,
 };
 
 export const completeCheckout = createAsyncThunk(
   "cart/CompleteCheckout",
-  async (_, { getState, dispatch }) => {
-    const { cart } = getState();
+  async (data, { getState, dispatch }) => {
+    const { cart, user } = getState();
     if (!cart.transportation) {
       dispatch(
         setToast({
@@ -27,9 +31,54 @@ export const completeCheckout = createAsyncThunk(
           message: "Enter your location to get shipping/transport charges",
         }),
       );
+      return;
+    }
+    dispatch(openBackDrop());
+    const id = user.user.user.id;
+
+    try {
+      const response = await axiosPrivate.post(
+        `checkout/initialize-transaction/${id}`,
+        data,
+      );
+      dispatch(closeBackDrop());
+      window.location.href = response.data.data.authorization_url;
+    } catch (error) {
+      dispatch(closeBackDrop());
+      dispatch(
+        setToast({
+          type: "error",
+          message:
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            SERVER_ERROR,
+        }),
+      );
     }
   },
 );
+
+export const confirmPayment = createAsyncThunk(
+  "cart/removeFromCart",
+  async ({ userId, checkoutId }, { dispatch }) => {
+    dispatch(updateConfirmPaymentStatus("loading"));
+    try {
+      await axiosPrivate.get(
+        `/checkout/confirm-payment/${userId}/${checkoutId}`,
+      );
+      dispatch(updateConfirmPaymentStatus("success"));
+    } catch (error) {
+      dispatch(updateConfirmPaymentStatus("error"));
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.message || SERVER_ERROR,
+        }),
+      );
+    }
+  },
+);
+
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (id, { dispatch }) => {
@@ -122,20 +171,84 @@ export const addToCart = createAsyncThunk(
       const response = await axiosPrivate.post(`/cart/${userId}`, {
         id: productId,
       });
-      dispatch(openBackDrop());
+      dispatch(closeBackDrop());
       dispatch(setShake());
       dispatch(updateCart(response.data.data));
       dispatch(getCart(userId));
     } catch (error) {
-      dispatch(openBackDrop());
+      dispatch(closeBackDrop());
+      if (error.response.status === 409) {
+        dispatch(
+          setToast({
+            type: "info",
+            message: error.response?.data?.error || SERVER_ERROR,
+          }),
+        );
+      } else {
+        dispatch(
+          setToast({
+            type: "error",
+            message:
+              error.response?.data?.error ||
+              error.response?.data?.message ||
+              SERVER_ERROR,
+          }),
+        );
+      }
+    }
+    dispatch(setShake());
+  },
+);
+
+export const getOrders = createAsyncThunk(
+  "cart/orders",
+  async (_, { getState, dispatch }) => {
+    const { user } = getState();
+    const userId = user.user.user.id;
+    dispatch(openBackDrop());
+    try {
+      const response = await axiosPrivate.get(`/checkout/orders/${userId}`);
+      dispatch(updateOrders(response.data.data));
+      dispatch(closeBackDrop());
+    } catch (error) {
+      dispatch(closeBackDrop());
       dispatch(
         setToast({
           type: "error",
-          message: error.response?.data?.message || SERVER_ERROR,
+          message:
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            SERVER_ERROR,
         }),
       );
     }
-    dispatch(setShake());
+  },
+);
+
+export const getOrder = createAsyncThunk(
+  "cart/order",
+  async (id, { getState, dispatch }) => {
+    const { user } = getState();
+    const userId = user.user.user.id;
+    dispatch(openBackDrop());
+    try {
+      const response = await axiosPrivate.get(`/checkout/order/${id}`);
+      console.log(response, "response");
+      dispatch(updateOrder(response.data.data));
+      dispatch(closeBackDrop());
+      dispatch(setIsOrderOpen(true));
+    } catch (error) {
+      dispatch(closeBackDrop());
+      dispatch(
+        setToast({
+          type: "error",
+          message:
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            SERVER_ERROR,
+        }),
+      );
+    }
   },
 );
 
@@ -164,6 +277,9 @@ export const cartSlice = createSlice({
         findCart.quantity = quantity;
       }
     },
+    updateConfirmPaymentStatus: (state, action) => {
+      state.confirmPaymentStatus = action.payload;
+    },
     removeCart: (state, action) => {
       const cart = state.cart.find((cart) => cart.id === action.payload);
       state.cart = state.cart.filter((cart) => cart.id !== action.payload);
@@ -174,6 +290,15 @@ export const cartSlice = createSlice({
     },
     updateTransportation: (state, action) => {
       state.transportation = action.payload;
+    },
+    updateOrders: (state, action) => {
+      state.orders = action.payload;
+    },
+    updateOrder: (state, action) => {
+      state.order = action.payload;
+    },
+    setIsOrderOpen: (state, action) => {
+      state.isOrderOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -214,6 +339,11 @@ export const {
   setShake,
   removeCart,
   updateTransportation,
+  updateConfirmPaymentStatus,
+  updateProducts,
+  updateOrders,
+  updateOrder,
+  setIsOrderOpen,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

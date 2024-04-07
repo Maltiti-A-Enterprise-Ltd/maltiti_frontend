@@ -61,8 +61,9 @@ const refreshToken = async () => {
     );
     const user = store?.getState()?.user?.user;
     user.accessToken = response.data.accessToken;
+    console.log("Before Dispatch");
     store.dispatch(setUser(user));
-    console.log(response.data.accessToken);
+    console.log("After Dispatch");
     return response.data.accessToken;
   } catch (error) {
     localStorage.clear();

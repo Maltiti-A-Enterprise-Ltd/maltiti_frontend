@@ -16,14 +16,21 @@ const CheckoutComponent = () => {
   const transportation = useSelector((state) => state.cart.transportation);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const user = useSelector((state) => state.user.user);
+  const [name, setName] = useState(user.user.name);
   const [city, setCity] = useState("");
+  const [location, setLocation] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
+  const [country, setCountry] = useState("Ghana");
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     onPlaceSelected: (place) => {
+      setLocation(place.formatted_address || "Unkown");
+      setCountry(
+        place.address_components[3]?.long_name ||
+          place.address_components[2]?.long_name,
+      );
       const selectedCity = place.address_components[0].long_name;
       setCity(selectedCity);
-      const country = place.address_components[3].long_name;
-      console.log("country: " + country);
       if (country === "Ghana") {
         const location = selectedCity === "Tamale" ? "local" : "other";
         dispatch(getTransportation(location));
@@ -45,7 +52,8 @@ const CheckoutComponent = () => {
               <span style={{ color: "black" }}>Name</span>
               <TextField
                 fullWidth
-                defaultValue={user.user.name}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
                 color="success"
                 variant="outlined"
                 size={"small"}
@@ -94,6 +102,8 @@ const CheckoutComponent = () => {
                 shipping
               </span>
               <TextField
+                value={extraInfo}
+                onChange={(event) => setExtraInfo(event.target.value)}
                 fullWidth
                 color="success"
                 variant="outlined"
@@ -203,13 +213,31 @@ const CheckoutComponent = () => {
               By completing your purchase you agree to these Terms of Service
             </p>
             <div className={"mt-5 pb-10"}>
-              <Button
-                onClick={() => dispatch(completeCheckout())}
-                variant="contained"
-                color={"success"}
-              >
-                Complete Checkout
-              </Button>
+              {country === "Ghana" ? (
+                <Button
+                  onClick={() =>
+                    dispatch(
+                      completeCheckout({
+                        name,
+                        location,
+                        extraInfo,
+                        amount: (
+                          (totalPrice + transportation) *
+                          100
+                        ).toString(),
+                      }),
+                    )
+                  }
+                  variant="contained"
+                  color={"success"}
+                >
+                  Complete Checkout
+                </Button>
+              ) : (
+                <Button variant="contained" color={"success"}>
+                  Request Order
+                </Button>
+              )}
             </div>
           </div>
         </div>

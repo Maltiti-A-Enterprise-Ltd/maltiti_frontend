@@ -166,6 +166,7 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk(
   "user/logout",
   async (userData, { dispatch }) => {
+    dispatch(openBackDrop());
     try {
       await axiosPrivate.post(`/authentication/invalidate-token`, userData);
       dispatch(resetUser());
