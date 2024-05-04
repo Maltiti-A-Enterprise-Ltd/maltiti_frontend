@@ -1,0 +1,96 @@
+.lineItems {
+    margin-bottom: 80px;
+    padding: 0 40px;
+}
+
+/*.lineItems .addItem {*/
+/*    padding-top: 20px;*/
+/*}*/
+
+/*.lineItems .addItem button {*/
+/*    @extend %flex-center;*/
+/*    background: none;*/
+/*    padding: $rhythm / 2;*/
+/*    border: 1px solid $addColor;*/
+/*    color: $addColor;*/
+/*    border-radius: $borderRadius;*/
+/*    float: right;*/
+/*    .addIcon {*/
+/*        color: $addColor;*/
+/*        margin-right: $rhythm / 4;*/
+/*    }*/
+/*}*/
+
+.gridTable {
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    display: grid;
+}
+
+.gridTable > .row {
+    display: grid;
+    grid-template-columns: 1fr 5fr 2fr repeat(2, 3fr);
+    border-bottom: 1px solid #ccc;
+}
+.currency > input[type=number] {
+    max-width: 80px;
+}
+
+.gridTable > .row:last-of-type {
+    border-bottom: none;
+}
+
+.gridTable > .row.header > div {
+    text-align: center;
+    font-weight: bold;
+    background: #eee;
+}
+.gridTable > .row .editable > div {
+    padding: 10px;
+}
+
+.gridTable > .row > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-left: 1px solid #ccc;
+    width: 100%;
+    line-height: 10px;
+    min-width: 10px;
+}
+
+.gridTable > .row > div:first-of-type {
+    padding: 10px 0;
+    border-left: none;
+}
+.gridTable > .row > div:last-of-type {
+    padding: 10px 0;
+}
+.gridTable > .row > div:first-of-type, &:nth-child(4), &:last-of-type {
+    text-align: center;
+}
+
+.gridTable > .row > div > .deleteItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: darkred;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+.listDraggingOver {
+    background: #ddd repeating-linear-gradient(30deg, rgba(#FFF, .2), rgba(#FFF, .2) 30px, transparent 0, transparent 60px);
+}
+
+.listItemDragging {
+    background: #f9fff9;
+    border: 1px solid #ccc;
+}
+

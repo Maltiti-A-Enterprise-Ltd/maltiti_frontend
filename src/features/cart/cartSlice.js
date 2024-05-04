@@ -233,7 +233,6 @@ export const getOrder = createAsyncThunk(
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.get(`/checkout/order/${id}`);
-      console.log(response, "response");
       dispatch(updateOrder(response.data.data));
       dispatch(closeBackDrop());
       dispatch(setIsOrderOpen(true));

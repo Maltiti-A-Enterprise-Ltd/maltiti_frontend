@@ -17,9 +17,12 @@ export const axiosPrivate = axios.create({
   baseURL: BACKEND_URL,
   headers: { "Content-Type": "application/json" },
 });
-
+let isRefreshing = false;
 axiosPrivate.interceptors.request.use(
   (config) => {
+    if (isRefreshing) {
+      return Promise.reject();
+    }
     if (!config.headers["Authorization"]) {
       const token = store?.getState()?.user?.user?.accessToken;
       config.headers["Authorization"] = `Bearer ${token}`;
@@ -33,7 +36,7 @@ axiosPrivate.interceptors.response.use(
   (response) => response,
 
   async (error) => {
-    console.error(error, "error, here");
+    isRefreshing = true;
     const prevRequest = error?.config;
     if (error?.response?.status === 401 && !prevRequest?.sent) {
       prevRequest.sent = true;

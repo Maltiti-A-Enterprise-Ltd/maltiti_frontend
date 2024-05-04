@@ -10,3 +10,13 @@ export const formatDate = (date) => {
   };
   return new Intl.DateTimeFormat("en-US", options).format(date);
 };
+
+export const formatDate2 = (date) => {
+  date = new Date(date);
+  const options = {
+    year: "2-digit",
+    month: "long",
+    day: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};

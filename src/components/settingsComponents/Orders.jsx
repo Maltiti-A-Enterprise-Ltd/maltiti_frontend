@@ -21,12 +21,8 @@ import React, { useEffect, useState } from "react";
 import {
   getOrder,
   getOrders,
-  removeFromCart,
   setIsOrderOpen,
 } from "../../features/cart/cartSlice";
-import DoneIcon from "@mui/icons-material/Done";
-import CloseIcon from "@mui/icons-material/Close";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { formatDate } from "../../utility/formatDate";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -38,18 +34,22 @@ import { HighlightedText } from "../styleTW";
 import Link from "@mui/material/Link";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
+import { OrderStatus, PaymentStatus } from "./status";
+import { orderStatusProgress } from "../../utility/status";
+import { Invoice } from "../invoice";
+import generatePDF from "react-to-pdf";
+import { closeBackDrop, openBackDrop } from "../../features/toast/toastSlice";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   width: "100%",
+  padding: "0 3rem",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
+  outline: "none",
   boxShadow: 24,
 };
 
@@ -85,13 +85,21 @@ const Orders = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     dispatch(getOrders());
   }, []);
 
+  const getTargetElement = () => document.getElementById("content-id");
+
   return (
     <div className={"mt-16"}>
+      {isDownloading && (
+        <div id="content-id">
+          <Invoice order={order} />
+        </div>
+      )}
       <Breadcrumbs separator={">"} aria-label="breadcrumb">
         <Link
           underline="hover"
@@ -137,28 +145,10 @@ const Orders = () => {
                   {`#${order.id.substring(0, 6).toUpperCase()}`}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {order.paymentStatus === "paid" ? (
-                    <Chip
-                      label={order.paymentStatus.toUpperCase()}
-                      color="success"
-                      icon={<DoneIcon />}
-                    />
-                  ) : (
-                    <Chip
-                      label={order.paymentStatus.toUpperCase()}
-                      color="error"
-                      icon={<CloseIcon />}
-                    />
-                  )}
+                  <PaymentStatus status={order.paymentStatus} />
                 </StyledTableCell>
                 <StyledTableCell>
-                  {order.orderStatus === "review" && (
-                    <Chip
-                      label={order.orderStatus.toUpperCase()}
-                      color="default"
-                      icon={<RemoveRedEyeIcon />}
-                    />
-                  )}
+                  <OrderStatus status={order.orderStatus} />
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(order.createdAt)}</StyledTableCell>
                 <StyledTableCell>GH&#8373; {order.amount}</StyledTableCell>
@@ -185,23 +175,16 @@ const Orders = () => {
             <hr className={"bg-gray-200"} />
             <div className={"flex justify-between p-4"}>
               <div className={"flex flex-col"}>
-                <span>Order Status</span>
+                <span>Payment Status</span>
                 <span>
-                  <Chip
-                    label={order?.paymentStatus.toUpperCase()}
-                    color="success"
-                    icon={<DoneIcon />}
-                  />
+                  <PaymentStatus status={order?.paymentStatus} />
                 </span>
               </div>
               <Divider orientation="vertical" variant="middle" flexItem />
               <div className={"flex flex-col"}>
-                <span>Payment Status</span>
+                <span>Order Status</span>
                 <span>
-                  <Chip
-                    label={order?.orderStatus.toUpperCase()}
-                    icon={<VisibilityIcon />}
-                  />
+                  <OrderStatus status={order?.orderStatus} />
                 </span>
               </div>
               <Divider orientation="vertical" variant="middle" flexItem />
@@ -212,7 +195,7 @@ const Orders = () => {
               <Divider orientation="vertical" variant="middle" flexItem />
               <div className={"flex flex-col"}>
                 <span>Estimated Arrival Date</span>
-                <span>VISA CARD</span>
+                <span>Unknown</span>
               </div>
             </div>
             <hr className={"bg-gray-200"} />
@@ -226,53 +209,105 @@ const Orders = () => {
                   title="Order is being reviewed and will begin packaging shortly."
                   arrow
                 >
-                  <Avatar sx={{ bgcolor: "green" }}>
+                  <Avatar
+                    sx={{
+                      bgcolor:
+                        orderStatusProgress(order?.orderStatus) >= 25
+                          ? "green"
+                          : "#bdbdbd",
+                    }}
+                  >
                     <VisibilityIcon />
                   </Avatar>
                 </Tooltip>
               </div>
               <div className={"w-full grid items-center"}>
-                <hr className={"bg-[green] h-1"} />
+                <hr
+                  className={`${orderStatusProgress(order?.orderStatus) >= 50 ? "bg-[green]" : "bg-[#bdbdbd]"}  h-1`}
+                />
               </div>
               <div>
                 <Tooltip
                   placement="top"
-                  open={open}
+                  open={order?.orderStatus === "packaging"}
                   onClose={handleClose}
                   onOpen={handleOpen}
                   title="Order is being packaged and will be scheduled for delivery soon."
                   arrow
                 >
-                  <Avatar>
+                  <Avatar
+                    sx={{
+                      bgcolor:
+                        orderStatusProgress(order?.orderStatus) >= 50
+                          ? "green"
+                          : "#bdbdbd",
+                    }}
+                  >
                     <CycloneIcon />
                   </Avatar>
                 </Tooltip>
               </div>
               <div className={"w-full grid items-center"}>
-                <hr className={"bg-[#bdbdbd] h-1"} />
+                <hr
+                  className={`${orderStatusProgress(order?.orderStatus) >= 75 ? "bg-[green]" : "bg-[#bdbdbd]"}  h-1`}
+                />
               </div>
               <div>
-                <Avatar>
-                  <LocalShippingIcon />
-                </Avatar>
+                <Tooltip
+                  placement="top"
+                  open={order?.orderStatus === "delivery in progress"}
+                  onClose={handleClose}
+                  onOpen={handleOpen}
+                  title="Order is in transit, and will arrive at your location shortly."
+                  arrow
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor:
+                        orderStatusProgress(order?.orderStatus) >= 75
+                          ? "green"
+                          : "#bdbdbd",
+                    }}
+                  >
+                    <LocalShippingIcon />
+                  </Avatar>
+                </Tooltip>
               </div>
               <div className={"w-full grid items-center"}>
-                <hr className={"bg-[#bdbdbd] h-1"} />
+                <hr
+                  className={`${orderStatusProgress(order?.orderStatus) >= 100 ? "bg-[green]" : "bg-[#bdbdbd]"}  h-1`}
+                />
               </div>
               <div>
-                <Avatar>
-                  <AssuredWorkloadIcon />
-                </Avatar>
+                <Tooltip
+                  placement="top"
+                  open={order?.orderStatus === "delivered"}
+                  onClose={handleClose}
+                  onOpen={handleOpen}
+                  title="This order has been delivered successfully. Thank you for purchasing"
+                  arrow
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor:
+                        orderStatusProgress(order?.orderStatus) >= 100
+                          ? "green"
+                          : "#bdbdbd",
+                    }}
+                  >
+                    <AssuredWorkloadIcon />
+                  </Avatar>
+                </Tooltip>
               </div>
             </div>
-            <div className="flex p-10 flex-row">
+            <div className="flex justify-between p-10 flex-row">
               <div className="basis-3/4">
                 <ul
                   role="list"
                   className="-my-6 space-y-3 divide-y divide-gray-200"
                 >
                   {order?.__carts__?.map((item) => (
-                    <li className="flex rounded-md bg-gray-200 px-3 mx-5 py-2">
+                    <li className="flex rounded-md bg-[#E1E1E1FF] px-3 mx-5 py-2">
                       <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                         <img
                           src={item.product.image}
@@ -298,23 +333,38 @@ const Orders = () => {
                   ))}
                 </ul>
               </div>
-              <div className="basis-1/4 flex gap-y-2 flex-col">
+              <div className="basis-12/4 justify-end justify-content-end flex gap-y-2 flex-col">
                 <Button color={"error"} variant="contained">
                   Cancel Order
                 </Button>
-                <Button color={"success"} variant="contained">
+                <Button
+                  onClick={() => {
+                    dispatch(openBackDrop());
+                    setIsDownloading(true);
+                    setTimeout(() => {
+                      generatePDF(getTargetElement).then(() => {
+                        setIsDownloading(false);
+                        dispatch(closeBackDrop());
+                      }, 1000);
+                    });
+                  }}
+                  color={"success"}
+                  variant="contained"
+                >
                   Invoice
                 </Button>
-                <Button color={"warning"} variant="contained">
-                  Contact Us
-                </Button>
-                <Button variant="contained">Reorder</Button>
+                {/*<Button color={"warning"} variant="contained">*/}
+                {/*  Contact Us*/}
+                {/*</Button>*/}
+                {/*<Button variant="contained">Reorder</Button>*/}
               </div>
             </div>
             <div className={"p-4 flex justify-center"}>
               <Button
                 onClick={() => dispatch(setIsOrderOpen(false))}
-                color={"error"}
+                style={{
+                  backgroundColor: "#bdbdbd",
+                }}
                 variant="contained"
               >
                 Close

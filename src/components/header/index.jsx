@@ -227,11 +227,11 @@ export function NavBar({
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={() => navigate("orders")}>
+            <MenuItem onClick={() => navigate("/orders")}>
               <Avatar /> My Orders
             </MenuItem>
             <Divider />
-            <MenuItem onClick={() => navigate("settings")}>
+            <MenuItem onClick={() => navigate("/settings")}>
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
