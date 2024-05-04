@@ -75,6 +75,14 @@ export const OrderStatus = ({ status }) => {
           icon={<LocalShippingIcon />}
         />
       );
+    case "cancelled":
+      return (
+        <Chip
+          label={status.toUpperCase()}
+          color="default"
+          icon={<CloseIcon />}
+        />
+      );
     default:
       return null; // Or you can return some default message/component here
   }

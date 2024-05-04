@@ -13,12 +13,7 @@ import Shop from "./pages/shop";
 import Product from "./pages/product";
 import { SignUp } from "./pages/signUp";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Backdrop,
-  CircularProgress,
-  Snackbar,
-  Typography,
-} from "@mui/material";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { resetToast } from "./features/toast/toastSlice";
 import Results from "./components/results";

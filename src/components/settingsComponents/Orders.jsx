@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Backdrop,
   Breadcrumbs,
   Chip,
+  CircularProgress,
   Divider,
   Paper,
   Table,
@@ -19,6 +21,7 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import {
+  cancelOrder,
   getOrder,
   getOrders,
   setIsOrderOpen,
@@ -82,6 +85,7 @@ const Orders = () => {
   const orders = useSelector((state) => state.cart.orders);
   const order = useSelector((state) => state.cart.order);
   const isOrderOpen = useSelector((state) => state.cart.isOrderOpen);
+  const isBackDropOpen = useSelector((state) => state.toast.isBackDropOpen);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -151,7 +155,9 @@ const Orders = () => {
                   <OrderStatus status={order.orderStatus} />
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(order.createdAt)}</StyledTableCell>
-                <StyledTableCell>GH&#8373; {order.amount}</StyledTableCell>
+                <StyledTableCell>
+                  GH&#8373; {parseInt(order.amount) / 100}
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
@@ -162,6 +168,15 @@ const Orders = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
+            <Backdrop
+              sx={{
+                color: "#cefad0",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+              }}
+              open={isBackDropOpen}
+            >
+              <CircularProgress color="success" />
+            </Backdrop>
             <div className={"bg-[#e8faef] flex justify-between p-4"}>
               <span>
                 Order ID: {`#${order?.id.substring(0, 6).toUpperCase()}`}
@@ -334,25 +349,35 @@ const Orders = () => {
                 </ul>
               </div>
               <div className="basis-12/4 justify-end justify-content-end flex gap-y-2 flex-col">
-                <Button color={"error"} variant="contained">
-                  Cancel Order
-                </Button>
-                <Button
-                  onClick={() => {
-                    dispatch(openBackDrop());
-                    setIsDownloading(true);
-                    setTimeout(() => {
-                      generatePDF(getTargetElement).then(() => {
-                        setIsDownloading(false);
-                        dispatch(closeBackDrop());
-                      }, 1000);
-                    });
-                  }}
-                  color={"success"}
-                  variant="contained"
-                >
-                  Invoice
-                </Button>
+                {order?.orderStatus !== "delivery in progress" &&
+                  order?.orderStatus !== "delivered" &&
+                  order?.orderStatus !== "cancelled" && (
+                    <Button
+                      onClick={() => dispatch(cancelOrder(order.id))}
+                      color={"error"}
+                      variant="contained"
+                    >
+                      Cancel Order
+                    </Button>
+                  )}
+                {order?.orderStatus !== "cancelled" && (
+                  <Button
+                    onClick={() => {
+                      dispatch(openBackDrop());
+                      setIsDownloading(true);
+                      setTimeout(() => {
+                        generatePDF(getTargetElement).then(() => {
+                          setIsDownloading(false);
+                          dispatch(closeBackDrop());
+                        }, 1000);
+                      });
+                    }}
+                    color={"success"}
+                    variant="contained"
+                  >
+                    Invoice
+                  </Button>
+                )}
                 {/*<Button color={"warning"} variant="contained">*/}
                 {/*  Contact Us*/}
                 {/*</Button>*/}

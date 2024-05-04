@@ -251,6 +251,30 @@ export const getOrder = createAsyncThunk(
   },
 );
 
+export const cancelOrder = createAsyncThunk(
+  "cart/cancel-order",
+  async (id, { dispatch }) => {
+    dispatch(openBackDrop());
+    try {
+      const response = await axiosPrivate.patch(`/checkout/cancel-order/${id}`);
+      dispatch(updateOrder(response.data.data));
+      dispatch(closeBackDrop());
+      dispatch(getOrder());
+    } catch (error) {
+      dispatch(closeBackDrop());
+      dispatch(
+        setToast({
+          type: "error",
+          message:
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            SERVER_ERROR,
+        }),
+      );
+    }
+  },
+);
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
