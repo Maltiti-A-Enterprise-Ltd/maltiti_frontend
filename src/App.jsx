@@ -13,21 +13,16 @@ import Shop from "./pages/shop";
 import Product from "./pages/product";
 import { SignUp } from "./pages/signUp";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Backdrop,
-  CircularProgress,
-  Snackbar,
-  Typography,
-} from "@mui/material";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import { resetToast } from "./features/toast/toastSlice";
 import Results from "./components/results";
 import LoadingPage from "./components/loadingPage";
 import Checkout from "./pages/checkout";
-import { toggleOpenPhoneVerification } from "./features/cart/cartSlice";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
 import { ProtectedAuth, ProtectedRoute } from "./utility/protected";
+import ConfirmPayment from "./pages/confirmPayment";
+import Settings from "./pages/settings";
+import MyOrders from "./pages/myOrders";
 
 function App() {
   const message = useSelector((state) => state.toast.message);
@@ -42,7 +37,7 @@ function App() {
         sx={{ color: "#cefad0", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isBackDropOpen}
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress color="success" />
       </Backdrop>
       <Snackbar
         open={isOpen}
@@ -65,6 +60,30 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="verify/:id/:token" element={<LoadingPage />} />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <MyOrders />{" "}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="confirm-payment/:userId/:checkoutId"
+            element={
+              <ProtectedRoute>
+                <ConfirmPayment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="settings/*"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="checkout/:id"
             element={
