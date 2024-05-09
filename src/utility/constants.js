@@ -37,3 +37,21 @@ export const pdfOptions = {
     },
   },
 };
+
+export const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  borderRadius: 3,
+  boxShadow: 24,
+  outline: 0,
+  p: 4,
+};
+
+export const imagePaths = Object.freeze({
+  mailBox: "mailbox.svg",
+  highfive: "high-five.svg",
+});

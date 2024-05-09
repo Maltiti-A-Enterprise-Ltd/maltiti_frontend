@@ -5,6 +5,7 @@ import { css } from "styled-components/macro";
 import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "../../images/svg-decorator-blob-7.svg";
 import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons";
+import { Container as ContainerBase } from "../misc/Layouts";
 
 export const HighlightedText = tw.span`bg-green-500 text-gray-100 px-4 transform -skew-x-12 inline-block mt-2`;
 
@@ -57,3 +58,46 @@ export const CardText = tw.div`p-4 text-gray-900`;
 export const CardTitle = tw.h5`text-lg font-semibold group-hover:text-green-500`;
 export const CardContent = tw.p`mt-1 text-sm font-medium text-gray-600`;
 export const CardPrice = tw.p`mt-4 text-sm font-bold`;
+
+export const Container = tw(
+  ContainerBase,
+)`min-h-fit text-white font-medium flex justify-center -m-8`;
+export const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
+export const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
+export const LogoLink = tw.a``;
+export const LogoImage = tw.img`h-12 mx-auto`;
+export const MainContent = tw.div`mt-12 flex flex-col items-center`;
+export const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
+export const FormContainer = tw.div`w-full flex-1 mt-8`;
+export const SocialButtonsContainer = tw.div`flex flex-col items-center`;
+export const SocialButton = styled.a`
+  ${tw`flex items-center justify-center w-full max-w-xs py-3 mt-5 text-sm font-semibold text-gray-900 transition-all duration-300 bg-gray-100 border rounded-lg hocus:bg-gray-200 hocus:border-gray-400 focus:outline-none focus:outline first:mt-0`}
+  .iconContainer {
+    ${tw`p-2 bg-white rounded-full`}
+  }
+  .icon {
+    ${tw`w-4`}
+  }
+  .text {
+    ${tw`ml-4`}
+  }
+`;
+export const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
+export const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
+export const Form = tw.form`mx-auto max-w-xs`;
+export const Input = tw.input`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
+export const SubmitButton = styled.button`
+  ${tw`flex items-center justify-center w-full py-4 mt-5 font-semibold tracking-wide text-gray-100 transition-all duration-300 ease-in-out rounded-lg bg-green-100 hover:bg-green-900 focus:outline focus:outline-none`}
+  .icon {
+    ${tw`w-6 h-6 -ml-2`}
+  }
+  .text {
+    ${tw`ml-3`}
+  }
+`;
+export const IllustrationContainer = tw.div`sm:rounded-r-lg flex-1 bg-white text-center hidden lg:flex justify-center`;
+
+export const IllustrationImage = styled.div`
+  ${(props) => `background-image: url("${props.imageSrc}");`}
+  ${tw`w-full max-w-sm m-12 bg-center bg-no-repeat bg-contain xl:m-16`}
+`;

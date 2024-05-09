@@ -1,32 +1,34 @@
 .lineItem {
-    display: grid;
-    grid-template-columns: 1fr 5fr 2fr repeat(2, 3fr);
-    border-bottom: 1px solid #ccc;
+  display: grid;
+  grid-template-columns: 1fr 5fr 2fr repeat(2, 3fr);
+  border-bottom: 1px solid #ccc;
 }
 
 .lineItem > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    border-left: 1px solid #ccc;
-    width: 100%;
-    line-height: 20px;
-    min-width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  width: 100%;
+  line-height: 20px;
+  min-width: 20px;
 }
 
 .lineItem > div:first-of-type {
-    padding: 10px 0;
-    border-left: none;
+  padding: 10px 0;
+  border-left: none;
 }
 .lineItem > div:last-of-type {
-    padding: 10px 0;
+  padding: 10px 0;
 }
-.lineItem > div:first-of-type, &:nth-child(4), &:last-of-type {
-    text-align: center;
+.lineItem > div:first-of-type,
+&:nth-child(4),
+&:last-of-type {
+  text-align: center;
 }
 
 .line {
-    min-width: 40px;
-    width: 100%;
+  min-width: 40px;
+  width: 100%;
 }

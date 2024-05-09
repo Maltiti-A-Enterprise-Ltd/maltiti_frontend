@@ -51,6 +51,7 @@ import VerificationInput from "react-verification-input";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { stringAvatar } from "../../utility/avatarUtils";
+import { modalStyle } from "../../utility/constants";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -318,7 +319,7 @@ export function NavBar({
         aria-describedby="modal-modal-description"
         disableEscapeKeyDown={generateStatus === "loading"}
       >
-        <Box sx={style}>
+        <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Phone Number Verification
           </Typography>
@@ -370,7 +371,7 @@ export function NavBar({
         aria-describedby="modal-modal-description"
         disableEscapeKeyDown={verifyStatus === "loading"}
       >
-        <Box sx={style}>
+        <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Phone Number Verification
           </Typography>
@@ -617,28 +618,6 @@ export function NavBar({
     </Header>
   );
 }
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  borderRadius: 3,
-  boxShadow: 24,
-  outline: 0,
-  p: 4,
-};
-
-const phoneNumberStyles = (theme) => ({
-  field: {
-    margin: "10px 0",
-  },
-  countryList: {
-    ...theme.typography.body1,
-  },
-});
 
 const collapseBreakPointCssMap = {
   sm: {

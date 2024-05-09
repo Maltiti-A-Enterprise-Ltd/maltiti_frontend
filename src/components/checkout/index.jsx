@@ -9,9 +9,11 @@ import {
   getTransportation,
 } from "../../features/cart/cartSlice";
 import InfoIcon from "@mui/icons-material/Info";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutComponent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart.cart);
   const transportation = useSelector((state) => state.cart.transportation);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
@@ -39,8 +41,8 @@ const CheckoutComponent = () => {
   });
 
   return (
-    <main className="w-full flex item-center justify-center my-[3%] h-screen font-normal text-black">
-      <div className={"flex flex-row mt-24 gap-5"}>
+    <main className="w-full overflow-auto flex item-center justify-center my-[3%] h-screen font-normal text-black">
+      <div className={"flex flex-col md:flex-row mt-24 gap-5"}>
         <div
           className={
             "border px-5 bg-gray-200 basis-2/3 border-gray-200 shadow rounded-lg"
@@ -215,19 +217,23 @@ const CheckoutComponent = () => {
             <div className={"mt-5 pb-10"}>
               {country === "Ghana" ? (
                 <Button
-                  onClick={() =>
-                    dispatch(
-                      completeCheckout({
-                        name,
-                        location,
-                        extraInfo,
-                        amount: (
-                          (totalPrice + transportation) *
-                          100
-                        ).toString(),
-                      }),
-                    )
-                  }
+                  onClick={() => {
+                    if (cart.length) {
+                      dispatch(
+                        completeCheckout({
+                          name,
+                          location,
+                          extraInfo,
+                          amount: (
+                            (totalPrice + transportation) *
+                            100
+                          ).toString(),
+                        }),
+                      );
+                    } else {
+                      navigate("/");
+                    }
+                  }}
                   variant="contained"
                   color={"success"}
                 >

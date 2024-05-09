@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign,no-use-before-define */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { axiosPrivate } from "../../utility/axios";
-import { SERVER_ERROR } from "../../utility/constants";
-import { openBackDrop, setToast } from "../toast/toastSlice";
+import { imagePaths, SERVER_ERROR } from "../../utility/constants";
+import { openBackDrop, openModal, setToast } from "../toast/toastSlice";
 import { default as defaultAxios } from "axios";
 
 const initialState = {
@@ -21,6 +21,71 @@ export const signUp = createAsyncThunk(
       const response = await axios.post(
         `/authentication/customer-signup`,
         userData,
+      );
+      dispatch(
+        setToast({
+          type: "success",
+          message: response.data.message,
+        }),
+      );
+    } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.error || SERVER_ERROR,
+        }),
+      );
+    }
+  },
+);
+
+export const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  async (email, { dispatch }) => {
+    try {
+      const response = await axios.post(`/authentication/forgot-password`, {
+        email,
+      });
+
+      dispatch(
+        openModal({
+          message: response.data.message,
+          image: imagePaths.mailBox,
+        }),
+      );
+      dispatch(
+        setToast({
+          type: "success",
+          message: response.data.message,
+        }),
+      );
+      return response;
+    } catch (error) {
+      dispatch(
+        setToast({
+          type: "error",
+          message: error.response?.data?.error || SERVER_ERROR,
+        }),
+      );
+      throw new Error(error);
+    }
+  },
+);
+
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async ({ token, password, confirmPassword }, { dispatch }) => {
+    try {
+      const response = await axios.post(`/authentication/reset-password`, {
+        token,
+        password,
+        confirmPassword,
+      });
+      dispatch(
+        openModal({
+          message: response.data.message,
+          image: imagePaths.highfive,
+        }),
       );
       dispatch(
         setToast({
@@ -75,40 +140,6 @@ export const generateOtp = createAsyncThunk(
     }
   },
 );
-
-// export const verifyOtp = createAsyncThunk(
-//   "user/verifyOtp",
-//   async ({ phoneNumber, code }, { dispatch }) => {
-//     dispatch(openBackDrop());
-//     try {
-//       const response = await defaultAxios.post(
-//         `https://sms.arkesel.com/api/otp/verify`,
-//         {
-//           number: phoneNumber,
-//           code: code,
-//           "api-key": `${process.env.REACT_APP_SMS_API_KEY}`,
-//         },
-//         { headers: { "api-key": `${process.env.REACT_APP_SMS_API_KEY}` } },
-//       );
-//       dispatch(
-//         setToast({
-//           type: "success",
-//           message: response.data.message,
-//         }),
-//       );
-//       dispatch(toggleOpenCodeVerification());
-//       dispatch(savePhoneNumber(phoneNumber));
-//     } catch (error) {
-//       dispatch(openBackDrop());
-//       dispatch(
-//         setToast({
-//           type: "error",
-//           message: error.response?.data?.message || SERVER_ERROR,
-//         }),
-//       );
-//     }
-//   },
-// );
 
 export const savePhoneNumber = createAsyncThunk(
   "user/savePhoneNumber",
@@ -256,6 +287,24 @@ export const userSlice = createSlice({
     });
     builder.addCase(generateOtp.rejected, (state) => {
       state.generateStatus = "error";
+    });
+    builder.addCase(forgotPassword.rejected, (state) => {
+      state.status = "error";
+    });
+    builder.addCase(forgotPassword.fulfilled, (state) => {
+      state.status = "success";
+    });
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(resetPassword.rejected, (state) => {
+      state.status = "error";
+    });
+    builder.addCase(resetPassword.fulfilled, (state) => {
+      state.status = "success";
+    });
+    builder.addCase(resetPassword.pending, (state) => {
+      state.status = "loading";
     });
   },
 });
