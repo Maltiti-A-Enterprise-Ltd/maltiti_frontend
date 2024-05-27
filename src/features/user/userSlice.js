@@ -23,6 +23,12 @@ export const signUp = createAsyncThunk(
         userData,
       );
       dispatch(
+        openModal({
+          message: response.data.message,
+          image: imagePaths.mailBox,
+        }),
+      );
+      dispatch(
         setToast({
           type: "success",
           message: response.data.message,

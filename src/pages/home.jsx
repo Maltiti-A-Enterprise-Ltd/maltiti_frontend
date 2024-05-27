@@ -7,7 +7,6 @@ import HeroImage from "../images/hero.jpg";
 import MainFeature from "../components/features/TwoColWithButton";
 import TabGrid from "../components/cards/TabCardGrid";
 import ceo from "../images/founder.jpg";
-import Modal from "../components/features/modal1";
 import Features from "../components/features/ThreeColSimple";
 import chefIconImageSrc from "../images/vecteezy_isometric-flat-illustration-concept-courses-and-online_.jpg";
 import celebrationIconImageSrc from "../images/icons8-good-quality.gif";
@@ -26,6 +25,14 @@ import { Location } from "../components/features/Location";
 import darnisha from "../images/darnisha.jpg";
 import darnishaSide from "../images/darnishaSide.jpg";
 import { HighlightedText } from "../components/styleTW";
+import { AppBar, Dialog, Slide, Toolbar, Typography } from "@mui/material";
+import AboutCeo from "../components/features/AboutCeo";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Home() {
   const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -33,6 +40,7 @@ function Home() {
   const Description = tw.span`inline-block`;
   const imageCss = tw`rounded-[2.5rem]`;
   const [modalShow, setModalShow] = useState(false);
+
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
       <NavBar />
@@ -217,7 +225,29 @@ function Home() {
         <SimpleSlider />
         <Footer />
       </AnimationRevealPage>
-      <Modal modalShow={modalShow} onClick={() => setModalShow(false)} />
+      <Dialog
+        fullScreen
+        open={modalShow}
+        onClose={() => setModalShow(false)}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Maltiti A. Enterprise Ltd
+            </Typography>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setModalShow(false)}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <AboutCeo />
+      </Dialog>
     </div>
   );
 }
