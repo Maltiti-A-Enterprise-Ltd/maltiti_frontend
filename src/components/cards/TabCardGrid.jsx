@@ -28,6 +28,8 @@ import { addToCart } from "../../features/cart/cartSlice";
 import "./index.css";
 import { setToast } from "../../features/toast/toastSlice";
 import { SERVER_ERROR } from "../../utility/constants";
+import Button from "@mui/material/Button";
+import ShopCard from "../ShopCard";
 
 // eslint-disable-next-line react/display-name,func-names
 export default function ({
@@ -64,7 +66,7 @@ export default function ({
           {/*  ))} */}
           {/* </TabsControl> */}
         </HeaderRow>
-        <div className="mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12">
+        <div className="mt-6 flex gap-10 justify-center flex-wrap">
           {status === "loading" && !products.length
             ? Array.from({ length: 8 }).map((item) => (
                 // eslint-disable-next-line react/no-array-index-key
@@ -87,79 +89,34 @@ export default function ({
                 </CardContainer>
               ))
             : products.map((product) => (
-                <CardContainer key={product.id}>
-                  <Card
-                    className="group"
-                    initial="rest"
-                    whileHover="hover"
-                    animate="rest"
-                  >
-                    <CardImageContainer imageSrc={product.image}>
-                      <img
-                        ref={ref}
-                        className={`${adding === "loading" && id === product.id && "send-to-cart"} h-56 xl:h-64 bg-center bg-contain relative w-full rounded-t`}
-                        src={product.image}
-                        alt={product.name}
-                      />
-                      <CardRatingContainer>
-                        <CardRating>
-                          <StarIcon />
-                          {4}
-                        </CardRating>
-                        <CardReview>({87})</CardReview>
-                      </CardRatingContainer>
-                      <CardHoverOverlay
-                        variants={{
-                          hover: {
-                            opacity: 1,
-                            height: "auto",
-                          },
-                          rest: {
-                            opacity: 0,
-                            height: 0,
-                          },
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <CardButton
-                          type={"button"}
-                          onClick={() => {
-                            if (user) {
-                              dispatch(
-                                addToCart({
-                                  productId: product.id,
-                                  userId: user.user.id,
-                                }),
-                              );
-                            } else {
-                              navigate("/login");
-                              dispatch(
-                                setToast({
-                                  type: "info",
-                                  message: "Please login to continue",
-                                }),
-                              );
-                            }
-                          }}
-                        >
-                          Add to Cart
-                        </CardButton>
-                        <br />
-                        <CardButton type="button">
-                          <Link to={`shop/${product.id}`}>View Details</Link>
-                        </CardButton>
-                      </CardHoverOverlay>
-                    </CardImageContainer>
-                    <CardText>
-                      <CardTitle>{product.name}</CardTitle>
-                      <CardContent>
-                        {String(product.size).toUpperCase()} (
-                        {convertGramUnits(product.weight)})
-                      </CardContent>
-                      <CardPrice>GH₵ {product.retail}</CardPrice>
-                    </CardText>
-                  </Card>
-                </CardContainer>
+                <>
+                  <ShopCard
+                    key={product.id}
+                    selectProduct={() => navigate(`shop/${product.id}`)}
+                    image={product.image}
+                    name={product.name}
+                    price={product.retail}
+                    click={(event) => {
+                      event.stopPropagation();
+                      if (user) {
+                        dispatch(
+                          addToCart({
+                            productId: product.id,
+                            userId: user.user.id,
+                          }),
+                        );
+                      } else {
+                        navigate("/login");
+                        dispatch(
+                          setToast({
+                            type: "info",
+                            message: "Please login to continue",
+                          }),
+                        );
+                      }
+                    }}
+                  />
+                </>
               ))}
         </div>
       </ContentWithPaddingXl>
