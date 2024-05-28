@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Skeleton, Snackbar, TextField } from "@mui/material";
+import {
+  Breadcrumbs,
+  Container,
+  Skeleton,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@mui/material/Alert";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,6 +43,9 @@ import {
 import { convertGramUnits } from "../utility/unitConverter";
 import { addToCart } from "../features/cart/cartSlice";
 import { setToast } from "../features/toast/toastSlice";
+import ShopCard from "../components/ShopCard";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 function Shop() {
   const tabs = [
@@ -103,9 +113,28 @@ function Shop() {
       </Snackbar>
       <AnimationRevealPage>
         <NavBar />
+        <div className={"mt-20"}></div>
+        <Breadcrumbs separator={">"} aria-label="breadcrumb">
+          <Link
+            underline="hover"
+            sx={{ display: "flex", alignItems: "center" }}
+            color="inherit"
+            to="/"
+          >
+            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+            Home
+          </Link>
+          <Typography
+            sx={{ display: "flex", alignItems: "center" }}
+            color="text.primary"
+          >
+            <ShoppingBagIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+            Shop
+          </Typography>
+        </Breadcrumbs>
         <Container id="shop">
           <ContentWithPaddingXl>
-            <div className="mt-4">
+            <div>
               <Header>
                 Checkout our <HighlightedText>Products</HighlightedText>
               </Header>
@@ -156,7 +185,7 @@ function Shop() {
                 </TabsControl>
               </HeaderRow>
             </div>
-            <div className="mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12">
+            <div className="mt-6 flex flex-wrap justify-center gap-10">
               {status === "loading" && !products.length
                 ? Array.from({ length: 8 }).map((item) => (
                     // eslint-disable-next-line react/no-array-index-key
@@ -179,79 +208,35 @@ function Shop() {
                     </CardContainer>
                   ))
                 : products.map((product) => (
-                    <CardContainer key={product.id}>
-                      <Card
-                        className="group"
-                        initial="rest"
-                        whileHover="hover"
-                        animate="rest"
-                      >
-                        <CardImageContainer imageSrc={product.image}>
-                          <img
-                            className="h-56 xl:h-64 bg-center bg-contain relative w-full rounded-t"
-                            src={product.image}
-                            alt={product.name}
-                          />
-                          <CardRatingContainer>
-                            <CardRating>
-                              <StarIcon />
-                              {4}
-                            </CardRating>
-                            <CardReview>({87})</CardReview>
-                          </CardRatingContainer>
-                          <CardHoverOverlay
-                            variants={{
-                              hover: {
-                                opacity: 1,
-                                height: "auto",
-                              },
-                              rest: {
-                                opacity: 0,
-                                height: 0,
-                              },
-                            }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <CardButton
-                              type={"button"}
-                              onClick={() => {
-                                if (user) {
-                                  dispatch(
-                                    addToCart({
-                                      productId: product.id,
-                                      userId: user.user.id,
-                                    }),
-                                  );
-                                } else {
-                                  navigate("/login");
-                                  dispatch(
-                                    setToast({
-                                      type: "info",
-                                      message: "Please login to continue",
-                                    }),
-                                  );
-                                }
-                              }}
-                            >
-                              Add to Cart
-                            </CardButton>
-                            <br />
-                            <CardButton type="button">
-                              <Link to={`${product.id}`}>View Details</Link>
-                            </CardButton>
-                          </CardHoverOverlay>
-                        </CardImageContainer>
-                        <CardText>
-                          <CardTitle>{product.name}</CardTitle>
-                          <CardContent>
-                            {String(product.size).toUpperCase()} (
-                            {convertGramUnits(product.weight)})
-                          </CardContent>
-                          <CardPrice>GH₵ {product.retail}</CardPrice>
-                          {/* <CardPrice>Retail: GH₵ {card.price_retail}</CardPrice> */}
-                        </CardText>
-                      </Card>
-                    </CardContainer>
+                    <>
+                      <ShopCard
+                        key={product.id}
+                        selectProduct={() => navigate(`shop/${product.id}`)}
+                        image={product.image}
+                        name={product.name}
+                        price={product.retail}
+                        property={product.size}
+                        click={(event) => {
+                          event.stopPropagation();
+                          if (user) {
+                            dispatch(
+                              addToCart({
+                                productId: product.id,
+                                userId: user.user.id,
+                              }),
+                            );
+                          } else {
+                            navigate("/login");
+                            dispatch(
+                              setToast({
+                                type: "info",
+                                message: "Please login to continue",
+                              }),
+                            );
+                          }
+                        }}
+                      />
+                    </>
                   ))}
               {status !== "loading" && !products.length && (
                 <div className={"flex item-center w-full mt-5 justify-center"}>
