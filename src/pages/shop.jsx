@@ -211,7 +211,7 @@ function Shop() {
                     <>
                       <ShopCard
                         key={product.id}
-                        selectProduct={() => navigate(`shop/${product.id}`)}
+                        selectProduct={() => navigate(`./${product.id}`)}
                         image={product.image}
                         name={product.name}
                         price={product.retail}
