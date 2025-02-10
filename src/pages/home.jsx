@@ -61,6 +61,13 @@ function Home() {
           primaryButtonText="Shop Now"
           watchVideoButtonText="About US"
         />
+        <TabGrid
+          heading={
+            <>
+              Check our best selling <HighlightedText>Products</HighlightedText>
+            </>
+          }
+        />
         <MainFeature
           subheading={<Subheading>Established Since 2002</Subheading>}
           heading={
@@ -87,13 +94,6 @@ function Home() {
           imageDecoratorBlob
           imageDecoratorBlobCss={tw`-translate-x-1/2 opacity-25 left-1/2 md:w-32 md:h-32`}
           modal={() => setModalShow(true)}
-        />
-        <TabGrid
-          heading={
-            <>
-              Check our best selling <HighlightedText>Products</HighlightedText>
-            </>
-          }
         />
         <Features
           heading={
