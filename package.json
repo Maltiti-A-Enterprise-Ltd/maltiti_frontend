@@ -30,6 +30,7 @@
     "react-dom": "^18.0.0",
     "react-github-btn": "^1.4.0",
     "react-google-autocomplete": "^2.7.3",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^4.7.1",
     "react-modal": "^3.16.1",
     "react-phone-input-2": "^2.15.1",
@@ -88,6 +89,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
