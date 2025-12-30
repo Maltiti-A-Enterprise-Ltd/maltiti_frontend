@@ -1,15 +1,18 @@
 /* eslint-disable */
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
+import { css } from "styled-components"; //eslint-disable-line
 import { Transition } from "@headlessui/react";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import AnchorLink from "react-anchor-link-smooth-scroll";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import logo from "../../images/logo.svg";
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,12 +101,13 @@ export const DesktopNavLinks = tw.nav`
 
 export function NavBar({
   roundedHeaderButton = false,
-  logoLink,
-  links,
-  className,
+  logoLink = null,
+  links = null,
+  className = "",
   collapseBreakpointClass = "lg",
 }) {
-  const location = useLocation();
+  const pathname = usePathname();
+  const router = useRouter();
   const user = useSelector((state) => state.user.user);
   const verifyStatus = useSelector((state) => state.user.verifyStatus);
   const generateStatus = useSelector((state) => state.user.generateStatus);
@@ -123,7 +127,7 @@ export function NavBar({
   const removeStatus = useSelector((state) => state.cart.removeStatus);
   const addingStatus = useSelector((state) => state.cart.adding);
   const ref = useRef();
-  const navigate = useNavigate();
+  const navigate = router.push;
 
   useEffect(() => {
     if (user) {
@@ -146,13 +150,13 @@ export function NavBar({
 
   const defaultLinks = [
     <NavLinks key={1}>
-      {location.pathname === "/" ? (
+      {pathname === "/" ? (
         <>
           <NavLink>
             <AnchorLink href="#about">About</AnchorLink>
           </NavLink>
           <NavLink>
-            <Link to="/shop">Shop</Link>
+            <Link href="/shop">Shop</Link>
           </NavLink>
           <NavLink>
             <AnchorLink href="#faqs">Faqs</AnchorLink>
@@ -164,7 +168,7 @@ export function NavBar({
       ) : (
         <>
           <NavLink>
-            <Link to="/">Home</Link>
+            <Link href="/">Home</Link>
           </NavLink>
           <NavLink></NavLink>
           <NavLink></NavLink>

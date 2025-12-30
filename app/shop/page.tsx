@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import {
   Breadcrumbs,
@@ -9,45 +11,36 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@mui/material/Alert";
-import { Link, useNavigate } from "react-router-dom";
-import { NavBar } from "../components/header";
-import AnimationRevealPage from "../helpers/AnimationRevealPage";
-import Footer from "../components/footers/MiniCenteredFooter";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { NavBar } from "../../src/components/header";
+import AnimationRevealPage from "../../src/helpers/AnimationRevealPage";
+import Footer from "../../src/components/footers/MiniCenteredFooter";
 import {
   Card,
-  CardButton,
   CardContainer,
-  CardContent,
-  CardHoverOverlay,
   CardImageContainer,
-  CardPrice,
-  CardRating,
-  CardRatingContainer,
-  CardReview,
   CardText,
-  CardTitle,
-  HeaderRow,
   HighlightedText,
+  HeaderRow,
   TabControl,
   TabsControl,
-} from "../components/styleTW";
-import { Header } from "../components/misc/Headings";
-import { ContentWithPaddingXl } from "../components/misc/Layouts";
-import { ReactComponent as StarIcon } from "../images/star-icon.svg";
+} from "../../src/components/styleTW";
+import { Header } from "../../src/components/misc/Headings";
+import { ContentWithPaddingXl } from "../../src/components/misc/Layouts";
 import {
   getProducts,
   resetProducts,
   toggleShowError,
   updateCurrentPage,
-} from "../features/shop/shopSlice";
-import { convertGramUnits } from "../utility/unitConverter";
-import { addToCart } from "../features/cart/cartSlice";
-import { setToast } from "../features/toast/toastSlice";
-import ShopCard from "../components/ShopCard";
+} from "../../src/features/shop/shopSlice";
+import { addToCart } from "../../src/features/cart/cartSlice";
+import { setToast } from "../../src/features/toast/toastSlice";
+import ShopCard from "../../src/components/ShopCard";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
-function Shop() {
+export default function ShopPage() {
   const tabs = [
     { name: "All", value: "" },
     { name: "Shea butter", value: "shea butter" },
@@ -57,38 +50,41 @@ function Shop() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].value);
   const [search, setSearch] = useState("");
-  const [timer, setTimer] = useState(null);
-  const products = useSelector((state) => state.shop.products);
-  const status = useSelector((state) => state.shop.status);
-  const showError = useSelector((state) => state.shop.showError);
-  const errorMessage = useSelector((state) => state.shop.errorMessage);
-  const totalPages = useSelector((state) => state.shop.totalPages);
-  const currentPage = useSelector((state) => state.shop.currentPage);
-  const user = useSelector((state) => state.user.user);
-  const navigate = useNavigate();
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const products = useSelector((state: any) => state.shop.products);
+  const status = useSelector((state: any) => state.shop.status);
+  const showError = useSelector((state: any) => state.shop.showError);
+  const errorMessage = useSelector((state: any) => state.shop.errorMessage);
+  const totalPages = useSelector((state: any) => state.shop.totalPages);
+  const currentPage = useSelector((state: any) => state.shop.currentPage);
+  const user = useSelector((state: any) => state.user.user);
+  const router = useRouter();
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(
       getProducts({
         category: activeTab,
         page: currentPage,
         searchTerm: search,
-      }),
+      }) as any,
     );
   }, [currentPage, activeTab]);
 
   const handleScroll = () => {
+    if (typeof window === "undefined") return;
     const { scrollY } = window;
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     if (scrollY + windowHeight >= documentHeight - 250) {
       if (currentPage < totalPages && status !== "loading") {
-        dispatch(updateCurrentPage(currentPage + 1));
+        dispatch(updateCurrentPage(currentPage + 1) as any);
       }
     }
   };
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -100,10 +96,10 @@ function Shop() {
       <Snackbar
         open={showError}
         autoHideDuration={6000}
-        onClose={() => dispatch(toggleShowError(""))}
+        onClose={() => dispatch(toggleShowError("") as any)}
       >
         <Alert
-          onClose={() => dispatch(toggleShowError(""))}
+          onClose={() => dispatch(toggleShowError("") as any)}
           severity="error"
           variant="filled"
           sx={{ width: "100%" }}
@@ -115,12 +111,7 @@ function Shop() {
         <NavBar />
         <div className={"mt-20"}></div>
         <Breadcrumbs separator={">"} aria-label="breadcrumb">
-          <Link
-            underline="hover"
-            sx={{ display: "flex", alignItems: "center" }}
-            color="inherit"
-            to="/"
-          >
+          <Link style={{ display: "flex", alignItems: "center" }} href="/">
             <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
             Home
           </Link>
@@ -155,14 +146,14 @@ function Shop() {
                     }
                     setTimer(
                       setTimeout(() => {
-                        dispatch(resetProducts());
-                        dispatch(updateCurrentPage(1));
+                        dispatch(resetProducts() as any);
+                        dispatch(updateCurrentPage(1) as any);
                         dispatch(
                           getProducts({
                             category: activeTab,
                             page: currentPage,
                             searchTerm: search,
-                          }),
+                          }) as any,
                         );
                       }, 1000),
                     );
@@ -174,9 +165,9 @@ function Shop() {
                       key={tab.value}
                       active={activeTab === tab.value}
                       onClick={() => {
-                        dispatch(updateCurrentPage(1));
+                        dispatch(updateCurrentPage(1) as any);
                         setActiveTab(tab.value);
-                        dispatch(resetProducts());
+                        dispatch(resetProducts() as any);
                       }}
                     >
                       {tab.name}
@@ -187,9 +178,8 @@ function Shop() {
             </div>
             <div className="mt-6 flex flex-wrap justify-center gap-10">
               {status === "loading" && !products.length
-                ? Array.from({ length: 8 }).map((item) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <CardContainer key={item}>
+                ? Array.from({ length: 8 }).map((item, index) => (
+                    <CardContainer key={index}>
                       <Card className="group">
                         <CardImageContainer>
                           <Skeleton
@@ -207,36 +197,34 @@ function Shop() {
                       </Card>
                     </CardContainer>
                   ))
-                : products.map((product) => (
-                    <>
-                      <ShopCard
-                        key={product.id}
-                        selectProduct={() => navigate(`./${product.id}`)}
-                        image={product.image}
-                        name={product.name}
-                        price={product.retail}
-                        property={product.size}
-                        click={(event) => {
-                          event.stopPropagation();
-                          if (user) {
-                            dispatch(
-                              addToCart({
-                                productId: product.id,
-                                userId: user.user.id,
-                              }),
-                            );
-                          } else {
-                            navigate("/login");
-                            dispatch(
-                              setToast({
-                                type: "info",
-                                message: "Please login to continue",
-                              }),
-                            );
-                          }
-                        }}
-                      />
-                    </>
+                : products.map((product: any) => (
+                    <ShopCard
+                      key={product.id}
+                      selectProduct={() => router.push(`/shop/${product.id}`)}
+                      image={product.image}
+                      name={product.name}
+                      price={product.retail}
+                      property={product.size}
+                      click={(event: any) => {
+                        event.stopPropagation();
+                        if (user) {
+                          dispatch(
+                            addToCart({
+                              productId: product.id,
+                              userId: user.user.id,
+                            }) as any,
+                          );
+                        } else {
+                          router.push("/login");
+                          dispatch(
+                            setToast({
+                              type: "info",
+                              message: "Please login to continue",
+                            }) as any,
+                          );
+                        }
+                      }}
+                    />
                   ))}
               {status !== "loading" && !products.length && (
                 <div className={"flex item-center w-full mt-5 justify-center"}>
@@ -245,12 +233,9 @@ function Shop() {
               )}
             </div>
           </ContentWithPaddingXl>
-          {/* <DecoratorBlob1 /> */}
-          {/* <DecoratorBlob2 /> */}
         </Container>
         <Footer />
       </AnimationRevealPage>
     </div>
   );
 }
-export default Shop;

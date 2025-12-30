@@ -1,5 +1,5 @@
 import React from "react";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import styled from "styled-components";
 import { AiFillInstagram } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";

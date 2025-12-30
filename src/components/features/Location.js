@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import { GoogleMap, MarkerF, LoadScript } from "@react-google-maps/api";
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 import { Container, ContentWithPaddingXl } from "../misc/Layouts";

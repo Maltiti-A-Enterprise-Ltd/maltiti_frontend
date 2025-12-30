@@ -1,7 +1,7 @@
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { css } from "styled-components/macro";
+import { css } from "styled-components";
 import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "../../images/svg-decorator-blob-7.svg";
 import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons";

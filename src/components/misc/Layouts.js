@@ -1,4 +1,4 @@
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 
 export const Container = tw.div`relative`;
 export const ContentWithPaddingXl = tw.div`max-w-screen-xl mx-auto mt-8`;

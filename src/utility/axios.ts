@@ -1,41 +1,43 @@
-import axios from "axios";
-import { setUser } from "../features/user/userSlice";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL: string = process.env.REACT_APP_BACKEND_URL || "";
 
 export default axios.create({
   baseURL: BACKEND_URL,
 });
 
-let store;
+let store: any;
 
-export const injectStore = (_store) => {
+export const injectStore = (_store: any) => {
   store = _store;
 };
 
-export const axiosPrivate = axios.create({
+export const axiosPrivate: AxiosInstance = axios.create({
   baseURL: BACKEND_URL,
   headers: { "Content-Type": "application/json" },
 });
-let isRefreshing = false;
+
+let isRefreshing: boolean = false;
+
 axiosPrivate.interceptors.request.use(
-  (config) => {
+  (config: AxiosRequestConfig) => {
     if (isRefreshing) {
       return Promise.reject();
     }
-    if (!config.headers["Authorization"]) {
+    if (!config.headers?.["Authorization"]) {
       const token = store?.getState()?.user?.user?.accessToken;
-      config.headers["Authorization"] = `Bearer ${token}`;
+      if (config.headers) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error: any) => Promise.reject(error),
 );
 
 axiosPrivate.interceptors.response.use(
-  (response) => response,
-
-  async (error) => {
+  (response: AxiosResponse) => response,
+  async (error: any) => {
     isRefreshing = true;
     const prevRequest = error?.config;
     if (error?.response?.status === 401 && !prevRequest?.sent) {
@@ -48,28 +50,29 @@ axiosPrivate.interceptors.response.use(
   },
 );
 
-const refreshToken = async () => {
+const refreshToken = async (): Promise<string | undefined> => {
   const userData = store.getState().user.user;
-  const refreshToken = userData?.refreshToken;
+  const refreshTokenValue = userData?.refreshToken;
   try {
     const response = await axios.post(
       `${BACKEND_URL}/authentication/refresh-token/`,
-      { refreshToken },
+      { refreshToken: refreshTokenValue },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${refreshToken}`,
+          Authorization: `Bearer ${refreshTokenValue}`,
         },
       },
     );
     const user = store?.getState()?.user?.user;
     user.accessToken = response.data.accessToken;
-    console.log("Before Dispatch");
-    store.dispatch(setUser(user));
-    console.log("After Dispatch");
+    // Temporarily comment out to break circular import
+    // store.dispatch(setUser(user));
     return response.data.accessToken;
   } catch (error) {
-    localStorage.clear();
-    window.location.href = "/";
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+      window.location.href = "/";
+    }
   }
 };

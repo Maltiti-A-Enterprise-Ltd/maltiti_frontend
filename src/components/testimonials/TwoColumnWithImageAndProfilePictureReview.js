@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
-import tw from "twin.macro";
-import { css } from "styled-components/macro"; //eslint-disable-line
+import tw from "@/lib/tw";
+import { css } from "styled-components"; //eslint-disable-line
 import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
 import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
 import {

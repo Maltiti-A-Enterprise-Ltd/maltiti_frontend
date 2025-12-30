@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import { motion } from "framer-motion";
 import useInView from "./useInView";
 

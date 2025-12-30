@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Container, ContentWithPaddingXl } from "../misc/Layouts";
 import { Header } from "../misc/Headings";
 import { ReactComponent as StarIcon } from "../../images/star-icon.svg";
@@ -44,7 +46,7 @@ export default function ({
   const adding = useSelector((state) => state.cart.adding);
   const id = useSelector((state) => state.cart.id);
   const ref = useRef();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(getBestProducts());
@@ -88,11 +90,11 @@ export default function ({
                   </Card>
                 </CardContainer>
               ))
-            : products.map((product) => (
+            : products?.map((product) => (
                 <>
                   <ShopCard
                     key={product.id}
-                    selectProduct={() => navigate(`shop/${product.id}`)}
+                    selectProduct={() => router.push(`/shop/${product.id}`)}
                     image={product.image}
                     name={product.name}
                     price={product.retail}
@@ -106,7 +108,7 @@ export default function ({
                           }),
                         );
                       } else {
-                        navigate("/login");
+                        router.push("/login");
                         dispatch(
                           setToast({
                             type: "info",

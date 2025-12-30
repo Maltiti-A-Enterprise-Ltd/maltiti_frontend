@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import styled from "styled-components";
 import { ReactComponent as PlusIcon } from "feather-icons/dist/icons/plus.svg";
 import { ReactComponent as MinusIcon } from "feather-icons/dist/icons/minus.svg";
@@ -9,34 +9,64 @@ import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
-
+  <div className="max-w-screen-xl mx-auto py-16 lg:py-20">{children}</div>
 const TwoColumn = tw.div`flex`;
 const Column = tw.div``;
+const TwoColumn = ({ children }) => <div className="flex">{children}</div>;
+const Column = ({ children }) => <div>{children}</div>;
 
-const Image = styled.div((props) => [
-  `background-image: url("${props.imageSrc}");`,
   props.imageContain ? tw`bg-contain bg-no-repeat` : tw`bg-cover`,
   props.imageShadow ? tw`shadow` : tw`shadow-none`,
   tw`hidden lg:block rounded h-144 bg-center`,
-]);
-
+  props.imageShadow ? `shadow` : `shadow-none`,
+  `hidden lg:block rounded h-144 bg-center`,
 const FAQContent = tw.div`lg:ml-12`;
 const Subheading = tw(SubheadingBase)`mb-4 text-center lg:text-left`;
 const Heading = tw(SectionHeading)`lg:text-left`;
 const Description = tw.p`max-w-xl text-center mx-auto lg:mx-0 lg:text-left lg:max-w-none leading-relaxed text-sm sm:text-base lg:text-lg font-medium mt-4 text-secondary-100`;
-
+  <SubheadingBase className="mb-4 text-center lg:text-left">
 const FAQSContainer = tw.dl`mt-12`;
 const FAQ = tw.div`cursor-pointer mt-8 select-none border lg:border-0 px-8 py-4 lg:p-0 rounded-lg lg:rounded-none`;
 const Question = tw.dt`flex justify-between items-center`;
 const QuestionText = tw.span`text-lg lg:text-xl font-semibold text-gray-700`;
-const QuestionToggleIcon = styled.span`
+  <SectionHeading className="lg:text-left">{children}</SectionHeading>
   ${tw`ml-2 bg-green-500 text-gray-100 p-1 rounded-full group-hover:bg-black group-hover:text-gray-200 transition duration-300`}
-  svg {
+const Description = ({ children }) => (
     ${tw`w-4 h-4`}
-  }
-`;
+    {children}
+  </p>
 const Answer = motion(
   tw.dd`pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed`,
+);
+
+const FAQSContainer = ({ children }) => <dl className="mt-12">{children}</dl>;
+const FAQ = ({ children }) => (
+  <div className="cursor-pointer mt-8 select-none border lg:border-0 px-8 py-4 lg:p-0 rounded-lg lg:rounded-none">
+    {children}
+  </div>
+);
+const Question = ({ children }) => (
+  <dt className="flex justify-between items-center">{children}</dt>
+);
+const QuestionText = ({ children }) => (
+  <span className="text-lg lg:text-xl font-semibold text-gray-700">
+    {children}
+  </span>
+);
+const QuestionToggleIcon = styled.span`
+  ml-2 bg-green-500 text-gray-100 p-1 rounded-full group-hover:bg-black group-hover:text-gray-200 transition duration-300
+  svg {
+    w-4 h-4
+  }
+`;
+const Answer = motion(({ children }) => (
+  <dd className="pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed">
+    {children}
+  </dd>
+));
+  styled.dd`pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed`,
+);
+  styled.dd`pointer-events-none text-gray-700 text-sm sm:text-base leading-relaxed`,
 );
 
 export default function ({
@@ -84,9 +114,9 @@ export default function ({
 
   return (
     <Container id="faqs">
-      <Content>
-        <TwoColumn>
           <Column tw="hidden lg:block w-5/12 flex-shrink-0">
+        <TwoColumn>
+          <Column className="hidden lg:block w-5/12 flex-shrink-0">
             <Image
               imageContain={imageContain}
               imageShadow={imageShadow}

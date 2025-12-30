@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "./index.css";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import ripples from "../../images/Ripples_Foundation_Logo.png";
 import gsa from "../../images/GSA-Logo.png";
 import fda from "../../images/Food_and_Drug_Authority.png";

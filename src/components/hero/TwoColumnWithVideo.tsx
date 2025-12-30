@@ -1,18 +1,19 @@
+"use client";
+
 import React, { useState } from "react";
-import styled from "styled-components";
 import tw from "twin.macro";
-// eslint-disable-next-line
-import { css } from "styled-components/macro";
+import styled from "styled-components";
 
 import { ReactComponent as PlayIcon } from "feather-icons/dist/icons/play-circle.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import ReactModalAdapter from "../../helpers/ReactModalAdapter.js";
 import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
 
 import { ReactComponent as SvgDecoratorBlob1 } from "../../images/svg-decorator-blob-1.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "../../images/dot-pattern.svg";
 import DesignIllustration from "../../images/design-illustration.svg";
+import Image from "next/image";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col lg:flex-row md:items-center max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -78,9 +79,9 @@ export default function ({
           <Heading>{heading}</Heading>
           <Paragraph>{description}</Paragraph>
           <Actions>
-            <PrimaryButton as="a">
-              <Link to="/shop">{primaryButtonText}</Link>
-            </PrimaryButton>
+            <Link href="/shop">
+              <PrimaryButton as="a">{primaryButtonText}</PrimaryButton>
+            </Link>
             <WatchVideoButton onClick={toggleModal}>
               <span className="playIconContainer">
                 <PlayIcon className="playIcon" />
@@ -92,7 +93,13 @@ export default function ({
         <RightColumn>
           <IllustrationContainer>
             {/* eslint-disable-next-line react/no-unknown-property */}
-            <img css={imageCss} src={imageSrc} alt="Hero" />
+            <Image
+              height={100}
+              width={100}
+              css={imageCss}
+              src={imageSrc}
+              alt="Hero"
+            />
             {imageDecoratorBlob && <DecoratorBlob2 />}
           </IllustrationContainer>
         </RightColumn>

@@ -1,7 +1,7 @@
 import React from "react";
-import tw from "twin.macro";
+import tw from "@/lib/tw";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
+import { css } from "styled-components"; //eslint-disable-line
 import {
   SectionHeading,
   Subheading as SubheadingBase,

@@ -1,10 +1,36 @@
 /* eslint-disable no-param-reassign,no-use-before-define */
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { axiosPrivate } from "../../utility/axios";
 import { SERVER_ERROR } from "../../utility/constants";
 import { closeBackDrop, openBackDrop, setToast } from "../toast/toastSlice";
 
-const initialState = {
+interface CartItem {
+  id: number;
+  quantity: number;
+  product: {
+    retail: string;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+interface CartState {
+  status: string;
+  cart: CartItem[];
+  cartTotal: number;
+  shake: boolean;
+  adding: string;
+  id: string;
+  removeStatus: string;
+  totalPrice: number;
+  confirmPaymentStatus: string;
+  transportation: any;
+  orders: any[];
+  order: any;
+  isOrderOpen: boolean;
+}
+
+const initialState: CartState = {
   status: "idle",
   cart: [],
   cartTotal: 0,
@@ -22,8 +48,8 @@ const initialState = {
 
 export const completeCheckout = createAsyncThunk(
   "cart/CompleteCheckout",
-  async (data, { getState, dispatch }) => {
-    const { cart, user } = getState();
+  async (data: any, { getState, dispatch }) => {
+    const { cart, user } = getState() as any;
     if (!cart.transportation) {
       dispatch(
         setToast({
@@ -42,37 +68,15 @@ export const completeCheckout = createAsyncThunk(
         data,
       );
       dispatch(closeBackDrop());
-      window.location.href = response.data.data.authorization_url;
-    } catch (error) {
+      if (typeof window !== "undefined") {
+        window.location.href = response.data.data.authorization_url;
+      }
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
           type: "error",
-          message:
-            error.response?.data?.message ||
-            error.response?.data?.error ||
-            SERVER_ERROR,
-        }),
-      );
-    }
-  },
-);
-
-export const confirmPayment = createAsyncThunk(
-  "cart/removeFromCart",
-  async ({ userId, checkoutId }, { dispatch }) => {
-    dispatch(updateConfirmPaymentStatus("loading"));
-    try {
-      await axiosPrivate.get(
-        `/checkout/confirm-payment/${userId}/${checkoutId}`,
-      );
-      dispatch(updateConfirmPaymentStatus("success"));
-    } catch (error) {
-      dispatch(updateConfirmPaymentStatus("error"));
-      dispatch(
-        setToast({
-          type: "error",
-          message: error.response?.data?.message || SERVER_ERROR,
+          message: error.response?.data?.error || SERVER_ERROR,
         }),
       );
     }
@@ -81,13 +85,13 @@ export const confirmPayment = createAsyncThunk(
 
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async (id, { dispatch }) => {
+  async (id: number, { dispatch }) => {
     dispatch(openBackDrop());
     try {
       await axiosPrivate.delete(`/cart/${id}`);
       dispatch(removeCart(id));
       dispatch(closeBackDrop());
-    } catch (error) {
+    } catch (error: any) {
       dispatch(
         setToast({
           type: "error",
@@ -101,8 +105,8 @@ export const removeFromCart = createAsyncThunk(
 
 export const getTransportation = createAsyncThunk(
   "cart/getTransportation",
-  async (location, { dispatch, getState }) => {
-    const { user } = getState();
+  async (location: string, { dispatch, getState }) => {
+    const { user } = getState() as any;
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.get(
@@ -110,7 +114,7 @@ export const getTransportation = createAsyncThunk(
       );
       dispatch(updateTransportation(response.data.data));
       dispatch(closeBackDrop());
-    } catch (error) {
+    } catch (error: any) {
       dispatch(
         setToast({
           type: "error",
@@ -123,14 +127,14 @@ export const getTransportation = createAsyncThunk(
 );
 
 export const updateCartQuantity = createAsyncThunk(
-  "cart/removeFromCart",
-  async ({ id, quantity }, { dispatch }) => {
+  "cart/updateCartQuantity",
+  async ({ id, quantity }: { id: number; quantity: number }, { dispatch }) => {
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.patch(`/cart/${id}`, { quantity });
       dispatch(updateCart(response.data.data));
       dispatch(closeBackDrop());
-    } catch (error) {
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
@@ -144,13 +148,13 @@ export const updateCartQuantity = createAsyncThunk(
 
 export const getCart = createAsyncThunk(
   "cart/getCart",
-  async (userId, { dispatch }) => {
+  async (userId: number, { dispatch }) => {
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.get(`/cart/${userId}`);
       dispatch(updateCart(response.data.data));
       dispatch(closeBackDrop());
-    } catch (error) {
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
@@ -164,7 +168,10 @@ export const getCart = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ userId, productId }, { dispatch }) => {
+  async (
+    { userId, productId }: { userId: number; productId: number },
+    { dispatch },
+  ) => {
     dispatch(updateId(productId));
     dispatch(openBackDrop());
     try {
@@ -175,9 +182,9 @@ export const addToCart = createAsyncThunk(
       dispatch(setShake());
       dispatch(updateCart(response.data.data));
       dispatch(getCart(userId));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(closeBackDrop());
-      if (error.response.status === 409) {
+      if (error.response?.status === 409) {
         dispatch(
           setToast({
             type: "info",
@@ -203,14 +210,14 @@ export const addToCart = createAsyncThunk(
 export const getOrders = createAsyncThunk(
   "cart/orders",
   async (_, { getState, dispatch }) => {
-    const { user } = getState();
+    const { user } = getState() as any;
     const userId = user.user.user.id;
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.get(`/checkout/orders/${userId}`);
       dispatch(updateOrders(response.data.data));
       dispatch(closeBackDrop());
-    } catch (error) {
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
@@ -227,8 +234,8 @@ export const getOrders = createAsyncThunk(
 
 export const getOrder = createAsyncThunk(
   "cart/order",
-  async (id, { getState, dispatch }) => {
-    const { user } = getState();
+  async (id: number, { getState, dispatch }) => {
+    const { user } = getState() as any;
     const userId = user.user.user.id;
     dispatch(openBackDrop());
     try {
@@ -236,7 +243,7 @@ export const getOrder = createAsyncThunk(
       dispatch(updateOrder(response.data.data));
       dispatch(closeBackDrop());
       dispatch(setIsOrderOpen(true));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
@@ -253,14 +260,14 @@ export const getOrder = createAsyncThunk(
 
 export const cancelOrder = createAsyncThunk(
   "cart/cancel-order",
-  async (id, { dispatch }) => {
+  async (id: number, { dispatch }) => {
     dispatch(openBackDrop());
     try {
       const response = await axiosPrivate.patch(`/checkout/cancel-order/${id}`);
       dispatch(updateOrder(response.data.data));
       dispatch(closeBackDrop());
-      dispatch(getOrder());
-    } catch (error) {
+      dispatch(getOrder(id));
+    } catch (error: any) {
       dispatch(closeBackDrop());
       dispatch(
         setToast({
@@ -279,79 +286,82 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    updateProducts: (state, action) => {
-      state.products = [...state.products, ...action.payload];
-    },
-    updateCart: (state, action) => {
+    updateCart: (state, action: PayloadAction<any>) => {
       state.cart = action.payload[0];
       state.cartTotal = action.payload[1];
       state.totalPrice = action.payload[2];
     },
-    setShake: (state, action) => {
+    setShake: (state) => {
       state.shake = !state.shake;
     },
-    updateId: (state, action) => {
+    updateId: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
-    updateQuantity: (state, action) => {
+    updateQuantity: (
+      state,
+      action: PayloadAction<{ id: number; quantity: number }>,
+    ) => {
       const { id, quantity } = action.payload;
       const findCart = state.cart.find((cart) => cart.id === id);
-      if (quantity >= 1) {
+      if (findCart && quantity >= 1) {
         findCart.quantity = quantity;
       }
     },
-    updateConfirmPaymentStatus: (state, action) => {
+    updateConfirmPaymentStatus: (state, action: PayloadAction<string>) => {
       state.confirmPaymentStatus = action.payload;
     },
-    removeCart: (state, action) => {
+    removeCart: (state, action: PayloadAction<number>) => {
       const cart = state.cart.find((cart) => cart.id === action.payload);
       state.cart = state.cart.filter((cart) => cart.id !== action.payload);
-      state.totalPrice =
-        state.totalPrice -
-        parseInt(cart.product.retail) * parseInt(cart.quantity);
-      state.cartTotal = state.cartTotal - 1;
+      if (cart) {
+        state.totalPrice =
+          state.totalPrice -
+          parseInt(cart.product.retail) * parseInt(cart.quantity.toString());
+        state.cartTotal = state.cartTotal - 1;
+      }
     },
-    updateTransportation: (state, action) => {
+    updateTransportation: (state, action: PayloadAction<any>) => {
       state.transportation = action.payload;
     },
-    updateOrders: (state, action) => {
+    updateOrders: (state, action: PayloadAction<any[]>) => {
       state.orders = action.payload;
     },
-    updateOrder: (state, action) => {
+    updateOrder: (state, action: PayloadAction<any>) => {
       state.order = action.payload;
     },
-    setIsOrderOpen: (state, action) => {
+    setIsOrderOpen: (state, action: PayloadAction<boolean>) => {
       state.isOrderOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getCart.fulfilled, (state) => {
-      state.status = "success";
-    });
-    builder.addCase(getCart.pending, (state) => {
-      state.status = "loading";
-    });
-    builder.addCase(getCart.rejected, (state) => {
-      state.status = "error";
-    });
-    builder.addCase(addToCart.fulfilled, (state) => {
-      state.adding = "success";
-    });
-    builder.addCase(addToCart.pending, (state) => {
-      state.adding = "loading";
-    });
-    builder.addCase(addToCart.rejected, (state) => {
-      state.adding = "error";
-    });
-    builder.addCase(removeFromCart.fulfilled, (state) => {
-      state.removeStatus = "success";
-    });
-    builder.addCase(removeFromCart.pending, (state) => {
-      state.removeStatus = "loading";
-    });
-    builder.addCase(removeFromCart.rejected, (state) => {
-      state.removeStatus = "error";
-    });
+    builder
+      .addCase(getCart.fulfilled, (state) => {
+        state.status = "success";
+      })
+      .addCase(getCart.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getCart.rejected, (state) => {
+        state.status = "error";
+      })
+      .addCase(addToCart.fulfilled, (state) => {
+        state.adding = "success";
+      })
+      .addCase(addToCart.pending, (state) => {
+        state.adding = "loading";
+      })
+      .addCase(addToCart.rejected, (state) => {
+        state.adding = "error";
+      })
+      .addCase(removeFromCart.fulfilled, (state) => {
+        state.removeStatus = "success";
+      })
+      .addCase(removeFromCart.pending, (state) => {
+        state.removeStatus = "loading";
+      })
+      .addCase(removeFromCart.rejected, (state) => {
+        state.removeStatus = "error";
+      });
   },
 });
 
@@ -363,7 +373,6 @@ export const {
   removeCart,
   updateTransportation,
   updateConfirmPaymentStatus,
-  updateProducts,
   updateOrders,
   updateOrder,
   setIsOrderOpen,

@@ -322,7 +322,10 @@ const Orders = () => {
                   className="-my-6 space-y-3 divide-y divide-gray-200"
                 >
                   {order?.__carts__?.map((item) => (
-                    <li className="flex rounded-md bg-[#E1E1E1FF] px-3 mx-5 py-2">
+                    <li
+                      key={item.id}
+                      className="flex rounded-md bg-[#E1E1E1FF] px-3 mx-5 py-2"
+                    >
                       <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                         <img
                           src={item.product.image}
