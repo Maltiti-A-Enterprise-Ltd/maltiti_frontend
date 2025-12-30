@@ -1,6 +1,0 @@
-import tw from "@/lib/tw";
-
-export const SectionHeading = tw.h2`text-4xl sm:text-5xl font-black tracking-wide text-center`;
-export const Subheading = tw.h5`font-bold text-green-500`;
-
-export const Header = tw(SectionHeading)``;
