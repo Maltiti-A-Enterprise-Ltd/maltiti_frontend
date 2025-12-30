@@ -4,11 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: initial next js installation">
-      <change afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add home page navigation bar">
+      <change afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/home/cart-icon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/avatar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/badge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/dropdown-menu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/navigation-menu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/sheet.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/copilot-instructions.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/copilot-instructions.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/home/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/home/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
@@ -24,16 +41,38 @@
     <commands />
     <urls />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "git-widget-placeholder": "feat/next-js-conversion-v2",
     "javascript.preferred.runtime.type.id": "node",
+    "last_opened_file_path": "C:/Users/BilalAbubakari/Desktop/PROJECTS/maltiti_frontend/app/assets/images",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
     "ts.external.directory.path": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\typescript\\lib"
   }
 }]]></component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1769457619685" />
+    <option name="spentUsd" value="0.0700746" />
+  </component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="8" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets\images" />
+      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -60,11 +99,21 @@
       <option name="project" value="LOCAL" />
       <updated>1767061233073</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="chore: install shadcn">
+      <option name="closed" value="true" />
+      <created>1767062422006</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1767062422006</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: initial next js installation" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: initial next js installation" />
+    <MESSAGE value="chore: install shadcn" />
+    <MESSAGE value="feat: add home page navigation bar" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add home page navigation bar" />
   </component>
 </project>
