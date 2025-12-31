@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { JSX, ReactNode } from 'react';
 import { SmoothScroll } from '@/components/smooth-scroll';
+import { Footer } from '@/components/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SmoothScroll />
         {children}
+        <Footer />
       </body>
     </html>
   );
