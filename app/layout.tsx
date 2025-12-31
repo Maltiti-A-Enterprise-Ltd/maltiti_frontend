@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'Maltiti A. Enterprise Ltd | Organic Shea Butter & Natural Products',
   description: `Discover high-quality shea butter, essential oils, and black soap from Maltiti A. Enterprise Ltd. 
     Ethical sourcing, sustainable products from Ghana.`,
-  keywords: `Maltiti A. Enterprise Ltd, shea butter ghana, shea butter, organic shea butter, Ghana shea products, 
+  keywords: `Maltiti A. Enterprise Ltd, maltiti, shea butter ghana, shea butter, organic shea butter, Ghana shea products, 
     black soap, moringa oil, dawadawa tea, essential oils, wholesale shea butter, raw shea butter, 
     shea butter cosmetics, rice processing, baobab oil, neem oil, palm kernel oil, shea oil, agricultural exports Ghana`,
   metadataBase: new URL('https://maltitiaenterprise.com'),

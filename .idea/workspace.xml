@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display&#10;- Add @iconify/react dependency for icon support">
-      <change afterPath="$PROJECT_DIR$/app/android-chrome-192x192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/android-chrome-512x512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/apple-touch-icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/favicon-16x16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/favicon-32x32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/site.webmanifest" afterDir="false" />
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/app/favicon.ico" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -139,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767224825184</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export">
+      <option name="closed" value="true" />
+      <created>1767225307234</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1767225307234</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -151,6 +152,7 @@
     <MESSAGE value="feat: add Terms &amp; Conditions and Privacy Policy pages with animated accordion UI&#10;&#10;- Implement /terms and /privacy pages with detailed content and effective date&#10;- Use animated accordion for sectioned policy display with framer-motion&#10;- Add navigation links for Terms and Privacy to mobile navbar&#10;- Integrate back button and consistent styling with existing components" />
     <MESSAGE value="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display" />
     <MESSAGE value="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display&#10;- Add @iconify/react dependency for icon support" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display&#10;- Add @iconify/react dependency for icon support" />
+    <MESSAGE value="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export" />
   </component>
 </project>
