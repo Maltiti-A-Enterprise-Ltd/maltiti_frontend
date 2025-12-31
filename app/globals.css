@@ -120,4 +120,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scroll-padding-top: 5rem;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
 }
