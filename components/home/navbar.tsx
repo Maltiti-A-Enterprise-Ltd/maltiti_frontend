@@ -194,6 +194,22 @@ export function NavBar(): JSX.Element {
                     <span>FAQs</span>
                   </Link>
                   <Link
+                    href="/terms"
+                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Info className="h-5 w-5" />
+                    <span>Terms</span>
+                  </Link>
+                  <Link
+                    href="/privacy"
+                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Info className="h-5 w-5" />
+                    <span>Privacy</span>
+                  </Link>
+                  <Link
                     href="/#contactus"
                     className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
                     onClick={() => setMobileMenuOpen(false)}

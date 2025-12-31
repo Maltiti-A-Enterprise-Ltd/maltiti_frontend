@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency">
-      <change afterPath="$PROJECT_DIR$/components/faq.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/smooth-scroll.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/accordion.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/faq-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/copilot-instructions.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/copilot-instructions.md" afterDir="false" />
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add FAQ section with animated accordion, smooth scrolling, and supporting styles&#10;&#10;- Add FAQ component with animated accordion using Radix UI and framer-motion&#10;- Create FAQ data and icon mapping in lib&#10;- Implement smooth scrolling with Lenis and integrate in layout&#10;- Update global styles for accordion animations and scroll padding&#10;- Enhance Home page to include FAQ section&#10;- Update dependencies: add @radix-ui/react-accordion and lenis&#10;- Refine copilot instructions and enforce return types">
+      <change afterPath="$PROJECT_DIR$/app/privacy/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/terms/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/home/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/home/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="71" />
+    <option name="cachedIndexableFilesCount" value="72" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -116,7 +109,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767173194955</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: add FAQ section with animated accordion, smooth scrolling, and supporting styles&#10;&#10;- Add FAQ component with animated accordion using Radix UI and framer-motion&#10;- Create FAQ data and icon mapping in lib&#10;- Implement smooth scrolling with Lenis and integrate in layout&#10;- Update global styles for accordion animations and scroll padding&#10;- Enhance Home page to include FAQ section&#10;- Update dependencies: add @radix-ui/react-accordion and lenis&#10;- Refine copilot instructions and enforce return types">
+      <option name="closed" value="true" />
+      <created>1767198211891</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767198211891</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -124,6 +125,7 @@
     <MESSAGE value="chore: install shadcn" />
     <MESSAGE value="feat: add home page navigation bar" />
     <MESSAGE value="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency" />
+    <MESSAGE value="feat: add FAQ section with animated accordion, smooth scrolling, and supporting styles&#10;&#10;- Add FAQ component with animated accordion using Radix UI and framer-motion&#10;- Create FAQ data and icon mapping in lib&#10;- Implement smooth scrolling with Lenis and integrate in layout&#10;- Update global styles for accordion animations and scroll padding&#10;- Enhance Home page to include FAQ section&#10;- Update dependencies: add @radix-ui/react-accordion and lenis&#10;- Refine copilot instructions and enforce return types" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add FAQ section with animated accordion, smooth scrolling, and supporting styles&#10;&#10;- Add FAQ component with animated accordion using Radix UI and framer-motion&#10;- Create FAQ data and icon mapping in lib&#10;- Implement smooth scrolling with Lenis and integrate in layout&#10;- Update global styles for accordion animations and scroll padding&#10;- Enhance Home page to include FAQ section&#10;- Update dependencies: add @radix-ui/react-accordion and lenis&#10;- Refine copilot instructions and enforce return types" />
   </component>
 </project>
