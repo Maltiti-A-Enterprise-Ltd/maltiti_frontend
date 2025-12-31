@@ -4,28 +4,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add home page navigation bar">
-      <change afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/assets/images/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/assets/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/home/cart-icon.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/avatar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/badge.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/button.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/dropdown-menu.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/navigation-menu.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/sheet.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/copilot-instructions.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/copilot-instructions.md" afterDir="false" />
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency">
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-11.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-12.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-13.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-14.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/hero-9.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-10.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-3.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-4.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-5.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-6.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-7.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-8.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/images/svg-decorator-blob-9.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/assets/videos/hero.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/dialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/home/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/home/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
@@ -33,6 +45,10 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="68" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -56,20 +72,21 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "npm.dev.executor": "Run",
     "prettierjs.PrettierConfiguration.Package": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "ts.external.directory.path": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\typescript\\lib"
   }
 }]]></component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1769457619685" />
-    <option name="spentUsd" value="0.0700746" />
+    <option name="spentUsd" value="0.12741184" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="8" />
+    <option name="suspendCountdown" value="0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets\images" />
+      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets\videos" />
       <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets" />
     </key>
   </component>
@@ -107,13 +124,22 @@
       <option name="project" value="LOCAL" />
       <updated>1767062422006</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat: add home page navigation bar">
+      <option name="closed" value="true" />
+      <created>1767089672510</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1767089672510</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: initial next js installation" />
     <MESSAGE value="chore: install shadcn" />
     <MESSAGE value="feat: add home page navigation bar" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add home page navigation bar" />
+    <MESSAGE value="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add hero images, decorator blobs, dialog component, and framer-motion dependency" />
   </component>
 </project>
