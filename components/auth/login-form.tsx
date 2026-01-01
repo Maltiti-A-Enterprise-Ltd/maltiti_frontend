@@ -33,7 +33,7 @@ export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
   const onSubmit = async (data: LoginFormData): Promise<void> => {
