@@ -5,32 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: implement authentication forms and validation schemas">
-      <change afterPath="$PROJECT_DIR$/app/auth/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/resend-verification/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/signup/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/verify-email/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/auth-layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/email-verification-notice.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/login-form.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/resend-verification-form.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/auth/signup-form.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/input.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/label.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/authSlice.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/authThunk.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/validations/auth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/authSelectors.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/core/utils.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/core/utils.gen.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/sdk.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/sdk.gen.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/types.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/types.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/auth/auth-layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/auth-layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/auth/login-form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/login-form.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/auth/signup-form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/signup-form.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/home/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/store/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/store/store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openapi.json" beforeDir="false" afterPath="$PROJECT_DIR$/openapi.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/store/features/auth/authSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/store/features/auth/authSlice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/store/features/auth/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/store/features/auth/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +183,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767278278524</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat: implement authentication forms and validation schemas">
+      <option name="closed" value="true" />
+      <created>1767292140581</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1767292140581</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

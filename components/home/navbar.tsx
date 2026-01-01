@@ -39,8 +39,7 @@ import {
 import { CompanyLogo } from '@/app/assets';
 import CartIcon from './cart-icon';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth/authSlice';
-import { logout } from '@/lib/store/features/auth';
+import { selectIsAuthenticated, selectUser, logout } from '@/lib/store/features/auth';
 
 interface CartItem {
   id: string;

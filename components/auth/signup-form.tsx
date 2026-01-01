@@ -12,8 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signupSchema, type SignupFormData } from '@/lib/validations/auth';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { selectAuthLoading, selectAuthError } from '@/lib/store/features/auth/authSlice';
-import { signup } from '@/lib/store/features/auth';
+import { selectSignupLoading, selectSignupError, signup } from '@/lib/store/features/auth';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -22,8 +21,8 @@ interface SignupFormProps {
 export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const isAuthLoading = useAppSelector(selectAuthLoading);
-  const authError = useAppSelector(selectAuthError);
+  const isAuthLoading = useAppSelector(selectSignupLoading);
+  const authError = useAppSelector(selectSignupError);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

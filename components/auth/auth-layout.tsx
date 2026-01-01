@@ -1,10 +1,12 @@
 'use client';
 
-import React, { JSX } from 'react';
+import React, { JSX, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CompanyLogo } from '@/app/assets';
+import { useAppDispatch } from '@/lib/store/hooks';
+import { clearError } from '@/lib/store/features/auth';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -15,6 +17,17 @@ interface AuthLayoutProps {
 }
 
 export function AuthLayout({ children, title, subtitle, footer }: AuthLayoutProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(clearError());
+
+    // Clear errors when component unmounts
+    return (): void => {
+      dispatch(clearError());
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-linear-to-br from-green-50 via-white to-green-50 lg:flex-row">
       {/* Left Side - Form */}

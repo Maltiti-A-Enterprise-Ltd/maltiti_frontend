@@ -12,8 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { selectAuthLoading, selectAuthError } from '@/lib/store/features/auth/authSlice';
-import { login } from '@/lib/store/features/auth';
+import { selectLoginLoading, selectLoginError, login } from '@/lib/store/features/auth';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -22,8 +21,8 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const isAuthLoading = useAppSelector(selectAuthLoading);
-  const authError = useAppSelector(selectAuthError);
+  const isAuthLoading = useAppSelector(selectLoginLoading);
+  const authError = useAppSelector(selectLoginError);
 
   const [showPassword, setShowPassword] = useState(false);
   const [isUnverified, setIsUnverified] = useState(false);
