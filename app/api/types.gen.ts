@@ -61,30 +61,6 @@ export type RegisterUserDto = {
     [key: string]: unknown;
 };
 
-export type VerifyPhoneDto = {
-    [key: string]: unknown;
-};
-
-export type SignInDto = {
-    [key: string]: unknown;
-};
-
-export type ForgotPasswordDto = {
-    [key: string]: unknown;
-};
-
-export type ResetPasswordDto = {
-    [key: string]: unknown;
-};
-
-export type CreateAdminDto = {
-    [key: string]: unknown;
-};
-
-export type ChangePasswordDto = {
-    [key: string]: unknown;
-};
-
 export type UserResponseDto = {
     /**
      * Unique identifier for the user
@@ -138,6 +114,162 @@ export type UserResponseDto = {
      * Last update date
      */
     updatedAt: string;
+};
+
+export type AuthResponseDto = {
+    /**
+     * Response message
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
+};
+
+export type ValidationErrorResponseDto = {
+    /**
+     * HTTP status code
+     */
+    statusCode: number;
+    /**
+     * Detailed validation errors
+     */
+    message: Array<Array<unknown>>;
+    /**
+     * Error type/reason
+     */
+    error: string;
+};
+
+export type ErrorResponseDto = {
+    /**
+     * HTTP status code
+     */
+    statusCode: number;
+    /**
+     * Error message
+     */
+    message: string;
+    /**
+     * Error type/reason
+     */
+    error: string;
+};
+
+export type VerifyPhoneDto = {
+    [key: string]: unknown;
+};
+
+export type PhoneVerificationResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * User data with verified phone
+     */
+    data: UserResponseDto;
+};
+
+export type CustomerSignupResponseDto = {
+    /**
+     * Success message with verification instructions
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
+};
+
+export type SignInDto = {
+    [key: string]: unknown;
+};
+
+export type LoginResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * User data (password excluded)
+     */
+    data: UserResponseDto;
+};
+
+export type ForgotPasswordDto = {
+    [key: string]: unknown;
+};
+
+export type PasswordResetEmailResponseDto = {
+    /**
+     * Success message with email address
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
+};
+
+export type ResetPasswordDto = {
+    [key: string]: unknown;
+};
+
+export type PasswordResetResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
+};
+
+export type TokenRefreshResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+};
+
+export type LogoutResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+};
+
+export type CreateAdminDto = {
+    [key: string]: unknown;
+};
+
+export type AdminCreationResponseDto = {
+    /**
+     * Success message with email notification
+     */
+    message: string;
+    /**
+     * Admin user data (password excluded)
+     */
+    data: UserResponseDto;
+};
+
+export type ChangePasswordDto = {
+    [key: string]: unknown;
+};
+
+export type PasswordChangeResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
 };
 
 export type UpdateUserDto = {
@@ -1053,19 +1185,23 @@ export type AuthenticationControllerRegisterErrors = {
     /**
      * Bad request - validation failed
      */
-    400: unknown;
+    400: ValidationErrorResponseDto;
     /**
      * User with email already exists
      */
-    409: unknown;
+    409: ErrorResponseDto;
 };
+
+export type AuthenticationControllerRegisterError = AuthenticationControllerRegisterErrors[keyof AuthenticationControllerRegisterErrors];
 
 export type AuthenticationControllerRegisterResponses = {
     /**
      * User registration successful
      */
-    201: unknown;
+    201: AuthResponseDto;
 };
+
+export type AuthenticationControllerRegisterResponse = AuthenticationControllerRegisterResponses[keyof AuthenticationControllerRegisterResponses];
 
 export type AuthenticationControllerVerifyPhoneData = {
     body: VerifyPhoneDto;
@@ -1081,21 +1217,33 @@ export type AuthenticationControllerVerifyPhoneData = {
 
 export type AuthenticationControllerVerifyPhoneErrors = {
     /**
+     * Bad request - invalid OTP code or validation failed
+     */
+    400: ValidationErrorResponseDto;
+    /**
      * Unauthorized - invalid or missing token
      */
-    401: unknown;
+    401: ErrorResponseDto;
+    /**
+     * User not found
+     */
+    404: ErrorResponseDto;
     /**
      * User with phone number already exists
      */
-    409: unknown;
+    409: ErrorResponseDto;
 };
+
+export type AuthenticationControllerVerifyPhoneError = AuthenticationControllerVerifyPhoneErrors[keyof AuthenticationControllerVerifyPhoneErrors];
 
 export type AuthenticationControllerVerifyPhoneResponses = {
     /**
      * Phone verification successful
      */
-    200: unknown;
+    200: PhoneVerificationResponseDto;
 };
+
+export type AuthenticationControllerVerifyPhoneResponse = AuthenticationControllerVerifyPhoneResponses[keyof AuthenticationControllerVerifyPhoneResponses];
 
 export type AuthenticationControllerCustomerSignupData = {
     body: RegisterUserDto;
@@ -1108,19 +1256,23 @@ export type AuthenticationControllerCustomerSignupErrors = {
     /**
      * Bad request - validation failed
      */
-    400: unknown;
+    400: ValidationErrorResponseDto;
     /**
      * User with email already exists
      */
-    409: unknown;
+    409: ErrorResponseDto;
 };
+
+export type AuthenticationControllerCustomerSignupError = AuthenticationControllerCustomerSignupErrors[keyof AuthenticationControllerCustomerSignupErrors];
 
 export type AuthenticationControllerCustomerSignupResponses = {
     /**
      * Customer account created, verification email sent
      */
-    201: unknown;
+    201: CustomerSignupResponseDto;
 };
+
+export type AuthenticationControllerCustomerSignupResponse = AuthenticationControllerCustomerSignupResponses[keyof AuthenticationControllerCustomerSignupResponses];
 
 export type AuthenticationControllerSignInData = {
     body: SignInDto;
@@ -1131,17 +1283,29 @@ export type AuthenticationControllerSignInData = {
 
 export type AuthenticationControllerSignInErrors = {
     /**
-     * Invalid username or password
+     * Bad request - validation failed
      */
-    401: unknown;
+    400: ValidationErrorResponseDto;
+    /**
+     * Invalid email or password
+     */
+    401: ErrorResponseDto;
+    /**
+     * Account is inactive or suspended
+     */
+    403: ErrorResponseDto;
 };
+
+export type AuthenticationControllerSignInError = AuthenticationControllerSignInErrors[keyof AuthenticationControllerSignInErrors];
 
 export type AuthenticationControllerSignInResponses = {
     /**
-     * Login successful, tokens set in cookies
+     * Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)
      */
-    200: unknown;
+    200: LoginResponseDto;
 };
+
+export type AuthenticationControllerSignInResponse = AuthenticationControllerSignInResponses[keyof AuthenticationControllerSignInResponses];
 
 export type AuthenticationControllerForgotPasswordData = {
     body: ForgotPasswordDto;
@@ -1152,17 +1316,25 @@ export type AuthenticationControllerForgotPasswordData = {
 
 export type AuthenticationControllerForgotPasswordErrors = {
     /**
+     * Bad request - validation failed
+     */
+    400: ValidationErrorResponseDto;
+    /**
      * User with email does not exist
      */
-    404: unknown;
+    404: ErrorResponseDto;
 };
+
+export type AuthenticationControllerForgotPasswordError = AuthenticationControllerForgotPasswordErrors[keyof AuthenticationControllerForgotPasswordErrors];
 
 export type AuthenticationControllerForgotPasswordResponses = {
     /**
      * Password reset email sent successfully
      */
-    200: unknown;
+    200: PasswordResetEmailResponseDto;
 };
+
+export type AuthenticationControllerForgotPasswordResponse = AuthenticationControllerForgotPasswordResponses[keyof AuthenticationControllerForgotPasswordResponses];
 
 export type AuthenticationControllerResetPasswordData = {
     body: ResetPasswordDto;
@@ -1173,21 +1345,29 @@ export type AuthenticationControllerResetPasswordData = {
 
 export type AuthenticationControllerResetPasswordErrors = {
     /**
-     * Bad request - passwords do not match
+     * Bad request - passwords do not match or validation failed
      */
-    400: unknown;
+    400: ValidationErrorResponseDto;
+    /**
+     * User not found or invalid token
+     */
+    404: ErrorResponseDto;
     /**
      * Reset token has expired
      */
-    410: unknown;
+    410: ErrorResponseDto;
 };
+
+export type AuthenticationControllerResetPasswordError = AuthenticationControllerResetPasswordErrors[keyof AuthenticationControllerResetPasswordErrors];
 
 export type AuthenticationControllerResetPasswordResponses = {
     /**
      * Password reset successful
      */
-    200: unknown;
+    200: PasswordResetResponseDto;
 };
+
+export type AuthenticationControllerResetPasswordResponse = AuthenticationControllerResetPasswordResponses[keyof AuthenticationControllerResetPasswordResponses];
 
 export type AuthenticationControllerEmailVerificationData = {
     body?: never;
@@ -1209,16 +1389,18 @@ export type AuthenticationControllerEmailVerificationErrors = {
     /**
      * Token does not exist or has expired
      */
-    401: unknown;
+    401: ErrorResponseDto;
     /**
      * User not found
      */
-    404: unknown;
+    404: ErrorResponseDto;
 };
+
+export type AuthenticationControllerEmailVerificationError = AuthenticationControllerEmailVerificationErrors[keyof AuthenticationControllerEmailVerificationErrors];
 
 export type AuthenticationControllerEmailVerificationResponses = {
     /**
-     * Email verification successful
+     * Email verification successful, redirects to success page
      */
     200: unknown;
 };
@@ -1232,17 +1414,25 @@ export type AuthenticationControllerRefreshTokenData = {
 
 export type AuthenticationControllerRefreshTokenErrors = {
     /**
-     * Invalid or missing refresh token
+     * Invalid, expired, or missing refresh token
      */
-    401: unknown;
+    401: ErrorResponseDto;
+    /**
+     * User not found
+     */
+    404: ErrorResponseDto;
 };
+
+export type AuthenticationControllerRefreshTokenError = AuthenticationControllerRefreshTokenErrors[keyof AuthenticationControllerRefreshTokenErrors];
 
 export type AuthenticationControllerRefreshTokenResponses = {
     /**
-     * Tokens refreshed successfully
+     * Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)
      */
-    200: unknown;
+    200: TokenRefreshResponseDto;
 };
+
+export type AuthenticationControllerRefreshTokenResponse = AuthenticationControllerRefreshTokenResponses[keyof AuthenticationControllerRefreshTokenResponses];
 
 export type AuthenticationControllerLogoutData = {
     body?: never;
@@ -1255,15 +1445,19 @@ export type AuthenticationControllerLogoutErrors = {
     /**
      * Unauthorized - not logged in
      */
-    401: unknown;
+    401: ErrorResponseDto;
 };
+
+export type AuthenticationControllerLogoutError = AuthenticationControllerLogoutErrors[keyof AuthenticationControllerLogoutErrors];
 
 export type AuthenticationControllerLogoutResponses = {
     /**
-     * Logged out successfully
+     * Logged out successfully, cookies cleared
      */
-    200: unknown;
+    200: LogoutResponseDto;
 };
+
+export type AuthenticationControllerLogoutResponse = AuthenticationControllerLogoutResponses[keyof AuthenticationControllerLogoutResponses];
 
 export type AuthenticationControllerCreateAdminData = {
     body: CreateAdminDto;
@@ -1274,29 +1468,33 @@ export type AuthenticationControllerCreateAdminData = {
 
 export type AuthenticationControllerCreateAdminErrors = {
     /**
-     * Bad request - email must be @maltitiaenterprise.com
+     * Bad request - email must be @maltitiaenterprise.com or validation failed
      */
-    400: unknown;
+    400: ValidationErrorResponseDto;
     /**
      * Unauthorized - not logged in
      */
-    401: unknown;
+    401: ErrorResponseDto;
     /**
      * Forbidden - requires Super Admin role
      */
-    403: unknown;
+    403: ErrorResponseDto;
     /**
      * User with email already exists
      */
-    409: unknown;
+    409: ErrorResponseDto;
 };
+
+export type AuthenticationControllerCreateAdminError = AuthenticationControllerCreateAdminErrors[keyof AuthenticationControllerCreateAdminErrors];
 
 export type AuthenticationControllerCreateAdminResponses = {
     /**
      * Admin account created successfully, credentials sent to email
      */
-    201: unknown;
+    201: AdminCreationResponseDto;
 };
+
+export type AuthenticationControllerCreateAdminResponse = AuthenticationControllerCreateAdminResponses[keyof AuthenticationControllerCreateAdminResponses];
 
 export type AuthenticationControllerChangePasswordData = {
     body: ChangePasswordDto;
@@ -1312,25 +1510,29 @@ export type AuthenticationControllerChangePasswordData = {
 
 export type AuthenticationControllerChangePasswordErrors = {
     /**
-     * Bad request - passwords do not match or current password is incorrect
+     * Bad request - passwords do not match, current password is incorrect, or validation failed
      */
-    400: unknown;
+    400: ValidationErrorResponseDto;
     /**
      * Unauthorized - not logged in
      */
-    401: unknown;
+    401: ErrorResponseDto;
     /**
      * User not found
      */
-    404: unknown;
+    404: ErrorResponseDto;
 };
+
+export type AuthenticationControllerChangePasswordError = AuthenticationControllerChangePasswordErrors[keyof AuthenticationControllerChangePasswordErrors];
 
 export type AuthenticationControllerChangePasswordResponses = {
     /**
      * Password changed successfully
      */
-    200: unknown;
+    200: PasswordChangeResponseDto;
 };
+
+export type AuthenticationControllerChangePasswordResponse = AuthenticationControllerChangePasswordResponses[keyof AuthenticationControllerChangePasswordResponses];
 
 export type UsersControllerFindAllData = {
     body?: never;

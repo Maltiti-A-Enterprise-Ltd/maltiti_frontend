@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import productsReducer from './features/products/productsSlice';
+import authReducer from './features/auth/authSlice';
 
 const rootReducer = combineReducers({
   products: productsReducer,
+  auth: authReducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

@@ -1,6 +1,6 @@
 'use client';
 import React, { JSX, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,9 @@ import {
 } from 'lucide-react';
 import { CompanyLogo } from '@/app/assets';
 import CartIcon from './cart-icon';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth/authSlice';
+import { logout } from '@/lib/store/features/auth';
 
 interface CartItem {
   id: string;
@@ -50,23 +53,40 @@ interface CartItem {
   };
 }
 
-interface User {
-  image?: string;
-  name: string;
-}
-
 export function NavBar(): JSX.Element {
   const pathname = usePathname();
-  const user: User | null = { name: 'John Doe' };
-  // const user: User | null = null;
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  // Get auth state from Redux
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
+
   const cart: CartItem[] = []; // Placeholder
   const cartTotal = cart.length;
   const totalPrice = 0; // Placeholder
 
-  console.log('Cart here', cart);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Handle logout
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await dispatch(logout()).unwrap();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = (name: string): string => {
+    const names = name.split(' ');
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const desktopNavLinks =
     pathname === '/' ? (
@@ -106,40 +126,56 @@ export function NavBar(): JSX.Element {
       </NavigationMenu>
     );
 
-  const userLinks = user ? (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
-          <AvatarImage src={user.image} alt={user.name} />
-          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          My Orders
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ) : (
-    <div className="flex items-center gap-x-4 max-sm:hidden">
-      <Link href="/login" className="max-md:mr-3 md:ml-12">
-        Login
-      </Link>
-      <Button asChild className="rounded-full">
-        <Link href="/signup">Sign Up</Link>
-      </Button>
-    </div>
-  );
+  const userLinks =
+    isAuthenticated && user ? (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar className="cursor-pointer">
+            <AvatarImage src={undefined} alt={user.name} />
+            <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <div className="px-2 py-1.5">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs text-gray-500">{user.email}</p>
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/orders" className="cursor-pointer">
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              My Orders
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/profile" className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings" className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ) : (
+      <div className="flex items-center gap-x-4 max-sm:hidden">
+        <Link href="/auth/login" className="max-md:mr-3 md:ml-12">
+          Login
+        </Link>
+        <Button asChild className="rounded-full">
+          <Link href="/auth/signup">Sign Up</Link>
+        </Button>
+      </div>
+    );
 
   const logoLink = (
     <Link href="/" className="flex items-center border-b-0 text-sm font-black max-md:hidden">
@@ -230,27 +266,79 @@ export function NavBar(): JSX.Element {
               )}
               {/* Mobile User Links */}
               <div className="mt-6 border-t pt-4">
-                <div className="space-y-2">
-                  <Link
-                    href="/login"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User className="h-5 w-5" />
-                    <span>Login</span>
-                  </Link>
-                  <div className="mx-4">
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg py-3 text-lg font-medium text-white"
+                {isAuthenticated && user ? (
+                  <div className="space-y-2">
+                    {/* User Info */}
+                    <div className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <Avatar>
+                          <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* User Menu Items */}
+                    <Link
+                      href="/orders"
+                      className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                        <UserPlus className="h-5 w-5" />
-                        <span>Sign Up</span>
-                      </Link>
-                    </Button>
+                      <ShoppingBag className="h-5 w-5" />
+                      <span>My Orders</span>
+                    </Link>
+                    <Link
+                      href="/profile"
+                      className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="h-5 w-5" />
+                      <span>Profile</span>
+                    </Link>
+                    <Link
+                      href="/settings"
+                      className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Settings className="h-5 w-5" />
+                      <span>Settings</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="hover:text-primary flex w-full items-center space-x-3 rounded-lg px-4 py-3 text-left text-lg font-medium text-red-600 transition-colors hover:bg-gray-100"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>Logout</span>
+                    </button>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Link
+                      href="/auth/login"
+                      className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="h-5 w-5" />
+                      <span>Login</span>
+                    </Link>
+                    <div className="mx-4">
+                      <Button
+                        asChild
+                        className="w-full justify-start rounded-lg py-3 text-lg font-medium text-white"
+                      >
+                        <Link href="/auth/signup" onClick={() => setMobileMenuOpen(false)}>
+                          <UserPlus className="h-5 w-5" />
+                          <span>Sign Up</span>
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </SheetContent>

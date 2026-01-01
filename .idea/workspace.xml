@@ -4,50 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: implement Redux store setup, add product utilities, and create product components">
-      <change afterPath="$PROJECT_DIR$/app/api/client.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/client/client.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/client/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/client/types.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/client/utils.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/auth.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/bodySerializer.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/params.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/pathSerializer.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/queryKeySerializer.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/serverSentEvents.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/types.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/core/utils.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/sdk.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/types.gen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/storeProvider.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/products/best-products-section.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/products/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/products/product-card.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/card.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/loader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/product-utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/features/products/productsSlice.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/features/products/productsThunk.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/hooks.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/store/store.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/openapi-ts.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/openapi.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/placeholder-product.svg" afterDir="false" />
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: implement authentication forms and validation schemas">
+      <change afterPath="$PROJECT_DIR$/app/auth/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/auth/resend-verification/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/auth/signup/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/auth/verify-email/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/auth-layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/email-verification-notice.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/login-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/resend-verification-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/auth/signup-form.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/input.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/label.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/authSlice.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/authThunk.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/auth/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/validations/auth.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/privacy/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/privacy/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/terms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/terms/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/home/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/core/utils.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/core/utils.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/sdk.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/sdk.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/types.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/types.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/home/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/navbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/store/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/store/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openapi.json" beforeDir="false" afterPath="$PROJECT_DIR$/openapi.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
@@ -126,8 +107,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
         <item itemvalue="npm.openapi-ts" />
+        <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
@@ -204,7 +185,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767225398952</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: implement Redux store setup, add product utilities, and create product components">
+      <option name="closed" value="true" />
+      <created>1767278266258</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1767278266258</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: add cursor pointer style to button component">
+      <option name="closed" value="true" />
+      <created>1767278278524</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1767278278524</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -219,6 +216,8 @@
     <MESSAGE value="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export" />
     <MESSAGE value="feat: update SEO keywords to include brand name variant&#10;&#10;- Add &quot;maltiti&quot; to keywords for improved search visibility and brand recognition" />
     <MESSAGE value="feat: implement Redux store setup, add product utilities, and create product components" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: implement Redux store setup, add product utilities, and create product components" />
+    <MESSAGE value="feat: add cursor pointer style to button component" />
+    <MESSAGE value="feat: implement authentication forms and validation schemas" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement authentication forms and validation schemas" />
   </component>
 </project>

@@ -126,7 +126,7 @@ export const authenticationControllerResetPassword = <ThrowOnError extends boole
 /**
  * Verify email address
  *
- * Verifies user email using the verification token from email
+ * Verifies user email using the verification token from email. Redirects to appropriate page after verification.
  */
 export const authenticationControllerEmailVerification = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerEmailVerificationData, ThrowOnError>) => (options.client ?? client).get<AuthenticationControllerEmailVerificationResponses, AuthenticationControllerEmailVerificationErrors, ThrowOnError>({ url: '/authentication/verify/{id}/{token}', ...options });
 

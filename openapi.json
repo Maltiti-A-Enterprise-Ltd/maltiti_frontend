@@ -308,9 +308,26 @@
           }
         },
         "responses": {
-          "201": { "description": "User registration successful" },
-          "400": { "description": "Bad request - validation failed" },
-          "409": { "description": "User with email already exists" }
+          "201": {
+            "description": "User registration successful",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "409": {
+            "description": "User with email already exists",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "Register a new user",
         "tags": ["Authentication"]
@@ -336,9 +353,40 @@
           }
         },
         "responses": {
-          "200": { "description": "Phone verification successful" },
-          "401": { "description": "Unauthorized - invalid or missing token" },
-          "409": { "description": "User with phone number already exists" }
+          "200": {
+            "description": "Phone verification successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PhoneVerificationResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid OTP code or validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing token",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "409": {
+            "description": "User with phone number already exists",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "security": [{ "cookie": [] }],
         "summary": "Verify phone number",
@@ -357,9 +405,28 @@
           }
         },
         "responses": {
-          "201": { "description": "Customer account created, verification email sent" },
-          "400": { "description": "Bad request - validation failed" },
-          "409": { "description": "User with email already exists" }
+          "201": {
+            "description": "Customer account created, verification email sent",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CustomerSignupResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "409": {
+            "description": "User with email already exists",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "Customer signup",
         "tags": ["Authentication"]
@@ -377,8 +444,32 @@
           }
         },
         "responses": {
-          "200": { "description": "Login successful, tokens set in cookies" },
-          "401": { "description": "Invalid username or password" }
+          "200": {
+            "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "403": {
+            "description": "Account is inactive or suspended",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "User login",
         "tags": ["Authentication"]
@@ -396,8 +487,28 @@
           }
         },
         "responses": {
-          "200": { "description": "Password reset email sent successfully" },
-          "404": { "description": "User with email does not exist" }
+          "200": {
+            "description": "Password reset email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PasswordResetEmailResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "404": {
+            "description": "User with email does not exist",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "Request password reset",
         "tags": ["Authentication"]
@@ -415,9 +526,34 @@
           }
         },
         "responses": {
-          "200": { "description": "Password reset successful" },
-          "400": { "description": "Bad request - passwords do not match" },
-          "410": { "description": "Reset token has expired" }
+          "200": {
+            "description": "Password reset successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PasswordResetResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - passwords do not match or validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found or invalid token",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "410": {
+            "description": "Reset token has expired",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "Reset password",
         "tags": ["Authentication"]
@@ -425,7 +561,7 @@
     },
     "/authentication/verify/{id}/{token}": {
       "get": {
-        "description": "Verifies user email using the verification token from email",
+        "description": "Verifies user email using the verification token from email. Redirects to appropriate page after verification.",
         "operationId": "AuthenticationController_emailVerification",
         "parameters": [
           {
@@ -444,9 +580,19 @@
           }
         ],
         "responses": {
-          "200": { "description": "Email verification successful" },
-          "401": { "description": "Token does not exist or has expired" },
-          "404": { "description": "User not found" }
+          "200": { "description": "Email verification successful, redirects to success page" },
+          "401": {
+            "description": "Token does not exist or has expired",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "summary": "Verify email address",
         "tags": ["Authentication"]
@@ -458,8 +604,26 @@
         "operationId": "AuthenticationController_refreshToken",
         "parameters": [],
         "responses": {
-          "200": { "description": "Tokens refreshed successfully" },
-          "401": { "description": "Invalid or missing refresh token" }
+          "200": {
+            "description": "Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenRefreshResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid, expired, or missing refresh token",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "security": [{ "cookie": [] }],
         "summary": "Refresh access token",
@@ -472,8 +636,18 @@
         "operationId": "AuthenticationController_logout",
         "parameters": [],
         "responses": {
-          "200": { "description": "Logged out successfully" },
-          "401": { "description": "Unauthorized - not logged in" }
+          "200": {
+            "description": "Logged out successfully, cookies cleared",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LogoutResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - not logged in",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "security": [{ "cookie": [] }],
         "summary": "User logout",
@@ -492,11 +666,40 @@
           }
         },
         "responses": {
-          "201": { "description": "Admin account created successfully, credentials sent to email" },
-          "400": { "description": "Bad request - email must be @maltitiaenterprise.com" },
-          "401": { "description": "Unauthorized - not logged in" },
-          "403": { "description": "Forbidden - requires Super Admin role" },
-          "409": { "description": "User with email already exists" }
+          "201": {
+            "description": "Admin account created successfully, credentials sent to email",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AdminCreationResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - email must be @maltitiaenterprise.com or validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - not logged in",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "403": {
+            "description": "Forbidden - requires Super Admin role",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "409": {
+            "description": "User with email already exists",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "security": [{ "cookie": [] }],
         "summary": "Create admin user (Super Admin only)",
@@ -523,12 +726,34 @@
           }
         },
         "responses": {
-          "200": { "description": "Password changed successfully" },
-          "400": {
-            "description": "Bad request - passwords do not match or current password is incorrect"
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PasswordChangeResponseDto" }
+              }
+            }
           },
-          "401": { "description": "Unauthorized - not logged in" },
-          "404": { "description": "User not found" }
+          "400": {
+            "description": "Bad request - passwords do not match, current password is incorrect, or validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - not logged in",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
         },
         "security": [{ "cookie": [] }],
         "summary": "Change password",
@@ -3318,12 +3543,6 @@
         ]
       },
       "RegisterUserDto": { "type": "object", "properties": {} },
-      "VerifyPhoneDto": { "type": "object", "properties": {} },
-      "SignInDto": { "type": "object", "properties": {} },
-      "ForgotPasswordDto": { "type": "object", "properties": {} },
-      "ResetPasswordDto": { "type": "object", "properties": {} },
-      "CreateAdminDto": { "type": "object", "properties": {} },
-      "ChangePasswordDto": { "type": "object", "properties": {} },
       "UserResponseDto": {
         "type": "object",
         "properties": {
@@ -3405,6 +3624,189 @@
           "createdAt",
           "updatedAt"
         ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "User registration successful"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "ValidationErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "description": "HTTP status code", "example": 400 },
+          "message": {
+            "description": "Detailed validation errors",
+            "example": ["email must be a valid email", "password is required"],
+            "items": { "type": "array" },
+            "type": "array"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error type/reason",
+            "example": "Bad Request"
+          }
+        },
+        "required": ["statusCode", "message", "error"]
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "description": "HTTP status code", "example": 400 },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Validation failed"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error type/reason",
+            "example": "Bad Request"
+          }
+        },
+        "required": ["statusCode", "message", "error"]
+      },
+      "VerifyPhoneDto": { "type": "object", "properties": {} },
+      "PhoneVerificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Phone verification successful"
+          },
+          "data": {
+            "description": "User data with verified phone",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "CustomerSignupResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message with verification instructions",
+            "example": "Email has been sent to user@example.com. Please verify your email"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "SignInDto": { "type": "object", "properties": {} },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "You have successfully logged in"
+          },
+          "data": {
+            "description": "User data (password excluded)",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "ForgotPasswordDto": { "type": "object", "properties": {} },
+      "PasswordResetEmailResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message with email address",
+            "example": "We have sent a reset email to user@example.com"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "ResetPasswordDto": { "type": "object", "properties": {} },
+      "PasswordResetResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "You have successfully reset your password"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "TokenRefreshResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Tokens refreshed successfully"
+          }
+        },
+        "required": ["message"]
+      },
+      "LogoutResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Logged out successfully"
+          }
+        },
+        "required": ["message"]
+      },
+      "CreateAdminDto": { "type": "object", "properties": {} },
+      "AdminCreationResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message with email notification",
+            "example": "Admin account created successfully. Credentials have been sent to admin@maltitiaenterprise.com"
+          },
+          "data": {
+            "description": "Admin user data (password excluded)",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "ChangePasswordDto": { "type": "object", "properties": {} },
+      "PasswordChangeResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Password changed successfully"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
       },
       "UpdateUserDto": { "type": "object", "properties": {} },
       "ChangeStatusDto": { "type": "object", "properties": {} },
