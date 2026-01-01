@@ -1,18 +1,5 @@
 import { UserResponseDto } from '@/app/api';
-
-interface AuthState {
-  user: UserResponseDto | null;
-  isLoading: {
-    login: boolean;
-    signup: boolean;
-    logout: boolean;
-  };
-  error: {
-    login: string | null;
-    signup: string | null;
-    logout: string | null;
-  };
-}
+import { AuthState } from '@/lib/store/features/auth/authState';
 
 // Root state type for selectors
 type RootState = { auth: AuthState };
@@ -45,9 +32,16 @@ export const selectSignupLoading = (state: RootState): boolean => state.auth.isL
 // Logout loading state
 export const selectLogoutLoading = (state: RootState): boolean => state.auth.isLoading.logout;
 
+// Resend verification loading state
+export const selectResendVerificationLoading = (state: RootState): boolean =>
+  state.auth.isLoading.resendVerification;
+
 // Check if any auth operation is loading
 export const selectIsAnyAuthLoading = (state: RootState): boolean =>
-  state.auth.isLoading.login || state.auth.isLoading.signup || state.auth.isLoading.logout;
+  state.auth.isLoading.login ||
+  state.auth.isLoading.signup ||
+  state.auth.isLoading.logout ||
+  state.auth.isLoading.resendVerification;
 
 // ============================================================================
 // Error State Selectors
@@ -65,6 +59,13 @@ export const selectSignupError = (state: RootState): string | null => state.auth
 // Logout error
 export const selectLogoutError = (state: RootState): string | null => state.auth.error.logout;
 
+// Resend verification error
+export const selectResendVerificationError = (state: RootState): string | null =>
+  state.auth.error.resendVerification;
+
 // Check if any auth operation has an error
 export const selectHasAnyAuthError = (state: RootState): boolean =>
-  !!state.auth.error.login || !!state.auth.error.signup || !!state.auth.error.logout;
+  !!state.auth.error.login ||
+  !!state.auth.error.signup ||
+  !!state.auth.error.logout ||
+  !!state.auth.error.resendVerification;

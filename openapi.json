@@ -760,6 +760,47 @@
         "tags": ["Authentication"]
       }
     },
+    "/authentication/resend-verification": {
+      "post": {
+        "description": "Resends the email verification link to the user's email address. Creates a new verification token and sends a new verification email.",
+        "operationId": "AuthenticationController_resendVerificationEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ResendVerificationDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification email resent successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ResendVerificationResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - email already verified or validation failed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
+              }
+            }
+          },
+          "404": {
+            "description": "User with email does not exist",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
+            }
+          }
+        },
+        "summary": "Resend verification email",
+        "tags": ["Authentication"]
+      }
+    },
     "/users": {
       "get": {
         "operationId": "UsersController_findAll",
@@ -3800,6 +3841,32 @@
             "type": "string",
             "description": "Success message",
             "example": "Password changed successfully"
+          },
+          "data": {
+            "description": "User data",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "ResendVerificationDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address to resend verification to",
+            "example": "user@example.com"
+          }
+        },
+        "required": ["email"]
+      },
+      "ResendVerificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message with email address",
+            "example": "Verification email has been resent to user@example.com"
           },
           "data": {
             "description": "User data",

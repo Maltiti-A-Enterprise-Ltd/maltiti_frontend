@@ -1,9 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import type { LoginFormData, SignupFormData } from '@/lib/validations/auth';
+import type {
+  LoginFormData,
+  SignupFormData,
+  ResendVerificationFormData,
+} from '@/lib/validations/auth';
 import {
   authenticationControllerCustomerSignup,
   authenticationControllerLogout,
   authenticationControllerSignIn,
+  authenticationControllerResendVerificationEmail,
 } from '@/app/api';
 
 /**
@@ -52,6 +57,31 @@ export const signup = createAsyncThunk(
       if (error && typeof error === 'object' && 'error' in error) {
         const apiError = error as { error?: { message?: string } };
         return rejectWithValue(apiError.error?.message || 'Signup failed');
+      }
+      return rejectWithValue('An unexpected error occurred');
+    }
+  },
+);
+
+/**
+ * Resend verification email thunk
+ * Sends a new verification email to the user's email address
+ */
+export const resendVerificationEmail = createAsyncThunk(
+  'auth/resendVerificationEmail',
+  async (body: ResendVerificationFormData, { rejectWithValue }) => {
+    try {
+      const { error, data } = await authenticationControllerResendVerificationEmail({
+        body,
+      });
+      if (!data) {
+        return rejectWithValue(error?.message || 'Failed to resend verification email');
+      }
+      return data;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'error' in error) {
+        const apiError = error as { error?: { message?: string } };
+        return rejectWithValue(apiError.error?.message || 'Failed to resend verification email');
       }
       return rejectWithValue('An unexpected error occurred');
     }

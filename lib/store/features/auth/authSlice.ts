@@ -1,19 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { UserResponseDto } from '@/app/api';
-import { login, logout, signup } from '@/lib/store/features/auth/authThunk';
-
-// User type based on UserResponseDto from the API
-interface AuthPageState<T> {
-  login: T;
-  signup: T;
-  logout: T;
-}
-
-interface AuthState {
-  user: UserResponseDto | null;
-  isLoading: AuthPageState<boolean>;
-  error: AuthPageState<string | null>;
-}
+import {
+  login,
+  logout,
+  signup,
+  resendVerificationEmail,
+} from '@/lib/store/features/auth/authThunk';
+import { AuthState } from '@/lib/store/features/auth/authState';
 
 const initialState: AuthState = {
   user: null,
@@ -21,11 +14,13 @@ const initialState: AuthState = {
     login: false,
     signup: false,
     logout: false,
+    resendVerification: false,
   },
   error: {
     login: null,
     signup: null,
     logout: null,
+    resendVerification: null,
   },
 };
 
@@ -40,6 +35,7 @@ const authSlice = createSlice({
         login: null,
         signup: null,
         logout: null,
+        resendVerification: null,
       };
     },
     clearUser: (state) => {
@@ -48,9 +44,13 @@ const authSlice = createSlice({
         login: null,
         signup: null,
         logout: null,
+        resendVerification: null,
       };
     },
-    clearError: (state, action: PayloadAction<'login' | 'signup' | 'logout' | undefined>) => {
+    clearError: (
+      state,
+      action: PayloadAction<'login' | 'signup' | 'logout' | 'resendVerification' | undefined>,
+    ) => {
       if (action.payload) {
         state.error[action.payload] = null;
       } else {
@@ -58,6 +58,7 @@ const authSlice = createSlice({
           login: null,
           signup: null,
           logout: null,
+          resendVerification: null,
         };
       }
     },
@@ -112,6 +113,21 @@ const authSlice = createSlice({
         state.error.logout = action.payload as string;
         // Still clear user even if logout API fails
         state.user = null;
+      });
+
+    // Resend Verification Email
+    builder
+      .addCase(resendVerificationEmail.pending, (state) => {
+        state.isLoading.resendVerification = true;
+        state.error.resendVerification = null;
+      })
+      .addCase(resendVerificationEmail.fulfilled, (state) => {
+        state.isLoading.resendVerification = false;
+        state.error.resendVerification = null;
+      })
+      .addCase(resendVerificationEmail.rejected, (state, action) => {
+        state.isLoading.resendVerification = false;
+        state.error.resendVerification = action.payload as string;
       });
   },
 });

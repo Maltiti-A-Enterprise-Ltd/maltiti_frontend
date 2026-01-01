@@ -1,6 +1,6 @@
 'use client';
 
-import React, { JSX, useState } from 'react';
+import React, { JSX } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
@@ -10,48 +10,35 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { resendVerificationSchema, type ResendVerificationFormData } from '@/lib/validations/auth';
-import { authenticationControllerRegister } from '@/app/api/sdk.gen';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { resendVerificationEmail } from '@/lib/store/features/auth/authThunk';
+import {
+  selectResendVerificationLoading,
+  selectResendVerificationError,
+} from '@/lib/store/features/auth/authSelectors';
 
-interface ResendVerificationFormProps {
-  onSuccess?: (email: string) => void;
-}
-
-export function ResendVerificationForm({ onSuccess }: ResendVerificationFormProps): JSX.Element {
-  const [serverError, setServerError] = useState<string>('');
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [submittedEmail, setSubmittedEmail] = useState('');
+export function ResendVerificationForm(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(selectResendVerificationLoading);
+  const serverError = useAppSelector(selectResendVerificationError);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
+    watch,
   } = useForm<ResendVerificationFormData>({
     resolver: zodResolver(resendVerificationSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
+  const submittedEmail = watch('email');
+  const [isSuccess, setIsSuccess] = React.useState(false);
+
   const onSubmit = async (data: ResendVerificationFormData): Promise<void> => {
-    try {
-      setServerError('');
-      // Note: Using register endpoint as a workaround since there's no dedicated resend endpoint
-      // In production, you should have a dedicated resend verification endpoint
-      await authenticationControllerRegister({
-        body: { email: data.email },
-      });
-
-      setSubmittedEmail(data.email);
+    const result = await dispatch(resendVerificationEmail(data)).unwrap();
+    if (result) {
       setIsSuccess(true);
-
-      if (onSuccess) {
-        onSuccess(data.email);
-      }
-    } catch (error: unknown) {
-      if (error && typeof error === 'object' && 'error' in error) {
-        const apiError = error as { error?: { message?: string } };
-        setServerError(apiError.error?.message || 'Failed to resend verification email.');
-      } else {
-        setServerError('An unexpected error occurred. Please try again.');
-      }
     }
   };
 
@@ -113,7 +100,7 @@ export function ResendVerificationForm({ onSuccess }: ResendVerificationFormProp
           placeholder="you@example.com"
           {...register('email')}
           aria-invalid={errors.email ? 'true' : 'false'}
-          disabled={isSubmitting}
+          disabled={isLoading}
           autoComplete="email"
         />
         {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
@@ -123,9 +110,9 @@ export function ResendVerificationForm({ onSuccess }: ResendVerificationFormProp
       <Button
         type="submit"
         className="w-full rounded-lg py-6 text-base font-semibold"
-        disabled={isSubmitting}
+        disabled={isLoading}
       >
-        {isSubmitting ? (
+        {isLoading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Sending...

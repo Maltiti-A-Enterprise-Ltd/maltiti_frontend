@@ -272,6 +272,24 @@ export type PasswordChangeResponseDto = {
     data: UserResponseDto;
 };
 
+export type ResendVerificationDto = {
+    /**
+     * Email address to resend verification to
+     */
+    email: string;
+};
+
+export type ResendVerificationResponseDto = {
+    /**
+     * Success message with email address
+     */
+    message: string;
+    /**
+     * User data
+     */
+    data: UserResponseDto;
+};
+
 export type UpdateUserDto = {
     [key: string]: unknown;
 };
@@ -1533,6 +1551,35 @@ export type AuthenticationControllerChangePasswordResponses = {
 };
 
 export type AuthenticationControllerChangePasswordResponse = AuthenticationControllerChangePasswordResponses[keyof AuthenticationControllerChangePasswordResponses];
+
+export type AuthenticationControllerResendVerificationEmailData = {
+    body: ResendVerificationDto;
+    path?: never;
+    query?: never;
+    url: '/authentication/resend-verification';
+};
+
+export type AuthenticationControllerResendVerificationEmailErrors = {
+    /**
+     * Bad request - email already verified or validation failed
+     */
+    400: ValidationErrorResponseDto;
+    /**
+     * User with email does not exist
+     */
+    404: ErrorResponseDto;
+};
+
+export type AuthenticationControllerResendVerificationEmailError = AuthenticationControllerResendVerificationEmailErrors[keyof AuthenticationControllerResendVerificationEmailErrors];
+
+export type AuthenticationControllerResendVerificationEmailResponses = {
+    /**
+     * Verification email resent successfully
+     */
+    200: ResendVerificationResponseDto;
+};
+
+export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
 
 export type UsersControllerFindAllData = {
     body?: never;

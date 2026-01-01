@@ -13,7 +13,7 @@ export interface PathSerializer {
   url: string;
 }
 
-export const PATH_PARAM_RE = /\{[^{}]+}/g;
+export const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
 export const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   let url = _url;
@@ -44,7 +44,10 @@ export const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
       }
 
       if (Array.isArray(value)) {
-        url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
+        url = url.replace(
+          match,
+          serializeArrayParam({ explode, name, style, value }),
+        );
         continue;
       }
 
