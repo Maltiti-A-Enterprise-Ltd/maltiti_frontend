@@ -9,6 +9,7 @@ import {
   authenticationControllerLogout,
   authenticationControllerSignIn,
   authenticationControllerResendVerificationEmail,
+  authenticationControllerEmailVerification,
 } from '@/app/api';
 
 /**
@@ -82,6 +83,33 @@ export const resendVerificationEmail = createAsyncThunk(
       if (error && typeof error === 'object' && 'error' in error) {
         const apiError = error as { error?: { message?: string } };
         return rejectWithValue(apiError.error?.message || 'Failed to resend verification email');
+      }
+      return rejectWithValue('An unexpected error occurred');
+    }
+  },
+);
+
+/**
+ * Verify email thunk
+ * Verifies user email using the verification token from email
+ * Now logs the user in automatically upon successful verification
+ */
+export const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async ({ id, token }: { id: string; token: string }, { rejectWithValue }) => {
+    try {
+      const { error, data } = await authenticationControllerEmailVerification({
+        path: { id, token },
+      });
+      if (error || !data) {
+        return rejectWithValue(error?.message || 'Email verification failed');
+      }
+      // Return the user data from the response
+      return data.data;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'error' in error) {
+        const apiError = error as { error?: { message?: string } };
+        return rejectWithValue(apiError.error?.message || 'Email verification failed');
       }
       return rejectWithValue('An unexpected error occurred');
     }

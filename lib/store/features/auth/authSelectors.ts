@@ -36,12 +36,17 @@ export const selectLogoutLoading = (state: RootState): boolean => state.auth.isL
 export const selectResendVerificationLoading = (state: RootState): boolean =>
   state.auth.isLoading.resendVerification;
 
+// Verify email loading state
+export const selectVerifyEmailLoading = (state: RootState): boolean =>
+  state.auth.isLoading.verifyEmail;
+
 // Check if any auth operation is loading
 export const selectIsAnyAuthLoading = (state: RootState): boolean =>
   state.auth.isLoading.login ||
   state.auth.isLoading.signup ||
   state.auth.isLoading.logout ||
-  state.auth.isLoading.resendVerification;
+  state.auth.isLoading.resendVerification ||
+  state.auth.isLoading.verifyEmail;
 
 // ============================================================================
 // Error State Selectors
@@ -63,9 +68,14 @@ export const selectLogoutError = (state: RootState): string | null => state.auth
 export const selectResendVerificationError = (state: RootState): string | null =>
   state.auth.error.resendVerification;
 
+// Verify email error
+export const selectVerifyEmailError = (state: RootState): string | null =>
+  state.auth.error.verifyEmail;
+
 // Check if any auth operation has an error
 export const selectHasAnyAuthError = (state: RootState): boolean =>
   !!state.auth.error.login ||
   !!state.auth.error.signup ||
   !!state.auth.error.logout ||
-  !!state.auth.error.resendVerification;
+  !!state.auth.error.resendVerification ||
+  !!state.auth.error.verifyEmail;

@@ -6,6 +6,7 @@ interface AuthPageState<T> {
   signup: T;
   logout: T;
   resendVerification: T;
+  verifyEmail: T;
 }
 
 export interface AuthState {

@@ -561,7 +561,7 @@
     },
     "/authentication/verify/{id}/{token}": {
       "get": {
-        "description": "Verifies user email using the verification token from email. Redirects to appropriate page after verification.",
+        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day).",
         "operationId": "AuthenticationController_emailVerification",
         "parameters": [
           {
@@ -580,7 +580,12 @@
           }
         ],
         "responses": {
-          "200": { "description": "Email verification successful, redirects to success page" },
+          "200": {
+            "description": "Email verification successful and user logged in",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
           "401": {
             "description": "Token does not exist or has expired",
             "content": {

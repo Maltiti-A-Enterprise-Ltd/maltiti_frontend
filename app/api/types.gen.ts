@@ -1418,10 +1418,12 @@ export type AuthenticationControllerEmailVerificationError = AuthenticationContr
 
 export type AuthenticationControllerEmailVerificationResponses = {
     /**
-     * Email verification successful, redirects to success page
+     * Email verification successful and user logged in
      */
-    200: unknown;
+    200: LoginResponseDto;
 };
+
+export type AuthenticationControllerEmailVerificationResponse = AuthenticationControllerEmailVerificationResponses[keyof AuthenticationControllerEmailVerificationResponses];
 
 export type AuthenticationControllerRefreshTokenData = {
     body?: never;

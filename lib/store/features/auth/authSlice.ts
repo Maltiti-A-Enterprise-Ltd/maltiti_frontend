@@ -5,6 +5,7 @@ import {
   logout,
   signup,
   resendVerificationEmail,
+  verifyEmail,
 } from '@/lib/store/features/auth/authThunk';
 import { AuthState } from '@/lib/store/features/auth/authState';
 
@@ -15,12 +16,14 @@ const initialState: AuthState = {
     signup: false,
     logout: false,
     resendVerification: false,
+    verifyEmail: false,
   },
   error: {
     login: null,
     signup: null,
     logout: null,
     resendVerification: null,
+    verifyEmail: null,
   },
 };
 
@@ -36,6 +39,7 @@ const authSlice = createSlice({
         signup: null,
         logout: null,
         resendVerification: null,
+        verifyEmail: null,
       };
     },
     clearUser: (state) => {
@@ -45,11 +49,14 @@ const authSlice = createSlice({
         signup: null,
         logout: null,
         resendVerification: null,
+        verifyEmail: null,
       };
     },
     clearError: (
       state,
-      action: PayloadAction<'login' | 'signup' | 'logout' | 'resendVerification' | undefined>,
+      action: PayloadAction<
+        'login' | 'signup' | 'logout' | 'resendVerification' | 'verifyEmail' | undefined
+      >,
     ) => {
       if (action.payload) {
         state.error[action.payload] = null;
@@ -59,6 +66,7 @@ const authSlice = createSlice({
           signup: null,
           logout: null,
           resendVerification: null,
+          verifyEmail: null,
         };
       }
     },
@@ -128,6 +136,23 @@ const authSlice = createSlice({
       .addCase(resendVerificationEmail.rejected, (state, action) => {
         state.isLoading.resendVerification = false;
         state.error.resendVerification = action.payload as string;
+      });
+
+    // Verify Email
+    builder
+      .addCase(verifyEmail.pending, (state) => {
+        state.isLoading.verifyEmail = true;
+        state.error.verifyEmail = null;
+      })
+      .addCase(verifyEmail.fulfilled, (state, action) => {
+        state.isLoading.verifyEmail = false;
+        state.user = action.payload; // Set user data like login does
+        state.error.verifyEmail = null;
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.isLoading.verifyEmail = false;
+        state.error.verifyEmail = action.payload as string;
+        state.user = null;
       });
   },
 });
