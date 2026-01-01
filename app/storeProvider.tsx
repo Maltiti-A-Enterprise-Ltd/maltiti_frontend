@@ -1,10 +1,16 @@
 'use client';
-import { useState, ReactNode, JSX } from 'react';
+import { ReactNode, JSX } from 'react';
 import { Provider } from 'react-redux';
-import { makeStore, AppStore } from '@/lib/store/store';
+import { store, persistor } from '@/lib/store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Loader } from '@/components/ui/loader';
 
 export default function StoreProvider({ children }: { children: ReactNode }): JSX.Element {
-  const [store] = useState<AppStore>(() => makeStore());
-
-  return <Provider store={store}>{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<Loader />} persistor={persistor}>
+        {children}
+      </PersistGate>
+    </Provider>
+  );
 }
