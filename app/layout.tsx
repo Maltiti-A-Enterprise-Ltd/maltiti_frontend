@@ -4,6 +4,7 @@ import './globals.css';
 import { JSX, ReactNode } from 'react';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { Footer } from '@/components/footer';
+import StoreProvider from '@/app/storeProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,6 +38,10 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: '/logo.svg',
+    apple: '/logo.svg',
+  },
   manifest: '/manifest.json',
 };
 
@@ -53,7 +58,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SmoothScroll />
-        {children}
+        <StoreProvider>{children}</StoreProvider>
         <Footer />
       </body>
     </html>

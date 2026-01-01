@@ -4,9 +4,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export">
+    <list default="true" id="23b312a6-d0fe-4384-9215-ad14d01e0287" name="Changes" comment="feat: implement Redux store setup, add product utilities, and create product components">
+      <change afterPath="$PROJECT_DIR$/app/api/client.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/client/client.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/client/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/client/types.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/client/utils.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/auth.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/bodySerializer.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/params.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/pathSerializer.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/queryKeySerializer.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/serverSentEvents.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/types.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/core/utils.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/sdk.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/types.gen.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/storeProvider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/products/best-products-section.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/products/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/products/product-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/loader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/product-utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/products/productsSlice.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/features/products/productsThunk.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/hooks.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/store/store.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/openapi-ts.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/openapi.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/placeholder-product.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/privacy/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/privacy/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/terms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/terms/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/home/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/home/home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/button.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,7 +57,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="72" />
+    <option name="cachedIndexableFilesCount" value="106" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -31,13 +74,14 @@
   "keyToString": {
     "git-widget-placeholder": "feat/next-js-conversion-v2",
     "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "C:/Users/BilalAbubakari/Desktop/PROJECTS/maltiti_frontend/app",
+    "last_opened_file_path": "C:/Users/BilalAbubakari/Desktop/PROJECTS/maltiti_frontend/lib/store",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.standard": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "npm.dev.executor": "Run",
+    "npm.openapi-ts.executor": "Run",
     "prettierjs.PrettierConfiguration.Package": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\prettier",
     "settings.editor.selected.configurable": "preferences.keymap",
     "ts.external.directory.path": "C:\\Users\\BilalAbubakari\\Desktop\\PROJECTS\\maltiti_frontend\\node_modules\\typescript\\lib"
@@ -52,13 +96,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\lib\store" />
+      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\components\ui" />
       <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app" />
       <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets\images" />
       <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets\videos" />
-      <recent name="C:\Users\BilalAbubakari\Desktop\PROJECTS\maltiti_frontend\app\assets" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.openapi-ts">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -69,9 +114,20 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="openapi-ts" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="openapi-ts" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.openapi-ts" />
       </list>
     </recent_temporary>
   </component>
@@ -140,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767225307234</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: update SEO keywords to include brand name variant&#10;&#10;- Add &quot;maltiti&quot; to keywords for improved search visibility and brand recognition">
+      <option name="closed" value="true" />
+      <created>1767225398952</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1767225398952</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -153,6 +217,8 @@
     <MESSAGE value="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display" />
     <MESSAGE value="feat: add responsive footer with company info, quick links, policies, and social media&#10;&#10;- Implement Footer component with brand description, navigation links, legal policies, and contact info&#10;- Add social media icons and external links for LinkedIn, Facebook, and Instagram&#10;- Integrate Footer into main layout for consistent site-wide display&#10;- Add @iconify/react dependency for icon support" />
     <MESSAGE value="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: enhance SEO metadata, add web manifest, and update theme color&#10;&#10;- Update site metadata with detailed title, description, keywords, and Open Graph config for improved SEO and social sharing&#10;- Add site.webmanifest for PWA support and favicon integration&#10;- Set custom theme color in viewport export" />
+    <MESSAGE value="feat: update SEO keywords to include brand name variant&#10;&#10;- Add &quot;maltiti&quot; to keywords for improved search visibility and brand recognition" />
+    <MESSAGE value="feat: implement Redux store setup, add product utilities, and create product components" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement Redux store setup, add product utilities, and create product components" />
   </component>
 </project>
