@@ -11,20 +11,14 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO 8601 format)",
-            "schema": {
-              "example": "2023-01-01T00:00:00Z",
-              "type": "string"
-            }
+            "schema": { "example": "2023-01-01T00:00:00Z", "type": "string" }
           },
           {
             "name": "to",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO 8601 format)",
-            "schema": {
-              "example": "2023-12-31T23:59:59Z",
-              "type": "string"
-            }
+            "schema": { "example": "2023-12-31T23:59:59Z", "type": "string" }
           },
           {
             "name": "actionType",
@@ -92,71 +86,49 @@
             "required": false,
             "in": "query",
             "description": "Filter by user ID who performed the action",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           },
           {
             "name": "role",
             "required": false,
             "in": "query",
             "description": "Filter by user role",
-            "schema": {
-              "enum": ["user", "admin", "superadmin"],
-              "type": "string"
-            }
+            "schema": { "enum": ["user", "admin", "superadmin"], "type": "string" }
           },
           {
             "name": "page",
             "required": false,
             "in": "query",
             "description": "Page number (starts from 1)",
-            "schema": {
-              "default": 1,
-              "example": 1,
-              "type": "number"
-            }
+            "schema": { "default": 1, "example": 1, "type": "number" }
           },
           {
             "name": "limit",
             "required": false,
             "in": "query",
             "description": "Number of items per page",
-            "schema": {
-              "default": 20,
-              "example": 20,
-              "type": "number"
-            }
+            "schema": { "default": 20, "example": 20, "type": "number" }
           },
           {
             "name": "sortOrder",
             "required": false,
             "in": "query",
             "description": "Sort order (ASC or DESC)",
-            "schema": {
-              "default": "DESC",
-              "example": "DESC",
-              "type": "string"
-            }
+            "schema": { "default": "DESC", "example": "DESC", "type": "string" }
           },
           {
             "description": "Start date for filtering (ISO 8601 format)",
             "required": false,
             "name": "from",
             "in": "query",
-            "schema": {
-              "example": "2023-01-01T00:00:00Z"
-            }
+            "schema": { "example": "2023-01-01T00:00:00Z" }
           },
           {
             "description": "End date for filtering (ISO 8601 format)",
             "required": false,
             "name": "to",
             "in": "query",
-            "schema": {
-              "example": "2023-12-31T23:59:59Z"
-            }
+            "schema": { "example": "2023-12-31T23:59:59Z" }
           },
           {
             "description": "Filter by action type",
@@ -224,49 +196,35 @@
             "required": false,
             "name": "userId",
             "in": "query",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000" }
           },
           {
             "description": "Filter by user role",
             "required": false,
             "name": "role",
             "in": "query",
-            "schema": {
-              "enum": ["user", "admin", "superadmin"],
-              "type": "string"
-            }
+            "schema": { "enum": ["user", "admin", "superadmin"], "type": "string" }
           },
           {
             "description": "Page number (starts from 1)",
             "required": false,
             "name": "page",
             "in": "query",
-            "schema": {
-              "default": 1,
-              "example": 1
-            }
+            "schema": { "default": 1, "example": 1 }
           },
           {
             "description": "Number of items per page",
             "required": false,
             "name": "limit",
             "in": "query",
-            "schema": {
-              "default": 20,
-              "example": 20
-            }
+            "schema": { "default": 20, "example": 20 }
           },
           {
             "description": "Sort order (ASC or DESC)",
             "required": false,
             "name": "sortOrder",
             "in": "query",
-            "schema": {
-              "default": "DESC",
-              "example": "DESC"
-            }
+            "schema": { "default": "DESC", "example": "DESC" }
           }
         ],
         "responses": {
@@ -276,9 +234,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AuditLogResponseDto"
-                  }
+                  "items": { "$ref": "#/components/schemas/AuditLogResponseDto" }
                 }
               }
             }
@@ -298,9 +254,7 @@
             "required": true,
             "in": "path",
             "description": "Audit Log ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -308,9 +262,7 @@
             "description": "Audit log retrieved successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditLogResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/AuditLogResponseDto" }
               }
             }
           }
@@ -329,25 +281,17 @@
             "required": false,
             "in": "query",
             "description": "Start date (ISO 8601 format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "to",
             "required": false,
             "in": "query",
             "description": "End date (ISO 8601 format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Audit statistics retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Audit statistics retrieved successfully" } },
         "summary": "Get audit statistics (Super Admin Only)",
         "tags": ["audit"]
       }
@@ -360,42 +304,28 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterUserDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/RegisterUserDto" } }
           }
         },
         "responses": {
           "201": {
             "description": "User registration successful",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponseDto" } }
             }
           },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "409": {
             "description": "User with email already exists",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -413,19 +343,13 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyPhoneDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifyPhoneDto" } }
           }
         },
         "responses": {
@@ -433,9 +357,7 @@
             "description": "Phone verification successful",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PhoneVerificationResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/PhoneVerificationResponseDto" }
               }
             }
           },
@@ -443,48 +365,30 @@
             "description": "Bad request - invalid OTP code or validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - invalid or missing token",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "409": {
             "description": "User with phone number already exists",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Verify phone number",
         "tags": ["Authentication"]
       }
@@ -497,11 +401,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterUserDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/RegisterUserDto" } }
           }
         },
         "responses": {
@@ -509,9 +409,7 @@
             "description": "Customer account created, verification email sent",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerSignupResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/CustomerSignupResponseDto" }
               }
             }
           },
@@ -519,20 +417,14 @@
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "409": {
             "description": "User with email already exists",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -548,52 +440,34 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SignInDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/SignInDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Invalid email or password",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "403": {
             "description": "Account is inactive or suspended",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -609,11 +483,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ForgotPasswordDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ForgotPasswordDto" } }
           }
         },
         "responses": {
@@ -621,9 +491,7 @@
             "description": "Password reset email sent successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PasswordResetEmailResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/PasswordResetEmailResponseDto" }
               }
             }
           },
@@ -631,20 +499,14 @@
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "404": {
             "description": "User with email does not exist",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -660,11 +522,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ResetPasswordDto" } }
           }
         },
         "responses": {
@@ -672,9 +530,7 @@
             "description": "Password reset successful",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PasswordResetResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/PasswordResetResponseDto" }
               }
             }
           },
@@ -682,30 +538,20 @@
             "description": "Bad request - passwords do not match or validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "404": {
             "description": "User not found or invalid token",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "410": {
             "description": "Reset token has expired",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -723,49 +569,33 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "token",
             "required": true,
             "in": "path",
             "description": "Verification token",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "Email verification successful and user logged in",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
           "401": {
             "description": "Token does not exist or has expired",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -783,38 +613,24 @@
             "description": "Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TokenRefreshResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/TokenRefreshResponseDto" }
               }
             }
           },
           "401": {
             "description": "Invalid, expired, or missing refresh token",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Refresh access token",
         "tags": ["Authentication"]
       }
@@ -828,29 +644,17 @@
           "200": {
             "description": "Logged out successfully, cookies cleared",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogoutResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/LogoutResponseDto" } }
             }
           },
           "401": {
             "description": "Unauthorized - not logged in",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "User logout",
         "tags": ["Authentication"]
       }
@@ -863,11 +667,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAdminDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateAdminDto" } }
           }
         },
         "responses": {
@@ -875,9 +675,7 @@
             "description": "Admin account created successfully, credentials sent to email",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminCreationResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/AdminCreationResponseDto" }
               }
             }
           },
@@ -885,48 +683,30 @@
             "description": "Bad request - email must be @maltitiaenterprise.com or validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - not logged in",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "403": {
             "description": "Forbidden - requires Super Admin role",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "409": {
             "description": "User with email already exists",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Create admin user (Super Admin only)",
         "tags": ["Authentication"]
       }
@@ -941,19 +721,13 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangePasswordDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ChangePasswordDto" } }
           }
         },
         "responses": {
@@ -961,9 +735,7 @@
             "description": "Password changed successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PasswordChangeResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/PasswordChangeResponseDto" }
               }
             }
           },
@@ -971,38 +743,24 @@
             "description": "Bad request - passwords do not match, current password is incorrect, or validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - not logged in",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Change password",
         "tags": ["Authentication"]
       }
@@ -1016,9 +774,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResendVerificationDto"
-              }
+              "schema": { "$ref": "#/components/schemas/ResendVerificationDto" }
             }
           }
         },
@@ -1027,9 +783,7 @@
             "description": "Verification email resent successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResendVerificationResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ResendVerificationResponseDto" }
               }
             }
           },
@@ -1037,20 +791,14 @@
             "description": "Bad request - email already verified or validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "404": {
             "description": "User with email does not exist",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
@@ -1069,9 +817,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserResponseDto"
-                  }
+                  "items": { "$ref": "#/components/schemas/UserResponseDto" }
                 }
               }
             }
@@ -1090,20 +836,14 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "User retrieved successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserResponseDto" } }
             }
           }
         },
@@ -1118,30 +858,20 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateUserDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "User updated successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserResponseDto" } }
             }
           }
         },
@@ -1156,16 +886,10 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "User deleted successfully"
-          }
-        },
+        "responses": { "200": { "description": "User deleted successfully" } },
         "summary": "Delete a user",
         "tags": ["users"]
       }
@@ -1179,30 +903,20 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeStatusDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ChangeStatusDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "User status changed successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserResponseDto" } }
             }
           }
         },
@@ -1219,30 +933,20 @@
             "required": true,
             "in": "path",
             "description": "User ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeRoleDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/ChangeRoleDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "User role changed successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/UserResponseDto" } }
             }
           }
         },
@@ -1254,11 +958,7 @@
       "get": {
         "operationId": "CooperativeController_getAllCooperatives",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1266,20 +966,9 @@
       "get": {
         "operationId": "CooperativeController_getCooperative",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1290,18 +979,10 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCooperativeDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddCooperativeDto" } }
           }
         },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
+        "responses": { "201": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1312,18 +993,10 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditCooperativeDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/EditCooperativeDto" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1331,20 +1004,9 @@
       "delete": {
         "operationId": "CooperativeController_deleteCooperative",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1352,11 +1014,7 @@
       "get": {
         "operationId": "CooperativeController_getAllCooperativeMembers",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1364,20 +1022,9 @@
       "get": {
         "operationId": "CooperativeController_getCooperativeMember",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1385,20 +1032,9 @@
       "get": {
         "operationId": "CooperativeController_getMembersByCooperative",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1410,17 +1046,11 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCooperativeMemberDto"
-              }
+              "schema": { "$ref": "#/components/schemas/AddCooperativeMemberDto" }
             }
           }
         },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
+        "responses": { "201": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1432,17 +1062,11 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditCooperativeMemberDto"
-              }
+              "schema": { "$ref": "#/components/schemas/EditCooperativeMemberDto" }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1450,20 +1074,9 @@
       "delete": {
         "operationId": "CooperativeController_deleteMember",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Cooperative"]
       }
     },
@@ -1477,12 +1090,7 @@
             "required": false,
             "in": "query",
             "description": "Page number for pagination",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "example": 1,
-              "type": "number"
-            }
+            "schema": { "minimum": 1, "default": 1, "example": 1, "type": "number" }
           },
           {
             "name": "limit",
@@ -1502,10 +1110,7 @@
             "required": false,
             "in": "query",
             "description": "Search term for product name or description",
-            "schema": {
-              "example": "shea butter",
-              "type": "string"
-            }
+            "schema": { "example": "shea butter", "type": "string" }
           },
           {
             "name": "category",
@@ -1568,40 +1173,28 @@
             "required": false,
             "in": "query",
             "description": "Filter by featured products",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            }
+            "schema": { "example": true, "type": "boolean" }
           },
           {
             "name": "isOrganic",
             "required": false,
             "in": "query",
             "description": "Filter by organic products",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            }
+            "schema": { "example": true, "type": "boolean" }
           },
           {
             "name": "minPrice",
             "required": false,
             "in": "query",
             "description": "Minimum price filter",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
+            "schema": { "example": 10, "type": "number" }
           },
           {
             "name": "maxPrice",
             "required": false,
             "in": "query",
             "description": "Maximum price filter",
-            "schema": {
-              "example": 100,
-              "type": "number"
-            }
+            "schema": { "example": 100, "type": "number" }
           },
           {
             "name": "sortBy",
@@ -1619,21 +1212,14 @@
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": {
-              "example": "DESC",
-              "enum": ["ASC", "DESC"],
-              "type": "string"
-            }
+            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
           },
           {
             "name": "batchId",
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -1641,15 +1227,11 @@
             "description": "Products retrieved successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductsPaginationResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductsPaginationResponseDto" }
               }
             }
           },
-          "400": {
-            "description": "Invalid query parameters"
-          }
+          "400": { "description": "Invalid query parameters" }
         },
         "summary": "Get all products",
         "tags": ["Products"]
@@ -1665,9 +1247,7 @@
             "description": "Preview products retrieved successfully. Response includes personalized products for logged-in users or curated best performers for anonymous users.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BestProductsApiResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/BestProductsApiResponseDto" }
               }
             }
           }
@@ -1681,11 +1261,7 @@
         "description": "Retrieve all products with only id and name fields",
         "operationId": "ProductsController_getAllProductsBasic",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Products retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Products retrieved successfully" } },
         "summary": "Get all products basic",
         "tags": ["Products"]
       }
@@ -1700,10 +1276,7 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -1711,15 +1284,11 @@
             "description": "Product retrieved successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
               }
             }
           },
-          "404": {
-            "description": "Product not found"
-          }
+          "404": { "description": "Product not found" }
         },
         "summary": "Get single product",
         "tags": ["Products"]
@@ -1733,11 +1302,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateProductDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateProductDto" } }
           }
         },
         "responses": {
@@ -1745,21 +1310,13 @@
             "description": "Product created successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
               }
             }
           },
-          "400": {
-            "description": "Invalid input data"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "409": {
-            "description": "Product with SKU already exists"
-          }
+          "400": { "description": "Invalid input data" },
+          "401": { "description": "Unauthorized" },
+          "409": { "description": "Product with SKU already exists" }
         },
         "summary": "Create new product",
         "tags": ["Products"]
@@ -1775,20 +1332,13 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProductDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProductDto" } }
           }
         },
         "responses": {
@@ -1796,30 +1346,16 @@
             "description": "Product updated successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
               }
             }
           },
-          "400": {
-            "description": "Invalid input data"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Product not found"
-          },
-          "409": {
-            "description": "Product with SKU already exists"
-          }
+          "400": { "description": "Invalid input data" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Product not found" },
+          "409": { "description": "Product with SKU already exists" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Update product",
         "tags": ["Products"]
       }
@@ -1834,28 +1370,15 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Product deleted successfully"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Product not found"
-          }
+          "200": { "description": "Product deleted successfully" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Product not found" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Delete product",
         "tags": ["Products"]
       }
@@ -1870,10 +1393,7 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -1881,24 +1401,14 @@
             "description": "Product status changed successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Product not found"
-          }
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Product not found" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Toggle product status",
         "tags": ["Products"]
       }
@@ -1913,10 +1423,7 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -1924,24 +1431,14 @@
             "description": "Product favorite status toggled successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Product not found"
-          }
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Product not found" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Toggle product favorite",
         "tags": ["Products"]
       }
@@ -1956,10 +1453,7 @@
             "required": false,
             "in": "query",
             "description": "Search term for product name or description",
-            "schema": {
-              "example": "shea butter",
-              "type": "string"
-            }
+            "schema": { "example": "shea butter", "type": "string" }
           },
           {
             "name": "category",
@@ -2022,40 +1516,28 @@
             "required": false,
             "in": "query",
             "description": "Filter by featured products",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            }
+            "schema": { "example": true, "type": "boolean" }
           },
           {
             "name": "isOrganic",
             "required": false,
             "in": "query",
             "description": "Filter by organic products",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            }
+            "schema": { "example": true, "type": "boolean" }
           },
           {
             "name": "minPrice",
             "required": false,
             "in": "query",
             "description": "Minimum price filter",
-            "schema": {
-              "example": 10,
-              "type": "number"
-            }
+            "schema": { "example": 10, "type": "number" }
           },
           {
             "name": "maxPrice",
             "required": false,
             "in": "query",
             "description": "Maximum price filter",
-            "schema": {
-              "example": 100,
-              "type": "number"
-            }
+            "schema": { "example": 100, "type": "number" }
           },
           {
             "name": "sortBy",
@@ -2073,21 +1555,14 @@
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": {
-              "example": "DESC",
-              "enum": ["ASC", "DESC"],
-              "type": "string"
-            }
+            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
           },
           {
             "name": "batchId",
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -2095,25 +1570,14 @@
             "description": "Excel file downloaded successfully",
             "content": {
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
+                "schema": { "type": "string", "format": "binary" }
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "No products found matching filters"
-          }
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "No products found matching filters" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Export all products to Excel",
         "tags": ["Products"]
       }
@@ -2126,39 +1590,21 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBatchDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateBatchDto" } }
           }
         },
         "responses": {
           "201": {
             "description": "Batch created successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BatchResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/BatchResponseDto" } }
             }
           },
-          "400": {
-            "description": "Invalid input data"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "409": {
-            "description": "Batch number already exists"
-          }
+          "400": { "description": "Invalid input data" },
+          "401": { "description": "Unauthorized" },
+          "409": { "description": "Batch number already exists" }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
+        "security": [{ "bearer": [] }],
         "summary": "Create new batch",
         "tags": ["Batches"]
       },
@@ -2171,12 +1617,7 @@
             "required": false,
             "in": "query",
             "description": "Page number for pagination",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "example": 1,
-              "type": "number"
-            }
+            "schema": { "minimum": 1, "default": 1, "example": 1, "type": "number" }
           },
           {
             "name": "limit",
@@ -2196,40 +1637,28 @@
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           },
           {
             "name": "batchNumber",
             "required": false,
             "in": "query",
             "description": "Search term for batch number",
-            "schema": {
-              "example": "BATCH-2024-001",
-              "type": "string"
-            }
+            "schema": { "example": "BATCH-2024-001", "type": "string" }
           },
           {
             "name": "qualityCheckStatus",
             "required": false,
             "in": "query",
             "description": "Filter by quality check status",
-            "schema": {
-              "example": "Passed",
-              "type": "string"
-            }
+            "schema": { "example": "Passed", "type": "string" }
           },
           {
             "name": "isActive",
             "required": false,
             "in": "query",
             "description": "Filter by active status",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            }
+            "schema": { "example": true, "type": "boolean" }
           },
           {
             "name": "sortBy",
@@ -2247,88 +1676,63 @@
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": {
-              "example": "DESC",
-              "enum": ["ASC", "DESC"],
-              "type": "string"
-            }
+            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
           },
           {
             "description": "Page number for pagination",
             "required": false,
             "name": "page",
             "in": "query",
-            "schema": {
-              "minimum": 1,
-              "default": 1,
-              "example": 1
-            }
+            "schema": { "minimum": 1, "default": 1, "example": 1 }
           },
           {
             "description": "Number of items per page",
             "required": false,
             "name": "limit",
             "in": "query",
-            "schema": {
-              "minimum": 1,
-              "maximum": 100,
-              "default": 10,
-              "example": 10
-            }
+            "schema": { "minimum": 1, "maximum": 100, "default": 10, "example": 10 }
           },
           {
             "description": "Filter by product ID",
             "required": false,
             "name": "productId",
             "in": "query",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000" }
           },
           {
             "description": "Search term for batch number",
             "required": false,
             "name": "batchNumber",
             "in": "query",
-            "schema": {
-              "example": "BATCH-2024-001"
-            }
+            "schema": { "example": "BATCH-2024-001" }
           },
           {
             "description": "Filter by quality check status",
             "required": false,
             "name": "qualityCheckStatus",
             "in": "query",
-            "schema": {
-              "example": "Passed"
-            }
+            "schema": { "example": "Passed" }
           },
           {
             "description": "Filter by active status",
             "required": false,
             "name": "isActive",
             "in": "query",
-            "schema": {
-              "example": true
-            }
+            "schema": { "example": true }
           },
           {
             "description": "Sort field",
             "required": false,
             "name": "sortBy",
             "in": "query",
-            "schema": {
-              "example": "createdAt"
-            }
+            "schema": { "example": "createdAt" }
           },
           {
             "description": "Sort order",
             "required": false,
             "name": "sortOrder",
             "in": "query",
-            "schema": {
-              "example": "DESC"
-            }
+            "schema": { "example": "DESC" }
           }
         ],
         "responses": {
@@ -2339,27 +1743,17 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
-                    },
+                    "message": { "type": "string" },
                     "data": {
                       "type": "object",
                       "properties": {
                         "batches": {
                           "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/BatchResponseDto"
-                          }
+                          "items": { "$ref": "#/components/schemas/BatchResponseDto" }
                         },
-                        "total": {
-                          "type": "number"
-                        },
-                        "page": {
-                          "type": "number"
-                        },
-                        "limit": {
-                          "type": "number"
-                        }
+                        "total": { "type": "number" },
+                        "page": { "type": "number" },
+                        "limit": { "type": "number" }
                       }
                     }
                   }
@@ -2382,26 +1776,17 @@
             "required": true,
             "in": "path",
             "description": "Batch UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "Batch retrieved successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BatchResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/BatchResponseDto" } }
             }
           },
-          "404": {
-            "description": "Batch not found"
-          }
+          "404": { "description": "Batch not found" }
         },
         "summary": "Get single batch",
         "tags": ["Batches"]
@@ -2417,10 +1802,7 @@
             "required": true,
             "in": "path",
             "description": "Product UUID",
-            "schema": {
-              "example": "123e4567-e89b-12d3-a456-426614174000",
-              "type": "string"
-            }
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
           }
         ],
         "responses": {
@@ -2430,16 +1812,12 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BatchResponseDto"
-                  }
+                  "items": { "$ref": "#/components/schemas/BatchResponseDto" }
                 }
               }
             }
           },
-          "404": {
-            "description": "Product not found"
-          }
+          "404": { "description": "Product not found" }
         },
         "summary": "Get batches for a product",
         "tags": ["Batches"]
@@ -2449,11 +1827,7 @@
       "get": {
         "operationId": "IngredientsController_findAll",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "List of all ingredients"
-          }
-        },
+        "responses": { "200": { "description": "List of all ingredients" } },
         "summary": "Retrieve all ingredients",
         "tags": ["ingredients"]
       },
@@ -2463,20 +1837,12 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIngredientDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateIngredientDto" } }
           }
         },
         "responses": {
-          "201": {
-            "description": "The created ingredient"
-          },
-          "400": {
-            "description": "Bad request"
-          }
+          "201": { "description": "The created ingredient" },
+          "400": { "description": "Bad request" }
         },
         "summary": "Create a new ingredient",
         "tags": ["ingredients"]
@@ -2491,18 +1857,12 @@
             "required": true,
             "in": "path",
             "description": "The ID of the ingredient",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "The ingredient object"
-          },
-          "404": {
-            "description": "Ingredient not found"
-          }
+          "200": { "description": "The ingredient object" },
+          "404": { "description": "Ingredient not found" }
         },
         "summary": "Retrieve a single ingredient by ID",
         "tags": ["ingredients"]
@@ -2515,31 +1875,19 @@
             "required": true,
             "in": "path",
             "description": "The ID of the ingredient to update",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateIngredientDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateIngredientDto" } }
           }
         },
         "responses": {
-          "200": {
-            "description": "The updated ingredient"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Ingredient not found"
-          }
+          "200": { "description": "The updated ingredient" },
+          "400": { "description": "Bad request" },
+          "404": { "description": "Ingredient not found" }
         },
         "summary": "Update an existing ingredient",
         "tags": ["ingredients"]
@@ -2552,18 +1900,12 @@
             "required": true,
             "in": "path",
             "description": "The ID of the ingredient to delete",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Ingredient deleted successfully"
-          },
-          "404": {
-            "description": "Ingredient not found"
-          }
+          "200": { "description": "Ingredient deleted successfully" },
+          "404": { "description": "Ingredient not found" }
         },
         "summary": "Delete an ingredient by ID",
         "tags": ["ingredients"]
@@ -2579,113 +1921,67 @@
             "description": "Cart retrieved successfully. Returns array of cart items, total item count, and total price.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCartResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Get user's shopping cart",
         "tags": ["Cart"]
       },
       "post": {
-        "description": "Adds a single product to the authenticated user's shopping cart with quantity of 1. If product already exists in cart, returns conflict error.",
+        "description": "Adds a single product to the authenticated user's shopping cart with quantity of 1. If product already exists in cart, the quantity is incremented.",
         "operationId": "CartController_addToCart",
         "parameters": [],
         "requestBody": {
           "required": true,
           "description": "Product ID to add to cart",
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCartDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddCartDto" } }
           }
         },
         "responses": {
           "201": {
             "description": "Product added to cart successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CartResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/CartResponseDto" } }
             }
           },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "Product not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict - product already exists in cart",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Add product to cart",
         "tags": ["Cart"]
       }
@@ -2700,10 +1996,7 @@
             "required": true,
             "in": "path",
             "description": "Cart item ID (UUID)",
-            "schema": {
-              "example": "550e8400-e29b-41d4-a716-446655440000",
-              "type": "string"
-            }
+            "schema": { "example": "550e8400-e29b-41d4-a716-446655440000", "type": "string" }
           }
         ],
         "responses": {
@@ -2711,48 +2004,30 @@
             "description": "Cart item removed successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCartResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "403": {
             "description": "Forbidden - user attempting to delete another user's cart item",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "Cart item not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Remove item from cart",
         "tags": ["Cart"]
       },
@@ -2765,21 +2040,14 @@
             "required": true,
             "in": "path",
             "description": "Cart item ID (UUID)",
-            "schema": {
-              "example": "550e8400-e29b-41d4-a716-446655440000",
-              "type": "string"
-            }
+            "schema": { "example": "550e8400-e29b-41d4-a716-446655440000", "type": "string" }
           }
         ],
         "requestBody": {
           "required": true,
           "description": "New quantity for the cart item (must be positive integer)",
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddQuantityDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddQuantityDto" } }
           }
         },
         "responses": {
@@ -2787,9 +2055,7 @@
             "description": "Quantity updated successfully. Returns complete cart with updated totals.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCartResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
               }
             }
           },
@@ -2797,48 +2063,30 @@
             "description": "Bad request - validation failed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "403": {
             "description": "Forbidden - user attempting to update another user's cart item",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "Cart item not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Update cart item quantity",
         "tags": ["Cart"]
       }
@@ -2853,38 +2101,24 @@
             "description": "All cart items removed successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCartResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Remove all items from cart",
         "tags": ["Cart"]
       }
@@ -2898,11 +2132,7 @@
           "required": true,
           "description": "Array of products with quantities to add to cart. At least one item is required.",
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkAddCartDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/BulkAddCartDto" } }
           }
         },
         "responses": {
@@ -2910,9 +2140,7 @@
             "description": "Products processed successfully. Returns added items and any skipped items.",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BulkAddCartResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/BulkAddCartResponseDto" }
               }
             }
           },
@@ -2920,38 +2148,24 @@
             "description": "Bad request - validation failed (empty array, invalid quantities, etc.)",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationErrorResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponseDto" }
               }
             }
           },
           "401": {
             "description": "Unauthorized - user not authenticated",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           },
           "404": {
             "description": "User not found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseDto" } }
             }
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Bulk add products to cart",
         "tags": ["Cart"]
       }
@@ -2960,20 +2174,9 @@
       "get": {
         "operationId": "CheckoutController_getOrders",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -2981,20 +2184,9 @@
       "get": {
         "operationId": "CheckoutController_getOrder",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3002,11 +2194,7 @@
       "get": {
         "operationId": "CheckoutController_testMail",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3014,28 +2202,10 @@
       "get": {
         "operationId": "CheckoutController_confirmPayment",
         "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "checkoutId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "checkoutId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3043,28 +2213,10 @@
       "get": {
         "operationId": "CheckoutController_getTransportation",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "location",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "location", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3076,40 +2228,18 @@
             "name": "orderStatus",
             "required": true,
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
-          {
-            "name": "searchTerm",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
+          { "name": "searchTerm", "required": true, "in": "query", "schema": { "type": "string" } },
+          { "name": "page", "required": true, "in": "query", "schema": { "type": "number" } },
           {
             "name": "paymentStatus",
             "required": true,
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3117,30 +2247,17 @@
       "post": {
         "operationId": "CheckoutController_initializeTransaction",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InitializeTransaction"
-              }
+              "schema": { "$ref": "#/components/schemas/InitializeTransaction" }
             }
           }
         },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
+        "responses": { "201": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3148,30 +2265,15 @@
       "patch": {
         "operationId": "CheckoutController_orderStatus",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderStatus"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/OrderStatus" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3179,30 +2281,15 @@
       "patch": {
         "operationId": "CheckoutController_paymentStatus",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PaymentStatus"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/PaymentStatus" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3210,20 +2297,9 @@
       "patch": {
         "operationId": "CheckoutController_cancelOrder",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "responses": { "200": { "description": "" } },
         "tags": ["Checkout"]
       }
     },
@@ -3252,11 +2328,7 @@
           "201": {
             "description": "Image uploaded successfully",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadResponseDto"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/UploadResponseDto" } }
             }
           }
         },
@@ -3271,23 +2343,13 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateSaleDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateSaleDto" } }
           }
         },
         "responses": {
           "201": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Create a new sale",
@@ -3316,39 +2378,25 @@
             "name": "customerId",
             "required": false,
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "page",
             "required": false,
             "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
+            "schema": { "default": 1, "type": "number" }
           },
           {
             "name": "limit",
             "required": false,
             "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
+            "schema": { "default": 10, "type": "number" }
           }
         ],
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object" } } }
           }
         },
         "summary": "List sales",
@@ -3359,35 +2407,18 @@
       "patch": {
         "operationId": "SalesController_updateSale",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateSaleDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateSaleDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Edit sale details",
@@ -3396,25 +2427,12 @@
       "get": {
         "operationId": "SalesController_getSaleDetails",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Get sale details",
@@ -3423,25 +2441,12 @@
       "delete": {
         "operationId": "SalesController_cancelSale",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Cancel sale",
@@ -3452,35 +2457,18 @@
       "put": {
         "operationId": "SalesController_updateSaleStatus",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateSaleStatusDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateSaleStatusDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Update sale status",
@@ -3491,35 +2479,18 @@
       "post": {
         "operationId": "SalesController_addLineItem",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddLineItemDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddLineItemDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Add line item to sale",
@@ -3530,35 +2501,18 @@
       "put": {
         "operationId": "SalesController_assignBatches",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AssignBatchesDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/AssignBatchesDto" } }
           }
         },
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Sale"
-                }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Assign batches to line item",
@@ -3569,30 +2523,15 @@
       "post": {
         "operationId": "SalesController_generateInvoice",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateInvoiceDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/GenerateInvoiceDto" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Invoice PDF generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Invoice PDF generated successfully" } },
         "summary": "Generate invoice PDF for a sale",
         "tags": ["Sales"]
       }
@@ -3601,30 +2540,15 @@
       "post": {
         "operationId": "SalesController_generateReceipt",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateReceiptDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/GenerateReceiptDto" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Receipt PDF generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Receipt PDF generated successfully" } },
         "summary": "Generate receipt PDF for a sale",
         "tags": ["Sales"]
       }
@@ -3633,30 +2557,15 @@
       "post": {
         "operationId": "SalesController_generateWaybill",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateWaybillDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/GenerateWaybillDto" } }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Waybill PDF generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Waybill PDF generated successfully" } },
         "summary": "Generate waybill PDF for a sale",
         "tags": ["Sales"]
       }
@@ -3670,25 +2579,17 @@
             "required": false,
             "in": "query",
             "description": "Page number",
-            "schema": {
-              "type": "number"
-            }
+            "schema": { "type": "number" }
           },
           {
             "name": "limit",
             "required": false,
             "in": "query",
             "description": "Items per page",
-            "schema": {
-              "type": "number"
-            }
+            "schema": { "type": "number" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Customers retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Customers retrieved successfully" } },
         "summary": "Get all customers with pagination",
         "tags": ["customers"]
       },
@@ -3698,20 +2599,12 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCustomerDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCustomerDto" } }
           }
         },
         "responses": {
-          "201": {
-            "description": "Customer created successfully"
-          },
-          "409": {
-            "description": "Customer with email already exists"
-          }
+          "201": { "description": "Customer created successfully" },
+          "409": { "description": "Customer with email already exists" }
         },
         "summary": "Create a new customer",
         "tags": ["customers"]
@@ -3722,23 +2615,13 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCustomerDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateCustomerDto" } }
           }
         },
         "responses": {
-          "200": {
-            "description": "Customer updated successfully"
-          },
-          "404": {
-            "description": "Customer not found"
-          },
-          "409": {
-            "description": "Customer with email already exists"
-          }
+          "200": { "description": "Customer updated successfully" },
+          "404": { "description": "Customer not found" },
+          "409": { "description": "Customer with email already exists" }
         },
         "summary": "Update an existing customer",
         "tags": ["customers"]
@@ -3753,18 +2636,12 @@
             "required": true,
             "in": "path",
             "description": "Customer ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Customer retrieved successfully"
-          },
-          "404": {
-            "description": "Customer not found"
-          }
+          "200": { "description": "Customer retrieved successfully" },
+          "404": { "description": "Customer not found" }
         },
         "summary": "Get a customer by ID",
         "tags": ["customers"]
@@ -3777,18 +2654,12 @@
             "required": true,
             "in": "path",
             "description": "Customer ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Customer deleted successfully"
-          },
-          "404": {
-            "description": "Customer not found"
-          }
+          "200": { "description": "Customer deleted successfully" },
+          "404": { "description": "Customer not found" }
         },
         "summary": "Delete a customer (soft delete)",
         "tags": ["customers"]
@@ -3804,27 +2675,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -3853,9 +2718,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -3873,17 +2736,10 @@
             "required": false,
             "in": "query",
             "description": "Include sales trends",
-            "schema": {
-              "default": false,
-              "type": "boolean"
-            }
+            "schema": { "default": false, "type": "boolean" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Sales report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Sales report generated successfully" } },
         "summary": "Get comprehensive sales report",
         "tags": ["Reports"]
       }
@@ -3898,27 +2754,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -3947,9 +2797,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -3963,11 +2811,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Product sales report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Product sales report generated successfully" } },
         "summary": "Get sales breakdown by product",
         "tags": ["Reports"]
       }
@@ -3982,27 +2826,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4031,9 +2869,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4047,11 +2883,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Category sales report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Category sales report generated successfully" } },
         "summary": "Get sales breakdown by category",
         "tags": ["Reports"]
       }
@@ -4066,27 +2898,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4115,9 +2941,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4135,27 +2959,16 @@
             "required": false,
             "in": "query",
             "description": "Number of top products to return",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
+            "schema": { "default": 10, "type": "number" }
           },
           {
             "name": "sortOrder",
             "required": false,
             "in": "query",
-            "schema": {
-              "default": "DESC",
-              "enum": ["ASC", "DESC"],
-              "type": "string"
-            }
+            "schema": { "default": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Top products report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Top products report generated successfully" } },
         "summary": "Get top selling products",
         "tags": ["Reports"]
       }
@@ -4170,27 +2983,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4219,9 +3026,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4236,9 +3041,7 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Revenue distribution report generated successfully"
-          }
+          "200": { "description": "Revenue distribution report generated successfully" }
         },
         "summary": "Get revenue distribution by product",
         "tags": ["Reports"]
@@ -4254,27 +3057,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4303,9 +3100,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4319,11 +3114,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Batch report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Batch report generated successfully" } },
         "summary": "Get batch production report",
         "tags": ["Reports"]
       }
@@ -4338,27 +3129,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4387,9 +3172,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4403,11 +3186,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Batch aging report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Batch aging report generated successfully" } },
         "summary": "Get batch aging and expiry report",
         "tags": ["Reports"]
       }
@@ -4443,35 +3222,24 @@
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "lowStockOnly",
             "required": false,
             "in": "query",
             "description": "Show only low stock items",
-            "schema": {
-              "type": "boolean"
-            }
+            "schema": { "type": "boolean" }
           },
           {
             "name": "lowStockThreshold",
             "required": false,
             "in": "query",
             "description": "Low stock threshold",
-            "schema": {
-              "default": 100,
-              "type": "number"
-            }
+            "schema": { "default": 100, "type": "number" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Inventory report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Inventory report generated successfully" } },
         "summary": "Get inventory report",
         "tags": ["Reports"]
       }
@@ -4486,27 +3254,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4535,9 +3297,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4551,11 +3311,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Stock movement report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Stock movement report generated successfully" } },
         "summary": "Get stock movement report",
         "tags": ["Reports"]
       }
@@ -4570,36 +3326,28 @@
             "required": true,
             "in": "query",
             "description": "Start date for current period",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "currentToDate",
             "required": true,
             "in": "query",
             "description": "End date for current period",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "previousFromDate",
             "required": true,
             "in": "query",
             "description": "Start date for previous period",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "previousToDate",
             "required": true,
             "in": "query",
             "description": "End date for previous period",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4623,11 +3371,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Comparative report generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Comparative report generated successfully" } },
         "summary": "Get period-over-period comparison",
         "tags": ["Reports"]
       }
@@ -4642,27 +3386,21 @@
             "required": false,
             "in": "query",
             "description": "Start date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "productId",
             "required": false,
             "in": "query",
             "description": "Filter by product ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "category",
@@ -4691,9 +3429,7 @@
             "required": false,
             "in": "query",
             "description": "Filter by batch ID",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "aggregation",
@@ -4707,11 +3443,7 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard summary generated successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard summary generated successfully" } },
         "summary": "Get dashboard summary with key metrics",
         "tags": ["Reports"]
       }
@@ -4726,35 +3458,24 @@
             "required": false,
             "in": "query",
             "description": "Start date for period filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "toDate",
             "required": false,
             "in": "query",
             "description": "End date for period filtering (ISO format)",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "includeComparison",
             "required": false,
             "in": "query",
             "description": "Include comparison with previous period",
-            "schema": {
-              "default": false,
-              "type": "boolean"
-            }
+            "schema": { "default": false, "type": "boolean" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard summary retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard summary retrieved successfully" } },
         "summary": "Get dashboard summary with KPIs",
         "tags": ["Dashboard"]
       }
@@ -4769,18 +3490,10 @@
             "required": false,
             "in": "query",
             "description": "Period for trend data",
-            "schema": {
-              "default": "30",
-              "enum": ["7", "30", "90"],
-              "type": "string"
-            }
+            "schema": { "default": "30", "enum": ["7", "30", "90"], "type": "string" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard trends retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard trends retrieved successfully" } },
         "summary": "Get dashboard trend data",
         "tags": ["Dashboard"]
       }
@@ -4795,19 +3508,10 @@
             "required": false,
             "in": "query",
             "description": "Number of top/bottom products to return",
-            "schema": {
-              "minimum": 1,
-              "maximum": 10,
-              "default": 5,
-              "type": "number"
-            }
+            "schema": { "minimum": 1, "maximum": 10, "default": 5, "type": "number" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard highlights retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard highlights retrieved successfully" } },
         "summary": "Get top and bottom performers",
         "tags": ["Dashboard"]
       }
@@ -4822,27 +3526,17 @@
             "required": false,
             "in": "query",
             "description": "Low stock threshold",
-            "schema": {
-              "default": 100,
-              "type": "number"
-            }
+            "schema": { "default": 100, "type": "number" }
           },
           {
             "name": "expiryWarningDays",
             "required": false,
             "in": "query",
             "description": "Days until expiry for critical alert",
-            "schema": {
-              "default": 30,
-              "type": "number"
-            }
+            "schema": { "default": 30, "type": "number" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard alerts retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard alerts retrieved successfully" } },
         "summary": "Get inventory alerts",
         "tags": ["Dashboard"]
       }
@@ -4857,19 +3551,10 @@
             "required": false,
             "in": "query",
             "description": "Number of recent items to return",
-            "schema": {
-              "minimum": 5,
-              "maximum": 20,
-              "default": 10,
-              "type": "number"
-            }
+            "schema": { "minimum": 5, "maximum": 20, "default": 10, "type": "number" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Dashboard activity retrieved successfully"
-          }
-        },
+        "responses": { "200": { "description": "Dashboard activity retrieved successfully" } },
         "summary": "Get recent activity",
         "tags": ["Dashboard"]
       }
@@ -4884,21 +3569,13 @@
             "description": "Profile retrieved successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProfileResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProfileResponseDto" }
               }
             }
           },
-          "401": {
-            "description": "Unauthorized - not logged in"
-          }
+          "401": { "description": "Unauthorized - not logged in" }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Get my profile",
         "tags": ["Profile & Settings"]
       },
@@ -4909,11 +3586,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProfileDto"
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateProfileDto" } }
           }
         },
         "responses": {
@@ -4921,27 +3594,15 @@
             "description": "Profile updated successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProfileResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/ProfileResponseDto" }
               }
             }
           },
-          "400": {
-            "description": "Bad request - validation failed"
-          },
-          "401": {
-            "description": "Unauthorized - not logged in"
-          },
-          "409": {
-            "description": "Email already in use by another account"
-          }
+          "400": { "description": "Bad request - validation failed" },
+          "401": { "description": "Unauthorized - not logged in" },
+          "409": { "description": "Email already in use by another account" }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Update my profile",
         "tags": ["Profile & Settings"]
       }
@@ -4969,23 +3630,54 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Avatar uploaded successfully"
-          },
-          "400": {
-            "description": "Bad request - invalid file type or size"
-          },
-          "401": {
-            "description": "Unauthorized - not logged in"
-          }
+          "200": { "description": "Avatar uploaded successfully" },
+          "400": { "description": "Bad request - invalid file type or size" },
+          "401": { "description": "Unauthorized - not logged in" }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
+        "security": [{ "cookie": [] }],
         "summary": "Upload profile avatar",
         "tags": ["Profile & Settings"]
+      }
+    },
+    "/contact": {
+      "post": {
+        "description": "Allows users to contact Maltiti A. Enterprise Ltd. On successful submission, an email is sent to the administrator.",
+        "operationId": "ContactController_submitContactForm",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ContactUsDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContactUsSuccessResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error - Invalid input",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContactUsErrorResponseDto" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error - Unable to process request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContactUsErrorResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Submit contact us form",
+        "tags": ["Contact"]
       }
     }
   },
@@ -4998,43 +3690,18 @@
       "url": "https://maltiti.com",
       "email": "support@maltiti.com"
     },
-    "license": {
-      "name": "Proprietary",
-      "url": "https://maltiti.com/license"
-    }
+    "license": { "name": "Proprietary", "url": "https://maltiti.com/license" }
   },
   "tags": [
-    {
-      "name": "Authentication",
-      "description": "User authentication and authorization endpoints"
-    },
-    {
-      "name": "Products",
-      "description": "Product management endpoints"
-    },
-    {
-      "name": "Cart",
-      "description": "Shopping cart management endpoints"
-    },
-    {
-      "name": "Checkout",
-      "description": "Order and checkout endpoints"
-    },
-    {
-      "name": "Cooperative",
-      "description": "Cooperative management endpoints"
-    },
-    {
-      "name": "Users",
-      "description": "User management endpoints"
-    }
+    { "name": "Authentication", "description": "User authentication and authorization endpoints" },
+    { "name": "Products", "description": "Product management endpoints" },
+    { "name": "Cart", "description": "Shopping cart management endpoints" },
+    { "name": "Checkout", "description": "Order and checkout endpoints" },
+    { "name": "Cooperative", "description": "Cooperative management endpoints" },
+    { "name": "Users", "description": "User management endpoints" },
+    { "name": "Contact", "description": "Contact us form submission endpoints" }
   ],
-  "servers": [
-    {
-      "url": "http://localhost:3002",
-      "description": "Development"
-    }
-  ],
+  "servers": [{ "url": "http://localhost:3002", "description": "Development" }],
   "components": {
     "securitySchemes": {
       "JWT-auth": {
@@ -5153,14 +3820,7 @@
           "metadata": {
             "type": "object",
             "description": "Additional metadata (before/after values, etc.)",
-            "example": {
-              "before": {
-                "price": 100
-              },
-              "after": {
-                "price": 120
-              }
-            }
+            "example": { "before": { "price": 100 }, "after": { "price": 120 } }
           }
         },
         "required": [
@@ -5173,10 +3833,7 @@
           "timestamp"
         ]
       },
-      "RegisterUserDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "RegisterUserDto": { "type": "object", "properties": {} },
       "UserResponseDto": {
         "type": "object",
         "properties": {
@@ -5216,10 +3873,7 @@
             "description": "Whether the user must change their password on next login",
             "example": false
           },
-          "rememberToken": {
-            "type": "string",
-            "description": "Remember token for authentication"
-          },
+          "rememberToken": { "type": "string", "description": "Remember token for authentication" },
           "status": {
             "type": "string",
             "description": "User account status",
@@ -5272,11 +3926,7 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
@@ -5284,17 +3934,11 @@
       "ValidationErrorResponseDto": {
         "type": "object",
         "properties": {
-          "statusCode": {
-            "type": "number",
-            "description": "HTTP status code",
-            "example": 400
-          },
+          "statusCode": { "type": "number", "description": "HTTP status code", "example": 400 },
           "message": {
             "description": "Detailed validation errors",
             "example": ["email must be a valid email", "password is required"],
-            "items": {
-              "type": "array"
-            },
+            "items": { "type": "array" },
             "type": "array"
           },
           "error": {
@@ -5308,11 +3952,7 @@
       "ErrorResponseDto": {
         "type": "object",
         "properties": {
-          "statusCode": {
-            "type": "number",
-            "description": "HTTP status code",
-            "example": 400
-          },
+          "statusCode": { "type": "number", "description": "HTTP status code", "example": 400 },
           "message": {
             "type": "string",
             "description": "Error message",
@@ -5326,10 +3966,7 @@
         },
         "required": ["statusCode", "message", "error"]
       },
-      "VerifyPhoneDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "VerifyPhoneDto": { "type": "object", "properties": {} },
       "PhoneVerificationResponseDto": {
         "type": "object",
         "properties": {
@@ -5340,11 +3977,7 @@
           },
           "data": {
             "description": "User data with verified phone",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
@@ -5359,19 +3992,12 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "SignInDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "SignInDto": { "type": "object", "properties": {} },
       "LoginResponseDto": {
         "type": "object",
         "properties": {
@@ -5382,19 +4008,12 @@
           },
           "data": {
             "description": "User data (password excluded)",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "ForgotPasswordDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "ForgotPasswordDto": { "type": "object", "properties": {} },
       "PasswordResetEmailResponseDto": {
         "type": "object",
         "properties": {
@@ -5405,19 +4024,12 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "ResetPasswordDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "ResetPasswordDto": { "type": "object", "properties": {} },
       "PasswordResetResponseDto": {
         "type": "object",
         "properties": {
@@ -5428,11 +4040,7 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
@@ -5459,10 +4067,7 @@
         },
         "required": ["message"]
       },
-      "CreateAdminDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "CreateAdminDto": { "type": "object", "properties": {} },
       "AdminCreationResponseDto": {
         "type": "object",
         "properties": {
@@ -5473,19 +4078,12 @@
           },
           "data": {
             "description": "Admin user data (password excluded)",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "ChangePasswordDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "ChangePasswordDto": { "type": "object", "properties": {} },
       "PasswordChangeResponseDto": {
         "type": "object",
         "properties": {
@@ -5496,11 +4094,7 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
@@ -5526,27 +4120,14 @@
           },
           "data": {
             "description": "User data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UserResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "UpdateUserDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "ChangeStatusDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "ChangeRoleDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "UpdateUserDto": { "type": "object", "properties": {} },
+      "ChangeStatusDto": { "type": "object", "properties": {} },
+      "ChangeRoleDto": { "type": "object", "properties": {} },
       "AddCooperativeDto": {
         "type": "object",
         "properties": {
@@ -5931,29 +4512,15 @@
       "ProductResponseDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
-          },
-          "sku": {
-            "type": "string",
-            "example": "SB-WHT-1KG-001"
-          },
-          "name": {
-            "type": "string",
-            "example": "White Shea Butter Grade A"
-          },
+          "id": { "type": "string", "example": "123e4567-e89b-12d3-a456-426614174000" },
+          "sku": { "type": "string", "example": "SB-WHT-1KG-001" },
+          "name": { "type": "string", "example": "White Shea Butter Grade A" },
           "ingredients": {
             "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
-          "weight": {
-            "type": "string",
-            "example": "1kg"
-          },
+          "weight": { "type": "string", "example": "1kg" },
           "unitOfMeasurement": {
             "type": "string",
             "enum": ["kilogram", "gram", "litre", "millilitre"],
@@ -5988,73 +4555,34 @@
           "images": {
             "example": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
-          "image": {
-            "type": "string",
-            "example": "https://example.com/primary-image.jpg"
-          },
+          "image": { "type": "string", "example": "https://example.com/primary-image.jpg" },
           "wholesale": {
             "type": "number",
             "description": "Wholesale price per unit",
             "example": 15
           },
-          "retail": {
-            "type": "number",
-            "description": "Retail price per unit",
-            "example": 20
-          },
-          "inBoxPrice": {
-            "type": "number",
-            "description": "Price for a full box",
-            "example": 180
-          },
-          "quantityInBox": {
-            "type": "number",
-            "example": 12
-          },
-          "favorite": {
-            "type": "boolean",
-            "example": false
-          },
-          "rating": {
-            "type": "number",
-            "example": 4.5
-          },
-          "reviews": {
-            "type": "number",
-            "example": 23
-          },
+          "retail": { "type": "number", "description": "Retail price per unit", "example": 20 },
+          "inBoxPrice": { "type": "number", "description": "Price for a full box", "example": 180 },
+          "quantityInBox": { "type": "number", "example": 12 },
+          "favorite": { "type": "boolean", "example": false },
+          "rating": { "type": "number", "example": 4.5 },
+          "reviews": { "type": "number", "example": 23 },
           "grade": {
             "type": "string",
             "enum": ["A", "B", "premium", "standard", "organic"],
             "example": "A"
           },
-          "isFeatured": {
-            "type": "boolean",
-            "example": false
-          },
-          "isOrganic": {
-            "type": "boolean",
-            "example": true
-          },
+          "isFeatured": { "type": "boolean", "example": false },
+          "isOrganic": { "type": "boolean", "example": true },
           "certifications": {
             "example": ["Ecocert", "FDA", "GSA"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
-          "supplierReference": {
-            "type": "string",
-            "example": "SUP-2024-001"
-          },
-          "minOrderQuantity": {
-            "type": "number",
-            "example": 5
-          },
+          "supplierReference": { "type": "string", "example": "SUP-2024-001" },
+          "minOrderQuantity": { "type": "number", "example": 5 },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -6096,23 +4624,12 @@
       "ProductsPaginationResponseDto": {
         "type": "object",
         "properties": {
-          "totalItems": {
-            "type": "number",
-            "example": 50
-          },
-          "currentPage": {
-            "type": "number",
-            "example": 1
-          },
-          "totalPages": {
-            "type": "number",
-            "example": 5
-          },
+          "totalItems": { "type": "number", "example": 50 },
+          "currentPage": { "type": "number", "example": 1 },
+          "totalPages": { "type": "number", "example": 5 },
           "products": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductResponseDto"
-            }
+            "items": { "$ref": "#/components/schemas/ProductResponseDto" }
           }
         },
         "required": ["totalItems", "currentPage", "totalPages", "products"]
@@ -6120,15 +4637,10 @@
       "BestProductsResponseDto": {
         "type": "object",
         "properties": {
-          "totalItems": {
-            "type": "number",
-            "example": 8
-          },
+          "totalItems": { "type": "number", "example": 8 },
           "data": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductResponseDto"
-            }
+            "items": { "$ref": "#/components/schemas/ProductResponseDto" }
           }
         },
         "required": ["totalItems", "data"]
@@ -6141,9 +4653,7 @@
             "example": "Personalized products loaded successfully",
             "description": "Response message indicating whether products are personalized or curated"
           },
-          "data": {
-            "$ref": "#/components/schemas/BestProductsResponseDto"
-          }
+          "data": { "$ref": "#/components/schemas/BestProductsResponseDto" }
         },
         "required": ["message", "data"]
       },
@@ -6164,9 +4674,7 @@
             "description": "Product ingredients (comma-separated or array)",
             "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "weight": {
             "type": "string",
@@ -6213,9 +4721,7 @@
             "description": "Product images URLs",
             "example": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "image": {
             "type": "string",
@@ -6227,16 +4733,8 @@
             "description": "Wholesale price per unit",
             "example": 15
           },
-          "retail": {
-            "type": "number",
-            "description": "Retail price per unit",
-            "example": 20
-          },
-          "inBoxPrice": {
-            "type": "number",
-            "description": "Price for a full box",
-            "example": 180
-          },
+          "retail": { "type": "number", "description": "Retail price per unit", "example": 20 },
+          "inBoxPrice": { "type": "number", "description": "Price for a full box", "example": 180 },
           "quantityInBox": {
             "type": "number",
             "description": "Quantity of items in one box",
@@ -6264,9 +4762,7 @@
             "description": "Product certifications",
             "example": ["Ecocert", "FDA", "GSA"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "supplierReference": {
             "type": "string",
@@ -6304,9 +4800,7 @@
             "description": "Product ingredients (comma-separated or array)",
             "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "weight": {
             "type": "string",
@@ -6353,9 +4847,7 @@
             "description": "Product images URLs",
             "example": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "image": {
             "type": "string",
@@ -6367,16 +4859,8 @@
             "description": "Wholesale price per unit",
             "example": 15
           },
-          "retail": {
-            "type": "number",
-            "description": "Retail price per unit",
-            "example": 20
-          },
-          "inBoxPrice": {
-            "type": "number",
-            "description": "Price for a full box",
-            "example": 180
-          },
+          "retail": { "type": "number", "description": "Retail price per unit", "example": 20 },
+          "inBoxPrice": { "type": "number", "description": "Price for a full box", "example": 180 },
           "quantityInBox": {
             "type": "number",
             "description": "Quantity of items in one box",
@@ -6404,9 +4888,7 @@
             "description": "Product certifications",
             "example": ["Ecocert", "FDA", "GSA"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "supplierReference": {
             "type": "string",
@@ -6454,11 +4936,7 @@
             "description": "Production/manufacturing date",
             "example": "2024-01-15"
           },
-          "expiryDate": {
-            "type": "string",
-            "description": "Expiry date",
-            "example": "2026-01-15"
-          },
+          "expiryDate": { "type": "string", "description": "Expiry date", "example": "2026-01-15" },
           "manufacturingLocation": {
             "type": "string",
             "description": "Manufacturing location",
@@ -6529,11 +5007,7 @@
           },
           "product": {
             "description": "Associated product",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ProductResponseDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/ProductResponseDto" }]
           },
           "createdAt": {
             "format": "date-time",
@@ -6564,14 +5038,8 @@
           "updatedAt"
         ]
       },
-      "CreateIngredientDto": {
-        "type": "object",
-        "properties": {}
-      },
-      "UpdateIngredientDto": {
-        "type": "object",
-        "properties": {}
-      },
+      "CreateIngredientDto": { "type": "object", "properties": {} },
+      "UpdateIngredientDto": { "type": "object", "properties": {} },
       "CartProductDto": {
         "type": "object",
         "properties": {
@@ -6626,9 +5094,7 @@
             "example": ["https://example.com/image1.jpg"],
             "nullable": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "image": {
             "type": "string",
@@ -6636,16 +5102,8 @@
             "example": "https://example.com/main-image.jpg",
             "nullable": true
           },
-          "wholesale": {
-            "type": "number",
-            "description": "Wholesale price",
-            "example": 80
-          },
-          "retail": {
-            "type": "number",
-            "description": "Retail price",
-            "example": 100
-          },
+          "wholesale": { "type": "number", "description": "Wholesale price", "example": 80 },
+          "retail": { "type": "number", "description": "Retail price", "example": 100 },
           "inBoxPrice": {
             "type": "number",
             "description": "In-box price",
@@ -6663,16 +5121,8 @@
             "description": "Is product marked as favorite",
             "example": false
           },
-          "rating": {
-            "type": "number",
-            "description": "Product rating",
-            "example": 4.5
-          },
-          "reviews": {
-            "type": "number",
-            "description": "Number of reviews",
-            "example": 25
-          },
+          "rating": { "type": "number", "description": "Product rating", "example": 4.5 },
+          "reviews": { "type": "number", "description": "Number of reviews", "example": 25 },
           "weight": {
             "type": "string",
             "description": "Product weight",
@@ -6709,11 +5159,7 @@
           },
           "product": {
             "description": "Product details",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CartProductDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/CartProductDto" }]
           },
           "quantity": {
             "type": "number",
@@ -6763,9 +5209,7 @@
               }
             ],
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CartItemDto"
-            }
+            "items": { "$ref": "#/components/schemas/CartItemDto" }
           },
           "count": {
             "type": "number",
@@ -6790,11 +5234,7 @@
           },
           "data": {
             "description": "Cart data containing items, count, and total price",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CartDataDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/CartDataDto" }]
           }
         },
         "required": ["message", "data"]
@@ -6810,10 +5250,7 @@
           "data": {
             "type": "object",
             "description": "Delete operation result",
-            "example": {
-              "raw": [],
-              "affected": 1
-            }
+            "example": { "raw": [], "affected": 1 }
           }
         },
         "required": ["message", "data"]
@@ -6839,11 +5276,7 @@
           },
           "data": {
             "description": "Cart item data",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CartItemDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/CartItemDto" }]
           }
         },
         "required": ["message", "data"]
@@ -6883,19 +5316,11 @@
           "items": {
             "description": "Array of cart items to add with their quantities",
             "example": [
-              {
-                "productId": "550e8400-e29b-41d4-a716-446655440000",
-                "quantity": 2
-              },
-              {
-                "productId": "660e8400-e29b-41d4-a716-446655440001",
-                "quantity": 5
-              }
+              { "productId": "550e8400-e29b-41d4-a716-446655440000", "quantity": 2 },
+              { "productId": "660e8400-e29b-41d4-a716-446655440001", "quantity": 5 }
             ],
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AddBulkCartItemDto"
-            }
+            "items": { "$ref": "#/components/schemas/AddBulkCartItemDto" }
           }
         },
         "required": ["items"]
@@ -6928,17 +5353,13 @@
               }
             ],
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CartItemDto"
-            }
+            "items": { "$ref": "#/components/schemas/CartItemDto" }
           },
           "skippedItems": {
             "description": "Array of product IDs that were skipped (not found or invalid)",
             "example": ["770e8400-e29b-41d4-a716-446655440002"],
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         },
         "required": ["addedItems", "skippedItems"]
@@ -6953,80 +5374,44 @@
           },
           "data": {
             "description": "Details of added items and skipped items",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BulkAddCartDataDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/BulkAddCartDataDto" }]
           }
         },
         "required": ["message", "data"]
       },
-      "InitializeTransaction": {
-        "type": "object",
-        "properties": {}
-      },
-      "OrderStatus": {
-        "type": "object",
-        "properties": {}
-      },
-      "PaymentStatus": {
-        "type": "object",
-        "properties": {}
-      },
+      "InitializeTransaction": { "type": "object", "properties": {} },
+      "OrderStatus": { "type": "object", "properties": {} },
+      "PaymentStatus": { "type": "object", "properties": {} },
       "UploadResponseDto": {
         "type": "object",
         "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success message"
-          },
-          "data": {
-            "type": "string",
-            "description": "The URL of the uploaded image"
-          }
+          "message": { "type": "string", "description": "Success message" },
+          "data": { "type": "string", "description": "The URL of the uploaded image" }
         },
         "required": ["message", "data"]
       },
       "BatchAllocationDto": {
         "type": "object",
-        "properties": {
-          "batchId": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "number"
-          }
-        },
+        "properties": { "batchId": { "type": "string" }, "quantity": { "type": "number" } },
         "required": ["batchId", "quantity"]
       },
       "SaleLineItemDto": {
         "type": "object",
         "properties": {
-          "productId": {
-            "type": "string"
-          },
+          "productId": { "type": "string" },
           "batchAllocations": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BatchAllocationDto"
-            }
+            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
           },
-          "requestedQuantity": {
-            "type": "number"
-          },
-          "customPrice": {
-            "type": "number"
-          }
+          "requestedQuantity": { "type": "number" },
+          "customPrice": { "type": "number" }
         },
         "required": ["productId", "batchAllocations", "requestedQuantity"]
       },
       "CreateSaleDto": {
         "type": "object",
         "properties": {
-          "customerId": {
-            "type": "string"
-          },
+          "customerId": { "type": "string" },
           "status": {
             "type": "string",
             "enum": [
@@ -7041,43 +5426,28 @@
           },
           "lineItems": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SaleLineItemDto"
-            }
+            "items": { "$ref": "#/components/schemas/SaleLineItemDto" }
           }
         },
         "required": ["customerId", "lineItems"]
       },
-      "Sale": {
-        "type": "object",
-        "properties": {}
-      },
+      "Sale": { "type": "object", "properties": {} },
       "UpdateSaleLineItemDto": {
         "type": "object",
         "properties": {
-          "productId": {
-            "type": "string"
-          },
+          "productId": { "type": "string" },
           "batchAllocations": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BatchAllocationDto"
-            }
+            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
           },
-          "requestedQuantity": {
-            "type": "number"
-          },
-          "customPrice": {
-            "type": "number"
-          }
+          "requestedQuantity": { "type": "number" },
+          "customPrice": { "type": "number" }
         }
       },
       "UpdateSaleDto": {
         "type": "object",
         "properties": {
-          "customerId": {
-            "type": "string"
-          },
+          "customerId": { "type": "string" },
           "status": {
             "type": "string",
             "enum": [
@@ -7092,9 +5462,7 @@
           },
           "lineItems": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UpdateSaleLineItemDto"
-            }
+            "items": { "$ref": "#/components/schemas/UpdateSaleLineItemDto" }
           }
         }
       },
@@ -7118,35 +5486,23 @@
       "AddLineItemDto": {
         "type": "object",
         "properties": {
-          "productId": {
-            "type": "string"
-          },
+          "productId": { "type": "string" },
           "batchAllocations": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BatchAllocationDto"
-            }
+            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
           },
-          "requestedQuantity": {
-            "type": "number"
-          },
-          "customPrice": {
-            "type": "number"
-          }
+          "requestedQuantity": { "type": "number" },
+          "customPrice": { "type": "number" }
         },
         "required": ["productId", "batchAllocations", "requestedQuantity"]
       },
       "AssignBatchesDto": {
         "type": "object",
         "properties": {
-          "productId": {
-            "type": "string"
-          },
+          "productId": { "type": "string" },
           "batchAllocations": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BatchAllocationDto"
-            }
+            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
           }
         },
         "required": ["productId", "batchAllocations"]
@@ -7154,79 +5510,35 @@
       "GenerateInvoiceDto": {
         "type": "object",
         "properties": {
-          "discount": {
-            "type": "number",
-            "description": "Discount amount",
-            "default": 0
-          },
-          "transportation": {
-            "type": "number",
-            "description": "Transportation cost",
-            "default": 0
-          }
+          "discount": { "type": "number", "description": "Discount amount", "default": 0 },
+          "transportation": { "type": "number", "description": "Transportation cost", "default": 0 }
         }
       },
       "GenerateReceiptDto": {
         "type": "object",
         "properties": {
-          "paymentMethod": {
-            "type": "string",
-            "description": "Payment method",
-            "default": "Cash"
-          },
-          "discount": {
-            "type": "number",
-            "description": "Discount amount",
-            "default": 0
-          },
-          "transportation": {
-            "type": "number",
-            "description": "Transportation cost",
-            "default": 0
-          }
+          "paymentMethod": { "type": "string", "description": "Payment method", "default": "Cash" },
+          "discount": { "type": "number", "description": "Discount amount", "default": 0 },
+          "transportation": { "type": "number", "description": "Transportation cost", "default": 0 }
         }
       },
       "DriverDetailsDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "Driver name"
-          },
-          "vehicleNumber": {
-            "type": "string",
-            "description": "Vehicle/Truck number"
-          },
-          "phoneNumber": {
-            "type": "string",
-            "description": "Driver phone number"
-          },
-          "email": {
-            "type": "string",
-            "description": "Driver email"
-          }
+          "name": { "type": "string", "description": "Driver name" },
+          "vehicleNumber": { "type": "string", "description": "Vehicle/Truck number" },
+          "phoneNumber": { "type": "string", "description": "Driver phone number" },
+          "email": { "type": "string", "description": "Driver email" }
         },
         "required": ["name", "vehicleNumber", "phoneNumber"]
       },
       "ReceiverDetailsDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "Receiver name"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Receiver phone number"
-          },
-          "email": {
-            "type": "string",
-            "description": "Receiver email"
-          },
-          "address": {
-            "type": "string",
-            "description": "Receiver address"
-          }
+          "name": { "type": "string", "description": "Receiver name" },
+          "phone": { "type": "string", "description": "Receiver phone number" },
+          "email": { "type": "string", "description": "Receiver email" },
+          "address": { "type": "string", "description": "Receiver address" }
         },
         "required": ["name", "phone"]
       },
@@ -7235,19 +5547,11 @@
         "properties": {
           "driver": {
             "description": "Driver details",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/DriverDetailsDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/DriverDetailsDto" }]
           },
           "receiver": {
             "description": "Receiver details (falls back to customer if not provided)",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ReceiverDetailsDto"
-              }
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/ReceiverDetailsDto" }]
           },
           "remarks": {
             "type": "string",
@@ -7326,21 +5630,13 @@
             "description": "User ID",
             "example": "123e4567-e89b-12d3-a456-426614174000"
           },
-          "name": {
-            "type": "string",
-            "description": "Full name",
-            "example": "John Doe"
-          },
+          "name": { "type": "string", "description": "Full name", "example": "John Doe" },
           "email": {
             "type": "string",
             "description": "Email address",
             "example": "john.doe@maltitiaenterprise.com"
           },
-          "phone": {
-            "type": "string",
-            "description": "Phone number",
-            "example": "+1234567890"
-          },
+          "phone": { "type": "string", "description": "Phone number", "example": "+1234567890" },
           "avatarUrl": {
             "type": "string",
             "description": "Profile avatar URL",
@@ -7389,17 +5685,68 @@
       "UpdateProfileDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "name": { "type": "string", "description": "Full name", "example": "John Doe" },
+          "phone": { "type": "string", "description": "Phone number", "example": "+1234567890" }
+        }
+      },
+      "ContactUsDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
             "type": "string",
-            "description": "Full name",
+            "description": "Full name of the person contacting",
             "example": "John Doe"
           },
-          "phone": {
+          "email": {
             "type": "string",
-            "description": "Phone number",
-            "example": "+1234567890"
+            "description": "Email address of the person contacting",
+            "example": "john.doe@example.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Phone number of the person contacting (accepts international formats)",
+            "example": "+233244123456"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message content (minimum 10 characters)",
+            "example": "I would like to inquire about your shea butter products and pricing.",
+            "minLength": 10
           }
-        }
+        },
+        "required": ["message"]
+      },
+      "ContactUsSuccessResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the operation was successful",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Your message has been sent successfully."
+          }
+        },
+        "required": ["success", "message"]
+      },
+      "ContactUsErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the operation was successful",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Message is required."
+          }
+        },
+        "required": ["success", "error"]
       }
     }
   }

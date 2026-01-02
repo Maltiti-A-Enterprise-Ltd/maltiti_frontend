@@ -1275,6 +1275,47 @@ export type UpdateProfileDto = {
     phone?: string;
 };
 
+export type ContactUsDto = {
+    /**
+     * Full name of the person contacting
+     */
+    fullName?: string;
+    /**
+     * Email address of the person contacting
+     */
+    email?: string;
+    /**
+     * Phone number of the person contacting (accepts international formats)
+     */
+    phoneNumber?: string;
+    /**
+     * Message content (minimum 10 characters)
+     */
+    message: string;
+};
+
+export type ContactUsSuccessResponseDto = {
+    /**
+     * Indicates if the operation was successful
+     */
+    success: boolean;
+    /**
+     * Success message
+     */
+    message: string;
+};
+
+export type ContactUsErrorResponseDto = {
+    /**
+     * Indicates if the operation was successful
+     */
+    success: boolean;
+    /**
+     * Error message
+     */
+    error: string;
+};
+
 export type AuditControllerFindAllData = {
     body?: never;
     path?: never;
@@ -2705,10 +2746,6 @@ export type CartControllerAddToCartErrors = {
      * Product not found
      */
     404: ErrorResponseDto;
-    /**
-     * Conflict - product already exists in cart
-     */
-    409: ErrorResponseDto;
 };
 
 export type CartControllerAddToCartError = CartControllerAddToCartErrors[keyof CartControllerAddToCartErrors];
@@ -3926,3 +3963,32 @@ export type ProfileControllerUploadAvatarResponses = {
      */
     200: unknown;
 };
+
+export type ContactControllerSubmitContactFormData = {
+    body: ContactUsDto;
+    path?: never;
+    query?: never;
+    url: '/contact';
+};
+
+export type ContactControllerSubmitContactFormErrors = {
+    /**
+     * Validation error - Invalid input
+     */
+    400: ContactUsErrorResponseDto;
+    /**
+     * Server error - Unable to process request
+     */
+    500: ContactUsErrorResponseDto;
+};
+
+export type ContactControllerSubmitContactFormError = ContactControllerSubmitContactFormErrors[keyof ContactControllerSubmitContactFormErrors];
+
+export type ContactControllerSubmitContactFormResponses = {
+    /**
+     * Message sent successfully
+     */
+    200: ContactUsSuccessResponseDto;
+};
+
+export type ContactControllerSubmitContactFormResponse = ContactControllerSubmitContactFormResponses[keyof ContactControllerSubmitContactFormResponses];
