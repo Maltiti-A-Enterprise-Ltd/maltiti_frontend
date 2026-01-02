@@ -23,7 +23,11 @@ export { default as Hero14 } from './images/hero-14.png';
 export { default as AboutUsCEO } from './images/about-us-ceo.png';
 
 export { default as Darnisha } from './images/darnisha.jpg';
-
+export { default as KasimImoro } from './images/kasim.png';
+export { default as RabiatuAbukari } from './images/rabiatu-abukari.jpg';
+export { default as KantakoMohammed } from './images/kantako-mohammed.png';
+export { default as MohammedSuhuyini } from './images/mohammed-suhuyini.png';
+export { default as BilalAbubakari } from './images/bilal-abubakari.png';
 // Decorator Blob images
 export { default as SvgDecoratorBlob1 } from './images/svg-decorator-blob-1.svg';
 export { default as SvgDecoratorBlob2 } from './images/svg-decorator-blob-2.svg';
