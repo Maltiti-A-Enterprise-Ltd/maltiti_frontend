@@ -503,7 +503,7 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
                   variant="outline"
                   className="h-12 rounded-full border-2 border-white bg-transparent px-8 text-base font-semibold text-white transition-all hover:scale-105 hover:bg-white/10 sm:h-14 sm:text-lg"
                 >
-                  <Link href="/contact">Partner With Us</Link>
+                  <a href="#contactus">Partner With Us</a>
                 </Button>
               </div>
             </Card>
