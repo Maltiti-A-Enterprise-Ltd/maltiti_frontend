@@ -167,22 +167,22 @@ const ProductCard = memo(function ProductCard({
         )}
 
         {/* Favorite Icon */}
-        <button
-          className="focus:ring-primary absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          aria-label="Add to favorites"
-          onClick={(e) => {
-            e.preventDefault();
-            // TODO: Implement favorite functionality
-          }}
-        >
-          <Icon
-            icon={product.favorite ? 'ph:heart-fill' : 'ph:heart'}
-            className={cn(
-              'h-5 w-5 transition-colors',
-              product.favorite ? 'text-red-500' : 'text-gray-600',
-            )}
-          />
-        </button>
+        {/*<button*/}
+        {/*  className="focus:ring-primary absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white focus:ring-2 focus:ring-offset-2 focus:outline-none"*/}
+        {/*  aria-label="Add to favorites"*/}
+        {/*  onClick={(e) => {*/}
+        {/*    e.preventDefault();*/}
+        {/*    // TODO: Implement favorite functionality*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <Icon*/}
+        {/*    icon={product.favorite ? 'ph:heart-fill' : 'ph:heart'}*/}
+        {/*    className={cn(*/}
+        {/*      'h-5 w-5 transition-colors',*/}
+        {/*      product.favorite ? 'text-red-500' : 'text-gray-600',*/}
+        {/*    )}*/}
+        {/*  />*/}
+        {/*</button>*/}
       </div>
 
       {/* Content Container */}
@@ -241,18 +241,18 @@ const ProductCard = memo(function ProductCard({
             <span className="text-foreground text-2xl font-bold">
               {formatPrice(product.retail)}
             </span>
-            <span className="text-muted-foreground text-sm line-through">
-              {product.wholesale < product.retail && formatPrice(product.wholesale)}
-            </span>
+            {/*<span className="text-muted-foreground text-sm line-through">*/}
+            {/*  {product.wholesale < product.retail && formatPrice(product.wholesale)}*/}
+            {/*</span>*/}
           </div>
-          {product.inBoxPrice && (
-            <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
-              <Icon icon="ph:package-fill" className="h-3.5 w-3.5" />
-              <span>
-                Box of {product.quantityInBox}: {formatPrice(product.inBoxPrice)}
-              </span>
-            </div>
-          )}
+          {/*{product.inBoxPrice && (*/}
+          {/*  <div className="text-muted-foreground flex items-center gap-1.5 text-xs">*/}
+          {/*    <Icon icon="ph:package-fill" className="h-3.5 w-3.5" />*/}
+          {/*    <span>*/}
+          {/*      Box of {product.quantityInBox}: {formatPrice(product.inBoxPrice)}*/}
+          {/*    </span>*/}
+          {/*  </div>*/}
+          {/*)}*/}
         </div>
 
         {/* Add to Cart Button */}
