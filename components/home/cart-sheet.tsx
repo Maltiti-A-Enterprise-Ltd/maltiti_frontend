@@ -12,9 +12,8 @@ import { ProductPlaceholder } from '@/app/assets';
 type CartSheetProps = Record<string, never>;
 
 const CartSheet = ({}: CartSheetProps): JSX.Element => {
-  const { items, totalItems } = useCart();
+  const { items, totalItems, totalPrice } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const totalPrice = 0;
 
   const toggleCart = (): void => setIsCartOpen(!isCartOpen);
 

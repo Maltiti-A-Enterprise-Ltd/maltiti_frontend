@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { selectIsAuthenticated } from '@/lib/store/features/auth';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const selectGuestCart = ({ guestCart }: RootState) => guestCart;
+export const selectGuestCart = ({ guestCart }: RootState) => guestCart;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const selectCart = ({ cart }: RootState) => cart;
@@ -15,7 +15,16 @@ export const selectAuthenticatedCartItems = createSelector(
   (cartData) => cartData.items,
 );
 
+export const selectAuthenticatedCartTotal = createSelector(
+  selectAuthenticatedCartItemsData,
+  (cartData) => cartData.total,
+);
+
 export const selectGuestCartItems = createSelector(selectGuestCart, (guestCart) => guestCart.items);
+
+export const selectGuestCartTotal = createSelector(selectGuestCartItems, (items) =>
+  items.reduce((acc, item) => acc + Number(item.product.retail) * item.quantity, 0),
+);
 
 export const selectCartItems = createSelector(
   selectAuthenticatedCartItems,
@@ -27,4 +36,12 @@ export const selectCartItems = createSelector(
 export const selectCartItemsCount = createSelector(
   selectCartItems,
   (cartItems) => cartItems.length,
+);
+
+export const selectCartTotal = createSelector(
+  selectAuthenticatedCartTotal,
+  selectGuestCartTotal,
+  selectIsAuthenticated,
+  (authenticatedCartTotal, guestCartTotal, isAuthenticated) =>
+    isAuthenticated ? authenticatedCartTotal : guestCartTotal,
 );

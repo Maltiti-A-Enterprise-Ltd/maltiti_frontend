@@ -16,7 +16,12 @@ import {
 import type { CartItemDto, ProductResponseDto } from '@/app/api';
 import type { CartState, GuestCartState } from './features/cart/cartState';
 import { selectIsAuthenticated } from '@/lib/store/features/auth';
-import { selectCartItems, selectCartItemsCount } from '@/lib/store/features/cart/cartSelector';
+import {
+  selectCartItems,
+  selectCartItemsCount,
+  selectCartTotal,
+  selectGuestCart,
+} from '@/lib/store/features/cart/cartSelector';
 
 type UseCartReturn = {
   items: CartItemDto[];
@@ -49,7 +54,8 @@ export const useCart = (): UseCartReturn => {
   const cart = useAppSelector((state) => state.cart);
   const cartItems = useAppSelector(selectCartItems);
   const cartItemsCount = useAppSelector(selectCartItemsCount);
-  const guestCart = useAppSelector((state) => state.guestCart);
+  const cartTotal = useAppSelector(selectCartTotal);
+  const guestCart = useAppSelector(selectGuestCart);
 
   useEffect(() => {
     dispatch(fetchCart());
@@ -178,7 +184,7 @@ export const useCart = (): UseCartReturn => {
     // Cart data
     items: cartItems,
     totalItems: cartItemsCount,
-    totalPrice: 0,
+    totalPrice: cartTotal,
     isAuthenticated,
 
     // Actions
