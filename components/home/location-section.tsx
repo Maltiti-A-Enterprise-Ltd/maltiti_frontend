@@ -85,7 +85,7 @@ export function LocationSection({ location }: LocationSectionProps): JSX.Element
         >
           {/* Google Map */}
           <motion.div variants={fadeInUp}>
-            <Card className="overflow-hidden border-none shadow-xl">
+            <Card className="h-full overflow-hidden border-none shadow-xl">
               <div className="relative h-96 w-full lg:h-full lg:min-h-150">
                 <iframe
                   src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${location.coordinates.lat},${location.coordinates.lng}&zoom=15`}
