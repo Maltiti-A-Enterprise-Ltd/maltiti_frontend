@@ -832,6 +832,135 @@ export type UpdateIngredientDto = {
     [key: string]: unknown;
 };
 
+export type CartProductDto = {
+    /**
+     * Product ID
+     */
+    id: string;
+    /**
+     * Product SKU
+     */
+    sku: string | null;
+    /**
+     * Product name
+     */
+    name: string;
+    /**
+     * Product category
+     */
+    category: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+    /**
+     * Product description
+     */
+    description: string | null;
+    /**
+     * Product status
+     */
+    status: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+    /**
+     * Product images URLs
+     */
+    images: Array<string> | null;
+    /**
+     * Main product image URL
+     */
+    image: string | null;
+    /**
+     * Wholesale price
+     */
+    wholesale: number;
+    /**
+     * Retail price
+     */
+    retail: number;
+    /**
+     * In-box price
+     */
+    inBoxPrice: number | null;
+    /**
+     * Quantity per box
+     */
+    quantityInBox: number | null;
+    /**
+     * Is product marked as favorite
+     */
+    favorite: boolean;
+    /**
+     * Product rating
+     */
+    rating: number;
+    /**
+     * Number of reviews
+     */
+    reviews: number;
+    /**
+     * Product weight
+     */
+    weight: string | null;
+};
+
+export type CartItemDto = {
+    /**
+     * Cart item ID
+     */
+    id: string;
+    /**
+     * Product details
+     */
+    product: CartProductDto;
+    /**
+     * Quantity of product in cart
+     */
+    quantity: number;
+    /**
+     * Cart item creation date
+     */
+    createdAt: string;
+    /**
+     * Cart item last update date
+     */
+    updatedAt: string;
+};
+
+export type CartDataDto = {
+    /**
+     * Array of cart items
+     */
+    items: Array<CartItemDto>;
+    /**
+     * Total number of items in cart
+     */
+    count: number;
+    /**
+     * Total price of all items in cart
+     */
+    total: number;
+};
+
+export type GetCartResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * Cart data containing items, count, and total price
+     */
+    data: CartDataDto;
+};
+
+export type DeleteCartResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * Delete operation result
+     */
+    data: {
+        [key: string]: unknown;
+    };
+};
+
 export type AddCartDto = {
     /**
      * The UUID of the product to add to cart
@@ -839,11 +968,62 @@ export type AddCartDto = {
     id: string;
 };
 
+export type CartResponseDto = {
+    /**
+     * Success message
+     */
+    message: string;
+    /**
+     * Cart item data
+     */
+    data: CartItemDto;
+};
+
 export type AddQuantityDto = {
     /**
      * The quantity of the product in the cart (must be a positive integer)
      */
     quantity: number;
+};
+
+export type AddBulkCartItemDto = {
+    /**
+     * The UUID of the product to add to cart
+     */
+    productId: string;
+    /**
+     * The quantity of the product in the cart (must be a positive integer)
+     */
+    quantity: number;
+};
+
+export type BulkAddCartDto = {
+    /**
+     * Array of cart items to add with their quantities
+     */
+    items: Array<AddBulkCartItemDto>;
+};
+
+export type BulkAddCartDataDto = {
+    /**
+     * Array of successfully added cart items
+     */
+    addedItems: Array<CartItemDto>;
+    /**
+     * Array of product IDs that were skipped (not found or invalid)
+     */
+    skippedItems: Array<string>;
+};
+
+export type BulkAddCartResponseDto = {
+    /**
+     * Success message with details about added and skipped items
+     */
+    message: string;
+    /**
+     * Details of added items and skipped items
+     */
+    data: BulkAddCartDataDto;
 };
 
 export type InitializeTransaction = {
@@ -2473,70 +2653,222 @@ export type IngredientsControllerUpdateResponses = {
     200: unknown;
 };
 
+export type CartControllerGetCartData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/cart';
+};
+
+export type CartControllerGetCartErrors = {
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * User not found
+     */
+    404: ErrorResponseDto;
+};
+
+export type CartControllerGetCartError = CartControllerGetCartErrors[keyof CartControllerGetCartErrors];
+
+export type CartControllerGetCartResponses = {
+    /**
+     * Cart retrieved successfully. Returns array of cart items, total item count, and total price.
+     */
+    200: GetCartResponseDto;
+};
+
+export type CartControllerGetCartResponse = CartControllerGetCartResponses[keyof CartControllerGetCartResponses];
+
+export type CartControllerAddToCartData = {
+    /**
+     * Product ID to add to cart
+     */
+    body: AddCartDto;
+    path?: never;
+    query?: never;
+    url: '/cart';
+};
+
+export type CartControllerAddToCartErrors = {
+    /**
+     * Bad request - validation failed
+     */
+    400: ValidationErrorResponseDto;
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * Product not found
+     */
+    404: ErrorResponseDto;
+    /**
+     * Conflict - product already exists in cart
+     */
+    409: ErrorResponseDto;
+};
+
+export type CartControllerAddToCartError = CartControllerAddToCartErrors[keyof CartControllerAddToCartErrors];
+
+export type CartControllerAddToCartResponses = {
+    /**
+     * Product added to cart successfully
+     */
+    201: CartResponseDto;
+};
+
+export type CartControllerAddToCartResponse = CartControllerAddToCartResponses[keyof CartControllerAddToCartResponses];
+
 export type CartControllerRemoveFromCartData = {
     body?: never;
     path: {
+        /**
+         * Cart item ID (UUID)
+         */
         id: string;
     };
     query?: never;
     url: '/cart/{id}';
 };
+
+export type CartControllerRemoveFromCartErrors = {
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * Forbidden - user attempting to delete another user's cart item
+     */
+    403: ErrorResponseDto;
+    /**
+     * Cart item not found
+     */
+    404: ErrorResponseDto;
+};
+
+export type CartControllerRemoveFromCartError = CartControllerRemoveFromCartErrors[keyof CartControllerRemoveFromCartErrors];
 
 export type CartControllerRemoveFromCartResponses = {
-    200: unknown;
+    /**
+     * Cart item removed successfully
+     */
+    200: DeleteCartResponseDto;
 };
 
-export type CartControllerGetCartData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cart/{id}';
-};
-
-export type CartControllerGetCartResponses = {
-    200: unknown;
-};
+export type CartControllerRemoveFromCartResponse = CartControllerRemoveFromCartResponses[keyof CartControllerRemoveFromCartResponses];
 
 export type CartControllerAddQuantityData = {
+    /**
+     * New quantity for the cart item (must be positive integer)
+     */
     body: AddQuantityDto;
     path: {
+        /**
+         * Cart item ID (UUID)
+         */
         id: string;
     };
     query?: never;
     url: '/cart/{id}';
 };
+
+export type CartControllerAddQuantityErrors = {
+    /**
+     * Bad request - validation failed
+     */
+    400: ValidationErrorResponseDto;
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * Forbidden - user attempting to update another user's cart item
+     */
+    403: ErrorResponseDto;
+    /**
+     * Cart item not found
+     */
+    404: ErrorResponseDto;
+};
+
+export type CartControllerAddQuantityError = CartControllerAddQuantityErrors[keyof CartControllerAddQuantityErrors];
 
 export type CartControllerAddQuantityResponses = {
-    200: unknown;
+    /**
+     * Quantity updated successfully. Returns complete cart with updated totals.
+     */
+    200: GetCartResponseDto;
 };
 
-export type CartControllerAddToCartData = {
-    body: AddCartDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cart/{id}';
-};
-
-export type CartControllerAddToCartResponses = {
-    201: unknown;
-};
+export type CartControllerAddQuantityResponse = CartControllerAddQuantityResponses[keyof CartControllerAddQuantityResponses];
 
 export type CartControllerRemoveAllFromCartData = {
     body?: never;
-    path: {
-        id: string;
-    };
+    path?: never;
     query?: never;
-    url: '/cart/all-cart/{id}';
+    url: '/cart/all-cart';
 };
 
-export type CartControllerRemoveAllFromCartResponses = {
-    200: unknown;
+export type CartControllerRemoveAllFromCartErrors = {
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * User not found
+     */
+    404: ErrorResponseDto;
 };
+
+export type CartControllerRemoveAllFromCartError = CartControllerRemoveAllFromCartErrors[keyof CartControllerRemoveAllFromCartErrors];
+
+export type CartControllerRemoveAllFromCartResponses = {
+    /**
+     * All cart items removed successfully
+     */
+    200: DeleteCartResponseDto;
+};
+
+export type CartControllerRemoveAllFromCartResponse = CartControllerRemoveAllFromCartResponses[keyof CartControllerRemoveAllFromCartResponses];
+
+export type CartControllerBulkAddToCartData = {
+    /**
+     * Array of products with quantities to add to cart. At least one item is required.
+     */
+    body: BulkAddCartDto;
+    path?: never;
+    query?: never;
+    url: '/cart/bulk';
+};
+
+export type CartControllerBulkAddToCartErrors = {
+    /**
+     * Bad request - validation failed (empty array, invalid quantities, etc.)
+     */
+    400: ValidationErrorResponseDto;
+    /**
+     * Unauthorized - user not authenticated
+     */
+    401: ErrorResponseDto;
+    /**
+     * User not found
+     */
+    404: ErrorResponseDto;
+};
+
+export type CartControllerBulkAddToCartError = CartControllerBulkAddToCartErrors[keyof CartControllerBulkAddToCartErrors];
+
+export type CartControllerBulkAddToCartResponses = {
+    /**
+     * Products processed successfully. Returns added items and any skipped items.
+     */
+    201: BulkAddCartResponseDto;
+};
+
+export type CartControllerBulkAddToCartResponse = CartControllerBulkAddToCartResponses[keyof CartControllerBulkAddToCartResponses];
 
 export type CheckoutControllerGetOrdersData = {
     body?: never;

@@ -9,6 +9,8 @@ import { Icon } from '@iconify/react';
 import { cn } from '@/lib/utils';
 import { ProductResponseDto } from '@/app/api';
 import { getUnitSymbol } from '@/lib/product-utils';
+import { useCart } from '@/lib/store/useCart';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: ProductResponseDto;
@@ -21,6 +23,9 @@ const ProductCard = memo(function ProductCard({
 }: ProductCardProps): JSX.Element {
   const [imageError, setImageError] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  // Cart functionality
+  const { addItem, isAdding } = useCart();
 
   // Get primary image
   const primaryImage = product.image || product.images?.[0] || '/placeholder-product.svg';
@@ -38,6 +43,35 @@ const ProductCard = memo(function ProductCard({
       currency: 'GHS',
       minimumFractionDigits: 2,
     }).format(price);
+
+  /**
+   * Handle add to cart
+   * Shows loading state and success/error toasts
+   */
+  const handleAddToCart = async (e: React.MouseEvent): Promise<void> => {
+    e.preventDefault();
+
+    if (isUnavailable) {
+      return;
+    }
+
+    try {
+      await addItem(product, 1);
+
+      // Show success toast
+      toast.success('Added to cart', {
+        description: `${product.name} has been added to your cart`,
+        duration: 3000,
+      });
+    } catch (error) {
+      // Show error toast
+      toast.error('Failed to add to cart', {
+        description: error instanceof Error ? error.message : 'Something went wrong',
+        duration: 4000,
+      });
+      console.error('Add to cart error:', error);
+    }
+  };
 
   // Render star rating
   const renderStars = (): JSX.Element[] => {
@@ -224,15 +258,20 @@ const ProductCard = memo(function ProductCard({
         {/* Add to Cart Button */}
         <Button
           className="w-full transition-all duration-300 hover:scale-[1.02]"
-          disabled={isUnavailable}
-          onClick={(e) => {
-            e.preventDefault();
-            // TODO: Implement add to cart functionality
-            console.log('Add to cart:', product.id);
-          }}
+          disabled={isUnavailable || isAdding}
+          onClick={handleAddToCart}
         >
-          <Icon icon="ph:shopping-cart" className="h-4 w-4" />
-          {isUnavailable ? 'Unavailable' : 'Add to Cart'}
+          {isAdding ? (
+            <>
+              <Icon icon="ph:circle-notch" className="h-4 w-4 animate-spin" />
+              Adding...
+            </>
+          ) : (
+            <>
+              <Icon icon="ph:shopping-cart" className="h-4 w-4" />
+              {isUnavailable ? 'Unavailable' : 'Add to Cart'}
+            </>
+          )}
         </Button>
       </div>
     </motion.div>

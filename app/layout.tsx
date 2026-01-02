@@ -4,6 +4,7 @@ import './globals.css';
 import { JSX, ReactNode } from 'react';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { Footer } from '@/components/footer';
+import { Toaster } from '@/components/ui/sonner';
 import StoreProvider from '@/app/storeProvider';
 
 const geistSans = Geist({
@@ -59,6 +60,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SmoothScroll />
         <StoreProvider>{children}</StoreProvider>
+        <Toaster />
         <Footer />
       </body>
     </html>

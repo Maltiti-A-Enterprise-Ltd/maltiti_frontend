@@ -1,6 +1,8 @@
 // Company Logo
 export { default as CompanyLogo } from './images/logo.svg';
 
+export { default as ProductPlaceholder } from './images/placeholder-product.svg';
+
 // Hero images
 export { default as Hero0 } from './images/hero-0.jpg';
 export { default as Hero1 } from './images/hero-1.jpg';

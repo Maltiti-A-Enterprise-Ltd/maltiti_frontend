@@ -15,15 +15,24 @@ import {
 /**
  * Login thunk
  * Authenticates user with credentials and returns user data
+ * After successful login, triggers guest cart sync if applicable
  */
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginFormData, { rejectWithValue }) => {
+  async (credentials: LoginFormData, { rejectWithValue, dispatch }) => {
     try {
       const { data, error } = await authenticationControllerSignIn({ body: credentials });
       if (!data) {
         return rejectWithValue(error?.message || 'Login failed');
       }
+
+      // Import syncGuestCart dynamically to avoid circular dependency
+      const { syncGuestCart } = await import('../cart/cartThunk');
+
+      // Trigger guest cart sync after successful login
+      // This will merge any items in the guest cart with the user's server cart
+      dispatch(syncGuestCart());
+
       return data.data;
     } catch (error: unknown) {
       if (error && typeof error === 'object' && 'error' in error) {
@@ -93,10 +102,11 @@ export const resendVerificationEmail = createAsyncThunk(
  * Verify email thunk
  * Verifies user email using the verification token from email
  * Now logs the user in automatically upon successful verification
+ * Also triggers guest cart sync after successful verification
  */
 export const verifyEmail = createAsyncThunk(
   'auth/verifyEmail',
-  async ({ id, token }: { id: string; token: string }, { rejectWithValue }) => {
+  async ({ id, token }: { id: string; token: string }, { rejectWithValue, dispatch }) => {
     try {
       const { error, data } = await authenticationControllerEmailVerification({
         path: { id, token },
@@ -104,6 +114,13 @@ export const verifyEmail = createAsyncThunk(
       if (error || !data) {
         return rejectWithValue(error?.message || 'Email verification failed');
       }
+
+      // Import syncGuestCart dynamically to avoid circular dependency
+      const { syncGuestCart } = await import('../cart/cartThunk');
+
+      // Trigger guest cart sync after successful verification and login
+      dispatch(syncGuestCart());
+
       // Return the user data from the response
       return data.data;
     } catch (error: unknown) {
@@ -119,13 +136,21 @@ export const verifyEmail = createAsyncThunk(
 /**
  * Logout thunk
  * Clears authentication cookies and logs out the user
+ * Also resets the cart state
  */
-export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue, dispatch }) => {
   try {
     const { data, error } = await authenticationControllerLogout();
     if (!data) {
       return rejectWithValue(error?.message || 'Login failed');
     }
+
+    // Import resetCart dynamically to avoid circular dependency
+    const { resetCart } = await import('../cart/cartSlice');
+
+    // Clear cart state on logout
+    dispatch(resetCart());
+
     return null;
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'error' in error) {

@@ -25,10 +25,6 @@ import {
   User,
   Settings,
   LogOut,
-  Minus,
-  Plus,
-  Trash2,
-  ShoppingCart,
   Info,
   ShoppingBag,
   HelpCircle,
@@ -37,20 +33,9 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { CompanyLogo } from '@/app/assets';
-import CartIcon from './cart-icon';
+import CartSheet from './cart-sheet';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser, logout } from '@/lib/store/features/auth';
-
-interface CartItem {
-  id: string;
-  quantity: number;
-  product: {
-    image: string;
-    name: string;
-    weight: number;
-    retail: number;
-  };
-}
 
 export function NavBar(): JSX.Element {
   const pathname = usePathname();
@@ -61,11 +46,6 @@ export function NavBar(): JSX.Element {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
-  const cart: CartItem[] = []; // Placeholder
-  const cartTotal = cart.length;
-  const totalPrice = 0; // Placeholder
-
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Handle logout
@@ -181,7 +161,6 @@ export function NavBar(): JSX.Element {
       <Image src={CompanyLogo} alt="logo" width={40} height={40} />
     </Link>
   );
-  const toggleCart = (): void => setIsCartOpen(!isCartOpen);
 
   return (
     <header className="header-light fixed top-0 right-0 left-0 z-50 mx-auto flex h-20 items-center justify-between border-b-2 bg-white px-8">
@@ -347,74 +326,8 @@ export function NavBar(): JSX.Element {
       {/* User Links and Cart */}
       <div className="flex items-center gap-x-4">
         {userLinks}
-        <CartIcon cartTotal={cartTotal} onClick={toggleCart} />
+        <CartSheet />
       </div>
-      {/* Cart Sheet */}
-      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <SheetContent side="right" className="w-96 bg-green-50">
-          <SheetHeader>
-            <SheetTitle>Your Cart</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4">
-            {cart.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="animate-bounce">
-                  <ShoppingCart className="h-24 w-24 text-gray-400" />
-                </div>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">Your cart is empty</h3>
-                <p className="mt-2 text-sm text-gray-500">Add some items to get started!</p>
-                <Button className="mt-4" onClick={() => setIsCartOpen(false)}>
-                  Continue Shopping
-                </Button>
-              </div>
-            ) : (
-              <>
-                <div className="mb-4 flex justify-between">
-                  <span className="font-bold">Subtotal</span>
-                  <span className="font-bold">GH₵ {totalPrice}</span>
-                </div>
-                <div className="mb-4 text-xs text-red-600">
-                  Shipping or delivery fees will be calculated during checkout
-                </div>
-                <div className="mb-4 flex justify-between">
-                  <span>{cartTotal} Products in your cart</span>
-                  <Button>Checkout</Button>
-                </div>
-                <ul className="space-y-4">
-                  {cart.map((item) => (
-                    <li key={item.id} className="flex rounded-md bg-gray-200 p-4">
-                      <Image
-                        src={item.product.image}
-                        alt={item.product.name}
-                        width={80}
-                        height={80}
-                        className="rounded-md"
-                      />
-                      <div className="ml-4 flex-1">
-                        <h3 className="font-medium">{item.product.name}</h3>
-                        <p className="text-sm text-gray-500">{item.product.weight}g</p>
-                        <p className="text-sm">GH₵ {item.product.retail}</p>
-                        <div className="mt-2 flex items-center space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => {}}>
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <span>{item.quantity}</span>
-                          <Button size="sm" variant="outline" onClick={() => {}}>
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="destructive" onClick={() => {}}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
     </header>
   );
 }
