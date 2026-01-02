@@ -39,11 +39,11 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
 
       {/* Cart Sheet */}
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <SheetContent side="right" className="w-96 bg-green-50">
+        <SheetContent side="right" className="w-96 bg-green-50 p-4">
           <SheetHeader>
             <SheetTitle>Your Cart</SheetTitle>
           </SheetHeader>
-          <div className="mt-4">
+          <div>
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <div className="animate-bounce">
@@ -65,7 +65,9 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
                   Shipping or delivery fees will be calculated during checkout
                 </div>
                 <div className="mb-4 flex justify-between">
-                  <span>{totalItems} Products in your cart</span>
+                  <span className="self-center text-sm text-gray-700">
+                    {totalItems} Products in your cart
+                  </span>
                   <Button>Checkout</Button>
                 </div>
                 <ul className="space-y-4">
