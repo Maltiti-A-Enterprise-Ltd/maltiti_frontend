@@ -22,6 +22,8 @@ export { default as Hero14 } from './images/hero-14.png';
 
 export { default as AboutUsCEO } from './images/about-us-ceo.png';
 
+export { default as Darnisha } from './images/darnisha.jpg';
+
 // Decorator Blob images
 export { default as SvgDecoratorBlob1 } from './images/svg-decorator-blob-1.svg';
 export { default as SvgDecoratorBlob2 } from './images/svg-decorator-blob-2.svg';

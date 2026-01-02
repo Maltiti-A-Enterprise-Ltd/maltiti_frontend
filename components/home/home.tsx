@@ -5,6 +5,8 @@ import { faqData } from '@/lib/faq-data';
 import { BestProductsSection } from '@/components/products';
 import { HeroSection } from '@/components/home/hero-section';
 import { AboutUsSection } from '@/components/home/about-us-section';
+import { TestimonialsSection } from '@/components/home/testimonials-section';
+import { testimonialsData } from '@/lib/testimonials-data';
 
 export default function Home(): JSX.Element {
   return (
@@ -15,6 +17,7 @@ export default function Home(): JSX.Element {
         <BestProductsSection />
       </div>
       <AboutUsSection />
+      <TestimonialsSection testimonials={testimonialsData} />
       <div className="px-8">
         <section id="faqs" className="scroll-mt-20 py-20">
           <FAQ items={faqData} />

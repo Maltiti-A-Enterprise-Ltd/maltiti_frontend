@@ -91,7 +91,10 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-white via-green-50/30 to-white py-16 lg:py-24">
+    <section
+      id="about"
+      className="relative overflow-hidden bg-linear-to-b from-white via-green-50/30 to-white py-16 lg:py-24"
+    >
       {/* Decorative Blobs */}
       <motion.div
         className="pointer-events-none absolute -top-20 -right-20 h-96 w-96 opacity-5"
