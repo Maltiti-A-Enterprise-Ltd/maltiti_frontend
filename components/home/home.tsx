@@ -3,19 +3,14 @@ import { NavBar } from '@/components/home/navbar';
 import { FAQ } from '@/components/faq';
 import { faqData } from '@/lib/faq-data';
 import { BestProductsSection } from '@/components/products';
+import { HeroSection } from '@/components/home/hero-section';
 
 export default function Home(): JSX.Element {
   return (
     <main className="mx-auto mt-20">
       <NavBar />
+      <HeroSection />
       <div className="px-8">
-        <section id="hero" className="scroll-mt-20 py-20 text-center">
-          <h1 className="mb-4 text-4xl font-bold">Welcome to Maltiti</h1>
-          <p className="mb-8 text-lg">Your one-stop shop for quality products</p>
-          <button className="rounded-full bg-green-500 px-6 py-3 text-white hover:bg-green-600">
-            Shop Now
-          </button>
-        </section>
         <BestProductsSection />
         <section id="about" className="scroll-mt-20 py-20">
           <h2 className="mb-8 text-center text-3xl font-bold">About Us</h2>
