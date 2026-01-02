@@ -20,6 +20,8 @@ export { default as Hero12 } from './images/hero-12.jpg';
 export { default as Hero13 } from './images/hero-13.jpg';
 export { default as Hero14 } from './images/hero-14.png';
 
+export { default as AboutUsCEO } from './images/about-us-ceo.png';
+
 // Decorator Blob images
 export { default as SvgDecoratorBlob1 } from './images/svg-decorator-blob-1.svg';
 export { default as SvgDecoratorBlob2 } from './images/svg-decorator-blob-2.svg';
