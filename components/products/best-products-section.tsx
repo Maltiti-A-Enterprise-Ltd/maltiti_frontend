@@ -6,9 +6,11 @@ import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { getBestProducts } from '@/lib/store/features/products/productsThunk';
 import ProductCard from './product-card';
 import { Icon } from '@iconify/react';
+import { useRouter } from 'next/navigation';
 
 const BestProductsSection = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { bestProducts, loading, error } = useAppSelector(({ products }) => products);
 
   useEffect(() => {
@@ -163,7 +165,10 @@ const BestProductsSection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-12 text-center"
         >
-          <button className="border-primary text-primary hover:bg-primary hover:text-primary-foreground hover:shadow-primary/20 inline-flex items-center gap-2 rounded-full border-2 bg-transparent px-8 py-3 text-sm font-semibold transition-all duration-300 hover:shadow-lg">
+          <button
+            onClick={() => router.push('/shop')}
+            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground hover:shadow-primary/20 inline-flex cursor-pointer items-center gap-2 rounded-full border-2 bg-transparent px-8 py-3 text-sm font-semibold transition-all duration-300 hover:shadow-lg"
+          >
             View All Products
             <Icon icon="ph:arrow-right" className="h-4 w-4" />
           </button>
