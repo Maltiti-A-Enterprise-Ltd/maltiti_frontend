@@ -6,6 +6,8 @@ import { SmoothScroll } from '@/components/smooth-scroll';
 import { Footer } from '@/components/footer';
 import { Toaster } from '@/components/ui/sonner';
 import StoreProvider from '@/app/storeProvider';
+import { CookieConsentProvider } from '@/lib/cookie-consent';
+import { CookieConsentManager } from '@/components/cookie-consent';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -58,10 +60,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SmoothScroll />
-        <StoreProvider>{children}</StoreProvider>
-        <Toaster />
-        <Footer />
+        <CookieConsentProvider>
+          <SmoothScroll />
+          <StoreProvider>{children}</StoreProvider>
+          <Toaster />
+          <Footer />
+          <CookieConsentManager />
+        </CookieConsentProvider>
       </body>
     </html>
   );

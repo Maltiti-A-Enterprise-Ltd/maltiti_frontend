@@ -4,9 +4,11 @@ import { JSX } from 'react';
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
 import { Icon } from '@iconify/react';
+import { useCookieConsent } from '@/lib/cookie-consent';
 
 export function Footer(): JSX.Element {
   const currentYear = new Date().getFullYear();
+  const { openSettings } = useCookieConsent();
 
   return (
     <footer className="bg-slate-900 text-slate-200">
@@ -74,6 +76,12 @@ export function Footer(): JSX.Element {
               >
                 Terms & Conditions
               </Link>
+              <button
+                onClick={openSettings}
+                className="hover:text-primary text-left text-sm transition-colors duration-200"
+              >
+                Cookie Settings
+              </button>
             </nav>
           </div>
 
