@@ -40,7 +40,10 @@ export const fetchCart = createAsyncThunk('cart/fetchCart', async (_, { rejectWi
  */
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
-  async ({ productId }: { productId: string }, { rejectWithValue, getState, dispatch }) => {
+  async (
+    { productId, quantity }: { productId: string; quantity?: number },
+    { rejectWithValue, getState, dispatch },
+  ) => {
     try {
       const state = getState() as RootState;
       const userId = state.auth.user?.id;
@@ -50,7 +53,7 @@ export const addToCart = createAsyncThunk(
       }
 
       const { data, error } = await cartControllerAddToCart({
-        body: { id: productId },
+        body: { id: productId, quantity },
       });
 
       if (error || !data) {

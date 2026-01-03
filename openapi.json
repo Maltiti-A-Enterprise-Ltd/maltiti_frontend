@@ -5372,6 +5372,12 @@
             "type": "string",
             "description": "The UUID of the product to add to cart",
             "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity of the product in the cart (must be a positive integer)",
+            "example": 5,
+            "minimum": 1
           }
         },
         "required": ["id"]
@@ -5396,9 +5402,9 @@
         "properties": {
           "quantity": {
             "type": "number",
-            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 5
+            "example": 5,
+            "minimum": 1
           }
         },
         "required": ["quantity"]
@@ -5413,9 +5419,9 @@
           },
           "quantity": {
             "type": "number",
-            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 3
+            "example": 3,
+            "minimum": 1
           }
         },
         "required": ["productId", "quantity"]
@@ -5424,7 +5430,6 @@
         "type": "object",
         "properties": {
           "items": {
-            "minItems": 1,
             "description": "Array of cart items to add with their quantities",
             "example": [
               { "productId": "550e8400-e29b-41d4-a716-446655440000", "quantity": 2 },

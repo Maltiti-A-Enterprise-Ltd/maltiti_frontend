@@ -75,6 +75,7 @@ export const useCart = (): UseCartReturn => {
         await dispatch(
           addToCartAPI({
             productId: product.id,
+            quantity,
           }),
         ).unwrap();
       } else {

@@ -1049,6 +1049,10 @@ export type AddCartDto = {
      * The UUID of the product to add to cart
      */
     id: string;
+    /**
+     * The quantity of the product in the cart (must be a positive integer)
+     */
+    quantity?: number;
 };
 
 export type CartResponseDto = {
