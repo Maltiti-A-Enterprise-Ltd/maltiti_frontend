@@ -655,6 +655,14 @@ export type BestProductsApiResponseDto = {
     data: BestProductsResponseDto;
 };
 
+export type SingleProductResponseDto = {
+    /**
+     * Response message indicating whether product is loaded
+     */
+    message: string;
+    data: ProductResponseDto;
+};
+
 export type CreateProductDto = {
     /**
      * Unique SKU code for the product
@@ -2388,7 +2396,7 @@ export type ProductsControllerGetProductResponses = {
     /**
      * Product retrieved successfully
      */
-    200: ProductResponseDto;
+    200: SingleProductResponseDto;
 };
 
 export type ProductsControllerGetProductResponse = ProductsControllerGetProductResponses[keyof ProductsControllerGetProductResponses];

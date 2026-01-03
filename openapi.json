@@ -1252,7 +1252,7 @@
             "description": "Product retrieved successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProductResponseDto" }
+                "schema": { "$ref": "#/components/schemas/SingleProductResponseDto" }
               }
             }
           },
@@ -4726,6 +4726,18 @@
             "description": "Response message indicating whether products are personalized or curated"
           },
           "data": { "$ref": "#/components/schemas/BestProductsResponseDto" }
+        },
+        "required": ["message", "data"]
+      },
+      "SingleProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Product loaded successfully",
+            "description": "Response message indicating whether product is loaded"
+          },
+          "data": { "$ref": "#/components/schemas/ProductResponseDto" }
         },
         "required": ["message", "data"]
       },
