@@ -31,6 +31,7 @@ import {
   Phone,
   Home,
   UserPlus,
+  BookOpen,
 } from 'lucide-react';
 import { CompanyLogo } from '@/app/assets';
 import CartSheet from './cart-sheet';
@@ -79,6 +80,11 @@ export function NavBar(): JSX.Element {
           <NavigationMenuItem>
             <NavigationMenuLink href="/shop" className={navigationMenuTriggerStyle()}>
               Shop
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/blog" className={navigationMenuTriggerStyle()}>
+              Blog
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -198,6 +204,14 @@ export function NavBar(): JSX.Element {
                   >
                     <ShoppingBag className="h-5 w-5" />
                     <span>Shop</span>
+                  </Link>
+                  <Link
+                    href="/blog"
+                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <BookOpen className="h-5 w-5" />
+                    <span>Blog</span>
                   </Link>
                   <Link
                     href="/#faqs"

@@ -46,6 +46,12 @@ export function Footer(): JSX.Element {
                 Products
               </Link>
               <Link
+                href="/blog"
+                className="hover:text-primary text-sm transition-colors duration-200"
+              >
+                Blog
+              </Link>
+              <Link
                 href="/#contactus"
                 className="hover:text-primary text-sm transition-colors duration-200"
               >
