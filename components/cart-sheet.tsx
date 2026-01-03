@@ -1,5 +1,5 @@
 'use client';
-import { JSX, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ShoppingCartIcon, ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -12,10 +12,14 @@ import { ProductPlaceholder } from '@/app/assets';
 type CartSheetProps = Record<string, never>;
 
 const CartSheet = ({}: CartSheetProps): JSX.Element => {
-  const { items, totalItems, totalPrice } = useCart();
+  const { items, totalItems, totalPrice, getCart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const toggleCart = (): void => setIsCartOpen(!isCartOpen);
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   return (
     <>

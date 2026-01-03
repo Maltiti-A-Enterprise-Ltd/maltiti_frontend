@@ -9,6 +9,7 @@ import StoreProvider from '@/app/storeProvider';
 import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { CookieConsentManager } from '@/components/cookie-consent';
 import { NavBar } from '@/components/navbar';
+import { SessionExpiryHandler } from '@/components/auth';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <StoreProvider>
+          <SessionExpiryHandler />
           <NavBar />
           <CookieConsentProvider>
             <SmoothScroll />

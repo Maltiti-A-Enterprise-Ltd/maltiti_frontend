@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from './hooks';
 import {
   addToCart as addToCartAPI,
@@ -42,6 +42,7 @@ type UseCartReturn = {
   error: string | null;
   cart: CartState | null;
   guestCart: GuestCartState | null;
+  getCart: () => void;
 };
 
 /**
@@ -57,9 +58,11 @@ export const useCart = (): UseCartReturn => {
   const cartTotal = useAppSelector(selectCartTotal);
   const guestCart = useAppSelector(selectGuestCart);
 
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, []);
+  const getCart = (): void => {
+    if (isAuthenticated) {
+      dispatch(fetchCart());
+    }
+  };
 
   /**
    * Add item to cart
@@ -201,7 +204,7 @@ export const useCart = (): UseCartReturn => {
     isUpdating,
     isRemoving,
     isSyncing,
-
+    getCart,
     // Error state
     error,
 

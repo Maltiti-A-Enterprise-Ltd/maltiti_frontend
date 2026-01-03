@@ -48,8 +48,18 @@ export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
         onSuccess();
       }
 
-      // Redirect to home page
-      router.push('/');
+      // Check for return URL from session storage
+      const returnUrl = sessionStorage.getItem('returnUrl');
+
+      if (returnUrl) {
+        // Clear the return URL from storage
+        sessionStorage.removeItem('returnUrl');
+        // Redirect to the stored URL
+        router.push(returnUrl);
+      } else {
+        // Default redirect to home page
+        router.push('/');
+      }
     } catch (error: unknown) {
       const errorMessage = typeof error === 'string' ? error : 'Invalid email or password.';
 

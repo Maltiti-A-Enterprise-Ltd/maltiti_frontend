@@ -4,3 +4,4 @@
 - Remember to use yarn always since that is our package manager
 - Enforce return types in all functions
 - Always type for props instead of interfaces
+- Don't create .md or documentation after implementations unless prompt asks for it
