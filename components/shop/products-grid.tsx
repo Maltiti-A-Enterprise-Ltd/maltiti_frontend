@@ -20,7 +20,7 @@ export function ProductsGrid({ products }: ProductsGridProps): JSX.Element {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: index * 0.05 }}
         >
-          <Link href={`/products/${product.id}`} className="block h-full">
+          <Link href={`/shop/${product.id}`} className="block h-full">
             <ProductCard product={product} className="h-full" />
           </Link>
         </motion.div>
