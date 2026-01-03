@@ -1172,15 +1172,23 @@ export type BulkAddCartResponseDto = {
 
 export type InitializeTransaction = {
     /**
-     * Delivery location/address for this order
+     * Delivery country
      */
-    location: string;
+    country: string;
+    /**
+     * Delivery state/region
+     */
+    region: string;
+    /**
+     * Delivery city/town
+     */
+    city: string;
     /**
      * Contact phone number for delivery (in case of issues)
      */
     phoneNumber: string;
     /**
-     * Additional information about the order
+     * Additional information about the order (e.g., house number, landmarks)
      */
     extraInfo?: string;
 };
@@ -3156,14 +3164,9 @@ export type CartControllerBulkAddToCartResponse = CartControllerBulkAddToCartRes
 
 export type CheckoutControllerGetOrdersData = {
     body?: never;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
+    path?: never;
     query?: never;
-    url: '/checkout/orders/{id}';
+    url: '/checkout/orders';
 };
 
 export type CheckoutControllerGetOrdersResponses = {
@@ -3201,16 +3204,12 @@ export type CheckoutControllerConfirmPaymentData = {
     body?: never;
     path: {
         /**
-         * User ID
-         */
-        userId: string;
-        /**
          * Checkout ID
          */
         checkoutId: string;
     };
     query?: never;
-    url: '/checkout/confirm-payment/{userId}/{checkoutId}';
+    url: '/checkout/confirm-payment/{checkoutId}';
 };
 
 export type CheckoutControllerConfirmPaymentResponses = {
@@ -3221,16 +3220,12 @@ export type CheckoutControllerGetTransportationData = {
     body?: never;
     path: {
         /**
-         * User ID
-         */
-        id: string;
-        /**
-         * Delivery location
+         * Delivery location type
          */
         location: SchemaEnum4;
     };
     query?: never;
-    url: '/checkout/{id}/{location}';
+    url: '/checkout/transportation/{location}';
 };
 
 export type CheckoutControllerGetTransportationResponses = {
@@ -3246,7 +3241,7 @@ export type CheckoutControllerGetAllOrdersData = {
         page?: number;
         paymentStatus?: SchemaEnum5;
     };
-    url: '/checkout/orders';
+    url: '/checkout/admin/orders';
 };
 
 export type CheckoutControllerGetAllOrdersResponses = {
@@ -3255,14 +3250,9 @@ export type CheckoutControllerGetAllOrdersResponses = {
 
 export type CheckoutControllerInitializeTransactionData = {
     body: InitializeTransaction;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
+    path?: never;
     query?: never;
-    url: '/checkout/initialize-transaction/{id}';
+    url: '/checkout/initialize-transaction';
 };
 
 export type CheckoutControllerInitializeTransactionResponses = {

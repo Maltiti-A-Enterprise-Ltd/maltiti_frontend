@@ -2122,20 +2122,12 @@
         "tags": ["Cart"]
       }
     },
-    "/checkout/orders/{id}": {
+    "/checkout/orders": {
       "get": {
         "operationId": "CheckoutController_getOrders",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "User ID",
-            "schema": { "type": "string" }
-          }
-        ],
+        "parameters": [],
         "responses": { "200": { "description": "" } },
-        "summary": "Get all orders for a user",
+        "summary": "Get all orders for current user",
         "tags": ["Checkout"]
       }
     },
@@ -2165,17 +2157,10 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/confirm-payment/{userId}/{checkoutId}": {
+    "/checkout/confirm-payment/{checkoutId}": {
       "get": {
         "operationId": "CheckoutController_confirmPayment",
         "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "description": "User ID",
-            "schema": { "type": "string" }
-          },
           {
             "name": "checkoutId",
             "required": true,
@@ -2189,22 +2174,15 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/{id}/{location}": {
+    "/checkout/transportation/{location}": {
       "get": {
         "operationId": "CheckoutController_getTransportation",
         "parameters": [
           {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "User ID",
-            "schema": { "type": "string" }
-          },
-          {
             "name": "location",
             "required": true,
             "in": "path",
-            "description": "Delivery location",
+            "description": "Delivery location type",
             "schema": { "enum": ["local", "other"], "type": "string" }
           }
         ],
@@ -2213,7 +2191,7 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/orders": {
+    "/checkout/admin/orders": {
       "get": {
         "operationId": "CheckoutController_getAllOrders",
         "parameters": [
@@ -2253,18 +2231,10 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/initialize-transaction/{id}": {
+    "/checkout/initialize-transaction": {
       "post": {
         "operationId": "CheckoutController_initializeTransaction",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "User ID",
-            "schema": { "type": "string" }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -5728,11 +5698,13 @@
       "InitializeTransaction": {
         "type": "object",
         "properties": {
-          "location": {
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
             "type": "string",
-            "description": "Delivery location/address for this order",
-            "example": "Tamale, Northern Region, House No. 123"
+            "description": "Delivery state/region",
+            "example": "Northern Region"
           },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
           "phoneNumber": {
             "type": "string",
             "description": "Contact phone number for delivery (in case of issues)",
@@ -5740,11 +5712,11 @@
           },
           "extraInfo": {
             "type": "string",
-            "description": "Additional information about the order",
-            "example": "Please deliver after 5pm"
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
           }
         },
-        "required": ["location", "phoneNumber"]
+        "required": ["country", "region", "city", "phoneNumber"]
       },
       "SaleStatus": {
         "type": "string",

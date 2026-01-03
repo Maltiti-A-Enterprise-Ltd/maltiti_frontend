@@ -509,9 +509,9 @@ export const cartControllerBulkAddToCart = <ThrowOnError extends boolean = false
 });
 
 /**
- * Get all orders for a user
+ * Get all orders for current user
  */
-export const checkoutControllerGetOrders = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetOrdersData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerGetOrdersResponses, unknown, ThrowOnError>({ url: '/checkout/orders/{id}', ...options });
+export const checkoutControllerGetOrders = <ThrowOnError extends boolean = false>(options?: Options<CheckoutControllerGetOrdersData, ThrowOnError>) => (options?.client ?? client).get<CheckoutControllerGetOrdersResponses, unknown, ThrowOnError>({ url: '/checkout/orders', ...options });
 
 /**
  * Get a specific order
@@ -526,23 +526,23 @@ export const checkoutControllerTestMail = <ThrowOnError extends boolean = false>
 /**
  * Confirm payment for an order
  */
-export const checkoutControllerConfirmPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/confirm-payment/{userId}/{checkoutId}', ...options });
+export const checkoutControllerConfirmPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/confirm-payment/{checkoutId}', ...options });
 
 /**
  * Calculate transportation cost
  */
-export const checkoutControllerGetTransportation = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetTransportationData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerGetTransportationResponses, unknown, ThrowOnError>({ url: '/checkout/{id}/{location}', ...options });
+export const checkoutControllerGetTransportation = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetTransportationData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerGetTransportationResponses, unknown, ThrowOnError>({ url: '/checkout/transportation/{location}', ...options });
 
 /**
  * Get all orders (admin)
  */
-export const checkoutControllerGetAllOrders = <ThrowOnError extends boolean = false>(options?: Options<CheckoutControllerGetAllOrdersData, ThrowOnError>) => (options?.client ?? client).get<CheckoutControllerGetAllOrdersResponses, unknown, ThrowOnError>({ url: '/checkout/orders', ...options });
+export const checkoutControllerGetAllOrders = <ThrowOnError extends boolean = false>(options?: Options<CheckoutControllerGetAllOrdersData, ThrowOnError>) => (options?.client ?? client).get<CheckoutControllerGetAllOrdersResponses, unknown, ThrowOnError>({ url: '/checkout/admin/orders', ...options });
 
 /**
  * Initialize payment transaction
  */
 export const checkoutControllerInitializeTransaction = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerInitializeTransactionData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerInitializeTransactionResponses, unknown, ThrowOnError>({
-    url: '/checkout/initialize-transaction/{id}',
+    url: '/checkout/initialize-transaction',
     ...options,
     headers: {
         'Content-Type': 'application/json',
