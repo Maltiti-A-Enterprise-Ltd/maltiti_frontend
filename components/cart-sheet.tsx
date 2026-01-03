@@ -1,5 +1,5 @@
 'use client';
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { ShoppingCartIcon, ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -12,10 +12,64 @@ import { ProductPlaceholder } from '@/app/assets';
 type CartSheetProps = Record<string, never>;
 
 const CartSheet = ({}: CartSheetProps): JSX.Element => {
-  const { items, totalItems, totalPrice, getCart } = useCart();
+  const { items, totalItems, totalPrice, getCart, updateQuantity, removeItem } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [optimisticQuantities, setOptimisticQuantities] = useState<Record<string, number>>({});
+  const debounceTimers = useRef<Record<string, NodeJS.Timeout>>({});
 
   const toggleCart = (): void => setIsCartOpen(!isCartOpen);
+
+  // Debounced update function
+  const debouncedUpdateQuantity = useCallback(
+    (itemId: string, newQuantity: number): void => {
+      // Clear existing timer for this item
+      if (debounceTimers.current[itemId]) {
+        clearTimeout(debounceTimers.current[itemId]);
+      }
+
+      // Set new timer
+      debounceTimers.current[itemId] = setTimeout(() => {
+        updateQuantity(itemId, newQuantity);
+        delete debounceTimers.current[itemId];
+      }, 500); // 500ms delay
+    },
+    [updateQuantity],
+  );
+
+  const handleIncrement = (itemId: string, currentQuantity: number): void => {
+    const newQuantity = currentQuantity + 1;
+    setOptimisticQuantities((prev) => ({ ...prev, [itemId]: newQuantity }));
+    debouncedUpdateQuantity(itemId, newQuantity);
+  };
+
+  const handleDecrement = (itemId: string, currentQuantity: number): void => {
+    if (currentQuantity > 1) {
+      const newQuantity = currentQuantity - 1;
+      setOptimisticQuantities((prev) => ({ ...prev, [itemId]: newQuantity }));
+      debouncedUpdateQuantity(itemId, newQuantity);
+    }
+  };
+
+  const handleRemove = async (itemId: string): Promise<void> => {
+    // Clear any pending debounce timer for this item
+    if (debounceTimers.current[itemId]) {
+      clearTimeout(debounceTimers.current[itemId]);
+      delete debounceTimers.current[itemId];
+    }
+    await removeItem(itemId);
+  };
+
+  // Get the display quantity (optimistic or actual)
+  const getDisplayQuantity = (itemId: string, actualQuantity: number): number =>
+    optimisticQuantities[itemId] ?? actualQuantity;
+
+  // Cleanup timers on unmount
+  useEffect(
+    () => (): void => {
+      Object.values(debounceTimers.current).forEach((timer) => clearTimeout(timer));
+    },
+    [],
+  );
 
   useEffect(() => {
     getCart();
@@ -88,14 +142,33 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
                         <p className="text-sm text-gray-500">{item.product.weight}g</p>
                         <p className="text-sm">GH₵ {item.product.retail}</p>
                         <div className="mt-2 flex items-center space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => {}}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              handleDecrement(item.id, getDisplayQuantity(item.id, item.quantity))
+                            }
+                            disabled={getDisplayQuantity(item.id, item.quantity) <= 1}
+                          >
                             <Minus className="h-4 w-4" />
                           </Button>
-                          <span>{item.quantity}</span>
-                          <Button size="sm" variant="outline" onClick={() => {}}>
+                          <span className="min-w-[2rem] text-center">
+                            {getDisplayQuantity(item.id, item.quantity)}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              handleIncrement(item.id, getDisplayQuantity(item.id, item.quantity))
+                            }
+                          >
                             <Plus className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => {}}>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleRemove(item.id)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

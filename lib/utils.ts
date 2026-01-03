@@ -21,3 +21,30 @@ export const generateUUID = (): string =>
     const value = char === 'x' ? random : (random & 0x3) | 0x8;
     return value.toString(16);
   });
+
+/**
+ * Creates a debounced function that delays invoking the provided function
+ * until after the specified delay has elapsed since the last time it was invoked.
+ *
+ * @template T - The type of the function to debounce
+ * @param {T} func - The function to debounce
+ * @param {number} delay - The delay in milliseconds
+ * @returns {(...args: Parameters<T>) => void} A debounced version of the function
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  return (...args: Parameters<T>): void => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
