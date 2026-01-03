@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/accordion';
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
-import { NavBar } from '@/components/home/navbar';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -70,59 +69,52 @@ export default function PrivacyPage(): JSX.Element {
   const router = useRouter();
 
   return (
-    <>
-      <NavBar />
-      <main className="mx-auto mt-20 px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto max-w-4xl p-6"
-        >
-          <div className="mb-8 flex items-center justify-between">
-            <Button variant="ghost" onClick={() => router.back()} className="text-primary">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-            <div className="flex-1 text-center">
-              <h1 className="from-primary via-primary to-primary/80 mb-3 bg-linear-to-r bg-clip-text text-4xl font-bold tracking-wide text-transparent drop-shadow-sm">
-                Privacy Policy
-              </h1>
-              <div className="from-primary/60 to-primary/30 mx-auto mb-4 h-0.5 w-16 rounded-full bg-linear-to-r"></div>
-              <p className="text-primary/70 mx-auto max-w-md text-sm leading-relaxed font-medium">
-                Your privacy is important to us. Please read this policy carefully.
-              </p>
-              <p className="text-muted-foreground mt-4 text-sm">
-                Effective Date: December 31, 2025
-              </p>
-            </div>
+    <main className="mx-auto mt-20 px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mx-auto max-w-4xl p-6"
+      >
+        <div className="mb-8 flex items-center justify-between">
+          <Button variant="ghost" onClick={() => router.back()} className="text-primary">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <div className="flex-1 text-center">
+            <h1 className="from-primary via-primary to-primary/80 mb-3 bg-linear-to-r bg-clip-text text-4xl font-bold tracking-wide text-transparent drop-shadow-sm">
+              Privacy Policy
+            </h1>
+            <div className="from-primary/60 to-primary/30 mx-auto mb-4 h-0.5 w-16 rounded-full bg-linear-to-r"></div>
+            <p className="text-primary/70 mx-auto max-w-md text-sm leading-relaxed font-medium">
+              Your privacy is important to us. Please read this policy carefully.
+            </p>
+            <p className="text-muted-foreground mt-4 text-sm">Effective Date: December 31, 2025</p>
           </div>
-          <Accordion type="single" collapsible className="space-y-4">
-            {privacyData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
+        </div>
+        <Accordion type="single" collapsible className="space-y-4">
+          {privacyData.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+            >
+              <AccordionItem
+                value={`item-${index}`}
+                className="bg-card rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md"
               >
-                <AccordionItem
-                  value={`item-${index}`}
-                  className="bg-card rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md"
-                >
-                  <AccordionTrigger className="px-6 py-4 text-left hover:no-underline">
-                    <span className="font-semibold">{item.title}</span>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <div className="text-sm leading-relaxed whitespace-pre-line">
-                      {item.content}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </motion.div>
-            ))}
-          </Accordion>
-        </motion.div>
-      </main>
-    </>
+                <AccordionTrigger className="px-6 py-4 text-left hover:no-underline">
+                  <span className="font-semibold">{item.title}</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4">
+                  <div className="text-sm leading-relaxed whitespace-pre-line">{item.content}</div>
+                </AccordionContent>
+              </AccordionItem>
+            </motion.div>
+          ))}
+        </Accordion>
+      </motion.div>
+    </main>
   );
 }

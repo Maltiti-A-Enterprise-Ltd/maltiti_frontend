@@ -1,17 +1,13 @@
-/**
- * Product utility functions and constants
- */
-
-export type UnitOfMeasurement = 'kilogram' | 'gram' | 'litre' | 'millilitre';
+import { UnitOfMeasurement } from '@/app/api';
 
 /**
  * Maps unit of measurement to their short symbols
  */
 export const unitSymbols: Record<UnitOfMeasurement, string> = {
-  kilogram: 'kg',
-  gram: 'g',
-  litre: 'L',
-  millilitre: 'ml',
+  [UnitOfMeasurement.KILOGRAM]: 'kg',
+  [UnitOfMeasurement.GRAM]: 'g',
+  [UnitOfMeasurement.LITRE]: 'L',
+  [UnitOfMeasurement.MILLILITRE]: 'ml',
 };
 
 /**

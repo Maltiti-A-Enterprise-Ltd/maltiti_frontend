@@ -29,7 +29,6 @@ export function ContactSection({ className = '' }: ContactSectionProps): JSX.Ele
     resolver: zodResolver(contactSchema),
     mode: 'onBlur',
   });
-
   const onSubmit = async (data: ContactFormData): Promise<void> => {
     try {
       // Trim all text inputs before submission

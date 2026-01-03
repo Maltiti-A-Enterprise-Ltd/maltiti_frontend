@@ -4,19 +4,17 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:3002' | (string & {});
 };
 
+export type Object = {
+    [key: string]: unknown;
+};
+
 export type AuditLogResponseDto = {
     /**
      * Unique identifier for the audit log
      */
     id: string;
-    /**
-     * Type of action performed
-     */
-    actionType: 'LOGIN' | 'LOGOUT' | 'LOGIN_FAILED' | 'PASSWORD_CHANGED' | 'PASSWORD_RESET' | 'CREATE' | 'UPDATE' | 'DELETE' | 'ROLE_CHANGED' | 'PERMISSION_CHANGED' | 'STATUS_CHANGED' | 'INVENTORY_ADJUSTED' | 'BATCH_ASSIGNED' | 'REPORT_EXPORTED' | 'DATA_EXPORTED' | 'SALE_CREATED' | 'SALE_UPDATED' | 'SALE_CANCELLED' | 'CONFIGURATION_CHANGED' | 'SYSTEM_ACTION' | 'USER_CREATED' | 'USER_UPDATED' | 'USER_DELETED' | 'USER_DEACTIVATED' | 'USER_ACTIVATED';
-    /**
-     * Type of entity affected
-     */
-    entityType: 'USER' | 'PRODUCT' | 'BATCH' | 'INVENTORY' | 'SALE' | 'CHECKOUT' | 'CART' | 'COOPERATIVE' | 'COOPERATIVE_MEMBER' | 'CUSTOMER' | 'REPORT' | 'SYSTEM' | 'CONFIGURATION' | 'AUTHENTICATION';
+    actionType: SchemaEnum;
+    entityType: SchemaEnum2;
     /**
      * ID of the entity affected
      */
@@ -33,10 +31,7 @@ export type AuditLogResponseDto = {
      * Name of user who performed the action
      */
     performedByUserName?: string;
-    /**
-     * Role of user who performed the action
-     */
-    performedByRole: 'user' | 'admin' | 'superadmin';
+    performedByRole: Role;
     /**
      * IP address from which action was performed
      */
@@ -58,8 +53,19 @@ export type AuditLogResponseDto = {
 };
 
 export type RegisterUserDto = {
-    [key: string]: unknown;
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    userType: Role;
+    phoneNumber?: string;
 };
+
+export enum Role {
+    USER = 'user',
+    ADMIN = 'admin',
+    SUPERADMIN = 'superadmin'
+}
 
 export type UserResponseDto = {
     /**
@@ -77,7 +83,7 @@ export type UserResponseDto = {
     /**
      * User role/type
      */
-    userType: 'user' | 'admin' | 'superadmin';
+    userType: Role;
     /**
      * Phone number of the user
      */
@@ -94,10 +100,7 @@ export type UserResponseDto = {
      * Remember token for authentication
      */
     rememberToken?: string;
-    /**
-     * User account status
-     */
-    status: 'active' | 'inactive' | 'suspended';
+    status: StatusEnum;
     /**
      * Date of birth
      */
@@ -158,7 +161,8 @@ export type ErrorResponseDto = {
 };
 
 export type VerifyPhoneDto = {
-    [key: string]: unknown;
+    phoneNumber: string;
+    code: string;
 };
 
 export type PhoneVerificationResponseDto = {
@@ -184,7 +188,8 @@ export type CustomerSignupResponseDto = {
 };
 
 export type SignInDto = {
-    [key: string]: unknown;
+    email: string;
+    password: string;
 };
 
 export type LoginResponseDto = {
@@ -199,7 +204,7 @@ export type LoginResponseDto = {
 };
 
 export type ForgotPasswordDto = {
-    [key: string]: unknown;
+    email: string;
 };
 
 export type PasswordResetEmailResponseDto = {
@@ -214,7 +219,9 @@ export type PasswordResetEmailResponseDto = {
 };
 
 export type ResetPasswordDto = {
-    [key: string]: unknown;
+    token: string;
+    password: string;
+    confirmPassword: string;
 };
 
 export type PasswordResetResponseDto = {
@@ -243,7 +250,8 @@ export type LogoutResponseDto = {
 };
 
 export type CreateAdminDto = {
-    [key: string]: unknown;
+    name: string;
+    email: string;
 };
 
 export type AdminCreationResponseDto = {
@@ -258,7 +266,9 @@ export type AdminCreationResponseDto = {
 };
 
 export type ChangePasswordDto = {
-    [key: string]: unknown;
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
 };
 
 export type PasswordChangeResponseDto = {
@@ -291,15 +301,20 @@ export type ResendVerificationResponseDto = {
 };
 
 export type UpdateUserDto = {
-    [key: string]: unknown;
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    userType?: Role;
+    status?: StatusEnum;
+    dob?: string;
 };
 
 export type ChangeStatusDto = {
-    [key: string]: unknown;
+    status: StatusEnum;
 };
 
 export type ChangeRoleDto = {
-    [key: string]: unknown;
+    userType: Role;
 };
 
 export type AddCooperativeDto = {
@@ -352,6 +367,42 @@ export type EditCooperativeDto = {
     minimalShare: string;
 };
 
+export enum IdType {
+    GHANA_CARD = 'Ghana Card',
+    VOTER_ID = 'Voter ID',
+    PASSPORT = 'Passport',
+    DRIVER_LICENSE = 'Driver License',
+    NHIS_CARD = 'NHIS Card'
+}
+
+export enum GhanaRegion {
+    AHAFO_REGION = 'Ahafo Region',
+    ASHANTI_REGION = 'Ashanti Region',
+    BONO_EAST_REGION = 'Bono East Region',
+    BONO_REGION = 'Bono Region',
+    CENTRAL_REGION = 'Central Region',
+    EASTERN_REGION = 'Eastern Region',
+    GREATER_ACCRA_REGION = 'Greater Accra Region',
+    NORTH_EAST_REGION = 'North East Region',
+    NORTHERN_REGION = 'Northern Region',
+    OTI_REGION = 'Oti Region',
+    SAVANNAH_REGION = 'Savannah Region',
+    UPPER_EAST_REGION = 'Upper East Region',
+    UPPER_WEST_REGION = 'Upper West Region',
+    VOLTA_REGION = 'Volta Region',
+    WESTERN_NORTH_REGION = 'Western North Region',
+    WESTERN_REGION = 'Western Region'
+}
+
+export enum EducationLevel {
+    NO_FORMAL_EDUCATION = 'No Formal Education',
+    PRIMARY_SCHOOL = 'Primary School',
+    JUNIOR_HIGH_SCHOOL = 'Junior High School',
+    SENIOR_HIGH_SCHOOL = 'Senior High School',
+    TERTIARY_EDUCATION = 'Tertiary Education',
+    VOCATIONAL_TRAINING = 'Vocational Training'
+}
+
 export type AddCooperativeMemberDto = {
     /**
      * The full name of the cooperative member
@@ -380,7 +431,7 @@ export type AddCooperativeMemberDto = {
     /**
      * The type of identification document (e.g., National ID, Voter ID, Passport)
      */
-    idType: 'Ghana Card' | 'Voter ID' | 'Passport' | 'Driver License' | 'NHIS Card';
+    idType: IdType;
     /**
      * The identification number (must be unique)
      */
@@ -396,7 +447,7 @@ export type AddCooperativeMemberDto = {
     /**
      * The region of Ghana where the member resides
      */
-    region: 'Ahafo Region' | 'Ashanti Region' | 'Bono East Region' | 'Bono Region' | 'Central Region' | 'Eastern Region' | 'Greater Accra Region' | 'North East Region' | 'Northern Region' | 'Oti Region' | 'Savannah Region' | 'Upper East Region' | 'Upper West Region' | 'Volta Region' | 'Western North Region' | 'Western Region';
+    region: GhanaRegion;
     /**
      * The date of birth of the member (ISO 8601 format)
      */
@@ -404,7 +455,7 @@ export type AddCooperativeMemberDto = {
     /**
      * The highest level of education attained
      */
-    education: 'No Formal Education' | 'Primary School' | 'Junior High School' | 'Senior High School' | 'Tertiary Education' | 'Vocational Training';
+    education: EducationLevel;
     /**
      * The primary occupation of the member
      */
@@ -452,10 +503,7 @@ export type EditCooperativeMemberDto = {
      * The updated profile image URL or file reference (uploaded separately)
      */
     image?: string;
-    /**
-     * The updated type of identification document (e.g., National ID, Voter ID, Passport)
-     */
-    idType: 'Ghana Card' | 'Voter ID' | 'Passport' | 'Driver License' | 'NHIS Card';
+    idType: IdType;
     /**
      * The updated identification number (must be unique)
      */
@@ -468,18 +516,12 @@ export type EditCooperativeMemberDto = {
      * The updated district where the member resides
      */
     district: string;
-    /**
-     * The updated region of Ghana where the member resides
-     */
-    region: 'Ahafo Region' | 'Ashanti Region' | 'Bono East Region' | 'Bono Region' | 'Central Region' | 'Eastern Region' | 'Greater Accra Region' | 'North East Region' | 'Northern Region' | 'Oti Region' | 'Savannah Region' | 'Upper East Region' | 'Upper West Region' | 'Volta Region' | 'Western North Region' | 'Western Region';
+    region: GhanaRegion;
     /**
      * The updated date of birth of the member (ISO 8601 format)
      */
     dob: string;
-    /**
-     * The updated highest level of education attained
-     */
-    education: 'No Formal Education' | 'Primary School' | 'Junior High School' | 'Senior High School' | 'Tertiary Education' | 'Vocational Training';
+    education: EducationLevel;
     /**
      * The updated primary occupation of the member
      */
@@ -498,16 +540,65 @@ export type EditCooperativeMemberDto = {
     farmSize: number;
 };
 
+export enum ProductCategory {
+    SHEA_BUTTER = 'Shea Butter',
+    BLACK_SOAP = 'Black Soap',
+    COSMETICS = 'Cosmetics',
+    SHEA_SOAP = 'Shea Soap',
+    POWDERED_SOAP = 'Powdered Soap',
+    DAWADAWA = 'Dawadawa',
+    ESSENTIAL_OILS = 'Essential Oils',
+    HAIR_OIL = 'Hair Oil',
+    GRAINS = 'Grains',
+    LEGUMES = 'Legumes',
+    OTHER = 'Other'
+}
+
+export enum ProductStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+    OUT_OF_STOCK = 'out_of_stock',
+    DISCONTINUED = 'discontinued'
+}
+
+export enum ProductGrade {
+    A = 'A',
+    B = 'B',
+    PREMIUM = 'premium',
+    STANDARD = 'standard',
+    ORGANIC = 'organic'
+}
+
+export enum UnitOfMeasurement {
+    KILOGRAM = 'kilogram',
+    GRAM = 'gram',
+    LITRE = 'litre',
+    MILLILITRE = 'millilitre'
+}
+
+export enum ProductSortBy {
+    NAME = 'name',
+    RETAIL = 'retail',
+    CREATED_AT = 'createdAt',
+    STOCK_QUANTITY = 'stockQuantity',
+    RATING = 'rating'
+}
+
+export enum SortOrder {
+    ASC = 'ASC',
+    DESC = 'DESC'
+}
+
 export type ProductResponseDto = {
     id: string;
     sku: string;
     name: string;
     ingredients: Array<string>;
     weight: string;
-    unitOfMeasurement: 'kilogram' | 'gram' | 'litre' | 'millilitre';
-    category: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+    unitOfMeasurement: UnitOfMeasurement;
+    category: ProductCategory;
     description: string;
-    status: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+    status: ProductStatus;
     images: Array<string>;
     image: string;
     /**
@@ -526,7 +617,7 @@ export type ProductResponseDto = {
     favorite: boolean;
     rating: number;
     reviews: number;
-    grade: 'A' | 'B' | 'premium' | 'standard' | 'organic';
+    grade: ProductGrade;
     isFeatured: boolean;
     isOrganic: boolean;
     certifications: Array<string>;
@@ -536,11 +627,19 @@ export type ProductResponseDto = {
     updatedAt: string;
 };
 
-export type ProductsPaginationResponseDto = {
+export type ProductsPaginationResponse = {
     totalItems: number;
     currentPage: number;
     totalPages: number;
-    products: Array<ProductResponseDto>;
+    items: Array<ProductResponseDto>;
+};
+
+export type ProductPaginationApiResponseDto = {
+    /**
+     * Response message indicating whether products are personalized or curated
+     */
+    message: string;
+    data: ProductsPaginationResponse;
 };
 
 export type BestProductsResponseDto = {
@@ -573,22 +672,13 @@ export type CreateProductDto = {
      * Product weight description
      */
     weight?: string;
-    /**
-     * Unit of measurement for the product weight
-     */
-    unitOfMeasurement?: 'kilogram' | 'gram' | 'litre' | 'millilitre';
-    /**
-     * Product category
-     */
-    category: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+    unitOfMeasurement?: UnitOfMeasurement;
+    category: ProductCategory;
     /**
      * Detailed product description
      */
     description: string;
-    /**
-     * Product status
-     */
-    status?: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+    status?: ProductStatus;
     /**
      * Product images URLs
      */
@@ -613,10 +703,7 @@ export type CreateProductDto = {
      * Quantity of items in one box
      */
     quantityInBox?: number;
-    /**
-     * Product grade/quality
-     */
-    grade?: 'A' | 'B' | 'premium' | 'standard' | 'organic';
+    grade?: ProductGrade;
     /**
      * Whether product is featured
      */
@@ -660,22 +747,13 @@ export type UpdateProductDto = {
      * Product weight description
      */
     weight?: string;
-    /**
-     * Unit of measurement for the product weight
-     */
-    unitOfMeasurement?: 'kilogram' | 'gram' | 'litre' | 'millilitre';
-    /**
-     * Product category
-     */
-    category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+    unitOfMeasurement?: UnitOfMeasurement;
+    category?: ProductCategory;
     /**
      * Detailed product description
      */
     description?: string;
-    /**
-     * Product status
-     */
-    status?: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+    status?: ProductStatus;
     /**
      * Product images URLs
      */
@@ -700,10 +778,7 @@ export type UpdateProductDto = {
      * Quantity of items in one box
      */
     quantityInBox?: number;
-    /**
-     * Product grade/quality
-     */
-    grade?: 'A' | 'B' | 'premium' | 'standard' | 'organic';
+    grade?: ProductGrade;
     /**
      * Whether product is featured
      */
@@ -825,11 +900,17 @@ export type BatchResponseDto = {
 };
 
 export type CreateIngredientDto = {
-    [key: string]: unknown;
+    /**
+     * The name of the ingredient. Must be unique.
+     */
+    name: string;
 };
 
 export type UpdateIngredientDto = {
-    [key: string]: unknown;
+    /**
+     * The name of the ingredient. Must be unique if provided.
+     */
+    name?: string;
 };
 
 export type CartProductDto = {
@@ -845,18 +926,12 @@ export type CartProductDto = {
      * Product name
      */
     name: string;
-    /**
-     * Product category
-     */
-    category: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+    category: ProductCategory;
     /**
      * Product description
      */
     description: string | null;
-    /**
-     * Product status
-     */
-    status: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+    status: ProductStatus;
     /**
      * Product images URLs
      */
@@ -953,11 +1028,11 @@ export type DeleteCartResponseDto = {
      * Success message
      */
     message: string;
-    /**
-     * Delete operation result
-     */
     data: {
-        [key: string]: unknown;
+        raw: Array<{
+            [key: string]: unknown;
+        }>;
+        affected?: number;
     };
 };
 
@@ -1027,15 +1102,21 @@ export type BulkAddCartResponseDto = {
 };
 
 export type InitializeTransaction = {
-    [key: string]: unknown;
+    amount: string;
+    email: string;
+    extraInfo: string;
+    name: string;
+    location: string;
 };
 
 export type OrderStatus = {
-    [key: string]: unknown;
+    status: {
+        [key: string]: unknown;
+    };
 };
 
 export type PaymentStatus = {
-    [key: string]: unknown;
+    status: string;
 };
 
 export type UploadResponseDto = {
@@ -1048,6 +1129,15 @@ export type UploadResponseDto = {
      */
     data: string;
 };
+
+export enum SaleStatus {
+    INVOICE_REQUESTED = 'invoice_requested',
+    PENDING_PAYMENT = 'pending_payment',
+    PAID = 'paid',
+    PACKAGING = 'packaging',
+    IN_TRANSIT = 'in_transit',
+    DELIVERED = 'delivered'
+}
 
 export type BatchAllocationDto = {
     batchId: string;
@@ -1063,12 +1153,51 @@ export type SaleLineItemDto = {
 
 export type CreateSaleDto = {
     customerId: string;
-    status?: 'invoice_requested' | 'pending_payment' | 'paid' | 'packaging' | 'in_transit' | 'delivered';
+    status?: SaleStatus;
     lineItems: Array<SaleLineItemDto>;
 };
 
 export type Sale = {
-    [key: string]: unknown;
+    id: string;
+    customer: Customer;
+    status: SaleStatus;
+    lineItems: Array<{
+        [key: string]: unknown;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type User = {
+    id: string;
+    email: string;
+    name: string;
+    password: string;
+    userType: Role;
+    phoneNumber: string;
+    avatarUrl: string;
+    permissions: string;
+    mustChangePassword: boolean;
+    rememberToken: string;
+    status: StatusEnum;
+    dob: string;
+    createdAt: string;
+    emailVerifiedAt: string;
+    updatedAt: string;
+};
+
+export type Customer = {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    sales: Array<Sale>;
+    user: User;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
 };
 
 export type UpdateSaleLineItemDto = {
@@ -1080,12 +1209,12 @@ export type UpdateSaleLineItemDto = {
 
 export type UpdateSaleDto = {
     customerId?: string;
-    status?: 'invoice_requested' | 'pending_payment' | 'paid' | 'packaging' | 'in_transit' | 'delivered';
+    status?: SaleStatus;
     lineItems?: Array<UpdateSaleLineItemDto>;
 };
 
 export type UpdateSaleStatusDto = {
-    status: 'invoice_requested' | 'pending_payment' | 'paid' | 'packaging' | 'in_transit' | 'delivered';
+    status: SaleStatus;
 };
 
 export type AddLineItemDto = {
@@ -1242,10 +1371,7 @@ export type ProfileResponseDto = {
      * Profile avatar URL
      */
     avatarUrl?: string;
-    /**
-     * User role (read-only)
-     */
-    userType: 'user' | 'admin' | 'superadmin';
+    userType: Role;
     /**
      * Email verification status (read-only)
      */
@@ -1292,6 +1418,7 @@ export type ContactUsDto = {
      * Message content (minimum 10 characters)
      */
     message: string;
+    website?: string;
 };
 
 export type ContactUsSuccessResponseDto = {
@@ -1316,6 +1443,80 @@ export type ContactUsErrorResponseDto = {
     error: string;
 };
 
+export enum SchemaEnum {
+    LOGIN = 'LOGIN',
+    LOGOUT = 'LOGOUT',
+    LOGIN_FAILED = 'LOGIN_FAILED',
+    PASSWORD_CHANGED = 'PASSWORD_CHANGED',
+    PASSWORD_RESET = 'PASSWORD_RESET',
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+    ROLE_CHANGED = 'ROLE_CHANGED',
+    PERMISSION_CHANGED = 'PERMISSION_CHANGED',
+    STATUS_CHANGED = 'STATUS_CHANGED',
+    INVENTORY_ADJUSTED = 'INVENTORY_ADJUSTED',
+    BATCH_ASSIGNED = 'BATCH_ASSIGNED',
+    REPORT_EXPORTED = 'REPORT_EXPORTED',
+    DATA_EXPORTED = 'DATA_EXPORTED',
+    SALE_CREATED = 'SALE_CREATED',
+    SALE_UPDATED = 'SALE_UPDATED',
+    SALE_CANCELLED = 'SALE_CANCELLED',
+    CONFIGURATION_CHANGED = 'CONFIGURATION_CHANGED',
+    SYSTEM_ACTION = 'SYSTEM_ACTION',
+    USER_CREATED = 'USER_CREATED',
+    USER_UPDATED = 'USER_UPDATED',
+    USER_DELETED = 'USER_DELETED',
+    USER_DEACTIVATED = 'USER_DEACTIVATED',
+    USER_ACTIVATED = 'USER_ACTIVATED'
+}
+
+export enum SchemaEnum2 {
+    USER = 'USER',
+    PRODUCT = 'PRODUCT',
+    BATCH = 'BATCH',
+    INVENTORY = 'INVENTORY',
+    SALE = 'SALE',
+    CHECKOUT = 'CHECKOUT',
+    CART = 'CART',
+    COOPERATIVE = 'COOPERATIVE',
+    COOPERATIVE_MEMBER = 'COOPERATIVE_MEMBER',
+    CUSTOMER = 'CUSTOMER',
+    REPORT = 'REPORT',
+    SYSTEM = 'SYSTEM',
+    CONFIGURATION = 'CONFIGURATION',
+    AUTHENTICATION = 'AUTHENTICATION'
+}
+
+export enum SchemaEnum3 {
+    CREATED_AT = 'createdAt',
+    BATCH_NUMBER = 'batchNumber',
+    PRODUCTION_DATE = 'productionDate',
+    EXPIRY_DATE = 'expiryDate'
+}
+
+export enum SchemaEnum4 {
+    DAILY = 'daily',
+    WEEKLY = 'weekly',
+    MONTHLY = 'monthly',
+    YEARLY = 'yearly'
+}
+
+export enum SchemaEnum5 {
+    _7 = '7',
+    _30 = '30',
+    _90 = '90'
+}
+
+/**
+ * User account status
+ */
+export enum StatusEnum {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+    SUSPENDED = 'suspended'
+}
+
 export type AuditControllerFindAllData = {
     body?: never;
     path?: never;
@@ -1331,11 +1532,11 @@ export type AuditControllerFindAllData = {
         /**
          * Filter by action type
          */
-        actionType?: 'LOGIN' | 'LOGOUT' | 'LOGIN_FAILED' | 'PASSWORD_CHANGED' | 'PASSWORD_RESET' | 'CREATE' | 'UPDATE' | 'DELETE' | 'ROLE_CHANGED' | 'PERMISSION_CHANGED' | 'STATUS_CHANGED' | 'INVENTORY_ADJUSTED' | 'BATCH_ASSIGNED' | 'REPORT_EXPORTED' | 'DATA_EXPORTED' | 'SALE_CREATED' | 'SALE_UPDATED' | 'SALE_CANCELLED' | 'CONFIGURATION_CHANGED' | 'SYSTEM_ACTION' | 'USER_CREATED' | 'USER_UPDATED' | 'USER_DELETED' | 'USER_DEACTIVATED' | 'USER_ACTIVATED';
+        actionType?: SchemaEnum;
         /**
          * Filter by entity type
          */
-        entityType?: 'USER' | 'PRODUCT' | 'BATCH' | 'INVENTORY' | 'SALE' | 'CHECKOUT' | 'CART' | 'COOPERATIVE' | 'COOPERATIVE_MEMBER' | 'CUSTOMER' | 'REPORT' | 'SYSTEM' | 'CONFIGURATION' | 'AUTHENTICATION';
+        entityType?: SchemaEnum2;
         /**
          * Filter by user ID who performed the action
          */
@@ -1343,7 +1544,7 @@ export type AuditControllerFindAllData = {
         /**
          * Filter by user role
          */
-        role?: 'user' | 'admin' | 'superadmin';
+        role?: Role;
         /**
          * Page number (starts from 1)
          */
@@ -2073,19 +2274,19 @@ export type ProductsControllerGetAllProductsData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by product status
          */
-        status?: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+        status?: ProductStatus;
         /**
          * Filter by product grade
          */
-        grade?: 'A' | 'B' | 'premium' | 'standard' | 'organic';
+        grade?: ProductGrade;
         /**
          * Filter by unit of measurement
          */
-        unitOfMeasurement?: 'kilogram' | 'gram' | 'litre' | 'millilitre';
+        unitOfMeasurement?: UnitOfMeasurement;
         /**
          * Filter by featured products
          */
@@ -2105,11 +2306,11 @@ export type ProductsControllerGetAllProductsData = {
         /**
          * Sort field
          */
-        sortBy?: 'name' | 'retail' | 'createdAt' | 'rating' | 'stockQuantity';
+        sortBy?: ProductSortBy;
         /**
          * Sort order
          */
-        sortOrder?: 'ASC' | 'DESC';
+        sortOrder?: SortOrder;
         /**
          * Filter by batch ID
          */
@@ -2129,7 +2330,7 @@ export type ProductsControllerGetAllProductsResponses = {
     /**
      * Products retrieved successfully
      */
-    200: ProductsPaginationResponseDto;
+    200: ProductPaginationApiResponseDto;
 };
 
 export type ProductsControllerGetAllProductsResponse = ProductsControllerGetAllProductsResponses[keyof ProductsControllerGetAllProductsResponses];
@@ -2368,19 +2569,19 @@ export type ProductsControllerExportProductsToExcelData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by product status
          */
-        status?: 'active' | 'inactive' | 'out_of_stock' | 'discontinued';
+        status?: ProductStatus;
         /**
          * Filter by product grade
          */
-        grade?: 'A' | 'B' | 'premium' | 'standard' | 'organic';
+        grade?: ProductGrade;
         /**
          * Filter by unit of measurement
          */
-        unitOfMeasurement?: 'kilogram' | 'gram' | 'litre' | 'millilitre';
+        unitOfMeasurement?: UnitOfMeasurement;
         /**
          * Filter by featured products
          */
@@ -2400,11 +2601,11 @@ export type ProductsControllerExportProductsToExcelData = {
         /**
          * Sort field
          */
-        sortBy?: 'name' | 'retail' | 'createdAt' | 'rating' | 'stockQuantity';
+        sortBy?: ProductSortBy;
         /**
          * Sort order
          */
-        sortOrder?: 'ASC' | 'DESC';
+        sortOrder?: SortOrder;
         /**
          * Filter by batch ID
          */
@@ -3065,7 +3266,7 @@ export type SalesControllerListSalesData = {
     body?: never;
     path?: never;
     query?: {
-        status?: 'invoice_requested' | 'pending_payment' | 'paid' | 'packaging' | 'in_transit' | 'delivered';
+        status?: SaleStatus;
         customerId?: string;
         page?: number;
         limit?: number;
@@ -3372,7 +3573,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3380,7 +3581,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
         /**
          * Include sales trends
          */
@@ -3415,7 +3616,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3423,7 +3624,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/sales/by-product';
 };
@@ -3454,7 +3655,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3462,7 +3663,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/sales/by-category';
 };
@@ -3493,7 +3694,7 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3501,12 +3702,12 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
         /**
          * Number of top products to return
          */
         limit?: number;
-        sortOrder?: 'ASC' | 'DESC';
+        sortOrder?: SortOrder;
     };
     url: '/reports/products/top';
 };
@@ -3537,7 +3738,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3545,7 +3746,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/products/revenue-distribution';
 };
@@ -3576,7 +3777,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3584,7 +3785,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/batches';
 };
@@ -3615,7 +3816,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3623,7 +3824,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/batches/aging';
 };
@@ -3639,7 +3840,7 @@ export type ReportsControllerGetInventoryReportData = {
     body?: never;
     path?: never;
     query?: {
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by product ID
          */
@@ -3682,7 +3883,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3690,7 +3891,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/stock-movement';
 };
@@ -3722,7 +3923,7 @@ export type ReportsControllerGetComparativeReportData = {
          * End date for previous period
          */
         previousToDate: string;
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
     };
     url: '/reports/comparative';
 };
@@ -3753,7 +3954,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Filter by product category
          */
-        category?: 'Shea Butter' | 'Black Soap' | 'Cosmetics' | 'Shea Soap' | 'Powdered Soap' | 'Dawadawa' | 'Essential Oils' | 'Hair Oil' | 'Grains' | 'Legumes' | 'Other';
+        category?: ProductCategory;
         /**
          * Filter by batch ID
          */
@@ -3761,7 +3962,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/dashboard-summary';
 };
@@ -3807,7 +4008,7 @@ export type DashboardControllerGetTrendsData = {
         /**
          * Period for trend data
          */
-        period?: '7' | '30' | '90';
+        period?: SchemaEnum5;
     };
     url: '/dashboard/trends';
 };
@@ -3962,6 +4163,7 @@ export type ProfileControllerUploadAvatarResponses = {
      * Avatar uploaded successfully
      */
     200: unknown;
+    201: unknown;
 };
 
 export type ContactControllerSubmitContactFormData = {

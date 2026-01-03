@@ -1,5 +1,4 @@
 import { JSX } from 'react';
-import { NavBar } from '@/components/home/navbar';
 import { FAQ } from '@/components/faq';
 import { faqData } from '@/lib/faq-data';
 import { BestProductsSection } from '@/components/products';
@@ -16,7 +15,6 @@ import { ContactSection } from '@/components/home/contact-section';
 export default function Home(): JSX.Element {
   return (
     <main className="mx-auto mt-20">
-      <NavBar />
       <HeroSection />
       <div className="px-8">
         <BestProductsSection />

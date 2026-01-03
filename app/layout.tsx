@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/sonner';
 import StoreProvider from '@/app/storeProvider';
 import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { CookieConsentManager } from '@/components/cookie-consent';
+import { NavBar } from '@/components/navbar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -60,13 +61,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <CookieConsentProvider>
-          <SmoothScroll />
-          <StoreProvider>{children}</StoreProvider>
-          <Toaster />
-          <Footer />
-          <CookieConsentManager />
-        </CookieConsentProvider>
+        <StoreProvider>
+          <NavBar />
+          <CookieConsentProvider>
+            <SmoothScroll />
+            {children}
+            <Toaster />
+            <Footer />
+            <CookieConsentManager />
+          </CookieConsentProvider>
+        </StoreProvider>
       </body>
     </html>
   );

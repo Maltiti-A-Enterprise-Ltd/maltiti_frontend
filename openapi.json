@@ -100,39 +100,39 @@
             "required": false,
             "in": "query",
             "description": "Page number (starts from 1)",
-            "schema": { "default": 1, "example": 1, "type": "number" }
+            "schema": { "minimum": 1, "default": 1, "example": 1, "type": "number" }
           },
           {
             "name": "limit",
             "required": false,
             "in": "query",
             "description": "Number of items per page",
-            "schema": { "default": 20, "example": 20, "type": "number" }
+            "schema": { "minimum": 1, "default": 20, "example": 20, "type": "number" }
           },
           {
             "name": "sortOrder",
             "required": false,
             "in": "query",
             "description": "Sort order (ASC or DESC)",
-            "schema": { "default": "DESC", "example": "DESC", "type": "string" }
+            "schema": { "$ref": "#/components/schemas/Object" }
           },
           {
-            "description": "Start date for filtering (ISO 8601 format)",
             "required": false,
+            "description": "Start date for filtering (ISO 8601 format)",
             "name": "from",
             "in": "query",
             "schema": { "example": "2023-01-01T00:00:00Z" }
           },
           {
-            "description": "End date for filtering (ISO 8601 format)",
             "required": false,
+            "description": "End date for filtering (ISO 8601 format)",
             "name": "to",
             "in": "query",
             "schema": { "example": "2023-12-31T23:59:59Z" }
           },
           {
-            "description": "Filter by action type",
             "required": false,
+            "description": "Filter by action type",
             "name": "actionType",
             "in": "query",
             "schema": {
@@ -167,8 +167,8 @@
             }
           },
           {
-            "description": "Filter by entity type",
             "required": false,
+            "description": "Filter by entity type",
             "name": "entityType",
             "in": "query",
             "schema": {
@@ -192,36 +192,36 @@
             }
           },
           {
-            "description": "Filter by user ID who performed the action",
             "required": false,
+            "description": "Filter by user ID who performed the action",
             "name": "userId",
             "in": "query",
             "schema": { "example": "123e4567-e89b-12d3-a456-426614174000" }
           },
           {
-            "description": "Filter by user role",
             "required": false,
+            "description": "Filter by user role",
             "name": "role",
             "in": "query",
             "schema": { "enum": ["user", "admin", "superadmin"], "type": "string" }
           },
           {
-            "description": "Page number (starts from 1)",
             "required": false,
+            "description": "Page number (starts from 1)",
             "name": "page",
             "in": "query",
-            "schema": { "default": 1, "example": 1 }
+            "schema": { "minimum": 1, "default": 1, "example": 1 }
           },
           {
-            "description": "Number of items per page",
             "required": false,
+            "description": "Number of items per page",
             "name": "limit",
             "in": "query",
-            "schema": { "default": 20, "example": 20 }
+            "schema": { "minimum": 1, "default": 20, "example": 20 }
           },
           {
-            "description": "Sort order (ASC or DESC)",
             "required": false,
+            "description": "Sort order (ASC or DESC)",
             "name": "sortOrder",
             "in": "query",
             "schema": { "default": "DESC", "example": "DESC" }
@@ -1117,56 +1117,28 @@
             "required": false,
             "in": "query",
             "description": "Filter by product category",
-            "schema": {
-              "example": "Shea Butter",
-              "enum": [
-                "Shea Butter",
-                "Black Soap",
-                "Cosmetics",
-                "Shea Soap",
-                "Powdered Soap",
-                "Dawadawa",
-                "Essential Oils",
-                "Hair Oil",
-                "Grains",
-                "Legumes",
-                "Other"
-              ],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductCategory" }
           },
           {
             "name": "status",
             "required": false,
             "in": "query",
             "description": "Filter by product status",
-            "schema": {
-              "example": "active",
-              "enum": ["active", "inactive", "out_of_stock", "discontinued"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductStatus" }
           },
           {
             "name": "grade",
             "required": false,
             "in": "query",
             "description": "Filter by product grade",
-            "schema": {
-              "example": "A",
-              "enum": ["A", "B", "premium", "standard", "organic"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductGrade" }
           },
           {
             "name": "unitOfMeasurement",
             "required": false,
             "in": "query",
             "description": "Filter by unit of measurement",
-            "schema": {
-              "example": "kilogram",
-              "enum": ["kilogram", "gram", "litre", "millilitre"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/UnitOfMeasurement" }
           },
           {
             "name": "isFeatured",
@@ -1201,18 +1173,14 @@
             "required": false,
             "in": "query",
             "description": "Sort field",
-            "schema": {
-              "example": "createdAt",
-              "enum": ["name", "retail", "createdAt", "rating", "stockQuantity"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductSortBy" }
           },
           {
             "name": "sortOrder",
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
+            "schema": { "$ref": "#/components/schemas/SortOrder" }
           },
           {
             "name": "batchId",
@@ -1227,7 +1195,7 @@
             "description": "Products retrieved successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProductsPaginationResponseDto" }
+                "schema": { "$ref": "#/components/schemas/ProductPaginationApiResponseDto" }
               }
             }
           },
@@ -1460,56 +1428,28 @@
             "required": false,
             "in": "query",
             "description": "Filter by product category",
-            "schema": {
-              "example": "Shea Butter",
-              "enum": [
-                "Shea Butter",
-                "Black Soap",
-                "Cosmetics",
-                "Shea Soap",
-                "Powdered Soap",
-                "Dawadawa",
-                "Essential Oils",
-                "Hair Oil",
-                "Grains",
-                "Legumes",
-                "Other"
-              ],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductCategory" }
           },
           {
             "name": "status",
             "required": false,
             "in": "query",
             "description": "Filter by product status",
-            "schema": {
-              "example": "active",
-              "enum": ["active", "inactive", "out_of_stock", "discontinued"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductStatus" }
           },
           {
             "name": "grade",
             "required": false,
             "in": "query",
             "description": "Filter by product grade",
-            "schema": {
-              "example": "A",
-              "enum": ["A", "B", "premium", "standard", "organic"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/ProductGrade" }
           },
           {
             "name": "unitOfMeasurement",
             "required": false,
             "in": "query",
             "description": "Filter by unit of measurement",
-            "schema": {
-              "example": "kilogram",
-              "enum": ["kilogram", "gram", "litre", "millilitre"],
-              "type": "string"
-            }
+            "schema": { "$ref": "#/components/schemas/UnitOfMeasurement" }
           },
           {
             "name": "isFeatured",
@@ -1666,6 +1606,7 @@
             "in": "query",
             "description": "Sort field",
             "schema": {
+              "default": "createdAt",
               "example": "createdAt",
               "enum": ["createdAt", "batchNumber", "productionDate", "expiryDate"],
               "type": "string"
@@ -1676,63 +1617,68 @@
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
+            "schema": {
+              "default": "DESC",
+              "example": "DESC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
           },
           {
-            "description": "Page number for pagination",
             "required": false,
+            "description": "Page number for pagination",
             "name": "page",
             "in": "query",
             "schema": { "minimum": 1, "default": 1, "example": 1 }
           },
           {
-            "description": "Number of items per page",
             "required": false,
+            "description": "Number of items per page",
             "name": "limit",
             "in": "query",
             "schema": { "minimum": 1, "maximum": 100, "default": 10, "example": 10 }
           },
           {
-            "description": "Filter by product ID",
             "required": false,
+            "description": "Filter by product ID",
             "name": "productId",
             "in": "query",
             "schema": { "example": "123e4567-e89b-12d3-a456-426614174000" }
           },
           {
-            "description": "Search term for batch number",
             "required": false,
+            "description": "Search term for batch number",
             "name": "batchNumber",
             "in": "query",
             "schema": { "example": "BATCH-2024-001" }
           },
           {
-            "description": "Filter by quality check status",
             "required": false,
+            "description": "Filter by quality check status",
             "name": "qualityCheckStatus",
             "in": "query",
             "schema": { "example": "Passed" }
           },
           {
-            "description": "Filter by active status",
             "required": false,
+            "description": "Filter by active status",
             "name": "isActive",
             "in": "query",
             "schema": { "example": true }
           },
           {
-            "description": "Sort field",
             "required": false,
+            "description": "Sort field",
             "name": "sortBy",
             "in": "query",
-            "schema": { "example": "createdAt" }
+            "schema": { "default": "createdAt", "example": "createdAt" }
           },
           {
-            "description": "Sort order",
             "required": false,
+            "description": "Sort order",
             "name": "sortOrder",
             "in": "query",
-            "schema": { "example": "DESC" }
+            "schema": { "default": "DESC", "example": "DESC" }
           }
         ],
         "responses": {
@@ -2959,7 +2905,7 @@
             "required": false,
             "in": "query",
             "description": "Number of top products to return",
-            "schema": { "default": 10, "type": "number" }
+            "schema": { "minimum": 1, "default": 10, "type": "number" }
           },
           {
             "name": "sortOrder",
@@ -3526,14 +3472,14 @@
             "required": false,
             "in": "query",
             "description": "Low stock threshold",
-            "schema": { "default": 100, "type": "number" }
+            "schema": { "minimum": 0, "default": 100, "type": "number" }
           },
           {
             "name": "expiryWarningDays",
             "required": false,
             "in": "query",
             "description": "Days until expiry for critical alert",
-            "schema": { "default": 30, "type": "number" }
+            "schema": { "minimum": 1, "default": 30, "type": "number" }
           }
         ],
         "responses": { "200": { "description": "Dashboard alerts retrieved successfully" } },
@@ -3631,6 +3577,7 @@
         },
         "responses": {
           "200": { "description": "Avatar uploaded successfully" },
+          "201": { "description": "" },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
         },
@@ -3714,6 +3661,7 @@
       }
     },
     "schemas": {
+      "Object": { "type": "object", "properties": {} },
       "AuditLogResponseDto": {
         "type": "object",
         "properties": {
@@ -3723,8 +3671,6 @@
             "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "actionType": {
-            "type": "string",
-            "description": "Type of action performed",
             "enum": [
               "LOGIN",
               "LOGOUT",
@@ -3752,11 +3698,11 @@
               "USER_DEACTIVATED",
               "USER_ACTIVATED"
             ],
+            "type": "string",
+            "description": "Type of action performed",
             "example": "CREATE"
           },
           "entityType": {
-            "type": "string",
-            "description": "Type of entity affected",
             "enum": [
               "USER",
               "PRODUCT",
@@ -3773,6 +3719,8 @@
               "CONFIGURATION",
               "AUTHENTICATION"
             ],
+            "type": "string",
+            "description": "Type of entity affected",
             "example": "PRODUCT"
           },
           "entityId": {
@@ -3796,9 +3744,9 @@
             "example": "John Doe"
           },
           "performedByRole": {
+            "enum": ["user", "admin", "superadmin"],
             "type": "string",
             "description": "Role of user who performed the action",
-            "enum": ["user", "admin", "superadmin"],
             "example": "admin"
           },
           "ipAddress": {
@@ -3833,7 +3781,19 @@
           "timestamp"
         ]
       },
-      "RegisterUserDto": { "type": "object", "properties": {} },
+      "RegisterUserDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" },
+          "confirmPassword": { "type": "string" },
+          "userType": { "enum": ["user", "admin", "superadmin"], "type": "string" },
+          "phoneNumber": { "type": "string" }
+        },
+        "required": ["name", "email", "password", "confirmPassword", "userType"]
+      },
+      "Role": { "type": "string", "enum": ["user", "admin", "superadmin"] },
       "UserResponseDto": {
         "type": "object",
         "properties": {
@@ -3853,10 +3813,9 @@
             "example": "John Doe"
           },
           "userType": {
-            "type": "string",
             "description": "User role/type",
-            "enum": ["user", "admin", "superadmin"],
-            "example": "superadmin"
+            "example": "superadmin",
+            "allOf": [{ "$ref": "#/components/schemas/Role" }]
           },
           "phoneNumber": {
             "type": "string",
@@ -3966,7 +3925,11 @@
         },
         "required": ["statusCode", "message", "error"]
       },
-      "VerifyPhoneDto": { "type": "object", "properties": {} },
+      "VerifyPhoneDto": {
+        "type": "object",
+        "properties": { "phoneNumber": { "type": "string" }, "code": { "type": "string" } },
+        "required": ["phoneNumber", "code"]
+      },
       "PhoneVerificationResponseDto": {
         "type": "object",
         "properties": {
@@ -3997,7 +3960,14 @@
         },
         "required": ["message", "data"]
       },
-      "SignInDto": { "type": "object", "properties": {} },
+      "SignInDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
       "LoginResponseDto": {
         "type": "object",
         "properties": {
@@ -4013,7 +3983,11 @@
         },
         "required": ["message", "data"]
       },
-      "ForgotPasswordDto": { "type": "object", "properties": {} },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": { "email": { "type": "string", "format": "email" } },
+        "required": ["email"]
+      },
       "PasswordResetEmailResponseDto": {
         "type": "object",
         "properties": {
@@ -4029,7 +4003,15 @@
         },
         "required": ["message", "data"]
       },
-      "ResetPasswordDto": { "type": "object", "properties": {} },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" },
+          "password": { "type": "string" },
+          "confirmPassword": { "type": "string" }
+        },
+        "required": ["token", "password", "confirmPassword"]
+      },
       "PasswordResetResponseDto": {
         "type": "object",
         "properties": {
@@ -4067,7 +4049,14 @@
         },
         "required": ["message"]
       },
-      "CreateAdminDto": { "type": "object", "properties": {} },
+      "CreateAdminDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" }
+        },
+        "required": ["name", "email"]
+      },
       "AdminCreationResponseDto": {
         "type": "object",
         "properties": {
@@ -4083,7 +4072,15 @@
         },
         "required": ["message", "data"]
       },
-      "ChangePasswordDto": { "type": "object", "properties": {} },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": { "type": "string" },
+          "newPassword": { "type": "string" },
+          "confirmPassword": { "type": "string" }
+        },
+        "required": ["currentPassword", "newPassword", "confirmPassword"]
+      },
       "PasswordChangeResponseDto": {
         "type": "object",
         "properties": {
@@ -4104,6 +4101,7 @@
         "properties": {
           "email": {
             "type": "string",
+            "format": "email",
             "description": "Email address to resend verification to",
             "example": "user@example.com"
           }
@@ -4125,25 +4123,45 @@
         },
         "required": ["message", "data"]
       },
-      "UpdateUserDto": { "type": "object", "properties": {} },
-      "ChangeStatusDto": { "type": "object", "properties": {} },
-      "ChangeRoleDto": { "type": "object", "properties": {} },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "phoneNumber": { "type": "string" },
+          "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] },
+          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
+          "dob": { "type": "string" }
+        }
+      },
+      "ChangeStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] }
+        },
+        "required": ["status"]
+      },
+      "ChangeRoleDto": {
+        "type": "object",
+        "properties": { "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] } },
+        "required": ["userType"]
+      },
       "AddCooperativeDto": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the cooperative",
-            "example": "Shea Women's Cooperative Union",
             "minLength": 3,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "The name of the cooperative",
+            "example": "Shea Women's Cooperative Union"
           },
           "community": {
             "type": "string",
-            "description": "The community or location where the cooperative operates",
-            "example": "Tamale, Northern Region",
             "minLength": 2,
-            "maxLength": 150
+            "maxLength": 150,
+            "description": "The community or location where the cooperative operates",
+            "example": "Tamale, Northern Region"
           },
           "registrationFee": {
             "type": "string",
@@ -4173,17 +4191,17 @@
           },
           "name": {
             "type": "string",
-            "description": "The updated name of the cooperative",
-            "example": "Shea Women's Cooperative Union",
             "minLength": 3,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "The updated name of the cooperative",
+            "example": "Shea Women's Cooperative Union"
           },
           "community": {
             "type": "string",
-            "description": "The updated community or location where the cooperative operates",
-            "example": "Tamale, Northern Region",
             "minLength": 2,
-            "maxLength": 150
+            "maxLength": 150,
+            "description": "The updated community or location where the cooperative operates",
+            "example": "Tamale, Northern Region"
           },
           "registrationFee": {
             "type": "string",
@@ -4202,6 +4220,42 @@
           }
         },
         "required": ["id", "name", "community", "registrationFee", "monthlyFee", "minimalShare"]
+      },
+      "IdType": {
+        "type": "string",
+        "enum": ["Ghana Card", "Voter ID", "Passport", "Driver License", "NHIS Card"]
+      },
+      "GhanaRegion": {
+        "type": "string",
+        "enum": [
+          "Ahafo Region",
+          "Ashanti Region",
+          "Bono East Region",
+          "Bono Region",
+          "Central Region",
+          "Eastern Region",
+          "Greater Accra Region",
+          "North East Region",
+          "Northern Region",
+          "Oti Region",
+          "Savannah Region",
+          "Upper East Region",
+          "Upper West Region",
+          "Volta Region",
+          "Western North Region",
+          "Western Region"
+        ]
+      },
+      "EducationLevel": {
+        "type": "string",
+        "enum": [
+          "No Formal Education",
+          "Primary School",
+          "Junior High School",
+          "Senior High School",
+          "Tertiary Education",
+          "Vocational Training"
+        ]
       },
       "AddCooperativeMemberDto": {
         "type": "object",
@@ -4241,10 +4295,9 @@
             "example": "https://s3.amazonaws.com/bucket/member-photos/image.jpg"
           },
           "idType": {
-            "type": "string",
             "description": "The type of identification document (e.g., National ID, Voter ID, Passport)",
             "example": "Ghana Card",
-            "enum": ["Ghana Card", "Voter ID", "Passport", "Driver License", "NHIS Card"]
+            "allOf": [{ "$ref": "#/components/schemas/IdType" }]
           },
           "idNumber": {
             "type": "string",
@@ -4267,27 +4320,9 @@
             "maxLength": 100
           },
           "region": {
-            "type": "string",
             "description": "The region of Ghana where the member resides",
             "example": "Northern Region",
-            "enum": [
-              "Ahafo Region",
-              "Ashanti Region",
-              "Bono East Region",
-              "Bono Region",
-              "Central Region",
-              "Eastern Region",
-              "Greater Accra Region",
-              "North East Region",
-              "Northern Region",
-              "Oti Region",
-              "Savannah Region",
-              "Upper East Region",
-              "Upper West Region",
-              "Volta Region",
-              "Western North Region",
-              "Western Region"
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/GhanaRegion" }]
           },
           "dob": {
             "type": "string",
@@ -4296,17 +4331,9 @@
             "format": "date"
           },
           "education": {
-            "type": "string",
             "description": "The highest level of education attained",
             "example": "Junior High School",
-            "enum": [
-              "No Formal Education",
-              "Primary School",
-              "Junior High School",
-              "Senior High School",
-              "Tertiary Education",
-              "Vocational Training"
-            ]
+            "allOf": [{ "$ref": "#/components/schemas/EducationLevel" }]
           },
           "occupation": {
             "type": "string",
@@ -4363,10 +4390,10 @@
           },
           "name": {
             "type": "string",
-            "description": "The updated full name of the cooperative member",
-            "example": "Fatima Abdul-Rahman",
             "minLength": 3,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The updated full name of the cooperative member",
+            "example": "Fatima Abdul-Rahman"
           },
           "cooperative": {
             "type": "string",
@@ -4375,20 +4402,22 @@
           },
           "phoneNumber": {
             "type": "string",
+            "minLength": 10,
+            "maxLength": 20,
             "description": "The updated phone number of the member (must be unique, Ghana format)",
             "example": "+233244123456"
           },
           "houseNumber": {
             "type": "string",
+            "maxLength": 50,
             "description": "The updated house number or residential address identifier",
-            "example": "House 42B",
-            "maxLength": 50
+            "example": "House 42B"
           },
           "gpsAddress": {
             "type": "string",
+            "maxLength": 20,
             "description": "The updated GPS address or digital address",
-            "example": "GT-0123-4567",
-            "maxLength": 20
+            "example": "GT-0123-4567"
           },
           "image": {
             "type": "string",
@@ -4396,35 +4425,33 @@
             "example": "https://s3.amazonaws.com/bucket/member-photos/image.jpg"
           },
           "idType": {
+            "enum": ["Ghana Card", "Voter ID", "Passport", "Driver License", "NHIS Card"],
             "type": "string",
             "description": "The updated type of identification document (e.g., National ID, Voter ID, Passport)",
-            "example": "Ghana Card",
-            "enum": ["Ghana Card", "Voter ID", "Passport", "Driver License", "NHIS Card"]
+            "example": "Ghana Card"
           },
           "idNumber": {
             "type": "string",
+            "minLength": 5,
+            "maxLength": 50,
             "description": "The updated identification number (must be unique)",
-            "example": "GHA-123456789-0",
-            "maxLength": 50
+            "example": "GHA-123456789-0"
           },
           "community": {
             "type": "string",
-            "description": "The updated community or locality where the member resides",
-            "example": "Savelugu",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The updated community or locality where the member resides",
+            "example": "Savelugu"
           },
           "district": {
             "type": "string",
-            "description": "The updated district where the member resides",
-            "example": "Savelugu Municipal",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The updated district where the member resides",
+            "example": "Savelugu Municipal"
           },
           "region": {
-            "type": "string",
-            "description": "The updated region of Ghana where the member resides",
-            "example": "Northern Region",
             "enum": [
               "Ahafo Region",
               "Ashanti Region",
@@ -4442,7 +4469,10 @@
               "Volta Region",
               "Western North Region",
               "Western Region"
-            ]
+            ],
+            "type": "string",
+            "description": "The updated region of Ghana where the member resides",
+            "example": "Northern Region"
           },
           "dob": {
             "type": "string",
@@ -4451,9 +4481,6 @@
             "format": "date"
           },
           "education": {
-            "type": "string",
-            "description": "The updated highest level of education attained",
-            "example": "Junior High School",
             "enum": [
               "No Formal Education",
               "Primary School",
@@ -4461,33 +4488,36 @@
               "Senior High School",
               "Tertiary Education",
               "Vocational Training"
-            ]
+            ],
+            "type": "string",
+            "description": "The updated highest level of education attained",
+            "example": "Junior High School"
           },
           "occupation": {
             "type": "string",
-            "description": "The updated primary occupation of the member",
-            "example": "Shea Butter Producer",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The updated primary occupation of the member",
+            "example": "Shea Butter Producer"
           },
           "secondaryOccupation": {
             "type": "string",
+            "maxLength": 100,
             "description": "The updated secondary occupation of the member (if any)",
-            "example": "Farmer",
-            "maxLength": 100
+            "example": "Farmer"
           },
           "crops": {
             "type": "string",
+            "maxLength": 200,
             "description": "The updated types of crops cultivated by the member (comma-separated)",
-            "example": "Shea nuts, Groundnuts, Maize",
-            "maxLength": 200
+            "example": "Shea nuts, Groundnuts, Maize"
           },
           "farmSize": {
             "type": "number",
-            "description": "The updated size of the farm in acres",
-            "example": 5.5,
             "minimum": 0,
-            "maximum": 10000
+            "maximum": 10000,
+            "description": "The updated size of the farm in acres",
+            "example": 5.5
           }
         },
         "required": [
@@ -4509,6 +4539,36 @@
           "farmSize"
         ]
       },
+      "ProductCategory": {
+        "type": "string",
+        "enum": [
+          "Shea Butter",
+          "Black Soap",
+          "Cosmetics",
+          "Shea Soap",
+          "Powdered Soap",
+          "Dawadawa",
+          "Essential Oils",
+          "Hair Oil",
+          "Grains",
+          "Legumes",
+          "Other"
+        ]
+      },
+      "ProductStatus": {
+        "type": "string",
+        "enum": ["active", "inactive", "out_of_stock", "discontinued"]
+      },
+      "ProductGrade": { "type": "string", "enum": ["A", "B", "premium", "standard", "organic"] },
+      "UnitOfMeasurement": {
+        "type": "string",
+        "enum": ["kilogram", "gram", "litre", "millilitre"]
+      },
+      "ProductSortBy": {
+        "type": "string",
+        "enum": ["name", "retail", "createdAt", "stockQuantity", "rating"]
+      },
+      "SortOrder": { "type": "string", "enum": ["ASC", "DESC"] },
       "ProductResponseDto": {
         "type": "object",
         "properties": {
@@ -4621,18 +4681,30 @@
           "updatedAt"
         ]
       },
-      "ProductsPaginationResponseDto": {
+      "ProductsPaginationResponse": {
         "type": "object",
         "properties": {
           "totalItems": { "type": "number", "example": 50 },
           "currentPage": { "type": "number", "example": 1 },
           "totalPages": { "type": "number", "example": 5 },
-          "products": {
+          "items": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/ProductResponseDto" }
           }
         },
-        "required": ["totalItems", "currentPage", "totalPages", "products"]
+        "required": ["totalItems", "currentPage", "totalPages", "items"]
+      },
+      "ProductPaginationApiResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Products loaded successfully",
+            "description": "Response message indicating whether products are personalized or curated"
+          },
+          "data": { "$ref": "#/components/schemas/ProductsPaginationResponse" }
+        },
+        "required": ["message", "data"]
       },
       "BestProductsResponseDto": {
         "type": "object",
@@ -4671,6 +4743,7 @@
             "example": "White Shea Butter Grade A"
           },
           "ingredients": {
+            "minItems": 1,
             "description": "Product ingredients (comma-separated or array)",
             "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
@@ -4682,14 +4755,12 @@
             "example": "1"
           },
           "unitOfMeasurement": {
+            "enum": ["kilogram", "gram", "litre", "millilitre"],
             "type": "string",
             "description": "Unit of measurement for the product weight",
-            "enum": ["kilogram", "gram", "litre", "millilitre"],
             "example": "kilogram"
           },
           "category": {
-            "type": "string",
-            "description": "Product category",
             "enum": [
               "Shea Butter",
               "Black Soap",
@@ -4703,6 +4774,8 @@
               "Legumes",
               "Other"
             ],
+            "type": "string",
+            "description": "Product category",
             "example": "Shea Butter"
           },
           "description": {
@@ -4711,11 +4784,11 @@
             "example": "Premium white shea butter extracted from organic shea nuts in Northern Ghana."
           },
           "status": {
+            "default": "active",
+            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
             "type": "string",
             "description": "Product status",
-            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
-            "example": "active",
-            "default": "active"
+            "example": "active"
           },
           "images": {
             "description": "Product images URLs",
@@ -4737,26 +4810,27 @@
           "inBoxPrice": { "type": "number", "description": "Price for a full box", "example": 180 },
           "quantityInBox": {
             "type": "number",
+            "minimum": 1,
             "description": "Quantity of items in one box",
             "example": 12
           },
           "grade": {
+            "enum": ["A", "B", "premium", "standard", "organic"],
             "type": "string",
             "description": "Product grade/quality",
-            "enum": ["A", "B", "premium", "standard", "organic"],
             "example": "A"
           },
           "isFeatured": {
             "type": "boolean",
+            "default": false,
             "description": "Whether product is featured",
-            "example": false,
-            "default": false
+            "example": false
           },
           "isOrganic": {
             "type": "boolean",
+            "default": false,
             "description": "Whether product is organic certified",
-            "example": true,
-            "default": false
+            "example": true
           },
           "certifications": {
             "description": "Product certifications",
@@ -4771,12 +4845,14 @@
           },
           "minOrderQuantity": {
             "type": "number",
+            "default": 0,
+            "minimum": 0,
             "description": "Minimum order quantity",
-            "example": 5,
-            "default": 0
+            "example": 5
           },
           "costPrice": {
             "type": "number",
+            "minimum": 0,
             "description": "Cost price for internal tracking",
             "example": 35
           }
@@ -4797,6 +4873,7 @@
             "example": "White Shea Butter Grade A"
           },
           "ingredients": {
+            "minItems": 1,
             "description": "Product ingredients (comma-separated or array)",
             "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
@@ -4808,14 +4885,12 @@
             "example": "1"
           },
           "unitOfMeasurement": {
+            "enum": ["kilogram", "gram", "litre", "millilitre"],
             "type": "string",
             "description": "Unit of measurement for the product weight",
-            "enum": ["kilogram", "gram", "litre", "millilitre"],
             "example": "kilogram"
           },
           "category": {
-            "type": "string",
-            "description": "Product category",
             "enum": [
               "Shea Butter",
               "Black Soap",
@@ -4829,6 +4904,8 @@
               "Legumes",
               "Other"
             ],
+            "type": "string",
+            "description": "Product category",
             "example": "Shea Butter"
           },
           "description": {
@@ -4837,11 +4914,11 @@
             "example": "Premium white shea butter extracted from organic shea nuts in Northern Ghana."
           },
           "status": {
+            "default": "active",
+            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
             "type": "string",
             "description": "Product status",
-            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
-            "example": "active",
-            "default": "active"
+            "example": "active"
           },
           "images": {
             "description": "Product images URLs",
@@ -4863,26 +4940,27 @@
           "inBoxPrice": { "type": "number", "description": "Price for a full box", "example": 180 },
           "quantityInBox": {
             "type": "number",
+            "minimum": 1,
             "description": "Quantity of items in one box",
             "example": 12
           },
           "grade": {
+            "enum": ["A", "B", "premium", "standard", "organic"],
             "type": "string",
             "description": "Product grade/quality",
-            "enum": ["A", "B", "premium", "standard", "organic"],
             "example": "A"
           },
           "isFeatured": {
             "type": "boolean",
+            "default": false,
             "description": "Whether product is featured",
-            "example": false,
-            "default": false
+            "example": false
           },
           "isOrganic": {
             "type": "boolean",
+            "default": false,
             "description": "Whether product is organic certified",
-            "example": true,
-            "default": false
+            "example": true
           },
           "certifications": {
             "description": "Product certifications",
@@ -4897,12 +4975,14 @@
           },
           "minOrderQuantity": {
             "type": "number",
+            "default": 0,
+            "minimum": 0,
             "description": "Minimum order quantity",
-            "example": 5,
-            "default": 0
+            "example": 5
           },
           "costPrice": {
             "type": "number",
+            "minimum": 0,
             "description": "Cost price for internal tracking",
             "example": 35
           },
@@ -4928,6 +5008,7 @@
           },
           "quantity": {
             "type": "number",
+            "minimum": 0,
             "description": "Quantity of items in this batch",
             "example": 100
           },
@@ -5038,8 +5119,22 @@
           "updatedAt"
         ]
       },
-      "CreateIngredientDto": { "type": "object", "properties": {} },
-      "UpdateIngredientDto": { "type": "object", "properties": {} },
+      "CreateIngredientDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "The name of the ingredient. Must be unique." }
+        },
+        "required": ["name"]
+      },
+      "UpdateIngredientDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the ingredient. Must be unique if provided."
+          }
+        }
+      },
       "CartProductDto": {
         "type": "object",
         "properties": {
@@ -5050,9 +5145,9 @@
           },
           "sku": {
             "type": "string",
+            "nullable": true,
             "description": "Product SKU",
-            "example": "PRD-001",
-            "nullable": true
+            "example": "PRD-001"
           },
           "name": {
             "type": "string",
@@ -5060,8 +5155,6 @@
             "example": "Premium Shea Butter"
           },
           "category": {
-            "type": "string",
-            "description": "Product category",
             "enum": [
               "Shea Butter",
               "Black Soap",
@@ -5075,46 +5168,48 @@
               "Legumes",
               "Other"
             ],
+            "type": "string",
+            "description": "Product category",
             "example": "Shea Butter"
           },
           "description": {
             "type": "string",
+            "nullable": true,
             "description": "Product description",
-            "example": "High-quality organic shea butter",
-            "nullable": true
+            "example": "High-quality organic shea butter"
           },
           "status": {
+            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
             "type": "string",
             "description": "Product status",
-            "enum": ["active", "inactive", "out_of_stock", "discontinued"],
             "example": "active"
           },
           "images": {
+            "nullable": true,
             "description": "Product images URLs",
             "example": ["https://example.com/image1.jpg"],
-            "nullable": true,
             "type": "array",
             "items": { "type": "string" }
           },
           "image": {
             "type": "string",
+            "nullable": true,
             "description": "Main product image URL",
-            "example": "https://example.com/main-image.jpg",
-            "nullable": true
+            "example": "https://example.com/main-image.jpg"
           },
           "wholesale": { "type": "number", "description": "Wholesale price", "example": 80 },
           "retail": { "type": "number", "description": "Retail price", "example": 100 },
           "inBoxPrice": {
             "type": "number",
+            "nullable": true,
             "description": "In-box price",
-            "example": 75,
-            "nullable": true
+            "example": 75
           },
           "quantityInBox": {
             "type": "number",
+            "nullable": true,
             "description": "Quantity per box",
-            "example": 12,
-            "nullable": true
+            "example": 12
           },
           "favorite": {
             "type": "boolean",
@@ -5125,9 +5220,9 @@
           "reviews": { "type": "number", "description": "Number of reviews", "example": 25 },
           "weight": {
             "type": "string",
+            "nullable": true,
             "description": "Product weight",
-            "example": "500g",
-            "nullable": true
+            "example": "500g"
           }
         },
         "required": [
@@ -5249,8 +5344,11 @@
           },
           "data": {
             "type": "object",
-            "description": "Delete operation result",
-            "example": { "raw": [], "affected": 1 }
+            "properties": {
+              "raw": { "type": "array", "items": { "type": "object" } },
+              "affected": { "type": "number" }
+            },
+            "required": ["raw"]
           }
         },
         "required": ["message", "data"]
@@ -5286,9 +5384,9 @@
         "properties": {
           "quantity": {
             "type": "number",
+            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 5,
-            "minimum": 1
+            "example": 5
           }
         },
         "required": ["quantity"]
@@ -5303,9 +5401,9 @@
           },
           "quantity": {
             "type": "number",
+            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 3,
-            "minimum": 1
+            "example": 3
           }
         },
         "required": ["productId", "quantity"]
@@ -5314,6 +5412,7 @@
         "type": "object",
         "properties": {
           "items": {
+            "minItems": 1,
             "description": "Array of cart items to add with their quantities",
             "example": [
               { "productId": "550e8400-e29b-41d4-a716-446655440000", "quantity": 2 },
@@ -5379,9 +5478,27 @@
         },
         "required": ["message", "data"]
       },
-      "InitializeTransaction": { "type": "object", "properties": {} },
-      "OrderStatus": { "type": "object", "properties": {} },
-      "PaymentStatus": { "type": "object", "properties": {} },
+      "InitializeTransaction": {
+        "type": "object",
+        "properties": {
+          "amount": { "type": "string" },
+          "email": { "type": "string" },
+          "extraInfo": { "type": "string" },
+          "name": { "type": "string" },
+          "location": { "type": "string" }
+        },
+        "required": ["amount", "email", "extraInfo", "name", "location"]
+      },
+      "OrderStatus": {
+        "type": "object",
+        "properties": { "status": { "type": "object" } },
+        "required": ["status"]
+      },
+      "PaymentStatus": {
+        "type": "object",
+        "properties": { "status": { "type": "string" } },
+        "required": ["status"]
+      },
       "UploadResponseDto": {
         "type": "object",
         "properties": {
@@ -5389,6 +5506,17 @@
           "data": { "type": "string", "description": "The URL of the uploaded image" }
         },
         "required": ["message", "data"]
+      },
+      "SaleStatus": {
+        "type": "string",
+        "enum": [
+          "invoice_requested",
+          "pending_payment",
+          "paid",
+          "packaging",
+          "in_transit",
+          "delivered"
+        ]
       },
       "BatchAllocationDto": {
         "type": "object",
@@ -5413,16 +5541,8 @@
         "properties": {
           "customerId": { "type": "string" },
           "status": {
-            "type": "string",
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered"
-            ],
-            "default": "invoice_requested"
+            "default": "invoice_requested",
+            "allOf": [{ "$ref": "#/components/schemas/SaleStatus" }]
           },
           "lineItems": {
             "type": "array",
@@ -5431,7 +5551,93 @@
         },
         "required": ["customerId", "lineItems"]
       },
-      "Sale": { "type": "object", "properties": {} },
+      "Sale": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "customer": { "$ref": "#/components/schemas/Customer" },
+          "status": {
+            "enum": [
+              "invoice_requested",
+              "pending_payment",
+              "paid",
+              "packaging",
+              "in_transit",
+              "delivered"
+            ],
+            "type": "string"
+          },
+          "lineItems": { "type": "array", "items": { "type": "object" } },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": ["id", "customer", "status", "lineItems", "createdAt", "updatedAt", "deletedAt"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] },
+          "phoneNumber": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "permissions": { "type": "string" },
+          "mustChangePassword": { "type": "boolean" },
+          "rememberToken": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
+          "dob": { "format": "date-time", "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "emailVerifiedAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "password",
+          "userType",
+          "phoneNumber",
+          "avatarUrl",
+          "permissions",
+          "mustChangePassword",
+          "rememberToken",
+          "status",
+          "dob",
+          "createdAt",
+          "emailVerifiedAt",
+          "updatedAt"
+        ]
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "address": { "type": "string" },
+          "sales": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
+          "user": { "$ref": "#/components/schemas/User" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "email",
+          "address",
+          "sales",
+          "user",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
       "UpdateSaleLineItemDto": {
         "type": "object",
         "properties": {
@@ -5449,7 +5655,6 @@
         "properties": {
           "customerId": { "type": "string" },
           "status": {
-            "type": "string",
             "enum": [
               "invoice_requested",
               "pending_payment",
@@ -5458,6 +5663,7 @@
               "in_transit",
               "delivered"
             ],
+            "type": "string",
             "default": "invoice_requested"
           },
           "lineItems": {
@@ -5470,7 +5676,6 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
             "enum": [
               "invoice_requested",
               "pending_payment",
@@ -5478,7 +5683,8 @@
               "packaging",
               "in_transit",
               "delivered"
-            ]
+            ],
+            "type": "string"
           }
         },
         "required": ["status"]
@@ -5528,7 +5734,7 @@
           "name": { "type": "string", "description": "Driver name" },
           "vehicleNumber": { "type": "string", "description": "Vehicle/Truck number" },
           "phoneNumber": { "type": "string", "description": "Driver phone number" },
-          "email": { "type": "string", "description": "Driver email" }
+          "email": { "type": "string", "format": "email", "description": "Driver email" }
         },
         "required": ["name", "vehicleNumber", "phoneNumber"]
       },
@@ -5537,7 +5743,7 @@
         "properties": {
           "name": { "type": "string", "description": "Receiver name" },
           "phone": { "type": "string", "description": "Receiver phone number" },
-          "email": { "type": "string", "description": "Receiver email" },
+          "email": { "type": "string", "format": "email", "description": "Receiver email" },
           "address": { "type": "string", "description": "Receiver address" }
         },
         "required": ["name", "phone"]
@@ -5566,10 +5772,10 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the customer",
-            "example": "John Doe",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "The name of the customer",
+            "example": "John Doe"
           },
           "phone": {
             "type": "string",
@@ -5578,6 +5784,7 @@
           },
           "email": {
             "type": "string",
+            "format": "email",
             "description": "The email address of the customer",
             "example": "john.doe@example.com"
           },
@@ -5599,10 +5806,10 @@
           },
           "name": {
             "type": "string",
-            "description": "The name of the customer",
-            "example": "John Doe",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "The name of the customer",
+            "example": "John Doe"
           },
           "phone": {
             "type": "string",
@@ -5611,6 +5818,7 @@
           },
           "email": {
             "type": "string",
+            "format": "email",
             "description": "The email address of the customer",
             "example": "john.doe@example.com"
           },
@@ -5643,9 +5851,9 @@
             "example": "https://example.com/avatars/user.jpg"
           },
           "userType": {
+            "enum": ["user", "admin", "superadmin"],
             "type": "string",
             "description": "User role (read-only)",
-            "enum": ["user", "admin", "superadmin"],
             "example": "admin"
           },
           "emailVerified": {
@@ -5699,6 +5907,7 @@
           },
           "email": {
             "type": "string",
+            "format": "email",
             "description": "Email address of the person contacting",
             "example": "john.doe@example.com"
           },
@@ -5709,10 +5918,11 @@
           },
           "message": {
             "type": "string",
+            "minLength": 10,
             "description": "Message content (minimum 10 characters)",
-            "example": "I would like to inquire about your shea butter products and pricing.",
-            "minLength": 10
-          }
+            "example": "I would like to inquire about your shea butter products and pricing."
+          },
+          "website": { "type": "string" }
         },
         "required": ["message"]
       },

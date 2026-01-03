@@ -1,15 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type {
   LoginFormData,
-  SignupFormData,
   ResendVerificationFormData,
+  SignupFormData,
 } from '@/lib/validations/auth';
 import {
   authenticationControllerCustomerSignup,
-  authenticationControllerLogout,
-  authenticationControllerSignIn,
-  authenticationControllerResendVerificationEmail,
   authenticationControllerEmailVerification,
+  authenticationControllerLogout,
+  authenticationControllerResendVerificationEmail,
+  authenticationControllerSignIn,
+  Role,
 } from '@/app/api';
 
 /**
@@ -56,7 +57,7 @@ export const signup = createAsyncThunk(
       const { error, data } = await authenticationControllerCustomerSignup({
         body: {
           ...body,
-          userType: 'user',
+          userType: Role.USER,
         },
       });
       if (!data) {
