@@ -589,11 +589,68 @@ export enum SortOrder {
     DESC = 'DESC'
 }
 
+export type Batch = {
+    id: string;
+    batchNumber: string;
+    productionDate: string;
+    expiryDate: string;
+    manufacturingLocation: string;
+    qualityCheckStatus: string;
+    notes: string;
+    quantity: number;
+    isActive: boolean;
+    product: Product;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type Product = {
+    id: string;
+    sku: string;
+    name: string;
+    ingredients: Array<Ingredient>;
+    weight: string;
+    unitOfMeasurement: UnitOfMeasurement;
+    category: ProductCategory;
+    description: string;
+    status: ProductStatus;
+    images: Array<string>;
+    image: string;
+    wholesale: number;
+    retail: number;
+    inBoxPrice: number;
+    quantityInBox: number;
+    favorite: boolean;
+    rating: number;
+    reviews: number;
+    grade: ProductGrade;
+    isFeatured: boolean;
+    isOrganic: boolean;
+    certifications: Array<string>;
+    supplierReference: string;
+    minOrderQuantity: number;
+    costPrice: number;
+    batches: Array<Batch>;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type Ingredient = {
+    name: string;
+    products: Array<Product>;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
 export type ProductResponseDto = {
     id: string;
     sku: string;
     name: string;
-    ingredients: Array<string>;
+    ingredients: Array<Ingredient>;
     weight: string;
     unitOfMeasurement: UnitOfMeasurement;
     category: ProductCategory;
@@ -1114,21 +1171,39 @@ export type BulkAddCartResponseDto = {
 };
 
 export type InitializeTransaction = {
-    amount: string;
-    email: string;
-    extraInfo: string;
-    name: string;
+    /**
+     * Delivery location/address for this order
+     */
     location: string;
+    /**
+     * Contact phone number for delivery (in case of issues)
+     */
+    phoneNumber: string;
+    /**
+     * Additional information about the order
+     */
+    extraInfo?: string;
 };
 
-export type OrderStatus = {
-    status: {
-        [key: string]: unknown;
-    };
+export enum SaleStatus {
+    INVOICE_REQUESTED = 'invoice_requested',
+    PENDING_PAYMENT = 'pending_payment',
+    PAID = 'paid',
+    PACKAGING = 'packaging',
+    IN_TRANSIT = 'in_transit',
+    DELIVERED = 'delivered',
+    CANCELLED = 'cancelled'
+}
+
+export type UpdateSaleStatusDto = {
+    status: SaleStatus;
 };
 
 export type PaymentStatus = {
-    status: string;
+    /**
+     * Payment status
+     */
+    status: PaymentStatus;
 };
 
 export type UploadResponseDto = {
@@ -1141,15 +1216,6 @@ export type UploadResponseDto = {
      */
     data: string;
 };
-
-export enum SaleStatus {
-    INVOICE_REQUESTED = 'invoice_requested',
-    PENDING_PAYMENT = 'pending_payment',
-    PAID = 'paid',
-    PACKAGING = 'packaging',
-    IN_TRANSIT = 'in_transit',
-    DELIVERED = 'delivered'
-}
 
 export type BatchAllocationDto = {
     batchId: string;
@@ -1170,46 +1236,7 @@ export type CreateSaleDto = {
 };
 
 export type Sale = {
-    id: string;
-    customer: Customer;
-    status: SaleStatus;
-    lineItems: Array<{
-        [key: string]: unknown;
-    }>;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-};
-
-export type User = {
-    id: string;
-    email: string;
-    name: string;
-    password: string;
-    userType: Role;
-    phoneNumber: string;
-    avatarUrl: string;
-    permissions: string;
-    mustChangePassword: boolean;
-    rememberToken: string;
-    status: StatusEnum;
-    dob: string;
-    createdAt: string;
-    emailVerifiedAt: string;
-    updatedAt: string;
-};
-
-export type Customer = {
-    id: string;
-    name: string;
-    phone: string;
-    email: string;
-    address: string;
-    sales: Array<Sale>;
-    user: User;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    [key: string]: unknown;
 };
 
 export type UpdateSaleLineItemDto = {
@@ -1223,10 +1250,6 @@ export type UpdateSaleDto = {
     customerId?: string;
     status?: SaleStatus;
     lineItems?: Array<UpdateSaleLineItemDto>;
-};
-
-export type UpdateSaleStatusDto = {
-    status: SaleStatus;
 };
 
 export type AddLineItemDto = {
@@ -1508,13 +1531,24 @@ export enum SchemaEnum3 {
 }
 
 export enum SchemaEnum4 {
+    LOCAL = 'local',
+    OTHER = 'other'
+}
+
+export enum SchemaEnum5 {
+    PAID = 'paid',
+    UNPAID = 'unpaid',
+    REFUNDED = 'refunded'
+}
+
+export enum SchemaEnum6 {
     DAILY = 'daily',
     WEEKLY = 'weekly',
     MONTHLY = 'monthly',
     YEARLY = 'yearly'
 }
 
-export enum SchemaEnum5 {
+export enum SchemaEnum7 {
     _7 = '7',
     _30 = '30',
     _90 = '90'
@@ -3123,6 +3157,9 @@ export type CartControllerBulkAddToCartResponse = CartControllerBulkAddToCartRes
 export type CheckoutControllerGetOrdersData = {
     body?: never;
     path: {
+        /**
+         * User ID
+         */
         id: string;
     };
     query?: never;
@@ -3136,6 +3173,9 @@ export type CheckoutControllerGetOrdersResponses = {
 export type CheckoutControllerGetOrderData = {
     body?: never;
     path: {
+        /**
+         * Order ID
+         */
         id: string;
     };
     query?: never;
@@ -3160,7 +3200,13 @@ export type CheckoutControllerTestMailResponses = {
 export type CheckoutControllerConfirmPaymentData = {
     body?: never;
     path: {
+        /**
+         * User ID
+         */
         userId: string;
+        /**
+         * Checkout ID
+         */
         checkoutId: string;
     };
     query?: never;
@@ -3174,8 +3220,14 @@ export type CheckoutControllerConfirmPaymentResponses = {
 export type CheckoutControllerGetTransportationData = {
     body?: never;
     path: {
+        /**
+         * User ID
+         */
         id: string;
-        location: string;
+        /**
+         * Delivery location
+         */
+        location: SchemaEnum4;
     };
     query?: never;
     url: '/checkout/{id}/{location}';
@@ -3188,11 +3240,11 @@ export type CheckoutControllerGetTransportationResponses = {
 export type CheckoutControllerGetAllOrdersData = {
     body?: never;
     path?: never;
-    query: {
-        orderStatus: string;
-        searchTerm: string;
-        page: number;
-        paymentStatus: string;
+    query?: {
+        saleStatus?: SaleStatus;
+        searchTerm?: string;
+        page?: number;
+        paymentStatus?: SchemaEnum5;
     };
     url: '/checkout/orders';
 };
@@ -3204,6 +3256,9 @@ export type CheckoutControllerGetAllOrdersResponses = {
 export type CheckoutControllerInitializeTransactionData = {
     body: InitializeTransaction;
     path: {
+        /**
+         * User ID
+         */
         id: string;
     };
     query?: never;
@@ -3214,22 +3269,28 @@ export type CheckoutControllerInitializeTransactionResponses = {
     201: unknown;
 };
 
-export type CheckoutControllerOrderStatusData = {
-    body: OrderStatus;
+export type CheckoutControllerUpdateSaleStatusData = {
+    body: UpdateSaleStatusDto;
     path: {
+        /**
+         * Checkout ID
+         */
         id: string;
     };
     query?: never;
-    url: '/checkout/order-status/{id}';
+    url: '/checkout/sale-status/{id}';
 };
 
-export type CheckoutControllerOrderStatusResponses = {
+export type CheckoutControllerUpdateSaleStatusResponses = {
     200: unknown;
 };
 
 export type CheckoutControllerPaymentStatusData = {
     body: PaymentStatus;
     path: {
+        /**
+         * Checkout ID
+         */
         id: string;
     };
     query?: never;
@@ -3243,6 +3304,9 @@ export type CheckoutControllerPaymentStatusResponses = {
 export type CheckoutControllerCancelOrderData = {
     body?: never;
     path: {
+        /**
+         * Checkout ID
+         */
         id: string;
     };
     query?: never;
@@ -3593,7 +3657,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
         /**
          * Include sales trends
          */
@@ -3636,7 +3700,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/sales/by-product';
 };
@@ -3675,7 +3739,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/sales/by-category';
 };
@@ -3714,7 +3778,7 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
         /**
          * Number of top products to return
          */
@@ -3758,7 +3822,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/products/revenue-distribution';
 };
@@ -3797,7 +3861,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/batches';
 };
@@ -3836,7 +3900,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/batches/aging';
 };
@@ -3903,7 +3967,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/stock-movement';
 };
@@ -3974,7 +4038,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/dashboard-summary';
 };
@@ -4020,7 +4084,7 @@ export type DashboardControllerGetTrendsData = {
         /**
          * Period for trend data
          */
-        period?: SchemaEnum5;
+        period?: SchemaEnum7;
     };
     url: '/dashboard/trends';
 };
@@ -4175,7 +4239,6 @@ export type ProfileControllerUploadAvatarResponses = {
      * Avatar uploaded successfully
      */
     200: unknown;
-    201: unknown;
 };
 
 export type ContactControllerSubmitContactFormData = {

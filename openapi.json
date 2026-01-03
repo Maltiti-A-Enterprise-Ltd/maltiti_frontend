@@ -1485,6 +1485,7 @@
             "in": "query",
             "description": "Sort field",
             "schema": {
+              "default": "createdAt",
               "example": "createdAt",
               "enum": ["name", "retail", "createdAt", "rating", "stockQuantity"],
               "type": "string"
@@ -1495,7 +1496,12 @@
             "required": false,
             "in": "query",
             "description": "Sort order",
-            "schema": { "example": "DESC", "enum": ["ASC", "DESC"], "type": "string" }
+            "schema": {
+              "default": "DESC",
+              "example": "DESC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
           },
           {
             "name": "batchId",
@@ -2120,9 +2126,16 @@
       "get": {
         "operationId": "CheckoutController_getOrders",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Get all orders for a user",
         "tags": ["Checkout"]
       }
     },
@@ -2130,9 +2143,16 @@
       "get": {
         "operationId": "CheckoutController_getOrder",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Order ID",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Get a specific order",
         "tags": ["Checkout"]
       }
     },
@@ -2141,6 +2161,7 @@
         "operationId": "CheckoutController_testMail",
         "parameters": [],
         "responses": { "200": { "description": "" } },
+        "summary": "Test email functionality",
         "tags": ["Checkout"]
       }
     },
@@ -2148,10 +2169,23 @@
       "get": {
         "operationId": "CheckoutController_confirmPayment",
         "parameters": [
-          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } },
-          { "name": "checkoutId", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Confirm payment for an order",
         "tags": ["Checkout"]
       }
     },
@@ -2159,10 +2193,23 @@
       "get": {
         "operationId": "CheckoutController_getTransportation",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
-          { "name": "location", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "location",
+            "required": true,
+            "in": "path",
+            "description": "Delivery location",
+            "schema": { "enum": ["local", "other"], "type": "string" }
+          }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Calculate transportation cost",
         "tags": ["Checkout"]
       }
     },
@@ -2171,21 +2218,38 @@
         "operationId": "CheckoutController_getAllOrders",
         "parameters": [
           {
-            "name": "orderStatus",
-            "required": true,
+            "name": "saleStatus",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "invoice_requested",
+                "pending_payment",
+                "paid",
+                "packaging",
+                "in_transit",
+                "delivered",
+                "cancelled"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "required": false,
             "in": "query",
             "schema": { "type": "string" }
           },
-          { "name": "searchTerm", "required": true, "in": "query", "schema": { "type": "string" } },
-          { "name": "page", "required": true, "in": "query", "schema": { "type": "number" } },
+          { "name": "page", "required": false, "in": "query", "schema": { "type": "number" } },
           {
             "name": "paymentStatus",
-            "required": true,
+            "required": false,
             "in": "query",
-            "schema": { "type": "string" }
+            "schema": { "enum": ["paid", "unpaid", "refunded"], "type": "string" }
           }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Get all orders (admin)",
         "tags": ["Checkout"]
       }
     },
@@ -2193,7 +2257,13 @@
       "post": {
         "operationId": "CheckoutController_initializeTransaction",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": { "type": "string" }
+          }
         ],
         "requestBody": {
           "required": true,
@@ -2204,22 +2274,30 @@
           }
         },
         "responses": { "201": { "description": "" } },
+        "summary": "Initialize payment transaction",
         "tags": ["Checkout"]
       }
     },
-    "/checkout/order-status/{id}": {
+    "/checkout/sale-status/{id}": {
       "patch": {
-        "operationId": "CheckoutController_orderStatus",
+        "operationId": "CheckoutController_updateSaleStatus",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/OrderStatus" } }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateSaleStatusDto" } }
           }
         },
         "responses": { "200": { "description": "" } },
+        "summary": "Update sale status",
         "tags": ["Checkout"]
       }
     },
@@ -2227,7 +2305,13 @@
       "patch": {
         "operationId": "CheckoutController_paymentStatus",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
         ],
         "requestBody": {
           "required": true,
@@ -2236,6 +2320,7 @@
           }
         },
         "responses": { "200": { "description": "" } },
+        "summary": "Update payment status",
         "tags": ["Checkout"]
       }
     },
@@ -2243,9 +2328,16 @@
       "patch": {
         "operationId": "CheckoutController_cancelOrder",
         "parameters": [
-          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
         ],
         "responses": { "200": { "description": "" } },
+        "summary": "Cancel an order",
         "tags": ["Checkout"]
       }
     },
@@ -2315,7 +2407,8 @@
                 "paid",
                 "packaging",
                 "in_transit",
-                "delivered"
+                "delivered",
+                "cancelled"
               ],
               "type": "string"
             }
@@ -3577,7 +3670,6 @@
         },
         "responses": {
           "200": { "description": "Avatar uploaded successfully" },
-          "201": { "description": "" },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
         },
@@ -3834,9 +3926,9 @@
           },
           "rememberToken": { "type": "string", "description": "Remember token for authentication" },
           "status": {
+            "enum": ["active", "inactive", "suspended"],
             "type": "string",
             "description": "User account status",
-            "enum": ["active", "inactive", "suspended"],
             "example": "active"
           },
           "dob": {
@@ -4262,10 +4354,10 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The full name of the cooperative member",
-            "example": "Fatima Abdul-Rahman",
             "minLength": 3,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The full name of the cooperative member",
+            "example": "Fatima Abdul-Rahman"
           },
           "cooperative": {
             "type": "string",
@@ -4274,20 +4366,22 @@
           },
           "phoneNumber": {
             "type": "string",
+            "minLength": 10,
+            "maxLength": 20,
             "description": "The phone number of the member (must be unique, Ghana format)",
             "example": "+233244123456"
           },
           "houseNumber": {
             "type": "string",
+            "maxLength": 50,
             "description": "The house number or residential address identifier",
-            "example": "House 42B",
-            "maxLength": 50
+            "example": "House 42B"
           },
           "gpsAddress": {
             "type": "string",
+            "maxLength": 20,
             "description": "The GPS address or digital address",
-            "example": "GT-0123-4567",
-            "maxLength": 20
+            "example": "GT-0123-4567"
           },
           "image": {
             "type": "string",
@@ -4301,23 +4395,24 @@
           },
           "idNumber": {
             "type": "string",
+            "minLength": 5,
+            "maxLength": 50,
             "description": "The identification number (must be unique)",
-            "example": "GHA-123456789-0",
-            "maxLength": 50
+            "example": "GHA-123456789-0"
           },
           "community": {
             "type": "string",
-            "description": "The community or locality where the member resides",
-            "example": "Savelugu",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The community or locality where the member resides",
+            "example": "Savelugu"
           },
           "district": {
             "type": "string",
-            "description": "The district where the member resides",
-            "example": "Savelugu Municipal",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The district where the member resides",
+            "example": "Savelugu Municipal"
           },
           "region": {
             "description": "The region of Ghana where the member resides",
@@ -4337,29 +4432,29 @@
           },
           "occupation": {
             "type": "string",
-            "description": "The primary occupation of the member",
-            "example": "Shea Butter Producer",
             "minLength": 2,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "The primary occupation of the member",
+            "example": "Shea Butter Producer"
           },
           "secondaryOccupation": {
             "type": "string",
+            "maxLength": 100,
             "description": "The secondary occupation of the member (if any)",
-            "example": "Farmer",
-            "maxLength": 100
+            "example": "Farmer"
           },
           "crops": {
             "type": "string",
+            "maxLength": 200,
             "description": "The types of crops cultivated by the member (comma-separated)",
-            "example": "Shea nuts, Groundnuts, Maize",
-            "maxLength": 200
+            "example": "Shea nuts, Groundnuts, Maize"
           },
           "farmSize": {
             "type": "number",
-            "description": "The size of the farm in acres",
-            "example": 5.5,
             "minimum": 0,
-            "maximum": 10000
+            "maximum": 10000,
+            "description": "The size of the farm in acres",
+            "example": 5.5
           }
         },
         "required": [
@@ -4569,22 +4664,53 @@
         "enum": ["name", "retail", "createdAt", "stockQuantity", "rating"]
       },
       "SortOrder": { "type": "string", "enum": ["ASC", "DESC"] },
-      "ProductResponseDto": {
+      "Batch": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "example": "123e4567-e89b-12d3-a456-426614174000" },
-          "sku": { "type": "string", "example": "SB-WHT-1KG-001" },
-          "name": { "type": "string", "example": "White Shea Butter Grade A" },
+          "id": { "type": "string" },
+          "batchNumber": { "type": "string" },
+          "productionDate": { "format": "date-time", "type": "string" },
+          "expiryDate": { "format": "date-time", "type": "string" },
+          "manufacturingLocation": { "type": "string" },
+          "qualityCheckStatus": { "type": "string" },
+          "notes": { "type": "string" },
+          "quantity": { "type": "number" },
+          "isActive": { "type": "boolean" },
+          "product": { "$ref": "#/components/schemas/Product" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "batchNumber",
+          "productionDate",
+          "expiryDate",
+          "manufacturingLocation",
+          "qualityCheckStatus",
+          "notes",
+          "quantity",
+          "isActive",
+          "product",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sku": { "type": "string" },
+          "name": { "type": "string" },
           "ingredients": {
-            "example": ["100% Pure Shea Butter", "No additives"],
             "type": "array",
-            "items": { "type": "string" }
+            "items": { "$ref": "#/components/schemas/Ingredient" }
           },
-          "weight": { "type": "string", "example": "1kg" },
+          "weight": { "type": "string" },
           "unitOfMeasurement": {
             "type": "string",
-            "enum": ["kilogram", "gram", "litre", "millilitre"],
-            "example": "kilogram"
+            "enum": ["kilogram", "gram", "litre", "millilitre"]
           },
           "category": {
             "type": "string",
@@ -4600,7 +4726,110 @@
               "Grains",
               "Legumes",
               "Other"
+            ]
+          },
+          "description": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "out_of_stock", "discontinued"]
+          },
+          "images": { "type": "array", "items": { "type": "string" } },
+          "image": { "type": "string" },
+          "wholesale": { "type": "number" },
+          "retail": { "type": "number" },
+          "inBoxPrice": { "type": "number" },
+          "quantityInBox": { "type": "number" },
+          "favorite": { "type": "boolean" },
+          "rating": { "type": "number" },
+          "reviews": { "type": "number" },
+          "grade": { "type": "string", "enum": ["A", "B", "premium", "standard", "organic"] },
+          "isFeatured": { "type": "boolean" },
+          "isOrganic": { "type": "boolean" },
+          "certifications": { "type": "array", "items": { "type": "string" } },
+          "supplierReference": { "type": "string" },
+          "minOrderQuantity": { "type": "number" },
+          "costPrice": { "type": "number" },
+          "batches": { "type": "array", "items": { "$ref": "#/components/schemas/Batch" } },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "sku",
+          "name",
+          "ingredients",
+          "weight",
+          "unitOfMeasurement",
+          "category",
+          "description",
+          "status",
+          "images",
+          "image",
+          "wholesale",
+          "retail",
+          "inBoxPrice",
+          "quantityInBox",
+          "favorite",
+          "rating",
+          "reviews",
+          "grade",
+          "isFeatured",
+          "isOrganic",
+          "certifications",
+          "supplierReference",
+          "minOrderQuantity",
+          "costPrice",
+          "batches",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "Ingredient": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "products": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } },
+          "id": { "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": ["name", "products", "id", "createdAt", "updatedAt", "deletedAt"]
+      },
+      "ProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "123e4567-e89b-12d3-a456-426614174000" },
+          "sku": { "type": "string", "example": "SB-WHT-1KG-001" },
+          "name": { "type": "string", "example": "White Shea Butter Grade A" },
+          "ingredients": {
+            "example": ["100% Pure Shea Butter", "No additives"],
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Ingredient" }
+          },
+          "weight": { "type": "string", "example": "1kg" },
+          "unitOfMeasurement": {
+            "enum": ["kilogram", "gram", "litre", "millilitre"],
+            "type": "string",
+            "example": "kilogram"
+          },
+          "category": {
+            "enum": [
+              "Shea Butter",
+              "Black Soap",
+              "Cosmetics",
+              "Shea Soap",
+              "Powdered Soap",
+              "Dawadawa",
+              "Essential Oils",
+              "Hair Oil",
+              "Grains",
+              "Legumes",
+              "Other"
             ],
+            "type": "string",
             "example": "Shea Butter"
           },
           "description": {
@@ -4608,8 +4837,8 @@
             "example": "Premium white shea butter extracted from organic shea nuts in Northern Ghana."
           },
           "status": {
-            "type": "string",
             "enum": ["active", "inactive", "out_of_stock", "discontinued"],
+            "type": "string",
             "example": "active"
           },
           "images": {
@@ -4630,8 +4859,8 @@
           "rating": { "type": "number", "example": 4.5 },
           "reviews": { "type": "number", "example": 23 },
           "grade": {
-            "type": "string",
             "enum": ["A", "B", "premium", "standard", "organic"],
+            "type": "string",
             "example": "A"
           },
           "isFeatured": { "type": "boolean", "example": false },
@@ -5375,9 +5604,9 @@
           },
           "quantity": {
             "type": "number",
+            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 5,
-            "minimum": 1
+            "example": 5
           }
         },
         "required": ["id"]
@@ -5402,9 +5631,9 @@
         "properties": {
           "quantity": {
             "type": "number",
+            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 5,
-            "minimum": 1
+            "example": 5
           }
         },
         "required": ["quantity"]
@@ -5419,9 +5648,9 @@
           },
           "quantity": {
             "type": "number",
+            "minimum": 1,
             "description": "The quantity of the product in the cart (must be a positive integer)",
-            "example": 3,
-            "minimum": 1
+            "example": 3
           }
         },
         "required": ["productId", "quantity"]
@@ -5430,6 +5659,7 @@
         "type": "object",
         "properties": {
           "items": {
+            "minItems": 1,
             "description": "Array of cart items to add with their quantities",
             "example": [
               { "productId": "550e8400-e29b-41d4-a716-446655440000", "quantity": 2 },
@@ -5498,31 +5728,23 @@
       "InitializeTransaction": {
         "type": "object",
         "properties": {
-          "amount": { "type": "string" },
-          "email": { "type": "string" },
-          "extraInfo": { "type": "string" },
-          "name": { "type": "string" },
-          "location": { "type": "string" }
+          "location": {
+            "type": "string",
+            "description": "Delivery location/address for this order",
+            "example": "Tamale, Northern Region, House No. 123"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order",
+            "example": "Please deliver after 5pm"
+          }
         },
-        "required": ["amount", "email", "extraInfo", "name", "location"]
-      },
-      "OrderStatus": {
-        "type": "object",
-        "properties": { "status": { "type": "object" } },
-        "required": ["status"]
-      },
-      "PaymentStatus": {
-        "type": "object",
-        "properties": { "status": { "type": "string" } },
-        "required": ["status"]
-      },
-      "UploadResponseDto": {
-        "type": "object",
-        "properties": {
-          "message": { "type": "string", "description": "Success message" },
-          "data": { "type": "string", "description": "The URL of the uploaded image" }
-        },
-        "required": ["message", "data"]
+        "required": ["location", "phoneNumber"]
       },
       "SaleStatus": {
         "type": "string",
@@ -5532,8 +5754,45 @@
           "paid",
           "packaging",
           "in_transit",
-          "delivered"
+          "delivered",
+          "cancelled"
         ]
+      },
+      "UpdateSaleStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "invoice_requested",
+              "pending_payment",
+              "paid",
+              "packaging",
+              "in_transit",
+              "delivered",
+              "cancelled"
+            ],
+            "type": "string"
+          }
+        },
+        "required": ["status"]
+      },
+      "PaymentStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "Payment status",
+            "allOf": [{ "$ref": "#/components/schemas/PaymentStatus" }]
+          }
+        },
+        "required": ["status"]
+      },
+      "UploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "description": "Success message" },
+          "data": { "type": "string", "description": "The URL of the uploaded image" }
+        },
+        "required": ["message", "data"]
       },
       "BatchAllocationDto": {
         "type": "object",
@@ -5568,93 +5827,7 @@
         },
         "required": ["customerId", "lineItems"]
       },
-      "Sale": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "customer": { "$ref": "#/components/schemas/Customer" },
-          "status": {
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered"
-            ],
-            "type": "string"
-          },
-          "lineItems": { "type": "array", "items": { "type": "object" } },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" },
-          "deletedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": ["id", "customer", "status", "lineItems", "createdAt", "updatedAt", "deletedAt"]
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "name": { "type": "string" },
-          "password": { "type": "string" },
-          "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] },
-          "phoneNumber": { "type": "string" },
-          "avatarUrl": { "type": "string" },
-          "permissions": { "type": "string" },
-          "mustChangePassword": { "type": "boolean" },
-          "rememberToken": { "type": "string" },
-          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
-          "dob": { "format": "date-time", "type": "string" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "emailVerifiedAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": [
-          "id",
-          "email",
-          "name",
-          "password",
-          "userType",
-          "phoneNumber",
-          "avatarUrl",
-          "permissions",
-          "mustChangePassword",
-          "rememberToken",
-          "status",
-          "dob",
-          "createdAt",
-          "emailVerifiedAt",
-          "updatedAt"
-        ]
-      },
-      "Customer": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "phone": { "type": "string" },
-          "email": { "type": "string" },
-          "address": { "type": "string" },
-          "sales": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
-          "user": { "$ref": "#/components/schemas/User" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" },
-          "deletedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": [
-          "id",
-          "name",
-          "phone",
-          "email",
-          "address",
-          "sales",
-          "user",
-          "createdAt",
-          "updatedAt",
-          "deletedAt"
-        ]
-      },
+      "Sale": { "type": "object", "properties": {} },
       "UpdateSaleLineItemDto": {
         "type": "object",
         "properties": {
@@ -5678,7 +5851,8 @@
               "paid",
               "packaging",
               "in_transit",
-              "delivered"
+              "delivered",
+              "cancelled"
             ],
             "type": "string",
             "default": "invoice_requested"
@@ -5688,23 +5862,6 @@
             "items": { "$ref": "#/components/schemas/UpdateSaleLineItemDto" }
           }
         }
-      },
-      "UpdateSaleStatusDto": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered"
-            ],
-            "type": "string"
-          }
-        },
-        "required": ["status"]
       },
       "AddLineItemDto": {
         "type": "object",
