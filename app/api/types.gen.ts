@@ -1170,6 +1170,109 @@ export type BulkAddCartResponseDto = {
     data: BulkAddCartDataDto;
 };
 
+export type UserDto = {
+    id: string;
+    email: string;
+    name: string;
+    password: string;
+    userType: string;
+    phoneNumber: string;
+    avatarUrl: string;
+    permissions: string;
+    mustChangePassword: boolean;
+    rememberToken: string;
+    status: string;
+};
+
+export type CustomerDto = {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    sales: Array<SaleDto>;
+    user: UserDto;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type CartDto = {
+    id: string;
+};
+
+export type CheckoutDto = {
+    id: string;
+    sale: SaleDto;
+    carts: Array<CartDto>;
+    amount: number;
+    country: string;
+    region: string;
+    city: string;
+    phoneNumber: string;
+    paymentStatus: SchemaEnum5;
+    extraInfo: string;
+    paystackReference: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type SaleLineItemDto = {
+    productId: string;
+    batchAllocations: {
+        batchId?: string;
+        quantity?: number;
+    };
+    requestedQuantity: number;
+    customPrice?: number;
+    finalPrice: number;
+};
+
+export type SaleDto = {
+    id: string;
+    customer: CustomerDto;
+    checkout: CheckoutDto;
+    status: string;
+    lineItems: Array<SaleLineItemDto>;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type OrdersPaginationDto = {
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+    orders: Array<CheckoutDto>;
+};
+
+export type InitializeTransactionDataDto = {
+    authorization_url: string;
+    access_code: string;
+    reference: string;
+};
+
+export type CheckoutsResponseDto = {
+    message: string;
+    data: Array<CheckoutDto>;
+};
+
+export type CheckoutResponseDto = {
+    message: string;
+    data: CheckoutDto;
+};
+
+export type TransportationResponseDto = {
+    message: string;
+    data: number;
+};
+
+export type OrdersPaginationResponseDto = {
+    message: string;
+    data: OrdersPaginationDto;
+};
+
 export type InitializeTransaction = {
     /**
      * Delivery country
@@ -1193,6 +1296,12 @@ export type InitializeTransaction = {
     extraInfo?: string;
 };
 
+export type InitializeTransactionResponseDto = {
+    message: string;
+    status: boolean;
+    data: InitializeTransactionDataDto;
+};
+
 export enum SaleStatus {
     INVOICE_REQUESTED = 'invoice_requested',
     PENDING_PAYMENT = 'pending_payment',
@@ -1205,6 +1314,11 @@ export enum SaleStatus {
 
 export type UpdateSaleStatusDto = {
     status: SaleStatus;
+};
+
+export type SaleResponseDto = {
+    message: string;
+    data: SaleDto;
 };
 
 export type PaymentStatus = {
@@ -1225,26 +1339,86 @@ export type UploadResponseDto = {
     data: string;
 };
 
-export type BatchAllocationDto = {
-    batchId: string;
-    quantity: number;
-};
-
-export type SaleLineItemDto = {
-    productId: string;
-    batchAllocations: Array<BatchAllocationDto>;
-    requestedQuantity: number;
-    customPrice?: number;
-};
-
 export type CreateSaleDto = {
     customerId: string;
     status?: SaleStatus;
     lineItems: Array<SaleLineItemDto>;
 };
 
+export type User = {
+    id: string;
+    email: string;
+    name: string;
+    password: string;
+    userType: Role;
+    phoneNumber: string;
+    avatarUrl: string;
+    permissions: string;
+    mustChangePassword: boolean;
+    rememberToken: string;
+    status: StatusEnum;
+    dob: string;
+    createdAt: string;
+    emailVerifiedAt: string;
+    updatedAt: string;
+};
+
+export type Cart = {
+    id: string;
+    user: User;
+    product: Product;
+    quantity: number;
+    checkout?: Checkout | null;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type Checkout = {
+    id: string;
+    sale: Sale;
+    carts: Array<Cart>;
+    amount: number;
+    country: string;
+    region: string;
+    city: string;
+    phoneNumber: string;
+    paymentStatus: string;
+    extraInfo: string;
+    paystackReference: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
 export type Sale = {
-    [key: string]: unknown;
+    id: string;
+    customer: Customer;
+    checkout: Checkout;
+    status: SaleStatus;
+    lineItems: Array<{
+        [key: string]: unknown;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type Customer = {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    sales: Array<Sale>;
+    user: User;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type BatchAllocationDto = {
+    batchId?: string;
+    quantity?: number;
 };
 
 export type UpdateSaleLineItemDto = {
@@ -1735,6 +1909,7 @@ export type AuthenticationControllerVerifyPhoneResponses = {
      * Phone verification successful
      */
     200: PhoneVerificationResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerVerifyPhoneResponse = AuthenticationControllerVerifyPhoneResponses[keyof AuthenticationControllerVerifyPhoneResponses];
@@ -1797,6 +1972,7 @@ export type AuthenticationControllerSignInResponses = {
      * Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)
      */
     200: LoginResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerSignInResponse = AuthenticationControllerSignInResponses[keyof AuthenticationControllerSignInResponses];
@@ -1826,6 +2002,7 @@ export type AuthenticationControllerForgotPasswordResponses = {
      * Password reset email sent successfully
      */
     200: PasswordResetEmailResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerForgotPasswordResponse = AuthenticationControllerForgotPasswordResponses[keyof AuthenticationControllerForgotPasswordResponses];
@@ -1859,6 +2036,7 @@ export type AuthenticationControllerResetPasswordResponses = {
      * Password reset successful
      */
     200: PasswordResetResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerResetPasswordResponse = AuthenticationControllerResetPasswordResponses[keyof AuthenticationControllerResetPasswordResponses];
@@ -1926,6 +2104,7 @@ export type AuthenticationControllerRefreshTokenResponses = {
      * Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)
      */
     200: TokenRefreshResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerRefreshTokenResponse = AuthenticationControllerRefreshTokenResponses[keyof AuthenticationControllerRefreshTokenResponses];
@@ -1951,6 +2130,7 @@ export type AuthenticationControllerLogoutResponses = {
      * Logged out successfully, cookies cleared
      */
     200: LogoutResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerLogoutResponse = AuthenticationControllerLogoutResponses[keyof AuthenticationControllerLogoutResponses];
@@ -2026,6 +2206,7 @@ export type AuthenticationControllerChangePasswordResponses = {
      * Password changed successfully
      */
     200: PasswordChangeResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerChangePasswordResponse = AuthenticationControllerChangePasswordResponses[keyof AuthenticationControllerChangePasswordResponses];
@@ -2055,6 +2236,7 @@ export type AuthenticationControllerResendVerificationEmailResponses = {
      * Verification email resent successfully
      */
     200: ResendVerificationResponseDto;
+    201: unknown;
 };
 
 export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
@@ -3170,8 +3352,13 @@ export type CheckoutControllerGetOrdersData = {
 };
 
 export type CheckoutControllerGetOrdersResponses = {
-    200: unknown;
+    /**
+     * Customer orders loaded successfully
+     */
+    200: CheckoutsResponseDto;
 };
+
+export type CheckoutControllerGetOrdersResponse = CheckoutControllerGetOrdersResponses[keyof CheckoutControllerGetOrdersResponses];
 
 export type CheckoutControllerGetOrderData = {
     body?: never;
@@ -3186,19 +3373,13 @@ export type CheckoutControllerGetOrderData = {
 };
 
 export type CheckoutControllerGetOrderResponses = {
-    200: unknown;
+    /**
+     * Order loaded successfully
+     */
+    200: CheckoutResponseDto;
 };
 
-export type CheckoutControllerTestMailData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/checkout/test-mail';
-};
-
-export type CheckoutControllerTestMailResponses = {
-    200: unknown;
-};
+export type CheckoutControllerGetOrderResponse = CheckoutControllerGetOrderResponses[keyof CheckoutControllerGetOrderResponses];
 
 export type CheckoutControllerConfirmPaymentData = {
     body?: never;
@@ -3213,8 +3394,13 @@ export type CheckoutControllerConfirmPaymentData = {
 };
 
 export type CheckoutControllerConfirmPaymentResponses = {
-    200: unknown;
+    /**
+     * Payment confirmed successfully
+     */
+    200: CheckoutResponseDto;
 };
+
+export type CheckoutControllerConfirmPaymentResponse = CheckoutControllerConfirmPaymentResponses[keyof CheckoutControllerConfirmPaymentResponses];
 
 export type CheckoutControllerGetTransportationData = {
     body?: never;
@@ -3229,8 +3415,13 @@ export type CheckoutControllerGetTransportationData = {
 };
 
 export type CheckoutControllerGetTransportationResponses = {
-    200: unknown;
+    /**
+     * Transportation cost calculated successfully
+     */
+    200: TransportationResponseDto;
 };
+
+export type CheckoutControllerGetTransportationResponse = CheckoutControllerGetTransportationResponses[keyof CheckoutControllerGetTransportationResponses];
 
 export type CheckoutControllerGetAllOrdersData = {
     body?: never;
@@ -3245,8 +3436,13 @@ export type CheckoutControllerGetAllOrdersData = {
 };
 
 export type CheckoutControllerGetAllOrdersResponses = {
-    200: unknown;
+    /**
+     * Orders loaded successfully
+     */
+    200: OrdersPaginationResponseDto;
 };
+
+export type CheckoutControllerGetAllOrdersResponse = CheckoutControllerGetAllOrdersResponses[keyof CheckoutControllerGetAllOrdersResponses];
 
 export type CheckoutControllerInitializeTransactionData = {
     body: InitializeTransaction;
@@ -3256,8 +3452,13 @@ export type CheckoutControllerInitializeTransactionData = {
 };
 
 export type CheckoutControllerInitializeTransactionResponses = {
-    201: unknown;
+    /**
+     * Transaction initialized successfully
+     */
+    201: InitializeTransactionResponseDto;
 };
+
+export type CheckoutControllerInitializeTransactionResponse = CheckoutControllerInitializeTransactionResponses[keyof CheckoutControllerInitializeTransactionResponses];
 
 export type CheckoutControllerUpdateSaleStatusData = {
     body: UpdateSaleStatusDto;
@@ -3272,8 +3473,13 @@ export type CheckoutControllerUpdateSaleStatusData = {
 };
 
 export type CheckoutControllerUpdateSaleStatusResponses = {
-    200: unknown;
+    /**
+     * Sale status updated successfully
+     */
+    200: SaleResponseDto;
 };
+
+export type CheckoutControllerUpdateSaleStatusResponse = CheckoutControllerUpdateSaleStatusResponses[keyof CheckoutControllerUpdateSaleStatusResponses];
 
 export type CheckoutControllerPaymentStatusData = {
     body: PaymentStatus;
@@ -3288,8 +3494,13 @@ export type CheckoutControllerPaymentStatusData = {
 };
 
 export type CheckoutControllerPaymentStatusResponses = {
-    200: unknown;
+    /**
+     * Payment status updated successfully
+     */
+    200: CheckoutResponseDto;
 };
+
+export type CheckoutControllerPaymentStatusResponse = CheckoutControllerPaymentStatusResponses[keyof CheckoutControllerPaymentStatusResponses];
 
 export type CheckoutControllerCancelOrderData = {
     body?: never;
@@ -3304,8 +3515,13 @@ export type CheckoutControllerCancelOrderData = {
 };
 
 export type CheckoutControllerCancelOrderResponses = {
-    200: unknown;
+    /**
+     * Order has been successfully cancelled. If you have paid, you will receive refund in 3 working days
+     */
+    200: CheckoutResponseDto;
 };
+
+export type CheckoutControllerCancelOrderResponse = CheckoutControllerCancelOrderResponses[keyof CheckoutControllerCancelOrderResponses];
 
 export type UploadControllerUploadImageData = {
     body: {
@@ -3432,6 +3648,7 @@ export type SalesControllerAddLineItemData = {
 
 export type SalesControllerAddLineItemResponses = {
     200: Sale;
+    201: Sale;
 };
 
 export type SalesControllerAddLineItemResponse = SalesControllerAddLineItemResponses[keyof SalesControllerAddLineItemResponses];
@@ -3465,6 +3682,7 @@ export type SalesControllerGenerateInvoiceResponses = {
      * Invoice PDF generated successfully
      */
     200: unknown;
+    201: unknown;
 };
 
 export type SalesControllerGenerateReceiptData = {
@@ -3481,6 +3699,7 @@ export type SalesControllerGenerateReceiptResponses = {
      * Receipt PDF generated successfully
      */
     200: unknown;
+    201: unknown;
 };
 
 export type SalesControllerGenerateWaybillData = {
@@ -3497,6 +3716,7 @@ export type SalesControllerGenerateWaybillResponses = {
      * Waybill PDF generated successfully
      */
     200: unknown;
+    201: unknown;
 };
 
 export type CustomerControllerGetAllCustomersData = {
@@ -4229,6 +4449,7 @@ export type ProfileControllerUploadAvatarResponses = {
      * Avatar uploaded successfully
      */
     200: unknown;
+    201: unknown;
 };
 
 export type ContactControllerSubmitContactFormData = {
