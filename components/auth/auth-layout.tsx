@@ -22,7 +22,6 @@ export function AuthLayout({ children, title, subtitle, footer }: AuthLayoutProp
   useEffect(() => {
     dispatch(clearError());
 
-    // Clear errors when component unmounts
     return (): void => {
       dispatch(clearError());
     };
@@ -35,7 +34,7 @@ export function AuthLayout({ children, title, subtitle, footer }: AuthLayoutProp
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex w-full flex-col justify-center px-6 py-12 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24"
+        className="flex w-full flex-col justify-center px-6 py-12 max-lg:mt-16 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24"
       >
         <div className="mx-auto w-full max-w-md">
           {/* Logo */}

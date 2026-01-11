@@ -1,23 +1,42 @@
 'use client';
 import { JSX, useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { ShoppingCartIcon, ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ShoppingCartIcon, ShoppingCart, Minus, Plus, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useCart } from '@/lib/store/useCart';
 import { ProductPlaceholder } from '@/app/assets';
 
 type CartSheetProps = Record<string, never>;
 
 const CartSheet = ({}: CartSheetProps): JSX.Element => {
-  const { items, totalItems, totalPrice, getCart, updateQuantity, removeItem } = useCart();
+  const router = useRouter();
+  const {
+    items,
+    totalItems,
+    totalPrice,
+    getCart,
+    updateQuantity,
+    removeItem,
+    isLoading,
+    isFetching,
+  } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [optimisticQuantities, setOptimisticQuantities] = useState<Record<string, number>>({});
   const debounceTimers = useRef<Record<string, NodeJS.Timeout>>({});
 
+  const isCartLoading = isLoading || isFetching;
+
   const toggleCart = (): void => setIsCartOpen(!isCartOpen);
+
+  const handleCheckout = (): void => {
+    setIsCartOpen(false);
+    router.push('/checkout');
+  };
 
   // Debounced update function
   const debouncedUpdateQuantity = useCallback(
@@ -101,18 +120,51 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
             <SheetTitle>Your Cart</SheetTitle>
           </SheetHeader>
           <div>
-            {items.length === 0 ? (
+            {isCartLoading ? (
+              // Loading state
+              <div className="space-y-4 py-4">
+                <div className="flex items-center justify-center gap-2 py-8 text-gray-600">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span className="text-sm">Loading your cart...</span>
+                </div>
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex gap-3 rounded-md bg-gray-200 p-4">
+                      <Skeleton className="h-20 w-20 rounded-md" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-20" />
+                        <Skeleton className="h-3 w-16" />
+                        <div className="flex gap-2 pt-1">
+                          <Skeleton className="h-8 w-8" />
+                          <Skeleton className="h-8 w-12" />
+                          <Skeleton className="h-8 w-8" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : items.length === 0 ? (
+              // Empty cart state
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <div className="animate-bounce">
                   <ShoppingCart className="h-24 w-24 text-gray-400" />
                 </div>
                 <h3 className="mt-4 text-lg font-medium text-gray-900">Your cart is empty</h3>
                 <p className="mt-2 text-sm text-gray-500">Add some items to get started!</p>
-                <Button className="mt-4" onClick={() => setIsCartOpen(false)}>
+                <Button
+                  className="mt-4"
+                  onClick={() => {
+                    router.push('/shop');
+                    setIsCartOpen(false);
+                  }}
+                >
                   Continue Shopping
                 </Button>
               </div>
             ) : (
+              // Cart with items
               <>
                 <div className="mb-4 flex justify-between">
                   <span className="font-bold">Subtotal</span>
@@ -125,7 +177,12 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
                   <span className="self-center text-sm text-gray-700">
                     {totalItems} Products in your cart
                   </span>
-                  <Button>Checkout</Button>
+                  <Button
+                    onClick={handleCheckout}
+                    className="cursor-pointer bg-[#0F6938] hover:bg-[#0F6938]/90"
+                  >
+                    Checkout
+                  </Button>
                 </div>
                 <ul className="space-y-4">
                   {items.map((item) => (
@@ -152,7 +209,7 @@ const CartSheet = ({}: CartSheetProps): JSX.Element => {
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
-                          <span className="min-w-[2rem] text-center">
+                          <span className="min-w-8 text-center">
                             {getDisplayQuantity(item.id, item.quantity)}
                           </span>
                           <Button
