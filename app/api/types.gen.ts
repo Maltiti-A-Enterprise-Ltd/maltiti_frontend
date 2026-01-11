@@ -2032,7 +2032,6 @@ export type AuthenticationControllerSignInResponses = {
    * Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)
    */
   200: LoginResponseDto;
-  201: unknown;
 };
 
 export type AuthenticationControllerSignInResponse =
