@@ -1190,6 +1190,11 @@ export type CustomerDto = {
     phone: string;
     email: string;
     address: string;
+    country: string;
+    region: string;
+    city: string;
+    phoneNumber: string;
+    extraInfo: string;
     sales: Array<SaleDto>;
     user: UserDto;
     createdAt: string;
@@ -1206,12 +1211,6 @@ export type CheckoutDto = {
     sale: SaleDto;
     carts: Array<CartDto>;
     amount: number;
-    country: string;
-    region: string;
-    city: string;
-    phoneNumber: string;
-    paymentStatus: SchemaEnum5;
-    extraInfo: string;
     paystackReference: string;
     createdAt: string;
     updatedAt: string;
@@ -1263,7 +1262,22 @@ export type CheckoutResponseDto = {
     data: CheckoutDto;
 };
 
-export type TransportationResponseDto = {
+export type GetDeliveryCostDto = {
+    /**
+     * The country for delivery.
+     */
+    country: string;
+    /**
+     * The city for delivery.
+     */
+    city: string;
+    /**
+     * The region for delivery.
+     */
+    region: string;
+};
+
+export type DeliveryResponseDto = {
     message: string;
     data: number;
 };
@@ -1321,13 +1335,6 @@ export type SaleResponseDto = {
     data: SaleDto;
 };
 
-export type PaymentStatus = {
-    /**
-     * Payment status
-     */
-    status: PaymentStatus;
-};
-
 export type UploadResponseDto = {
     /**
      * Success message
@@ -1378,12 +1385,6 @@ export type Checkout = {
     sale: Sale;
     carts: Array<Cart>;
     amount: number;
-    country: string;
-    region: string;
-    city: string;
-    phoneNumber: string;
-    paymentStatus: string;
-    extraInfo: string;
     paystackReference: string;
     createdAt: string;
     updatedAt: string;
@@ -1409,6 +1410,11 @@ export type Customer = {
     phone: string;
     email: string;
     address: string;
+    country: string;
+    region: string;
+    city: string;
+    phoneNumber: string;
+    extraInfo: string;
     sales: Array<Sale>;
     user: User;
     createdAt: string;
@@ -1713,24 +1719,13 @@ export enum SchemaEnum3 {
 }
 
 export enum SchemaEnum4 {
-    LOCAL = 'local',
-    OTHER = 'other'
-}
-
-export enum SchemaEnum5 {
-    PAID = 'paid',
-    UNPAID = 'unpaid',
-    REFUNDED = 'refunded'
-}
-
-export enum SchemaEnum6 {
     DAILY = 'daily',
     WEEKLY = 'weekly',
     MONTHLY = 'monthly',
     YEARLY = 'yearly'
 }
 
-export enum SchemaEnum7 {
+export enum SchemaEnum5 {
     _7 = '7',
     _30 = '30',
     _90 = '90'
@@ -3402,26 +3397,22 @@ export type CheckoutControllerConfirmPaymentResponses = {
 
 export type CheckoutControllerConfirmPaymentResponse = CheckoutControllerConfirmPaymentResponses[keyof CheckoutControllerConfirmPaymentResponses];
 
-export type CheckoutControllerGetTransportationData = {
-    body?: never;
-    path: {
-        /**
-         * Delivery location type
-         */
-        location: SchemaEnum4;
-    };
+export type CheckoutControllerGetDeliveryCostData = {
+    body: GetDeliveryCostDto;
+    path?: never;
     query?: never;
-    url: '/checkout/transportation/{location}';
+    url: '/checkout/delivery';
 };
 
-export type CheckoutControllerGetTransportationResponses = {
+export type CheckoutControllerGetDeliveryCostResponses = {
     /**
      * Transportation cost calculated successfully
      */
-    200: TransportationResponseDto;
+    200: DeliveryResponseDto;
+    201: unknown;
 };
 
-export type CheckoutControllerGetTransportationResponse = CheckoutControllerGetTransportationResponses[keyof CheckoutControllerGetTransportationResponses];
+export type CheckoutControllerGetDeliveryCostResponse = CheckoutControllerGetDeliveryCostResponses[keyof CheckoutControllerGetDeliveryCostResponses];
 
 export type CheckoutControllerGetAllOrdersData = {
     body?: never;
@@ -3430,7 +3421,6 @@ export type CheckoutControllerGetAllOrdersData = {
         saleStatus?: SaleStatus;
         searchTerm?: string;
         page?: number;
-        paymentStatus?: SchemaEnum5;
     };
     url: '/checkout/admin/orders';
 };
@@ -3480,27 +3470,6 @@ export type CheckoutControllerUpdateSaleStatusResponses = {
 };
 
 export type CheckoutControllerUpdateSaleStatusResponse = CheckoutControllerUpdateSaleStatusResponses[keyof CheckoutControllerUpdateSaleStatusResponses];
-
-export type CheckoutControllerPaymentStatusData = {
-    body: PaymentStatus;
-    path: {
-        /**
-         * Checkout ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/checkout/payment-status/{id}';
-};
-
-export type CheckoutControllerPaymentStatusResponses = {
-    /**
-     * Payment status updated successfully
-     */
-    200: CheckoutResponseDto;
-};
-
-export type CheckoutControllerPaymentStatusResponse = CheckoutControllerPaymentStatusResponses[keyof CheckoutControllerPaymentStatusResponses];
 
 export type CheckoutControllerCancelOrderData = {
     body?: never;
@@ -3867,7 +3836,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
         /**
          * Include sales trends
          */
@@ -3910,7 +3879,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/sales/by-product';
 };
@@ -3949,7 +3918,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/sales/by-category';
 };
@@ -3988,7 +3957,7 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
         /**
          * Number of top products to return
          */
@@ -4032,7 +4001,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/products/revenue-distribution';
 };
@@ -4071,7 +4040,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/batches';
 };
@@ -4110,7 +4079,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/batches/aging';
 };
@@ -4177,7 +4146,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/stock-movement';
 };
@@ -4248,7 +4217,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum6;
+        aggregation?: SchemaEnum4;
     };
     url: '/reports/dashboard-summary';
 };
@@ -4294,7 +4263,7 @@ export type DashboardControllerGetTrendsData = {
         /**
          * Period for trend data
          */
-        period?: SchemaEnum7;
+        period?: SchemaEnum5;
     };
     url: '/dashboard/trends';
 };

@@ -2200,29 +2200,28 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/transportation/{location}": {
-      "get": {
-        "operationId": "CheckoutController_getTransportation",
-        "parameters": [
-          {
-            "name": "location",
-            "required": true,
-            "in": "path",
-            "description": "Delivery location type",
-            "schema": { "enum": ["local", "other"], "type": "string" }
+    "/checkout/delivery": {
+      "post": {
+        "operationId": "CheckoutController_getDeliveryCost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/GetDeliveryCostDto" } }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Transportation cost calculated successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/TransportationResponseDto" }
+                "schema": { "$ref": "#/components/schemas/DeliveryResponseDto" }
               }
             }
-          }
+          },
+          "201": { "description": "" }
         },
-        "summary": "Calculate transportation cost",
+        "summary": "Calculate delivery cost based on location details",
         "tags": ["Checkout"]
       }
     },
@@ -2253,13 +2252,7 @@
             "in": "query",
             "schema": { "type": "string" }
           },
-          { "name": "page", "required": false, "in": "query", "schema": { "type": "number" } },
-          {
-            "name": "paymentStatus",
-            "required": false,
-            "in": "query",
-            "schema": { "enum": ["paid", "unpaid", "refunded"], "type": "string" }
-          }
+          { "name": "page", "required": false, "in": "query", "schema": { "type": "number" } }
         ],
         "responses": {
           "200": {
@@ -2328,38 +2321,6 @@
           }
         },
         "summary": "Update sale status",
-        "tags": ["Checkout"]
-      }
-    },
-    "/checkout/payment-status/{id}": {
-      "patch": {
-        "operationId": "CheckoutController_paymentStatus",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Checkout ID",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/PaymentStatus" } }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Payment status updated successfully",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
-              }
-            }
-          }
-        },
-        "summary": "Update payment status",
         "tags": ["Checkout"]
       }
     },
@@ -5824,6 +5785,11 @@
           "phone": { "type": "string" },
           "email": { "type": "string" },
           "address": { "type": "string" },
+          "country": { "type": "string" },
+          "region": { "type": "string" },
+          "city": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "extraInfo": { "type": "string" },
           "sales": { "type": "array", "items": { "$ref": "#/components/schemas/SaleDto" } },
           "user": { "$ref": "#/components/schemas/UserDto" },
           "createdAt": { "format": "date-time", "type": "string" },
@@ -5836,6 +5802,11 @@
           "phone",
           "email",
           "address",
+          "country",
+          "region",
+          "city",
+          "phoneNumber",
+          "extraInfo",
           "sales",
           "user",
           "createdAt",
@@ -5855,12 +5826,6 @@
           "sale": { "$ref": "#/components/schemas/SaleDto" },
           "carts": { "type": "array", "items": { "$ref": "#/components/schemas/CartDto" } },
           "amount": { "type": "number" },
-          "country": { "type": "string" },
-          "region": { "type": "string" },
-          "city": { "type": "string" },
-          "phoneNumber": { "type": "string" },
-          "paymentStatus": { "type": "string", "enum": ["paid", "unpaid", "refunded"] },
-          "extraInfo": { "type": "string" },
           "paystackReference": { "type": "string" },
           "createdAt": { "format": "date-time", "type": "string" },
           "updatedAt": { "format": "date-time", "type": "string" },
@@ -5871,12 +5836,6 @@
           "sale",
           "carts",
           "amount",
-          "country",
-          "region",
-          "city",
-          "phoneNumber",
-          "paymentStatus",
-          "extraInfo",
           "paystackReference",
           "createdAt",
           "updatedAt",
@@ -5959,7 +5918,16 @@
         },
         "required": ["message", "data"]
       },
-      "TransportationResponseDto": {
+      "GetDeliveryCostDto": {
+        "type": "object",
+        "properties": {
+          "country": { "type": "string", "description": "The country for delivery." },
+          "city": { "type": "string", "description": "The city for delivery." },
+          "region": { "type": "string", "description": "The region for delivery." }
+        },
+        "required": ["country", "city", "region"]
+      },
+      "DeliveryResponseDto": {
         "type": "object",
         "properties": { "message": { "type": "string" }, "data": { "type": "number" } },
         "required": ["message", "data"]
@@ -6042,16 +6010,6 @@
         },
         "required": ["message", "data"]
       },
-      "PaymentStatus": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "description": "Payment status",
-            "allOf": [{ "$ref": "#/components/schemas/PaymentStatus" }]
-          }
-        },
-        "required": ["status"]
-      },
       "UploadResponseDto": {
         "type": "object",
         "properties": {
@@ -6132,12 +6090,6 @@
           "sale": { "$ref": "#/components/schemas/Sale" },
           "carts": { "type": "array", "items": { "$ref": "#/components/schemas/Cart" } },
           "amount": { "type": "number" },
-          "country": { "type": "string" },
-          "region": { "type": "string" },
-          "city": { "type": "string" },
-          "phoneNumber": { "type": "string" },
-          "paymentStatus": { "type": "string" },
-          "extraInfo": { "type": "string" },
           "paystackReference": { "type": "string" },
           "createdAt": { "format": "date-time", "type": "string" },
           "updatedAt": { "format": "date-time", "type": "string" },
@@ -6148,12 +6100,6 @@
           "sale",
           "carts",
           "amount",
-          "country",
-          "region",
-          "city",
-          "phoneNumber",
-          "paymentStatus",
-          "extraInfo",
           "paystackReference",
           "createdAt",
           "updatedAt",
@@ -6202,6 +6148,11 @@
           "phone": { "type": "string" },
           "email": { "type": "string" },
           "address": { "type": "string" },
+          "country": { "type": "string" },
+          "region": { "type": "string" },
+          "city": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "extraInfo": { "type": "string" },
           "sales": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
           "user": { "$ref": "#/components/schemas/User" },
           "createdAt": { "format": "date-time", "type": "string" },
@@ -6214,6 +6165,11 @@
           "phone",
           "email",
           "address",
+          "country",
+          "region",
+          "city",
+          "phoneNumber",
+          "extraInfo",
           "sales",
           "user",
           "createdAt",
