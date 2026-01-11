@@ -64,7 +64,7 @@ export function ProductDetailsTabs({ product }: ProductDetailsTabsProps): JSX.El
               <div className="flex flex-wrap gap-2">
                 {product.ingredients.map((ingredient, index) => (
                   <Badge key={index} variant="secondary" className="text-sm">
-                    {ingredient}
+                    {ingredient.name}
                   </Badge>
                 ))}
               </div>
