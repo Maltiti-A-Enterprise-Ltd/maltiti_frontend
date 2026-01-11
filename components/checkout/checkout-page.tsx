@@ -13,8 +13,10 @@ import OrderSummary from './order-summary';
 import {
   checkoutControllerInitializeTransaction,
   checkoutControllerGetDeliveryCost,
+  checkoutControllerPlaceOrder,
   InitializeTransaction,
   GetDeliveryCostDto,
+  PlaceOrderDto,
 } from '@/app/api';
 import { toast } from 'sonner';
 
@@ -56,14 +58,12 @@ const CheckoutPage = (): JSX.Element => {
         throw new Error('Unable to calculate delivery cost');
       }
 
-      // Cast to the expected type after error check
-      const responseData = response.data;
-
-      if (typeof responseData.data !== 'number') {
+      // response.data is already DeliveryResponseDto
+      if (typeof response.data.data !== 'number') {
         throw new Error('Invalid delivery cost response');
       }
 
-      const cost = responseData.data;
+      const cost = response.data.data;
 
       if (cost === -1) {
         // International delivery - cost will be determined later
@@ -97,7 +97,7 @@ const CheckoutPage = (): JSX.Element => {
     calculateDeliveryCost(data);
   };
 
-  const handleProceedToPayment = async (): Promise<void> => {
+  const handleCheckout = async (): Promise<void> => {
     if (!locationData) {
       toast.error('Location Required', {
         description: 'Please fill in your delivery location details.',
@@ -115,38 +115,76 @@ const CheckoutPage = (): JSX.Element => {
     setIsProcessing(true);
 
     try {
-      const payload: InitializeTransaction = {
-        country: locationData.country,
-        region: locationData.region,
-        city: locationData.city,
-        phoneNumber: locationData.phoneNumber,
-        extraInfo: locationData.extraInfo,
-      };
+      // If international delivery (deliveryCost is null and isInternationalDelivery is true),
+      // use place order endpoint instead of immediate payment
+      if (isInternationalDelivery || deliveryCost === null) {
+        const payload: PlaceOrderDto = {
+          country: locationData.country,
+          region: locationData.region,
+          city: locationData.city,
+          phoneNumber: locationData.phoneNumber,
+          extraInfo: locationData.extraInfo,
+        };
 
-      const { data, error } = await checkoutControllerInitializeTransaction({
-        body: payload,
-      });
+        const { data, error } = await checkoutControllerPlaceOrder({
+          body: payload,
+        });
 
-      if (!data || error) {
-        throw new Error('Unable to initialize payment. Please try again.');
-      }
+        if (!data || error) {
+          throw new Error('Unable to place order. Please try again.');
+        }
 
-      const paymentLink = data.data.authorization_url;
+        // Show success message and redirect to orders page
+        toast.success('Order Placed Successfully!', {
+          description:
+            'Your order has been placed. We will contact you with the delivery cost and you can make payment from your orders page.',
+          duration: 8000,
+        });
 
-      // Redirect to Paystack
-      if (paymentLink) {
-        window.location.href = paymentLink;
+        // Redirect to orders page after a short delay
+        setTimeout(() => {
+          router.push('/orders');
+        }, 2000);
       } else {
-        throw new Error('Payment link not received');
+        // Normal flow: proceed to payment
+        const payload: InitializeTransaction = {
+          country: locationData.country,
+          region: locationData.region,
+          city: locationData.city,
+          phoneNumber: locationData.phoneNumber,
+          extraInfo: locationData.extraInfo,
+        };
+
+        const { data, error } = await checkoutControllerInitializeTransaction({
+          body: payload,
+        });
+
+        if (!data || error) {
+          throw new Error('Unable to initialize payment. Please try again.');
+        }
+
+        const paymentLink = data.data.authorization_url;
+
+        // Redirect to Paystack
+        if (paymentLink) {
+          window.location.href = paymentLink;
+        } else {
+          throw new Error('Payment link not received');
+        }
       }
     } catch (error) {
-      console.error('Payment initialization error:', error);
-      toast.error('Payment Initialization Failed', {
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Unable to initialize payment. Please try again.',
-      });
+      console.error('Checkout error:', error);
+      toast.error(
+        isInternationalDelivery ? 'Order Placement Failed' : 'Payment Initialization Failed',
+        {
+          description:
+            error instanceof Error
+              ? error.message
+              : isInternationalDelivery
+                ? 'Unable to place order. Please try again.'
+                : 'Unable to initialize payment. Please try again.',
+        },
+      );
       setIsProcessing(false);
     }
   };
@@ -262,7 +300,7 @@ const CheckoutPage = (): JSX.Element => {
             Back
           </Button>
           <h1 className="text-4xl font-bold text-gray-900">Checkout</h1>
-          <p className="mt-2 text-gray-600">Complete your order and proceed to payment</p>
+          <p className="mt-2 text-gray-600">Complete your order information</p>
         </div>
 
         {/* Main Content */}
@@ -275,7 +313,10 @@ const CheckoutPage = (): JSX.Element => {
                 <CardDescription>Please provide your delivery location details</CardDescription>
               </CardHeader>
               <CardContent>
-                <LocationForm onSubmit={handleLocationSubmit} />
+                <LocationForm
+                  onSubmit={handleLocationSubmit}
+                  onReset={() => setLocationData(null)}
+                />
               </CardContent>
             </Card>
 
@@ -316,8 +357,8 @@ const CheckoutPage = (): JSX.Element => {
                 <Separator />
 
                 <Button
-                  onClick={handleProceedToPayment}
-                  disabled={isProcessing || !locationData}
+                  onClick={handleCheckout}
+                  disabled={isProcessing || !locationData || isCalculatingDelivery}
                   className="w-full bg-[#0F6938] text-lg font-semibold hover:bg-[#0F6938]/90"
                   size="lg"
                 >
@@ -326,10 +367,18 @@ const CheckoutPage = (): JSX.Element => {
                       <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                       Processing...
                     </>
+                  ) : isInternationalDelivery || deliveryCost === null ? (
+                    <>Place Order</>
                   ) : (
                     <>Proceed to Payment</>
                   )}
                 </Button>
+
+                {(isInternationalDelivery || deliveryCost === null) && (
+                  <p className="text-center text-xs text-blue-600">
+                    You will be able to make payment once we confirm the delivery cost
+                  </p>
+                )}
 
                 <p className="text-center text-xs text-gray-500">
                   By proceeding, you agree to our{' '}

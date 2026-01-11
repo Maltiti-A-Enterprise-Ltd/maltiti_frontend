@@ -41,9 +41,10 @@ type LocationFormValues = z.infer<typeof locationSchema>;
 
 type LocationFormProps = {
   onSubmit: (data: LocationFormValues) => void;
+  onReset?: () => void;
 };
 
-const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
+const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [selectedState, setSelectedState] = useState<string>('');
@@ -95,6 +96,11 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
     onSubmit(data);
   };
 
+  const resetSubmission = (): void => {
+    setIsSubmitted(false);
+    onReset?.();
+  };
+
   useEffect(() => {
     if (isSubmitted) {
       const subscription = form.watch((value) => {
@@ -140,6 +146,11 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
                     } else {
                       form.setValue('phoneNumber', '');
                     }
+
+                    // Reset confirmation if location fields change
+                    if (isSubmitted) {
+                      resetSubmission();
+                    }
                   }}
                   placeholder="Select your country"
                 />
@@ -166,6 +177,11 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
                     setSelectedState(value);
                     // Reset city when state changes
                     form.setValue('city', '');
+
+                    // Reset confirmation if location fields change
+                    if (isSubmitted) {
+                      resetSubmission();
+                    }
                   }}
                   value={field.value}
                   disabled={!selectedCountry}
@@ -188,6 +204,14 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
                   <Input
                     placeholder="e.g., Greater Accra, California, Ontario"
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+
+                      // Reset confirmation if location fields change
+                      if (isSubmitted) {
+                        resetSubmission();
+                      }
+                    }}
                     disabled={!selectedCountry}
                   />
                 </FormControl>
@@ -213,7 +237,14 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
               <FormLabel>City / Town</FormLabel>
               {cities.length > 0 ? (
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+
+                    // Reset confirmation if location fields change
+                    if (isSubmitted) {
+                      resetSubmission();
+                    }
+                  }}
                   value={field.value}
                   disabled={!selectedState}
                 >
@@ -238,6 +269,14 @@ const LocationForm = ({ onSubmit }: LocationFormProps): JSX.Element => {
                       placeholder="e.g., Accra, New York, London"
                       className="pl-10"
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+
+                        // Reset confirmation if location fields change
+                        if (isSubmitted) {
+                          resetSubmission();
+                        }
+                      }}
                       disabled={!selectedCountry}
                     />
                   </div>
