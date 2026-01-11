@@ -1,7 +1,11 @@
 import { JSX, Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { productsControllerGetProduct, productsControllerGetAllProducts } from '@/app/api';
+import {
+  productsControllerGetProduct,
+  productsControllerGetAllProducts,
+  ProductResponseDto,
+} from '@/app/api';
 import { ProductDetailContent, ProductDetailSkeleton } from '@/components/products';
 
 type ProductPageProps = {
@@ -14,11 +18,15 @@ type ProductPageProps = {
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   try {
     const { id } = await params;
-    const response = await productsControllerGetProduct({
+    const { data, error } = await productsControllerGetProduct({
       path: { id },
     });
 
-    const product = response.data.data;
+    if (error || !data) {
+      throw new Error('Product not found');
+    }
+
+    const product = data.data;
 
     return {
       title: `${product.name} | Maltiti A. Enterprise Ltd`,
@@ -58,7 +66,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         images: [product.image || product.images?.[0] || '/placeholder-product.svg'],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'Product Not Found | Maltiti A. Enterprise Ltd',
       description: 'The product you are looking for could not be found.',
@@ -67,7 +75,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 // Fetch product data
-async function getProductData(id: string) {
+async function getProductData(id: string): Promise<{
+  product: ProductResponseDto;
+  relatedProducts: ProductResponseDto[];
+} | null> {
   try {
     const [productResponse, relatedProductsResponse] = await Promise.all([
       productsControllerGetProduct({
@@ -81,9 +92,20 @@ async function getProductData(id: string) {
       }),
     ]);
 
+    if (productResponse.error || relatedProductsResponse.error) {
+      throw new Error('Error fetching product data');
+    }
+
+    const product = productResponse.data?.data;
+    const relatedProducts = relatedProductsResponse.data?.data.items;
+
+    if (!product || !relatedProducts) {
+      throw new Error('Product or related products not found');
+    }
+
     return {
-      product: productResponse.data.data,
-      relatedProducts: relatedProductsResponse.data.data.items,
+      product,
+      relatedProducts,
     };
   } catch (error) {
     console.error('Error fetching product:', error);
