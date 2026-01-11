@@ -1,7 +1,14 @@
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[build]
+  # Other build settings might go here
 
- [trailing_slash]
-   remove = true
+[context.production]
+  # Set the Node version for the production build
+  NODE_VERSION = "24.12.0"
+
+[context.branch-deploy]
+  # Optionally set the Node version for branch builds
+  NODE_VERSION = "24.12.0"
+
+[context.deploy-preview]
+  # Optionally set the Node version for deploy previews
+  NODE_VERSION = "24.12.0"
