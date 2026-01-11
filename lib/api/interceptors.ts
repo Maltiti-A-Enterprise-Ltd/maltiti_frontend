@@ -98,6 +98,21 @@ const handleSessionExpiry = (): void => {
 };
 
 /**
+ * Recreate a Response object with the same properties but fresh body stream
+ */
+const recreateResponse = async (originalResponse: Response): Promise<Response> => {
+  // Clone the response body before it's consumed
+  const body = await originalResponse.clone().text();
+
+  // Create a new Response with the same properties
+  return new Response(body, {
+    status: originalResponse.status,
+    statusText: originalResponse.statusText,
+    headers: originalResponse.headers,
+  });
+};
+
+/**
  * Setup API client interceptors for token refresh
  */
 export const setupInterceptors = (): void => {
@@ -133,7 +148,8 @@ export const setupInterceptors = (): void => {
             ...requestOptions,
             _retry: true,
           } as Omit<ResolvedRequestOptions, 'method'>);
-          return retryResult.response;
+          // Return a fresh Response object to avoid body stream consumption issues
+          return recreateResponse(retryResult.response);
         })
         .catch((err) => {
           throw err;
@@ -162,7 +178,8 @@ export const setupInterceptors = (): void => {
         const retryResult = await clientMethod(
           requestOptions as Omit<ResolvedRequestOptions, 'method'>,
         );
-        return retryResult.response;
+        // Return a fresh Response object to avoid body stream consumption issues
+        return recreateResponse(retryResult.response);
       }
       // Token refresh failed, clear queue and handle session expiry
       processQueue(new Error('Token refresh failed'));
