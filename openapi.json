@@ -361,6 +361,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - invalid OTP code or validation failed",
             "content": {
@@ -450,6 +451,7 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
@@ -495,6 +497,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
@@ -534,6 +537,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - passwords do not match or validation failed",
             "content": {
@@ -617,6 +621,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "401": {
             "description": "Invalid, expired, or missing refresh token",
             "content": {
@@ -647,6 +652,7 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/LogoutResponseDto" } }
             }
           },
+          "201": { "description": "" },
           "401": {
             "description": "Unauthorized - not logged in",
             "content": {
@@ -739,6 +745,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - passwords do not match, current password is incorrect, or validation failed",
             "content": {
@@ -787,6 +794,7 @@
               }
             }
           },
+          "201": { "description": "" },
           "400": {
             "description": "Bad request - email already verified or validation failed",
             "content": {
@@ -2126,7 +2134,16 @@
       "get": {
         "operationId": "CheckoutController_getOrders",
         "parameters": [],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Customer orders loaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutsResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Get all orders for current user",
         "tags": ["Checkout"]
       }
@@ -2143,17 +2160,17 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Order loaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Get a specific order",
-        "tags": ["Checkout"]
-      }
-    },
-    "/checkout/test-mail": {
-      "get": {
-        "operationId": "CheckoutController_testMail",
-        "parameters": [],
-        "responses": { "200": { "description": "" } },
-        "summary": "Test email functionality",
         "tags": ["Checkout"]
       }
     },
@@ -2169,7 +2186,16 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Payment confirmed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Confirm payment for an order",
         "tags": ["Checkout"]
       }
@@ -2186,7 +2212,16 @@
             "schema": { "enum": ["local", "other"], "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Transportation cost calculated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TransportationResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Calculate transportation cost",
         "tags": ["Checkout"]
       }
@@ -2226,7 +2261,16 @@
             "schema": { "enum": ["paid", "unpaid", "refunded"], "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Orders loaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrdersPaginationResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Get all orders (admin)",
         "tags": ["Checkout"]
       }
@@ -2243,7 +2287,16 @@
             }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "Transaction initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Initialize payment transaction",
         "tags": ["Checkout"]
       }
@@ -2266,7 +2319,14 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/UpdateSaleStatusDto" } }
           }
         },
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Sale status updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
+          }
+        },
         "summary": "Update sale status",
         "tags": ["Checkout"]
       }
@@ -2289,7 +2349,16 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/PaymentStatus" } }
           }
         },
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Payment status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Update payment status",
         "tags": ["Checkout"]
       }
@@ -2306,7 +2375,16 @@
             "schema": { "type": "string" }
           }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "Order has been successfully cancelled. If you have paid, you will receive refund in 3 working days",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
         "summary": "Cancel an order",
         "tags": ["Checkout"]
       }
@@ -2500,6 +2578,10 @@
           "200": {
             "description": "",
             "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+          },
+          "201": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
           }
         },
         "summary": "Add line item to sale",
@@ -2540,7 +2622,10 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/GenerateInvoiceDto" } }
           }
         },
-        "responses": { "200": { "description": "Invoice PDF generated successfully" } },
+        "responses": {
+          "200": { "description": "Invoice PDF generated successfully" },
+          "201": { "description": "" }
+        },
         "summary": "Generate invoice PDF for a sale",
         "tags": ["Sales"]
       }
@@ -2557,7 +2642,10 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/GenerateReceiptDto" } }
           }
         },
-        "responses": { "200": { "description": "Receipt PDF generated successfully" } },
+        "responses": {
+          "200": { "description": "Receipt PDF generated successfully" },
+          "201": { "description": "" }
+        },
         "summary": "Generate receipt PDF for a sale",
         "tags": ["Sales"]
       }
@@ -2574,7 +2662,10 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/GenerateWaybillDto" } }
           }
         },
-        "responses": { "200": { "description": "Waybill PDF generated successfully" } },
+        "responses": {
+          "200": { "description": "Waybill PDF generated successfully" },
+          "201": { "description": "" }
+        },
         "summary": "Generate waybill PDF for a sale",
         "tags": ["Sales"]
       }
@@ -3640,6 +3731,7 @@
         },
         "responses": {
           "200": { "description": "Avatar uploaded successfully" },
+          "201": { "description": "" },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
         },
@@ -5695,6 +5787,191 @@
         },
         "required": ["message", "data"]
       },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string" },
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "userType": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "permissions": { "type": "string" },
+          "mustChangePassword": { "type": "boolean" },
+          "rememberToken": { "type": "string" },
+          "status": { "type": "string" }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "password",
+          "userType",
+          "phoneNumber",
+          "avatarUrl",
+          "permissions",
+          "mustChangePassword",
+          "rememberToken",
+          "status"
+        ]
+      },
+      "CustomerDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "address": { "type": "string" },
+          "sales": { "type": "array", "items": { "$ref": "#/components/schemas/SaleDto" } },
+          "user": { "$ref": "#/components/schemas/UserDto" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "email",
+          "address",
+          "sales",
+          "user",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "CartDto": {
+        "type": "object",
+        "properties": { "id": { "type": "string" } },
+        "required": ["id"]
+      },
+      "CheckoutDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sale": { "$ref": "#/components/schemas/SaleDto" },
+          "carts": { "type": "array", "items": { "$ref": "#/components/schemas/CartDto" } },
+          "amount": { "type": "number" },
+          "country": { "type": "string" },
+          "region": { "type": "string" },
+          "city": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "paymentStatus": { "type": "string", "enum": ["paid", "unpaid", "refunded"] },
+          "extraInfo": { "type": "string" },
+          "paystackReference": { "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "sale",
+          "carts",
+          "amount",
+          "country",
+          "region",
+          "city",
+          "phoneNumber",
+          "paymentStatus",
+          "extraInfo",
+          "paystackReference",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "SaleLineItemDto": {
+        "type": "object",
+        "properties": {
+          "productId": { "type": "string" },
+          "batchAllocations": {
+            "type": "object",
+            "properties": { "batchId": { "type": "string" }, "quantity": { "type": "number" } },
+            "required": []
+          },
+          "requestedQuantity": { "type": "number" },
+          "customPrice": { "type": "number" },
+          "finalPrice": { "type": "number" }
+        },
+        "required": ["productId", "batchAllocations", "requestedQuantity", "finalPrice"]
+      },
+      "SaleDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "customer": { "$ref": "#/components/schemas/CustomerDto" },
+          "checkout": { "$ref": "#/components/schemas/CheckoutDto" },
+          "status": { "type": "string" },
+          "lineItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SaleLineItemDto" }
+          },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "customer",
+          "checkout",
+          "status",
+          "lineItems",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "OrdersPaginationDto": {
+        "type": "object",
+        "properties": {
+          "totalItems": { "type": "number" },
+          "currentPage": { "type": "number" },
+          "totalPages": { "type": "number" },
+          "orders": { "type": "array", "items": { "$ref": "#/components/schemas/CheckoutDto" } }
+        },
+        "required": ["totalItems", "currentPage", "totalPages", "orders"]
+      },
+      "InitializeTransactionDataDto": {
+        "type": "object",
+        "properties": {
+          "authorization_url": { "type": "string" },
+          "access_code": { "type": "string" },
+          "reference": { "type": "string" }
+        },
+        "required": ["authorization_url", "access_code", "reference"]
+      },
+      "CheckoutsResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/CheckoutDto" } }
+        },
+        "required": ["message", "data"]
+      },
+      "CheckoutResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/CheckoutDto" }
+        },
+        "required": ["message", "data"]
+      },
+      "TransportationResponseDto": {
+        "type": "object",
+        "properties": { "message": { "type": "string" }, "data": { "type": "number" } },
+        "required": ["message", "data"]
+      },
+      "OrdersPaginationResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/OrdersPaginationDto" }
+        },
+        "required": ["message", "data"]
+      },
       "InitializeTransaction": {
         "type": "object",
         "properties": {
@@ -5717,6 +5994,15 @@
           }
         },
         "required": ["country", "region", "city", "phoneNumber"]
+      },
+      "InitializeTransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "status": { "type": "boolean" },
+          "data": { "$ref": "#/components/schemas/InitializeTransactionDataDto" }
+        },
+        "required": ["message", "status", "data"]
       },
       "SaleStatus": {
         "type": "string",
@@ -5748,6 +6034,14 @@
         },
         "required": ["status"]
       },
+      "SaleResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/SaleDto" }
+        },
+        "required": ["message", "data"]
+      },
       "PaymentStatus": {
         "type": "object",
         "properties": {
@@ -5766,24 +6060,6 @@
         },
         "required": ["message", "data"]
       },
-      "BatchAllocationDto": {
-        "type": "object",
-        "properties": { "batchId": { "type": "string" }, "quantity": { "type": "number" } },
-        "required": ["batchId", "quantity"]
-      },
-      "SaleLineItemDto": {
-        "type": "object",
-        "properties": {
-          "productId": { "type": "string" },
-          "batchAllocations": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
-          },
-          "requestedQuantity": { "type": "number" },
-          "customPrice": { "type": "number" }
-        },
-        "required": ["productId", "batchAllocations", "requestedQuantity"]
-      },
       "CreateSaleDto": {
         "type": "object",
         "properties": {
@@ -5799,7 +6075,156 @@
         },
         "required": ["customerId", "lineItems"]
       },
-      "Sale": { "type": "object", "properties": {} },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" },
+          "password": { "type": "string" },
+          "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] },
+          "phoneNumber": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "permissions": { "type": "string" },
+          "mustChangePassword": { "type": "boolean" },
+          "rememberToken": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
+          "dob": { "format": "date-time", "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "emailVerifiedAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "password",
+          "userType",
+          "phoneNumber",
+          "avatarUrl",
+          "permissions",
+          "mustChangePassword",
+          "rememberToken",
+          "status",
+          "dob",
+          "createdAt",
+          "emailVerifiedAt",
+          "updatedAt"
+        ]
+      },
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "user": { "$ref": "#/components/schemas/User" },
+          "product": { "$ref": "#/components/schemas/Product" },
+          "quantity": { "type": "number", "minimum": 1 },
+          "checkout": { "nullable": true, "allOf": [{ "$ref": "#/components/schemas/Checkout" }] },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": ["id", "user", "product", "quantity", "createdAt", "updatedAt"]
+      },
+      "Checkout": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sale": { "$ref": "#/components/schemas/Sale" },
+          "carts": { "type": "array", "items": { "$ref": "#/components/schemas/Cart" } },
+          "amount": { "type": "number" },
+          "country": { "type": "string" },
+          "region": { "type": "string" },
+          "city": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "extraInfo": { "type": "string" },
+          "paystackReference": { "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "sale",
+          "carts",
+          "amount",
+          "country",
+          "region",
+          "city",
+          "phoneNumber",
+          "paymentStatus",
+          "extraInfo",
+          "paystackReference",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "Sale": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "customer": { "$ref": "#/components/schemas/Customer" },
+          "checkout": { "$ref": "#/components/schemas/Checkout" },
+          "status": {
+            "enum": [
+              "invoice_requested",
+              "pending_payment",
+              "paid",
+              "packaging",
+              "in_transit",
+              "delivered",
+              "cancelled"
+            ],
+            "type": "string"
+          },
+          "lineItems": { "type": "array", "items": { "type": "object" } },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "customer",
+          "checkout",
+          "status",
+          "lineItems",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "address": { "type": "string" },
+          "sales": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
+          "user": { "$ref": "#/components/schemas/User" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" },
+          "deletedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "email",
+          "address",
+          "sales",
+          "user",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "BatchAllocationDto": {
+        "type": "object",
+        "properties": { "batchId": { "type": "string" }, "quantity": { "type": "number" } }
+      },
       "UpdateSaleLineItemDto": {
         "type": "object",
         "properties": {

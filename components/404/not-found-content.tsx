@@ -32,7 +32,7 @@ export function NotFoundContent({}: NotFoundContentProps): JSX.Element {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-linear-to-br from-green-50/30 via-white to-amber-50/40">
+    <section className="relative mt-16 min-h-screen overflow-hidden bg-linear-to-br from-green-50/30 via-white to-amber-50/40">
       {/* Decorative Blobs - Background Layer */}
       <motion.div
         className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 opacity-[0.07] lg:-top-40 lg:-right-40 lg:h-125 lg:w-125"
