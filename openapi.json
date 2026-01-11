@@ -2294,6 +2294,57 @@
         "tags": ["Checkout"]
       }
     },
+    "/checkout/place-order": {
+      "post": {
+        "operationId": "CheckoutController_placeOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/PlaceOrderDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order placed successfully. You can make payment later from your dashboard.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Place an order without immediate payment - payment can be made later",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/pay-for-order/{checkoutId}": {
+      "post": {
+        "operationId": "CheckoutController_payForOrder",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          },
+          "201": { "description": "" }
+        },
+        "summary": "Initialize payment for a previously placed order (invoice requested or pending payment)",
+        "tags": ["Checkout"]
+      }
+    },
     "/checkout/sale-status/{id}": {
       "patch": {
         "operationId": "CheckoutController_updateSaleStatus",
@@ -2321,6 +2372,40 @@
           }
         },
         "summary": "Update sale status",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/delivery-cost/{id}": {
+      "patch": {
+        "operationId": "CheckoutController_updateDeliveryCost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateDeliveryCostDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delivery cost updated successfully. Customer will be notified.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Update delivery cost for an order (e.g., for international orders)",
         "tags": ["Checkout"]
       }
     },
@@ -5972,6 +6057,29 @@
         },
         "required": ["message", "status", "data"]
       },
+      "PlaceOrderDto": {
+        "type": "object",
+        "properties": {
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
+          }
+        },
+        "required": ["country", "region", "city", "phoneNumber"]
+      },
       "SaleStatus": {
         "type": "string",
         "enum": [
@@ -6009,6 +6117,18 @@
           "data": { "$ref": "#/components/schemas/SaleDto" }
         },
         "required": ["message", "data"]
+      },
+      "UpdateDeliveryCostDto": {
+        "type": "object",
+        "properties": {
+          "deliveryCost": {
+            "type": "number",
+            "minimum": 0,
+            "description": "New delivery cost amount",
+            "example": 150.5
+          }
+        },
+        "required": ["deliveryCost"]
       },
       "UploadResponseDto": {
         "type": "object",
