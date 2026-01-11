@@ -4609,7 +4609,6 @@ export type ProfileControllerUploadAvatarResponses = {
    * Avatar uploaded successfully
    */
   200: AvatarUploadResponseDto;
-  201: unknown;
 };
 
 export type ProfileControllerUploadAvatarResponse =
