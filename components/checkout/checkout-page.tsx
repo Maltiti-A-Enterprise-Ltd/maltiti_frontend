@@ -10,7 +10,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useCart } from '@/lib/store/useCart';
 import LocationForm from './location-form';
 import OrderSummary from './order-summary';
-import { checkoutControllerInitializeTransaction, InitializeTransaction } from '@/app/api';
+import {
+  checkoutControllerInitializeTransaction,
+  checkoutControllerGetDeliveryCost,
+  InitializeTransaction,
+  GetDeliveryCostDto,
+} from '@/app/api';
 import { toast } from 'sonner';
 
 type LocationData = {
@@ -26,11 +31,70 @@ const CheckoutPage = (): JSX.Element => {
   const { items, totalPrice, isLoading, isFetching } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [deliveryCost, setDeliveryCost] = useState<number | null>(null);
+  const [isCalculatingDelivery, setIsCalculatingDelivery] = useState(false);
+  const [isInternationalDelivery, setIsInternationalDelivery] = useState(false);
 
   const isCartLoading = isLoading || isFetching;
 
+  const calculateDeliveryCost = async (location: LocationData): Promise<void> => {
+    setIsCalculatingDelivery(true);
+    setIsInternationalDelivery(false);
+
+    try {
+      const payload: GetDeliveryCostDto = {
+        country: location.country,
+        region: location.region,
+        city: location.city,
+      };
+
+      const response = await checkoutControllerGetDeliveryCost({
+        body: payload,
+      });
+
+      if (response.error || !response.data) {
+        throw new Error('Unable to calculate delivery cost');
+      }
+
+      // Cast to the expected type after error check
+      const responseData = response.data;
+
+      if (typeof responseData.data !== 'number') {
+        throw new Error('Invalid delivery cost response');
+      }
+
+      const cost = responseData.data;
+
+      if (cost === -1) {
+        // International delivery - cost will be determined later
+        setIsInternationalDelivery(true);
+        setDeliveryCost(null);
+        toast.info('International Delivery', {
+          description:
+            'We will contact you regarding delivery costs for international orders. Please proceed to complete your order.',
+          duration: 6000,
+        });
+      } else {
+        setDeliveryCost(cost);
+        setIsInternationalDelivery(false);
+      }
+    } catch (error) {
+      console.error('Delivery cost calculation error:', error);
+      toast.error('Delivery Calculation Failed', {
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Unable to calculate delivery cost. Please try again.',
+      });
+    } finally {
+      setIsCalculatingDelivery(false);
+    }
+  };
+
   const handleLocationSubmit = (data: LocationData): void => {
     setLocationData(data);
+    // Calculate delivery cost when location is submitted
+    calculateDeliveryCost(data);
   };
 
   const handleProceedToPayment = async (): Promise<void> => {
@@ -241,7 +305,13 @@ const CheckoutPage = (): JSX.Element => {
                 <CardDescription>{items.length} items in your cart</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <OrderSummary items={items} totalPrice={totalPrice} />
+                <OrderSummary
+                  items={items}
+                  totalPrice={totalPrice}
+                  deliveryCost={deliveryCost}
+                  isCalculatingDelivery={isCalculatingDelivery}
+                  isInternationalDelivery={isInternationalDelivery}
+                />
 
                 <Separator />
 
