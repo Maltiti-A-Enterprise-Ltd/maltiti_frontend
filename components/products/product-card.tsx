@@ -23,6 +23,7 @@ const ProductCard = memo(function ProductCard({
 }: ProductCardProps): JSX.Element {
   const [imageError, setImageError] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [addingCurrentProductToCart, setAddingCurrentProductToCart] = useState(false);
 
   // Cart functionality
   const { addItem, isAdding } = useCart();
@@ -56,7 +57,9 @@ const ProductCard = memo(function ProductCard({
     }
 
     try {
+      setAddingCurrentProductToCart(true);
       await addItem(product, 1);
+      setAddingCurrentProductToCart(false);
 
       // Show success toast
       toast.success('Added to cart', {
@@ -258,10 +261,10 @@ const ProductCard = memo(function ProductCard({
         {/* Add to Cart Button */}
         <Button
           className="w-full transition-all duration-300 hover:scale-[1.02]"
-          disabled={isUnavailable || isAdding}
+          disabled={isUnavailable || (isAdding && addingCurrentProductToCart)}
           onClick={handleAddToCart}
         >
-          {isAdding ? (
+          {isAdding && addingCurrentProductToCart ? (
             <>
               <Icon icon="ph:circle-notch" className="h-4 w-4 animate-spin" />
               Adding...
