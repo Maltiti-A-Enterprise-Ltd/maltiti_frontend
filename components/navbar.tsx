@@ -116,7 +116,7 @@ export function NavBar(): JSX.Element {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer">
-            <AvatarImage src={undefined} alt={user.name} />
+            <AvatarImage src={user.avatarUrl} alt={user.name} />
             <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

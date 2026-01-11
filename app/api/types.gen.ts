@@ -93,6 +93,10 @@ export type UserResponseDto = {
    */
   permissions?: string;
   /**
+   * URL of the user's avatar
+   */
+  avatarUrl?: string;
+  /**
    * Whether the user must change their password on next login
    */
   mustChangePassword: boolean;
@@ -1628,11 +1632,11 @@ export type ProfileResponseDto = {
   /**
    * Email verification status (read-only)
    */
-  emailVerified: boolean;
+  emailVerifiedAt: string;
   /**
    * Phone verification status (read-only)
    */
-  phoneVerified: boolean;
+  phoneVerifiedAt: string;
   /**
    * Account creation date (read-only)
    */
@@ -1641,6 +1645,17 @@ export type ProfileResponseDto = {
    * Last update date (read-only)
    */
   updatedAt: string;
+};
+
+export type ProfileResponseWrapperDto = {
+  /**
+   * Response message
+   */
+  message: string;
+  /**
+   * Profile data
+   */
+  data: ProfileResponseDto;
 };
 
 export type UpdateProfileDto = {
@@ -1652,6 +1667,17 @@ export type UpdateProfileDto = {
    * Phone number
    */
   phone?: string;
+};
+
+export type AvatarUploadResponseDto = {
+  /**
+   * Response message
+   */
+  message: string;
+  /**
+   * Avatar URL
+   */
+  data: string;
 };
 
 export type ContactUsDto = {
@@ -3496,7 +3522,7 @@ export type CheckoutControllerGetDeliveryCostResponses = {
   /**
    * Transportation cost calculated successfully
    */
-  200: DeliveryResponseDto;
+  201: DeliveryResponseDto;
 };
 
 export type CheckoutControllerGetDeliveryCostResponse =
@@ -4517,7 +4543,7 @@ export type ProfileControllerGetProfileResponses = {
   /**
    * Profile retrieved successfully
    */
-  200: ProfileResponseDto;
+  200: ProfileResponseWrapperDto;
 };
 
 export type ProfileControllerGetProfileResponse =
@@ -4549,7 +4575,7 @@ export type ProfileControllerUpdateProfileResponses = {
   /**
    * Profile updated successfully
    */
-  200: ProfileResponseDto;
+  201: ProfileResponseWrapperDto;
 };
 
 export type ProfileControllerUpdateProfileResponse =
@@ -4582,9 +4608,11 @@ export type ProfileControllerUploadAvatarResponses = {
   /**
    * Avatar uploaded successfully
    */
-  200: unknown;
-  201: unknown;
+  200: AvatarUploadResponseDto;
 };
+
+export type ProfileControllerUploadAvatarResponse =
+  ProfileControllerUploadAvatarResponses[keyof ProfileControllerUploadAvatarResponses];
 
 export type ContactControllerSubmitContactFormData = {
   body: ContactUsDto;

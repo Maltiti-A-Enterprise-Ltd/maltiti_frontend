@@ -2211,15 +2211,14 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Transportation cost calculated successfully",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/DeliveryResponseDto" }
               }
             }
-          },
-          "201": { "description": "" }
+          }
         },
         "summary": "Calculate delivery cost based on location details",
         "tags": ["Checkout"]
@@ -3715,7 +3714,7 @@
             "description": "Profile retrieved successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProfileResponseDto" }
+                "schema": { "$ref": "#/components/schemas/ProfileResponseWrapperDto" }
               }
             }
           },
@@ -3736,11 +3735,12 @@
           }
         },
         "responses": {
-          "200": {
+          "200": { "description": "" },
+          "201": {
             "description": "Profile updated successfully",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ProfileResponseDto" }
+                "schema": { "$ref": "#/components/schemas/ProfileResponseWrapperDto" }
               }
             }
           },
@@ -3776,7 +3776,14 @@
           }
         },
         "responses": {
-          "200": { "description": "Avatar uploaded successfully" },
+          "200": {
+            "description": "Avatar uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AvatarUploadResponseDto" }
+              }
+            }
+          },
           "201": { "description": "" },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
@@ -4026,6 +4033,11 @@
             "type": "string",
             "description": "User permissions",
             "example": "read,write,delete"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "URL of the user's avatar",
+            "example": "https://example.com/avatars/user.jpg"
           },
           "mustChangePassword": {
             "type": "boolean",
@@ -6503,13 +6515,13 @@
             "description": "User role (read-only)",
             "example": "admin"
           },
-          "emailVerified": {
-            "type": "boolean",
+          "emailVerifiedAt": {
+            "type": "string",
             "description": "Email verification status (read-only)",
             "example": true
           },
-          "phoneVerified": {
-            "type": "boolean",
+          "phoneVerifiedAt": {
+            "type": "string",
             "description": "Phone verification status (read-only)",
             "example": true
           },
@@ -6531,11 +6543,26 @@
           "name",
           "email",
           "userType",
-          "emailVerified",
-          "phoneVerified",
+          "emailVerifiedAt",
+          "phoneVerifiedAt",
           "createdAt",
           "updatedAt"
         ]
+      },
+      "ProfileResponseWrapperDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Profile retrieved successfully"
+          },
+          "data": {
+            "description": "Profile data",
+            "allOf": [{ "$ref": "#/components/schemas/ProfileResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
       },
       "UpdateProfileDto": {
         "type": "object",
@@ -6543,6 +6570,22 @@
           "name": { "type": "string", "description": "Full name", "example": "John Doe" },
           "phone": { "type": "string", "description": "Phone number", "example": "+1234567890" }
         }
+      },
+      "AvatarUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Profile picture uploaded successfully"
+          },
+          "data": {
+            "type": "string",
+            "description": "Avatar URL",
+            "example": "https://example.com/avatars/user.jpg"
+          }
+        },
+        "required": ["message", "data"]
       },
       "ContactUsDto": {
         "type": "object",

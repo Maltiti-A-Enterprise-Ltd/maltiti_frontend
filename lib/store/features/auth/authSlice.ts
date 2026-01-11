@@ -42,6 +42,11 @@ const authSlice = createSlice({
         verifyEmail: null,
       };
     },
+    updateUser: (state, action: PayloadAction<Partial<UserResponseDto>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
     clearUser: (state) => {
       state.user = null;
       state.error = {
@@ -158,7 +163,7 @@ const authSlice = createSlice({
 });
 
 // Actions
-export const { setUser, clearUser, clearError } = authSlice.actions;
+export const { setUser, clearUser, clearError, updateUser } = authSlice.actions;
 
 // Reducer
 export default authSlice.reducer;
