@@ -8,10 +8,11 @@ import {
   fetchCart,
 } from './features/cart/cartThunk';
 import {
-  addToGuestCart,
-  removeFromGuestCart,
-  updateGuestCartQuantity,
-  clearGuestCart,
+  fetchGuestCart,
+  addToGuestCartAPI,
+  removeFromGuestCartAPI,
+  updateGuestCartQuantityAPI,
+  clearGuestCartAPI,
 } from '@/lib/store/features/cart';
 import type { CartItemDto, ProductResponseDto } from '@/app/api';
 import type { CartState, GuestCartState } from './features/cart/cartState';
@@ -48,6 +49,7 @@ type UseCartReturn = {
 /**
  * Custom hook for cart operations
  * Automatically handles authenticated vs guest user logic
+ * Now uses API for both authenticated and guest users
  */
 export const useCart = (): UseCartReturn => {
   const dispatch = useAppDispatch();
@@ -61,17 +63,19 @@ export const useCart = (): UseCartReturn => {
   const getCart = (): void => {
     if (isAuthenticated) {
       dispatch(fetchCart());
+    } else {
+      dispatch(fetchGuestCart());
     }
   };
 
   /**
    * Add item to cart
-   * Routes to API or local storage based on auth status
+   * Uses API for both authenticated and guest users
    */
   const addItem = useCallback(
     async (product: ProductResponseDto, quantity = 1): Promise<void> => {
       if (isAuthenticated) {
-        // User is logged in - use API
+        // User is logged in - use authenticated API
         await dispatch(
           addToCartAPI({
             productId: product.id,
@@ -79,8 +83,13 @@ export const useCart = (): UseCartReturn => {
           }),
         ).unwrap();
       } else {
-        // Guest user - use local storage
-        dispatch(addToGuestCart({ product, quantity }));
+        // Guest user - use guest API
+        await dispatch(
+          addToGuestCartAPI({
+            productId: product.id,
+            quantity,
+          }),
+        ).unwrap();
       }
     },
     [dispatch, isAuthenticated],
@@ -89,44 +98,42 @@ export const useCart = (): UseCartReturn => {
   /**
    * Remove item from cart
    * For authenticated users, use cart item ID
-   * For guests, use product ID
+   * For guests, also use cart item ID (from API response)
    */
   const removeItem = useCallback(
-    async (productIdOrCartItemId: string): Promise<void> => {
+    async (cartItemId: string): Promise<void> => {
       if (isAuthenticated) {
-        // User is logged in - use API with cart item ID
-        await dispatch(removeFromCartAPI(productIdOrCartItemId)).unwrap();
+        // User is logged in - use authenticated API
+        await dispatch(removeFromCartAPI(cartItemId)).unwrap();
       } else {
-        // Guest user - use product ID
-        dispatch(removeFromGuestCart(productIdOrCartItemId));
+        // Guest user - use guest API
+        await dispatch(removeFromGuestCartAPI(cartItemId)).unwrap();
       }
     },
     [dispatch, isAuthenticated],
   );
-
   /**
    * Update item quantity
-   * For authenticated users, use cart item ID
-   * For guests, use product ID
+   * Uses API for both authenticated and guest users
    */
   const updateQuantity = useCallback(
-    async (productIdOrCartItemId: string, quantity: number): Promise<void> => {
+    async (cartItemId: string, quantity: number): Promise<void> => {
       if (isAuthenticated) {
-        // User is logged in - use API
+        // User is logged in - use authenticated API
         await dispatch(
           updateCartQuantityAPI({
-            cartItemId: productIdOrCartItemId,
+            cartItemId,
             quantity,
           }),
         ).unwrap();
       } else {
-        // Guest user - use local storage
-        dispatch(
-          updateGuestCartQuantity({
-            cartId: productIdOrCartItemId,
+        // Guest user - use guest API
+        await dispatch(
+          updateGuestCartQuantityAPI({
+            cartItemId,
             quantity,
           }),
-        );
+        ).unwrap();
       }
     },
     [dispatch, isAuthenticated],
@@ -134,24 +141,27 @@ export const useCart = (): UseCartReturn => {
 
   /**
    * Clear all items from cart
+   * Uses API for both authenticated and guest users
    */
   const clearAllItems = useCallback(async (): Promise<void> => {
     if (isAuthenticated) {
-      // User is logged in - use API
+      // User is logged in - use authenticated API
       await dispatch(clearCartAPI()).unwrap();
     } else {
-      // Guest user - clear local storage
-      dispatch(clearGuestCart());
+      // Guest user - use guest API
+      await dispatch(clearGuestCartAPI()).unwrap();
     }
   }, [dispatch, isAuthenticated]);
 
   /**
    * Refresh cart from server
-   * Only applicable for authenticated users
+   * Applicable for both authenticated and guest users
    */
   const refreshCart = useCallback(async (): Promise<void> => {
     if (isAuthenticated) {
       await dispatch(fetchCart()).unwrap();
+    } else {
+      await dispatch(fetchGuestCart()).unwrap();
     }
   }, [dispatch, isAuthenticated]);
 
@@ -165,24 +175,24 @@ export const useCart = (): UseCartReturn => {
   // const totalPrice = currentCart.totalPrice;
 
   /**
-   * Loading states
+   * Loading states - works for both authenticated and guest users
    */
   const isLoading = isAuthenticated
     ? cart.isLoading.add || cart.isLoading.fetch || cart.isLoading.update || cart.isLoading.remove
-    : false;
+    : guestCart.isLoading || false;
 
-  const isAdding = isAuthenticated ? cart.isLoading.add : false;
-  const isFetching = isAuthenticated ? cart.isLoading.fetch : false;
-  const isUpdating = isAuthenticated ? cart.isLoading.update : false;
-  const isRemoving = isAuthenticated ? cart.isLoading.remove : false;
+  const isAdding = isAuthenticated ? cart.isLoading.add : guestCart.isLoading || false;
+  const isFetching = isAuthenticated ? cart.isLoading.fetch : guestCart.isLoading || false;
+  const isUpdating = isAuthenticated ? cart.isLoading.update : guestCart.isLoading || false;
+  const isRemoving = isAuthenticated ? cart.isLoading.remove : guestCart.isLoading || false;
   const isSyncing = isAuthenticated ? cart.isLoading.sync : false;
 
   /**
-   * Error states
+   * Error states - works for both authenticated and guest users
    */
   const error = isAuthenticated
     ? cart.error.add || cart.error.fetch || cart.error.update || cart.error.remove
-    : null;
+    : guestCart.error || null;
 
   return {
     // Cart data
@@ -190,7 +200,6 @@ export const useCart = (): UseCartReturn => {
     totalItems: cartItemsCount,
     totalPrice: cartTotal,
     isAuthenticated,
-
     // Actions
     addItem,
     removeItem,

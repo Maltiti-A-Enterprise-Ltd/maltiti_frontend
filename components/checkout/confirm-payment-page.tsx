@@ -1,11 +1,13 @@
 'use client';
 
 import { JSX, useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { checkoutControllerConfirmPayment } from '@/app/api';
+import { checkoutControllerConfirmPayment, checkoutControllerConfirmGuestPayment } from '@/app/api';
+import { useAppSelector } from '@/lib/store/hooks';
+import { selectIsAuthenticated } from '@/lib/store/features/auth';
 
 type ConfirmPaymentPageProps = {
   checkoutId: string;
@@ -15,8 +17,11 @@ type PaymentStatus = 'loading' | 'success' | 'error';
 
 const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Element => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const [status, setStatus] = useState<PaymentStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [guestEmail, setGuestEmail] = useState<string>('');
 
   const confirmPayment = useCallback(async () => {
     setStatus('loading');
@@ -29,21 +34,51 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
     }
 
     try {
-      const { error } = await checkoutControllerConfirmPayment({
-        path: { checkoutId },
-      });
+      // Determine if this is a guest or authenticated user payment
+      if (isAuthenticated) {
+        // Authenticated user - use regular confirm payment endpoint
+        const { error } = await checkoutControllerConfirmPayment({
+          path: { checkoutId },
+        });
 
-      if (error) {
-        throw new Error(
-          String((error as { message: string }).message || 'Payment confirmation failed.'),
-        );
+        if (error) {
+          throw new Error(
+            String((error as { message: string }).message || 'Payment confirmation failed.'),
+          );
+        }
+
+        setStatus('success');
+
+        // Redirect to orders page after 3 seconds
+        setTimeout(() => {
+          router.push('/orders');
+        }, 3000);
+      } else {
+        // Guest user - use guest confirm payment endpoint
+        const { error, data } = await checkoutControllerConfirmGuestPayment({
+          path: { checkoutId },
+        });
+
+        if (error || !data) {
+          throw new Error(
+            String((error as { message: string }).message || 'Payment confirmation failed.'),
+          );
+        }
+
+        setStatus('success');
+
+        // Extract email from response or search params for redirect
+        const email = searchParams.get('email') || '';
+        setGuestEmail(email);
+
+        // Redirect to track order page after 3 seconds
+        setTimeout(() => {
+          const trackUrl = email
+            ? `/track-order/${checkoutId}?email=${encodeURIComponent(email)}`
+            : `/track-order/${checkoutId}`;
+          router.push(trackUrl);
+        }, 3000);
       }
-
-      setStatus('success');
-
-      setTimeout(() => {
-        router.push('/orders');
-      }, 3000);
     } catch (error) {
       console.error('Payment confirmation error:', error);
       setStatus('error');
@@ -53,7 +88,7 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
           : 'Unable to confirm payment. Please contact support.',
       );
     }
-  }, [checkoutId, router]);
+  }, [checkoutId, router, isAuthenticated, searchParams]);
 
   useEffect(() => {
     void confirmPayment();
@@ -88,17 +123,49 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
                 shortly.
               </p>
               <div className="space-y-3">
-                <Button
-                  onClick={() => router.push('/orders')}
-                  className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
-                >
-                  View My Orders
-                </Button>
-                <Button onClick={() => router.push('/shop')} variant="outline" className="w-full">
-                  Continue Shopping
-                </Button>
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      onClick={() => router.push('/orders')}
+                      className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
+                    >
+                      View My Orders
+                    </Button>
+                    <Button
+                      onClick={() => router.push('/shop')}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Continue Shopping
+                    </Button>
+                    <p className="mt-4 text-sm text-gray-500">Redirecting to orders page...</p>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => {
+                        const trackUrl = guestEmail
+                          ? `/track-order/${checkoutId}?email=${encodeURIComponent(guestEmail)}`
+                          : `/track-order/${checkoutId}`;
+                        router.push(trackUrl);
+                      }}
+                      className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
+                    >
+                      Track My Order
+                    </Button>
+                    <Button
+                      onClick={() => router.push('/shop')}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Continue Shopping
+                    </Button>
+                    <p className="mt-4 text-sm text-gray-500">
+                      Redirecting to order tracking page...
+                    </p>
+                  </>
+                )}
               </div>
-              <p className="mt-4 text-sm text-gray-500">Redirecting to orders page...</p>
             </>
           )}
 

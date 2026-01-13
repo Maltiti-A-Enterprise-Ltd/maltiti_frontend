@@ -1,0 +1,416 @@
+'use client';
+
+import { JSX, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import {
+  ArrowLeft,
+  Package,
+  CheckCircle,
+  Clock,
+  Truck,
+  XCircle,
+  Loader2,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { checkoutControllerGetOrderStatus } from '@/app/api';
+import { toast } from 'sonner';
+
+type TrackOrderPageProps = {
+  checkoutId: string;
+  email?: string;
+};
+
+type OrderStatus = 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+
+type OrderDetails = {
+  checkoutId: string;
+  status: OrderStatus;
+  email: string;
+  name: string;
+  phoneNumber: string;
+  country: string;
+  region: string;
+  city: string;
+  extraInfo?: string;
+  totalAmount: number;
+  deliveryCost: number | null;
+  items: Array<{
+    productName: string;
+    quantity: number;
+    price: number;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const statusConfig: Record<
+  OrderStatus,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    icon: JSX.Element;
+    description: string;
+  }
+> = {
+  PENDING: {
+    label: 'Pending',
+    color: 'text-yellow-700',
+    bgColor: 'bg-yellow-100',
+    icon: <Clock className="h-5 w-5" />,
+    description: 'Your order is being reviewed',
+  },
+  PROCESSING: {
+    label: 'Processing',
+    color: 'text-blue-700',
+    bgColor: 'bg-blue-100',
+    icon: <Package className="h-5 w-5" />,
+    description: 'Your order is being prepared',
+  },
+  SHIPPED: {
+    label: 'Shipped',
+    color: 'text-purple-700',
+    bgColor: 'bg-purple-100',
+    icon: <Truck className="h-5 w-5" />,
+    description: 'Your order is on its way',
+  },
+  DELIVERED: {
+    label: 'Delivered',
+    color: 'text-green-700',
+    bgColor: 'bg-green-100',
+    icon: <CheckCircle className="h-5 w-5" />,
+    description: 'Your order has been delivered',
+  },
+  CANCELLED: {
+    label: 'Cancelled',
+    color: 'text-red-700',
+    bgColor: 'bg-red-100',
+    icon: <XCircle className="h-5 w-5" />,
+    description: 'This order was cancelled',
+  },
+};
+
+const TrackOrderPage = ({ checkoutId, email: initialEmail }: TrackOrderPageProps): JSX.Element => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState(initialEmail || '');
+  const [needsEmail, setNeedsEmail] = useState(!initialEmail);
+
+  useEffect(() => {
+    const fetchOrderStatus = async (): Promise<void> => {
+      if (!email) {
+        setNeedsEmail(true);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const { data, error } = await checkoutControllerGetOrderStatus({
+          path: { checkoutId },
+          query: { email },
+        });
+
+        if (error || !data) {
+          throw new Error('Unable to fetch order details');
+        }
+
+        setOrderDetails(data.data as unknown as OrderDetails);
+        setNeedsEmail(false);
+      } catch (err) {
+        console.error('Error fetching order:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load order details');
+        toast.error('Error', {
+          description: 'Unable to load order details. Please check your order ID.',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (checkoutId) {
+      fetchOrderStatus();
+    }
+  }, [checkoutId, email]);
+
+  if (isLoading) {
+    return (
+      <div className="mt-16 flex min-h-screen items-center justify-center bg-linear-to-br from-gray-50 to-green-50/30">
+        <div className="text-center">
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-green-600" />
+          <p className="text-gray-600">Loading order details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (needsEmail) {
+    return (
+      <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
+        <div className="mx-auto max-w-2xl">
+          <Card>
+            <CardHeader>
+              <CardTitle>Track Your Order</CardTitle>
+              <CardDescription>Enter your email to view order details</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your.email@example.com"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
+                />
+                <p className="mt-2 text-sm text-gray-500">
+                  Enter the email address you used during checkout
+                </p>
+              </div>
+              <Button
+                onClick={() => {
+                  if (email) {
+                    setNeedsEmail(false);
+                    setIsLoading(true);
+                  }
+                }}
+                disabled={!email}
+                className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
+              >
+                Track Order
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !orderDetails) {
+    return (
+      <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
+        <div className="mx-auto max-w-2xl">
+          <Card className="border-red-200">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-6 rounded-full bg-red-100 p-6">
+                <XCircle className="h-16 w-16 text-red-600" />
+              </div>
+              <h2 className="mb-2 text-2xl font-bold text-gray-900">Order Not Found</h2>
+              <p className="mb-6 text-gray-600">
+                {error || 'We couldn&apos;t find an order with this ID.'}
+              </p>
+              <Button onClick={() => router.push('/shop')}>Continue Shopping</Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  const statusInfo = statusConfig[orderDetails.status];
+  const formattedDate = new Date(orderDetails.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  return (
+    <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
+      <div className="mx-auto max-w-4xl">
+        {/* Header */}
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => router.push('/shop')}
+            className="mb-4 gap-2 hover:bg-transparent"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Shop
+          </Button>
+          <h1 className="text-4xl font-bold text-gray-900">Track Your Order</h1>
+          <p className="mt-2 text-gray-600">Order ID: {checkoutId}</p>
+        </div>
+
+        {/* Status Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Card className="mb-6 border-2 border-green-100">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4">
+                <div className={`rounded-full ${statusInfo.bgColor} p-4`}>
+                  <div className={statusInfo.color}>{statusInfo.icon}</div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-bold text-gray-900">{statusInfo.label}</h2>
+                    <Badge
+                      variant="outline"
+                      className={`${statusInfo.color} ${statusInfo.bgColor}`}
+                    >
+                      {orderDetails.status}
+                    </Badge>
+                  </div>
+                  <p className="mt-1 text-gray-600">{statusInfo.description}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Order Details */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Details</CardTitle>
+                <CardDescription>Information about your purchase</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Calendar className="mt-0.5 h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Order Date</p>
+                    <p className="text-sm text-gray-600">{formattedDate}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-gray-900">Items Ordered</h3>
+                  {orderDetails.items.map((item, index) => (
+                    <div key={index} className="flex justify-between text-sm">
+                      <span className="text-gray-600">
+                        {item.productName} x{item.quantity}
+                      </span>
+                      <span className="font-medium text-gray-900">
+                        GHS {(item.price * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-medium text-gray-900">
+                      GHS {orderDetails.totalAmount.toFixed(2)}
+                    </span>
+                  </div>
+                  {orderDetails.deliveryCost !== null ? (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Delivery</span>
+                      <span className="font-medium text-gray-900">
+                        GHS {orderDetails.deliveryCost.toFixed(2)}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Delivery</span>
+                      <span className="text-xs text-blue-600">To be determined</span>
+                    </div>
+                  )}
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-gray-900">Total</span>
+                    <span className="text-lg font-bold text-green-600">
+                      {orderDetails.deliveryCost !== null
+                        ? `GHS ${(orderDetails.totalAmount + orderDetails.deliveryCost).toFixed(2)}`
+                        : 'Pending'}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Delivery Information */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Delivery Information</CardTitle>
+                <CardDescription>Where your order will be sent</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Mail className="mt-0.5 h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Email</p>
+                    <p className="text-sm text-gray-600">{orderDetails.email}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Phone className="mt-0.5 h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Phone Number</p>
+                    <p className="text-sm text-gray-600">{orderDetails.phoneNumber}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">Delivery Address</p>
+                    <p className="text-sm text-gray-600">
+                      {orderDetails.city}, {orderDetails.region}
+                      <br />
+                      {orderDetails.country}
+                      {orderDetails.extraInfo && (
+                        <>
+                          <br />
+                          {orderDetails.extraInfo}
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Help Card */}
+            <Card className="mt-6 bg-blue-50/50">
+              <CardContent className="p-6">
+                <h3 className="mb-2 font-semibold text-gray-900">Need Help?</h3>
+                <p className="mb-4 text-sm text-gray-600">
+                  If you have any questions about your order, please contact our support team.
+                </p>
+                <Button variant="outline" className="w-full" onClick={() => router.push('/shop')}>
+                  Contact Support
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TrackOrderPage;

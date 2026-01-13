@@ -12,27 +12,36 @@ import {
   authenticationControllerSignIn,
   Role,
 } from '@/app/api';
+import { getGuestSessionId, hasGuestSession, clearGuestSessionId } from '@/lib/session-utils';
 
 /**
  * Login thunk
  * Authenticates user with credentials and returns user data
- * After successful login, triggers guest cart sync if applicable
+ * Automatically syncs guest cart if sessionId exists (backend handles the sync)
  */
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: LoginFormData, { rejectWithValue, dispatch }) => {
+  async (credentials: LoginFormData, { rejectWithValue }) => {
     try {
-      const { data, error } = await authenticationControllerSignIn({ body: credentials });
+      // Get guest session ID if it exists
+      const sessionId = hasGuestSession() ? getGuestSessionId() : undefined;
+
+      const { data, error } = await authenticationControllerSignIn({
+        body: {
+          ...credentials,
+          sessionId, // Backend will sync guest cart if sessionId is provided
+        },
+      });
+
       if (!data) {
         return rejectWithValue(error?.message || 'Login failed');
       }
 
-      // Import syncGuestCart dynamically to avoid circular dependency
-      const { syncGuestCart } = await import('../cart/cartThunk');
-
-      // Trigger guest cart sync after successful login
-      // This will merge any items in the guest cart with the user's server cart
-      dispatch(syncGuestCart());
+      // Clear guest session ID after successful login
+      // Backend has already synced the cart
+      if (sessionId) {
+        clearGuestSessionId();
+      }
 
       return data.data;
     } catch (error: unknown) {
@@ -102,25 +111,30 @@ export const resendVerificationEmail = createAsyncThunk(
 /**
  * Verify email thunk
  * Verifies user email using the verification token from email
- * Now logs the user in automatically upon successful verification
- * Also triggers guest cart sync after successful verification
+ * Logs the user in automatically upon successful verification
+ * Backend automatically syncs guest cart if sessionId is provided
  */
 export const verifyEmail = createAsyncThunk(
   'auth/verifyEmail',
-  async ({ id, token }: { id: string; token: string }, { rejectWithValue, dispatch }) => {
+  async ({ id, token }: { id: string; token: string }, { rejectWithValue }) => {
     try {
+      // Get guest session ID if it exists
+      const sessionId = hasGuestSession() ? getGuestSessionId() : '';
+
       const { error, data } = await authenticationControllerEmailVerification({
         path: { id, token },
+        query: { sessionId }, // Backend will sync guest cart if sessionId is provided
       });
+
       if (error || !data) {
         return rejectWithValue(error?.message || 'Email verification failed');
       }
 
-      // Import syncGuestCart dynamically to avoid circular dependency
-      const { syncGuestCart } = await import('../cart/cartThunk');
-
-      // Trigger guest cart sync after successful verification and login
-      dispatch(syncGuestCart());
+      // Clear guest session ID after successful verification
+      // Backend has already synced the cart
+      if (sessionId) {
+        clearGuestSessionId();
+      }
 
       // Return the user data from the response
       return data.data;

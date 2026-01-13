@@ -396,7 +396,7 @@
     },
     "/authentication/customer-signup": {
       "post": {
-        "description": "Register a new customer account with email verification",
+        "description": "Register a new customer account with email verification. If sessionId is provided, guest cart items will be synced when email is verified.",
         "operationId": "AuthenticationController_customerSignup",
         "parameters": [],
         "requestBody": {
@@ -435,7 +435,7 @@
     },
     "/authentication/login": {
       "post": {
-        "description": "Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs.",
+        "description": "Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs. If sessionId is provided, guest cart items will be synced with user cart.",
         "operationId": "AuthenticationController_signIn",
         "parameters": [],
         "requestBody": {
@@ -451,7 +451,12 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
-          "201": { "description": "" },
+          "201": {
+            "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
@@ -565,7 +570,7 @@
     },
     "/authentication/verify/{id}/{token}": {
       "get": {
-        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day).",
+        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day). If sessionId is provided, guest cart items will be synced with user cart.",
         "operationId": "AuthenticationController_emailVerification",
         "parameters": [
           {
@@ -581,7 +586,8 @@
             "in": "path",
             "description": "Verification token",
             "schema": { "type": "string" }
-          }
+          },
+          { "name": "sessionId", "required": true, "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
@@ -2130,6 +2136,125 @@
         "tags": ["Cart"]
       }
     },
+    "/cart/guest/{sessionId}": {
+      "get": {
+        "description": "Retrieves all cart items for a guest user session. Only returns items that have not been checked out.",
+        "operationId": "CartController_getGuestCart",
+        "parameters": [
+          { "name": "sessionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart retrieved successfully. Returns array of cart items, total item count, and total price.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Get guest shopping cart",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest": {
+      "post": {
+        "description": "Adds a product to the guest user's shopping cart. If product already exists in cart, the quantity is incremented.",
+        "operationId": "CartController_addToGuestCart",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddToGuestCartDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product added to guest cart successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CartResponseDto" } }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Add product to guest cart",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest/{cartId}": {
+      "delete": {
+        "description": "Removes a specific cart item from the guest user's cart.",
+        "operationId": "CartController_removeFromGuestCart",
+        "parameters": [
+          { "name": "cartId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "sessionId", "required": true, "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product removed from guest cart successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Remove product from guest cart",
+        "tags": ["Cart"]
+      },
+      "patch": {
+        "description": "Updates the quantity of a specific item in the guest cart.",
+        "operationId": "CartController_updateGuestCartQuantity",
+        "parameters": [
+          { "name": "cartId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateGuestCartQuantityDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Guest cart item quantity updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Update guest cart item quantity",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest/all/{sessionId}": {
+      "delete": {
+        "description": "Removes all items from the guest user's shopping cart.",
+        "operationId": "CartController_removeAllFromGuestCart",
+        "parameters": [
+          { "name": "sessionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guest cart cleared successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Clear all items from guest cart",
+        "tags": ["Cart"]
+      }
+    },
     "/checkout/orders": {
       "get": {
         "operationId": "CheckoutController_getOrders",
@@ -2171,6 +2296,33 @@
           }
         },
         "summary": "Get a specific order",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/confirm-payment/{checkoutId}": {
+      "get": {
+        "description": "Public endpoint to confirm payment after Paystack redirect for guest users",
+        "operationId": "CheckoutController_confirmGuestPayment",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment confirmed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Confirm payment for a guest order (no authentication required)",
         "tags": ["Checkout"]
       }
     },
@@ -2431,6 +2583,149 @@
           }
         },
         "summary": "Cancel an order",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/delivery": {
+      "post": {
+        "operationId": "CheckoutController_getGuestDeliveryCost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GuestGetDeliveryCostDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transportation cost calculated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeliveryResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Calculate delivery cost for guest checkout",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/initialize-transaction": {
+      "post": {
+        "operationId": "CheckoutController_guestInitializeTransaction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GuestInitializeTransactionDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Initialize payment transaction for guest user",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/place-order": {
+      "post": {
+        "operationId": "CheckoutController_guestPlaceOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/GuestPlaceOrderDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order placed successfully. Check your email for order tracking information.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Place an order as guest without immediate payment - payment can be made later",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/track/{checkoutId}": {
+      "get": {
+        "operationId": "CheckoutController_getOrderStatus",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address used during checkout",
+            "schema": { "format": "email", "example": "guest@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Get order status by checkout ID and email (for guest users)",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/pay-for-order/{checkoutId}": {
+      "post": {
+        "operationId": "CheckoutController_payForGuestOrder",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address used during checkout",
+            "schema": { "format": "email", "example": "guest@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          },
+          "201": { "description": "" }
+        },
+        "summary": "Initialize payment for a previously placed guest order (invoice requested or pending payment)",
         "tags": ["Checkout"]
       }
     },
@@ -3735,7 +4030,14 @@
           }
         },
         "responses": {
-          "200": { "description": "" },
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProfileResponseWrapperDto" }
+              }
+            }
+          },
           "201": {
             "description": "Profile updated successfully",
             "content": {
@@ -3784,7 +4086,14 @@
               }
             }
           },
-          "201": { "description": "" },
+          "201": {
+            "description": "Avatar uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AvatarUploadResponseDto" }
+              }
+            }
+          },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
         },
@@ -3991,12 +4300,39 @@
       "RegisterUserDto": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" },
-          "confirmPassword": { "type": "string" },
-          "userType": { "enum": ["user", "admin", "superadmin"], "type": "string" },
-          "phoneNumber": { "type": "string" }
+          "name": { "type": "string", "description": "User full name", "example": "John Doe" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password (min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol)",
+            "example": "Password123!"
+          },
+          "confirmPassword": {
+            "type": "string",
+            "description": "Password confirmation",
+            "example": "Password123!"
+          },
+          "userType": {
+            "enum": ["user", "admin", "superadmin"],
+            "type": "string",
+            "description": "User role type",
+            "example": "user"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "User phone number",
+            "example": "+233244123456"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Guest session ID to sync cart items (optional, for guest users signing up)",
+            "example": "guest-1234567890"
+          }
         },
         "required": ["name", "email", "password", "confirmPassword", "userType"]
       },
@@ -4175,8 +4511,22 @@
       "SignInDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Password123!"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Guest session ID to sync cart items (optional, for guest users logging in)",
+            "example": "guest-1234567890"
+          }
         },
         "required": ["email", "password"]
       },
@@ -5845,6 +6195,45 @@
         },
         "required": ["message", "data"]
       },
+      "AddToGuestCartDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest user",
+            "example": "guest-session-123"
+          },
+          "id": {
+            "type": "string",
+            "description": "The UUID of the product to add to cart",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "description": "The quantity of the product in the cart (must be a positive integer)",
+            "example": 5
+          }
+        },
+        "required": ["sessionId", "id"]
+      },
+      "UpdateGuestCartQuantityDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest user",
+            "example": "guest-session-123"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "description": "The new quantity for the cart item",
+            "example": 3
+          }
+        },
+        "required": ["sessionId", "quantity"]
+      },
       "UserDto": {
         "type": "object",
         "properties": {
@@ -6142,6 +6531,94 @@
         },
         "required": ["deliveryCost"]
       },
+      "GuestGetDeliveryCostDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" }
+        },
+        "required": ["sessionId", "country", "region", "city"]
+      },
+      "GuestInitializeTransactionDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Guest email address for order updates",
+            "example": "guest@example.com"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
+          },
+          "name": { "type": "string", "description": "Guest name", "example": "John Doe" }
+        },
+        "required": ["email", "sessionId", "country", "region", "city", "phoneNumber", "name"]
+      },
+      "GuestPlaceOrderDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Guest email address for order updates",
+            "example": "guest@example.com"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
+          },
+          "name": { "type": "string", "description": "Guest name", "example": "John Doe" }
+        },
+        "required": ["email", "sessionId", "country", "region", "city", "phoneNumber", "name"]
+      },
       "UploadResponseDto": {
         "type": "object",
         "properties": {
@@ -6206,14 +6683,15 @@
         "type": "object",
         "properties": {
           "id": { "type": "string" },
-          "user": { "$ref": "#/components/schemas/User" },
+          "user": { "nullable": true, "allOf": [{ "$ref": "#/components/schemas/User" }] },
+          "sessionId": { "type": "string", "nullable": true },
           "product": { "$ref": "#/components/schemas/Product" },
           "quantity": { "type": "number", "minimum": 1 },
           "checkout": { "nullable": true, "allOf": [{ "$ref": "#/components/schemas/Checkout" }] },
           "createdAt": { "format": "date-time", "type": "string" },
           "updatedAt": { "format": "date-time", "type": "string" }
         },
-        "required": ["id", "user", "product", "quantity", "createdAt", "updatedAt"]
+        "required": ["id", "user", "sessionId", "product", "quantity", "createdAt", "updatedAt"]
       },
       "Checkout": {
         "type": "object",
@@ -6223,6 +6701,7 @@
           "carts": { "type": "array", "items": { "$ref": "#/components/schemas/Cart" } },
           "amount": { "type": "number" },
           "paystackReference": { "type": "string" },
+          "guestEmail": { "type": "string", "nullable": true },
           "createdAt": { "format": "date-time", "type": "string" },
           "updatedAt": { "format": "date-time", "type": "string" },
           "deletedAt": { "format": "date-time", "type": "string" }
@@ -6233,6 +6712,7 @@
           "carts",
           "amount",
           "paystackReference",
+          "guestEmail",
           "createdAt",
           "updatedAt",
           "deletedAt"

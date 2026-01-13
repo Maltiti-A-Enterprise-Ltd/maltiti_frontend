@@ -9,16 +9,24 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCart } from '@/lib/store/useCart';
 import LocationForm from './location-form';
+import GuestLocationForm, { type GuestLocationFormValues } from './guest-location-form';
+import GuestAuthPrompt from './guest-auth-prompt';
 import OrderSummary from './order-summary';
 import {
   checkoutControllerInitializeTransaction,
   checkoutControllerGetDeliveryCost,
   checkoutControllerPlaceOrder,
+  checkoutControllerGuestInitializeTransaction,
+  checkoutControllerGuestPlaceOrder,
+  checkoutControllerGetGuestDeliveryCost,
   InitializeTransaction,
   GetDeliveryCostDto,
   PlaceOrderDto,
+  GuestInitializeTransactionDto,
+  GuestPlaceOrderDto,
 } from '@/app/api';
 import { toast } from 'sonner';
+import { getGuestSessionId } from '@/lib/session-utils';
 
 type LocationData = {
   country: string;
@@ -28,14 +36,18 @@ type LocationData = {
   extraInfo?: string;
 };
 
+type GuestLocationData = GuestLocationFormValues;
+
 const CheckoutPage = (): JSX.Element => {
   const router = useRouter();
-  const { items, totalPrice, isLoading, isFetching } = useCart();
+  const { items, totalPrice, isLoading, isFetching, isAuthenticated } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [guestLocationData, setGuestLocationData] = useState<GuestLocationData | null>(null);
   const [deliveryCost, setDeliveryCost] = useState<number | null>(null);
   const [isCalculatingDelivery, setIsCalculatingDelivery] = useState(false);
   const [isInternationalDelivery, setIsInternationalDelivery] = useState(false);
+  const [showGuestCheckout, setShowGuestCheckout] = useState(false);
 
   const isCartLoading = isLoading || isFetching;
 
@@ -97,10 +109,79 @@ const CheckoutPage = (): JSX.Element => {
     calculateDeliveryCost(data);
   };
 
+  const calculateGuestDeliveryCost = async (location: GuestLocationData): Promise<void> => {
+    setIsCalculatingDelivery(true);
+    setIsInternationalDelivery(false);
+
+    try {
+      const sessionId = getGuestSessionId();
+
+      const response = await checkoutControllerGetGuestDeliveryCost({
+        body: {
+          sessionId,
+          country: location.country,
+          region: location.region,
+          city: location.city,
+        },
+      });
+
+      if (response.error || !response.data) {
+        throw new Error('Unable to calculate delivery cost');
+      }
+
+      if (typeof response.data.data !== 'number') {
+        throw new Error('Invalid delivery cost response');
+      }
+
+      const cost = response.data.data;
+
+      if (cost === -1) {
+        setIsInternationalDelivery(true);
+        setDeliveryCost(null);
+        toast.info('International Delivery', {
+          description:
+            'We will contact you regarding delivery costs for international orders. Please proceed to complete your order.',
+          duration: 6000,
+        });
+      } else {
+        setDeliveryCost(cost);
+        setIsInternationalDelivery(false);
+      }
+    } catch (error) {
+      console.error('Delivery cost calculation error:', error);
+      toast.error('Delivery Calculation Failed', {
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Unable to calculate delivery cost. Please try again.',
+      });
+    } finally {
+      setIsCalculatingDelivery(false);
+    }
+  };
+
+  const handleGuestLocationSubmit = (data: GuestLocationData): void => {
+    setGuestLocationData(data);
+    // Calculate delivery cost when location is submitted
+    calculateGuestDeliveryCost(data);
+  };
+
+  const handleContinueAsGuest = (): void => {
+    setShowGuestCheckout(true);
+  };
+
   const handleCheckout = async (): Promise<void> => {
-    if (!locationData) {
+    // Validate location data based on user type
+    if (isAuthenticated && !locationData) {
       toast.error('Location Required', {
         description: 'Please fill in your delivery location details.',
+      });
+      return;
+    }
+
+    if (!isAuthenticated && !guestLocationData) {
+      toast.error('Information Required', {
+        description: 'Please fill in your delivery information.',
       });
       return;
     }
@@ -115,61 +196,122 @@ const CheckoutPage = (): JSX.Element => {
     setIsProcessing(true);
 
     try {
-      // If international delivery (deliveryCost is null and isInternationalDelivery is true),
-      // use place order endpoint instead of immediate payment
-      if (isInternationalDelivery || deliveryCost === null) {
-        const payload: PlaceOrderDto = {
-          country: locationData.country,
-          region: locationData.region,
-          city: locationData.city,
-          phoneNumber: locationData.phoneNumber,
-          extraInfo: locationData.extraInfo,
-        };
+      if (isAuthenticated && locationData) {
+        // Authenticated user checkout flow
+        if (isInternationalDelivery || deliveryCost === null) {
+          const payload: PlaceOrderDto = {
+            country: locationData.country,
+            region: locationData.region,
+            city: locationData.city,
+            phoneNumber: locationData.phoneNumber,
+            extraInfo: locationData.extraInfo,
+          };
 
-        const { data, error } = await checkoutControllerPlaceOrder({
-          body: payload,
-        });
+          const { data, error } = await checkoutControllerPlaceOrder({
+            body: payload,
+          });
 
-        if (!data || error) {
-          throw new Error('Unable to place order. Please try again.');
-        }
+          if (!data || error) {
+            throw new Error('Unable to place order. Please try again.');
+          }
 
-        // Show success message and redirect to orders page
-        toast.success('Order Placed Successfully!', {
-          description:
-            'Your order has been placed. We will contact you with the delivery cost and you can make payment from your orders page.',
-          duration: 8000,
-        });
+          toast.success('Order Placed Successfully!', {
+            description:
+              'Your order has been placed. We will contact you with the delivery cost and you can make payment from your orders page.',
+            duration: 8000,
+          });
 
-        // Redirect to orders page after a short delay
-        setTimeout(() => {
-          router.push('/orders');
-        }, 2000);
-      } else {
-        // Normal flow: proceed to payment
-        const payload: InitializeTransaction = {
-          country: locationData.country,
-          region: locationData.region,
-          city: locationData.city,
-          phoneNumber: locationData.phoneNumber,
-          extraInfo: locationData.extraInfo,
-        };
-
-        const { data, error } = await checkoutControllerInitializeTransaction({
-          body: payload,
-        });
-
-        if (!data || error) {
-          throw new Error('Unable to initialize payment. Please try again.');
-        }
-
-        const paymentLink = data.data.authorization_url;
-
-        // Redirect to Paystack
-        if (paymentLink) {
-          window.location.href = paymentLink;
+          setTimeout(() => {
+            router.push('/orders');
+          }, 2000);
         } else {
-          throw new Error('Payment link not received');
+          // Normal flow: proceed to payment
+          const payload: InitializeTransaction = {
+            country: locationData.country,
+            region: locationData.region,
+            city: locationData.city,
+            phoneNumber: locationData.phoneNumber,
+            extraInfo: locationData.extraInfo,
+          };
+
+          const { data, error } = await checkoutControllerInitializeTransaction({
+            body: payload,
+          });
+
+          if (!data || error) {
+            throw new Error('Unable to initialize payment. Please try again.');
+          }
+
+          const paymentLink = data.data.authorization_url;
+
+          if (paymentLink) {
+            window.location.href = paymentLink;
+          } else {
+            throw new Error('Payment link not received');
+          }
+        }
+      } else if (!isAuthenticated && guestLocationData) {
+        // Guest checkout flow
+        const sessionId = getGuestSessionId();
+
+        if (isInternationalDelivery || deliveryCost === null) {
+          const payload: GuestPlaceOrderDto = {
+            email: guestLocationData.email,
+            sessionId,
+            country: guestLocationData.country,
+            region: guestLocationData.region,
+            city: guestLocationData.city,
+            phoneNumber: guestLocationData.phoneNumber,
+            extraInfo: guestLocationData.extraInfo,
+            name: guestLocationData.name,
+          };
+
+          const { data, error } = await checkoutControllerGuestPlaceOrder({
+            body: payload,
+          });
+
+          if (!data || error) {
+            throw new Error('Unable to place order. Please try again.');
+          }
+
+          toast.success('Order Placed Successfully!', {
+            description:
+              'Your order has been placed. We will contact you via email with the delivery cost and payment instructions.',
+            duration: 8000,
+          });
+
+          // Redirect to order tracking page
+          setTimeout(() => {
+            router.push(`/track-order/${data.data.id}`);
+          }, 2000);
+        } else {
+          // Normal flow: proceed to payment
+          const payload: GuestInitializeTransactionDto = {
+            email: guestLocationData.email,
+            sessionId,
+            country: guestLocationData.country,
+            region: guestLocationData.region,
+            city: guestLocationData.city,
+            phoneNumber: guestLocationData.phoneNumber,
+            extraInfo: guestLocationData.extraInfo,
+            name: guestLocationData.name,
+          };
+
+          const { data, error } = await checkoutControllerGuestInitializeTransaction({
+            body: payload,
+          });
+
+          if (!data || error) {
+            throw new Error('Unable to initialize payment. Please try again.');
+          }
+
+          const paymentLink = data.data.authorization_url;
+
+          if (paymentLink) {
+            window.location.href = paymentLink;
+          } else {
+            throw new Error('Payment link not received');
+          }
         }
       }
     } catch (error) {
@@ -305,37 +447,57 @@ const CheckoutPage = (): JSX.Element => {
 
         {/* Main Content */}
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Left Column: Location Form */}
+          {/* Left Column: Location Form or Auth Prompt */}
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Delivery Information</CardTitle>
-                <CardDescription>Please provide your delivery location details</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <LocationForm
-                  onSubmit={handleLocationSubmit}
-                  onReset={() => setLocationData(null)}
-                />
-              </CardContent>
-            </Card>
+            {/* Show guest auth prompt if user is not authenticated and hasn't chosen guest checkout */}
+            {!isAuthenticated && !showGuestCheckout ? (
+              <GuestAuthPrompt onContinueAsGuest={handleContinueAsGuest} />
+            ) : (
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      {isAuthenticated ? 'Delivery Information' : 'Guest Checkout'}
+                    </CardTitle>
+                    <CardDescription>
+                      {isAuthenticated
+                        ? 'Please provide your delivery location details'
+                        : 'Complete your purchase without creating an account'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {isAuthenticated ? (
+                      <LocationForm
+                        onSubmit={handleLocationSubmit}
+                        onReset={() => setLocationData(null)}
+                      />
+                    ) : (
+                      <GuestLocationForm
+                        onSubmit={handleGuestLocationSubmit}
+                        onReset={() => setGuestLocationData(null)}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
 
-            {/* Trust Badge */}
-            <Card className="bg-green-50/50">
-              <CardContent className="flex items-start gap-4 p-6">
-                <div className="rounded-full bg-green-100 p-3">
-                  <Lock className="h-5 w-5 text-green-700" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Secure Worldwide Shipping</h3>
-                  <p className="text-sm text-gray-600">
-                    Your payment information is encrypted and secure. We ship globally and handle
-                    bulk export orders. We accept Mobile Money, Visa, and other payment methods via
-                    Paystack.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Trust Badge */}
+                <Card className="bg-green-50/50">
+                  <CardContent className="flex items-start gap-4 p-6">
+                    <div className="rounded-full bg-green-100 p-3">
+                      <Lock className="h-5 w-5 text-green-700" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Secure Worldwide Shipping</h3>
+                      <p className="text-sm text-gray-600">
+                        Your payment information is encrypted and secure. We ship globally and
+                        handle bulk export orders. We accept Mobile Money, Visa, and other payment
+                        methods via Paystack.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
 
           {/* Right Column: Order Summary */}
@@ -358,7 +520,13 @@ const CheckoutPage = (): JSX.Element => {
 
                 <Button
                   onClick={handleCheckout}
-                  disabled={isProcessing || !locationData || isCalculatingDelivery}
+                  disabled={
+                    isProcessing ||
+                    (!isAuthenticated && !showGuestCheckout) ||
+                    (isAuthenticated && !locationData) ||
+                    (!isAuthenticated && !guestLocationData) ||
+                    isCalculatingDelivery
+                  }
                   className="w-full bg-[#0F6938] text-lg font-semibold hover:bg-[#0F6938]/90"
                   size="lg"
                 >
@@ -374,11 +542,12 @@ const CheckoutPage = (): JSX.Element => {
                   )}
                 </Button>
 
-                {(isInternationalDelivery || deliveryCost === null) && (
-                  <p className="text-center text-xs text-blue-600">
-                    You will be able to make payment once we confirm the delivery cost
-                  </p>
-                )}
+                {(isInternationalDelivery || deliveryCost === null) &&
+                  (showGuestCheckout || isAuthenticated) && (
+                    <p className="text-center text-xs text-blue-600">
+                      You will be able to make payment once we confirm the delivery cost
+                    </p>
+                  )}
 
                 <p className="text-center text-xs text-gray-500">
                   By proceeding, you agree to our{' '}
