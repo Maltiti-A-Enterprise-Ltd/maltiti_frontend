@@ -14,7 +14,6 @@ export const getBestProducts = createAsyncThunk(
 
       return data?.data.data ?? [];
     } catch (error) {
-      console.log('Error here', error);
       throw new Error(getErrorMessage(error, 'Failed to fetch best products.'));
     }
   },
