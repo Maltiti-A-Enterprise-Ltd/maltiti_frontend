@@ -1291,7 +1291,8 @@ export type SaleDto = {
     id: string;
     customer: CustomerDto;
     checkout: CheckoutDto;
-    status: string;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
     createdAt: string;
     updatedAt: string;
@@ -1398,23 +1399,57 @@ export type PlaceOrderDto = {
     extraInfo?: string;
 };
 
-export enum SaleStatus {
-    INVOICE_REQUESTED = 'invoice_requested',
-    PENDING_PAYMENT = 'pending_payment',
-    PAID = 'paid',
+export enum OrderStatus {
+    PENDING = 'pending',
     PACKAGING = 'packaging',
     IN_TRANSIT = 'in_transit',
     DELIVERED = 'delivered',
     CANCELLED = 'cancelled'
 }
 
+export enum PaymentStatus {
+    INVOICE_REQUESTED = 'invoice_requested',
+    PENDING_PAYMENT = 'pending_payment',
+    PAID = 'paid',
+    REFUNDED = 'refunded'
+}
+
 export type UpdateSaleStatusDto = {
-    status: SaleStatus;
+    orderStatus?: OrderStatus;
+    paymentStatus?: PaymentStatus;
 };
 
 export type SaleResponseDto = {
-    message: string;
-    data: SaleDto;
+    /**
+     * Sale/Order ID
+     */
+    id: string;
+    /**
+     * Customer information
+     */
+    customer: SaleCustomerDto;
+    /**
+     * Checkout information (null for admin-created orders)
+     */
+    checkout?: SaleCheckoutDto;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    /**
+     * Line items in the sale
+     */
+    lineItems: Array<SaleLineItemResponseDto>;
+    /**
+     * Sale creation date
+     */
+    createdAt: string;
+    /**
+     * Sale last update date
+     */
+    updatedAt: string;
+    /**
+     * Sale deletion date (soft delete)
+     */
+    deletedAt?: string;
 };
 
 export type UpdateDeliveryCostDto = {
@@ -1526,85 +1561,141 @@ export type UploadResponseDto = {
 
 export type CreateSaleDto = {
     customerId: string;
-    status?: SaleStatus;
+    orderStatus?: OrderStatus;
+    paymentStatus?: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
 };
 
-export type User = {
+export type SaleCustomerDto = {
+    /**
+     * Customer ID
+     */
     id: string;
-    email: string;
+    /**
+     * Customer name
+     */
     name: string;
-    password: string;
-    userType: Role;
-    phoneNumber: string;
-    avatarUrl: string;
-    permissions: string;
-    mustChangePassword: boolean;
-    rememberToken: string;
-    status: StatusEnum;
-    dob: string;
+    /**
+     * Customer phone number
+     */
+    phone?: string;
+    /**
+     * Customer email address
+     */
+    email?: string;
+    /**
+     * Customer address
+     */
+    address?: string;
+    /**
+     * Customer country
+     */
+    country?: string;
+    /**
+     * Customer region
+     */
+    region?: string;
+    /**
+     * Customer city
+     */
+    city?: string;
+    /**
+     * Additional phone number
+     */
+    phoneNumber?: string;
+    /**
+     * Extra customer information
+     */
+    extraInfo?: string;
+    /**
+     * Customer creation date
+     */
     createdAt: string;
-    emailVerifiedAt: string;
+    /**
+     * Customer last update date
+     */
     updatedAt: string;
+    /**
+     * Customer deletion date (soft delete)
+     */
+    deletedAt?: string;
 };
 
-export type Cart = {
+export type SaleCheckoutDto = {
+    /**
+     * Checkout ID
+     */
     id: string;
-    user: User | null;
-    sessionId: string | null;
-    product: Product;
-    quantity: number;
-    checkout?: Checkout | null;
-    createdAt: string;
-    updatedAt: string;
-};
-
-export type Checkout = {
-    id: string;
-    sale: Sale;
-    carts: Array<Cart>;
+    /**
+     * Total checkout amount
+     */
     amount: number;
-    paystackReference: string;
-    guestEmail: string | null;
+    /**
+     * Paystack payment reference
+     */
+    paystackReference?: string;
+    /**
+     * Guest email (for guest checkouts)
+     */
+    guestEmail?: string;
+    /**
+     * Checkout creation date
+     */
     createdAt: string;
+    /**
+     * Checkout last update date
+     */
     updatedAt: string;
-    deletedAt: string;
-};
-
-export type Sale = {
-    id: string;
-    customer: Customer;
-    checkout: Checkout;
-    status: SaleStatus;
-    lineItems: Array<{
-        [key: string]: unknown;
-    }>;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-};
-
-export type Customer = {
-    id: string;
-    name: string;
-    phone: string;
-    email: string;
-    address: string;
-    country: string;
-    region: string;
-    city: string;
-    phoneNumber: string;
-    extraInfo: string;
-    sales: Array<Sale>;
-    user: User;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    /**
+     * Checkout deletion date (soft delete)
+     */
+    deletedAt?: string;
 };
 
 export type BatchAllocationDto = {
-    batchId?: string;
-    quantity?: number;
+    /**
+     * Batch ID
+     */
+    batchId: string;
+    /**
+     * Quantity allocated from this batch
+     */
+    quantity: number;
+};
+
+export type SaleLineItemResponseDto = {
+    /**
+     * Product ID
+     */
+    productId: string;
+    /**
+     * Product name
+     */
+    productName?: string;
+    /**
+     * Product category
+     */
+    category?: string;
+    /**
+     * Batch allocations for this line item
+     */
+    batchAllocations: Array<BatchAllocationDto>;
+    /**
+     * Requested quantity
+     */
+    requestedQuantity: number;
+    /**
+     * Custom price per unit (if different from retail price)
+     */
+    customPrice?: number;
+    /**
+     * Final price per unit used for calculation
+     */
+    finalPrice: number;
+    /**
+     * Total amount for this line item
+     */
+    totalAmount?: number;
 };
 
 export type UpdateSaleLineItemDto = {
@@ -1616,7 +1707,8 @@ export type UpdateSaleLineItemDto = {
 
 export type UpdateSaleDto = {
     customerId?: string;
-    status?: SaleStatus;
+    orderStatus?: OrderStatus;
+    paymentStatus?: PaymentStatus;
     lineItems?: Array<UpdateSaleLineItemDto>;
 };
 
@@ -1630,6 +1722,17 @@ export type AddLineItemDto = {
 export type AssignBatchesDto = {
     productId: string;
     batchAllocations: Array<BatchAllocationDto>;
+};
+
+export type TrackOrderResponseDto = {
+    /**
+     * Response message
+     */
+    message: string;
+    /**
+     * Sale/Order data
+     */
+    data: SaleResponseDto;
 };
 
 export type GenerateInvoiceDto = {
@@ -3735,7 +3838,8 @@ export type CheckoutControllerGetAllOrdersData = {
     body?: never;
     path?: never;
     query?: {
-        saleStatus?: SaleStatus;
+        orderStatus?: OrderStatus;
+        paymentStatus?: PaymentStatus;
         searchTerm?: string;
         page?: number;
     };
@@ -3926,7 +4030,7 @@ export type CheckoutControllerGetOrderStatusData = {
     };
     query: {
         /**
-         * Email address used during checkout
+         * Email address associated with the order
          */
         email: string;
     };
@@ -3952,7 +4056,7 @@ export type CheckoutControllerPayForGuestOrderData = {
     };
     query: {
         /**
-         * Email address used during checkout
+         * Email address associated with the order
          */
         email: string;
     };
@@ -3994,7 +4098,8 @@ export type SalesControllerListSalesData = {
     body?: never;
     path?: never;
     query?: {
-        status?: SaleStatus;
+        orderStatus?: OrderStatus;
+        paymentStatus?: PaymentStatus;
         customerId?: string;
         page?: number;
         limit?: number;
@@ -4018,7 +4123,7 @@ export type SalesControllerCreateSaleData = {
 };
 
 export type SalesControllerCreateSaleResponses = {
-    201: Sale;
+    201: SaleResponseDto;
 };
 
 export type SalesControllerCreateSaleResponse = SalesControllerCreateSaleResponses[keyof SalesControllerCreateSaleResponses];
@@ -4033,7 +4138,7 @@ export type SalesControllerCancelSaleData = {
 };
 
 export type SalesControllerCancelSaleResponses = {
-    200: Sale;
+    200: SaleResponseDto;
 };
 
 export type SalesControllerCancelSaleResponse = SalesControllerCancelSaleResponses[keyof SalesControllerCancelSaleResponses];
@@ -4048,7 +4153,7 @@ export type SalesControllerGetSaleDetailsData = {
 };
 
 export type SalesControllerGetSaleDetailsResponses = {
-    200: Sale;
+    200: SaleResponseDto;
 };
 
 export type SalesControllerGetSaleDetailsResponse = SalesControllerGetSaleDetailsResponses[keyof SalesControllerGetSaleDetailsResponses];
@@ -4063,7 +4168,7 @@ export type SalesControllerUpdateSaleData = {
 };
 
 export type SalesControllerUpdateSaleResponses = {
-    200: Sale;
+    200: SaleResponseDto;
 };
 
 export type SalesControllerUpdateSaleResponse = SalesControllerUpdateSaleResponses[keyof SalesControllerUpdateSaleResponses];
@@ -4078,7 +4183,7 @@ export type SalesControllerUpdateSaleStatusData = {
 };
 
 export type SalesControllerUpdateSaleStatusResponses = {
-    200: Sale;
+    200: SaleResponseDto;
 };
 
 export type SalesControllerUpdateSaleStatusResponse = SalesControllerUpdateSaleStatusResponses[keyof SalesControllerUpdateSaleStatusResponses];
@@ -4093,8 +4198,8 @@ export type SalesControllerAddLineItemData = {
 };
 
 export type SalesControllerAddLineItemResponses = {
-    200: Sale;
-    201: Sale;
+    200: SaleResponseDto;
+    201: SaleResponseDto;
 };
 
 export type SalesControllerAddLineItemResponse = SalesControllerAddLineItemResponses[keyof SalesControllerAddLineItemResponses];
@@ -4109,10 +4214,61 @@ export type SalesControllerAssignBatchesData = {
 };
 
 export type SalesControllerAssignBatchesResponses = {
-    200: Sale;
+    200: SaleResponseDto;
 };
 
 export type SalesControllerAssignBatchesResponse = SalesControllerAssignBatchesResponses[keyof SalesControllerAssignBatchesResponses];
+
+export type SalesControllerTrackOrderData = {
+    body?: never;
+    path: {
+        /**
+         * Sale/Order ID
+         */
+        saleId: string;
+    };
+    query: {
+        /**
+         * Email address associated with the order
+         */
+        email: string;
+    };
+    url: '/sales/track/{saleId}';
+};
+
+export type SalesControllerTrackOrderResponses = {
+    /**
+     * Order tracked successfully
+     */
+    200: TrackOrderResponseDto;
+};
+
+export type SalesControllerTrackOrderResponse = SalesControllerTrackOrderResponses[keyof SalesControllerTrackOrderResponses];
+
+export type SalesControllerPayForOrderData = {
+    body?: never;
+    path: {
+        /**
+         * Sale/Order ID
+         */
+        saleId: string;
+    };
+    query: {
+        /**
+         * Email address associated with the order
+         */
+        email: string;
+    };
+    url: '/sales/pay/{saleId}';
+};
+
+export type SalesControllerPayForOrderResponses = {
+    /**
+     * Payment initialized successfully
+     */
+    200: unknown;
+    201: unknown;
+};
 
 export type SalesControllerGenerateInvoiceData = {
     body: GenerateInvoiceDto;
