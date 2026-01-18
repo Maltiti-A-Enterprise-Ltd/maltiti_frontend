@@ -1,6 +1,6 @@
 'use client';
 import React, { JSX, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser, logout } from '@/lib/store/features/auth';
 
 export function NavBar(): JSX.Element {
-  const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -68,48 +67,40 @@ export function NavBar(): JSX.Element {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const desktopNavLinks =
-    pathname === '/' ? (
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/#about" className={navigationMenuTriggerStyle()}>
-              About
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/shop" className={navigationMenuTriggerStyle()}>
-              Shop
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/blog" className={navigationMenuTriggerStyle()}>
-              Blog
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/#faqs" className={navigationMenuTriggerStyle()}>
-              Faqs
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/#contactus" className={navigationMenuTriggerStyle()}>
-              Contact Us
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    ) : (
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/" className={navigationMenuTriggerStyle()}>
-              Home
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    );
+  const desktopNavLinks = (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuLink href="/" className={navigationMenuTriggerStyle()}>
+          Home
+        </NavigationMenuLink>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/#about" className={navigationMenuTriggerStyle()}>
+            About
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/shop" className={navigationMenuTriggerStyle()}>
+            Shop
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/blog" className={navigationMenuTriggerStyle()}>
+            Blog
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/#faqs" className={navigationMenuTriggerStyle()}>
+            Faqs
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/#contactus" className={navigationMenuTriggerStyle()}>
+            Contact Us
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
 
   const userLinks =
     isAuthenticated && user ? (
@@ -187,66 +178,7 @@ export function NavBar(): JSX.Element {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="mt-4 flex flex-col space-y-2">
-              {pathname === '/' ? (
-                <>
-                  <Link
-                    href="/#about"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Info className="h-5 w-5" />
-                    <span>About</span>
-                  </Link>
-                  <Link
-                    href="/shop"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <ShoppingBag className="h-5 w-5" />
-                    <span>Shop</span>
-                  </Link>
-                  <Link
-                    href="/blog"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <BookOpen className="h-5 w-5" />
-                    <span>Blog</span>
-                  </Link>
-                  <Link
-                    href="/#faqs"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <HelpCircle className="h-5 w-5" />
-                    <span>FAQs</span>
-                  </Link>
-                  <Link
-                    href="/terms"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Info className="h-5 w-5" />
-                    <span>Terms</span>
-                  </Link>
-                  <Link
-                    href="/privacy"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Info className="h-5 w-5" />
-                    <span>Privacy</span>
-                  </Link>
-                  <Link
-                    href="/#contactus"
-                    className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Phone className="h-5 w-5" />
-                    <span>Contact Us</span>
-                  </Link>
-                </>
-              ) : (
+              <>
                 <Link
                   href="/"
                   className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
@@ -255,7 +187,63 @@ export function NavBar(): JSX.Element {
                   <Home className="h-5 w-5" />
                   <span>Home</span>
                 </Link>
-              )}
+                <Link
+                  href="/#about"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Info className="h-5 w-5" />
+                  <span>About</span>
+                </Link>
+                <Link
+                  href="/shop"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  <span>Shop</span>
+                </Link>
+                <Link
+                  href="/blog"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span>Blog</span>
+                </Link>
+                <Link
+                  href="/#faqs"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <HelpCircle className="h-5 w-5" />
+                  <span>FAQs</span>
+                </Link>
+                <Link
+                  href="/terms"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Info className="h-5 w-5" />
+                  <span>Terms</span>
+                </Link>
+                <Link
+                  href="/privacy"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Info className="h-5 w-5" />
+                  <span>Privacy</span>
+                </Link>
+                <Link
+                  href="/#contactus"
+                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Phone className="h-5 w-5" />
+                  <span>Contact Us</span>
+                </Link>
+              </>
               {/* Mobile User Links */}
               <div className="mt-6 border-t pt-4">
                 {isAuthenticated && user ? (

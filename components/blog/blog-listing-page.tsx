@@ -4,6 +4,7 @@ import { JSX, useState } from 'react';
 import { BlogCard } from '@/components/blog';
 import { Badge } from '@/components/ui/badge';
 import { blogPosts, getAllCategories, type BlogCategory } from '@/lib/blog-data';
+import Link from 'next/link';
 
 export function BlogListingPage(): JSX.Element {
   const [selectedCategory, setSelectedCategory] = useState<BlogCategory | 'All'>('All');
@@ -15,7 +16,7 @@ export function BlogListingPage(): JSX.Element {
       : blogPosts.filter((post) => post.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white">
+    <div className="mt-10 min-h-screen bg-linear-to-b from-gray-50 to-white">
       {/* Header Section */}
       <section className="bg-[#0F6938] px-4 py-20 text-white">
         <div className="mx-auto max-w-7xl">
@@ -92,12 +93,12 @@ export function BlogListingPage(): JSX.Element {
             Ready to try our premium organic products? Explore our collection of ethically sourced
             shea butter and natural products.
           </p>
-          <a
+          <Link
             href="/shop"
             className="inline-block rounded-lg bg-[#0F6938] px-8 py-4 font-semibold text-white shadow-lg transition-colors hover:bg-[#0F6938]/90 hover:shadow-xl"
           >
             Shop Our Products
-          </a>
+          </Link>
         </div>
       </section>
     </div>
