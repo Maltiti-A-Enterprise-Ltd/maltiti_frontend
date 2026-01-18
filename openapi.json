@@ -396,7 +396,7 @@
     },
     "/authentication/customer-signup": {
       "post": {
-        "description": "Register a new customer account with email verification",
+        "description": "Register a new customer account with email verification. If sessionId is provided, guest cart items will be synced when email is verified.",
         "operationId": "AuthenticationController_customerSignup",
         "parameters": [],
         "requestBody": {
@@ -435,7 +435,7 @@
     },
     "/authentication/login": {
       "post": {
-        "description": "Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs.",
+        "description": "Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs. If sessionId is provided, guest cart items will be synced with user cart.",
         "operationId": "AuthenticationController_signIn",
         "parameters": [],
         "requestBody": {
@@ -451,7 +451,12 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
-          "201": { "description": "" },
+          "201": {
+            "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
           "400": {
             "description": "Bad request - validation failed",
             "content": {
@@ -565,7 +570,7 @@
     },
     "/authentication/verify/{id}/{token}": {
       "get": {
-        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day).",
+        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day). If sessionId is provided, guest cart items will be synced with user cart.",
         "operationId": "AuthenticationController_emailVerification",
         "parameters": [
           {
@@ -581,7 +586,8 @@
             "in": "path",
             "description": "Verification token",
             "schema": { "type": "string" }
-          }
+          },
+          { "name": "sessionId", "required": true, "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
@@ -2130,6 +2136,125 @@
         "tags": ["Cart"]
       }
     },
+    "/cart/guest/{sessionId}": {
+      "get": {
+        "description": "Retrieves all cart items for a guest user session. Only returns items that have not been checked out.",
+        "operationId": "CartController_getGuestCart",
+        "parameters": [
+          { "name": "sessionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart retrieved successfully. Returns array of cart items, total item count, and total price.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Get guest shopping cart",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest": {
+      "post": {
+        "description": "Adds a product to the guest user's shopping cart. If product already exists in cart, the quantity is incremented.",
+        "operationId": "CartController_addToGuestCart",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddToGuestCartDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product added to guest cart successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CartResponseDto" } }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Add product to guest cart",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest/{cartId}": {
+      "delete": {
+        "description": "Removes a specific cart item from the guest user's cart.",
+        "operationId": "CartController_removeFromGuestCart",
+        "parameters": [
+          { "name": "cartId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "sessionId", "required": true, "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product removed from guest cart successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Remove product from guest cart",
+        "tags": ["Cart"]
+      },
+      "patch": {
+        "description": "Updates the quantity of a specific item in the guest cart.",
+        "operationId": "CartController_updateGuestCartQuantity",
+        "parameters": [
+          { "name": "cartId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateGuestCartQuantityDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Guest cart item quantity updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Update guest cart item quantity",
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/guest/all/{sessionId}": {
+      "delete": {
+        "description": "Removes all items from the guest user's shopping cart.",
+        "operationId": "CartController_removeAllFromGuestCart",
+        "parameters": [
+          { "name": "sessionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guest cart cleared successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteCartResponseDto" }
+              }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "summary": "Clear all items from guest cart",
+        "tags": ["Cart"]
+      }
+    },
     "/checkout/orders": {
       "get": {
         "operationId": "CheckoutController_getOrders",
@@ -2171,6 +2296,33 @@
           }
         },
         "summary": "Get a specific order",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/confirm-payment/{checkoutId}": {
+      "get": {
+        "description": "Public endpoint to confirm payment after Paystack redirect for guest users",
+        "operationId": "CheckoutController_confirmGuestPayment",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment confirmed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Confirm payment for a guest order (no authentication required)",
         "tags": ["Checkout"]
       }
     },
@@ -2229,19 +2381,20 @@
         "operationId": "CheckoutController_getAllOrders",
         "parameters": [
           {
-            "name": "saleStatus",
+            "name": "orderStatus",
             "required": false,
             "in": "query",
             "schema": {
-              "enum": [
-                "invoice_requested",
-                "pending_payment",
-                "paid",
-                "packaging",
-                "in_transit",
-                "delivered",
-                "cancelled"
-              ],
+              "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentStatus",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
               "type": "string"
             }
           },
@@ -2434,6 +2587,151 @@
         "tags": ["Checkout"]
       }
     },
+    "/checkout/guest/delivery": {
+      "post": {
+        "operationId": "CheckoutController_getGuestDeliveryCost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GuestGetDeliveryCostDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transportation cost calculated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeliveryResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Calculate delivery cost for guest checkout",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/initialize-transaction": {
+      "post": {
+        "operationId": "CheckoutController_guestInitializeTransaction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GuestInitializeTransactionDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Initialize payment transaction for guest user",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/place-order": {
+      "post": {
+        "operationId": "CheckoutController_guestPlaceOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/GuestPlaceOrderDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order placed successfully. Check your email for order tracking information.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Place an order as guest without immediate payment - payment can be made later",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/track/{checkoutId}": {
+      "get": {
+        "description": "Track any order using the checkout ID and email address. Works for orders placed by guests, registered users, or created by admins.",
+        "operationId": "CheckoutController_getOrderStatus",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address associated with the order",
+            "schema": { "format": "email", "example": "guest@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CheckoutResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Track order status by checkout ID and email (no authentication required - works for all orders)",
+        "tags": ["Checkout"]
+      }
+    },
+    "/checkout/guest/pay-for-order/{checkoutId}": {
+      "post": {
+        "description": "Initialize payment for any order using checkout ID and email. Works for orders placed by guests, registered users, or created by admins.",
+        "operationId": "CheckoutController_payForGuestOrder",
+        "parameters": [
+          {
+            "name": "checkoutId",
+            "required": true,
+            "in": "path",
+            "description": "Checkout ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address associated with the order",
+            "schema": { "format": "email", "example": "guest@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InitializeTransactionResponseDto" }
+              }
+            }
+          },
+          "201": { "description": "" }
+        },
+        "summary": "Initialize payment for any order without authentication (invoice requested or pending payment)",
+        "tags": ["Checkout"]
+      }
+    },
     "/upload/image": {
       "post": {
         "operationId": "UploadController_uploadImage",
@@ -2480,7 +2778,9 @@
         "responses": {
           "201": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Create a new sale",
@@ -2490,19 +2790,20 @@
         "operationId": "SalesController_listSales",
         "parameters": [
           {
-            "name": "status",
+            "name": "orderStatus",
             "required": false,
             "in": "query",
             "schema": {
-              "enum": [
-                "invoice_requested",
-                "pending_payment",
-                "paid",
-                "packaging",
-                "in_transit",
-                "delivered",
-                "cancelled"
-              ],
+              "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentStatus",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
               "type": "string"
             }
           },
@@ -2550,7 +2851,9 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Edit sale details",
@@ -2564,7 +2867,9 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Get sale details",
@@ -2578,7 +2883,9 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Cancel sale",
@@ -2600,7 +2907,9 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Update sale status",
@@ -2622,11 +2931,15 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           },
           "201": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Add line item to sale",
@@ -2648,10 +2961,135 @@
         "responses": {
           "200": {
             "description": "",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Sale" } } }
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/SaleResponseDto" } }
+            }
           }
         },
         "summary": "Assign batches to line item",
+        "tags": ["Sales"]
+      }
+    },
+    "/sales/track/{saleId}": {
+      "get": {
+        "description": "Track any order using the sale ID and email address. Works for orders placed by guests, registered users, or created by admins.",
+        "operationId": "SalesController_trackOrder",
+        "parameters": [
+          {
+            "name": "saleId",
+            "required": true,
+            "in": "path",
+            "description": "Sale/Order ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address associated with the order",
+            "schema": { "format": "email", "example": "customer@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TrackOrderResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Track order status by sale ID and email (no authentication required)",
+        "tags": ["Sales"]
+      }
+    },
+    "/sales/pay/{saleId}": {
+      "post": {
+        "description": "Initialize payment for any order using sale ID and email. Works for orders with INVOICE_REQUESTED or PENDING_PAYMENT status.",
+        "operationId": "SalesController_payForOrder",
+        "parameters": [
+          {
+            "name": "saleId",
+            "required": true,
+            "in": "path",
+            "description": "Sale/Order ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address associated with the order",
+            "schema": { "format": "email", "example": "customer@example.com", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Payment initialized successfully" },
+          "201": { "description": "" }
+        },
+        "summary": "Initialize payment for order by sale ID (no authentication required)",
+        "tags": ["Sales"]
+      }
+    },
+    "/sales/by-email": {
+      "get": {
+        "description": "Retrieve all sales associated with a specific customer email address. Supports filtering by order status and payment status with pagination.",
+        "operationId": "SalesController_listSalesByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address of the customer",
+            "schema": { "format": "email", "example": "customer@example.com", "type": "string" }
+          },
+          {
+            "name": "orderStatus",
+            "required": false,
+            "in": "query",
+            "description": "Filter by order status",
+            "schema": {
+              "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentStatus",
+            "required": false,
+            "in": "query",
+            "description": "Filter by payment status",
+            "schema": {
+              "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": { "default": 10, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedSaleResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "List sales by customer email (no authentication required)",
         "tags": ["Sales"]
       }
     },
@@ -3735,7 +4173,14 @@
           }
         },
         "responses": {
-          "200": { "description": "" },
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProfileResponseWrapperDto" }
+              }
+            }
+          },
           "201": {
             "description": "Profile updated successfully",
             "content": {
@@ -3784,7 +4229,14 @@
               }
             }
           },
-          "201": { "description": "" },
+          "201": {
+            "description": "Avatar uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AvatarUploadResponseDto" }
+              }
+            }
+          },
           "400": { "description": "Bad request - invalid file type or size" },
           "401": { "description": "Unauthorized - not logged in" }
         },
@@ -3991,12 +4443,39 @@
       "RegisterUserDto": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" },
-          "confirmPassword": { "type": "string" },
-          "userType": { "enum": ["user", "admin", "superadmin"], "type": "string" },
-          "phoneNumber": { "type": "string" }
+          "name": { "type": "string", "description": "User full name", "example": "John Doe" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password (min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol)",
+            "example": "Password123!"
+          },
+          "confirmPassword": {
+            "type": "string",
+            "description": "Password confirmation",
+            "example": "Password123!"
+          },
+          "userType": {
+            "enum": ["user", "admin", "superadmin"],
+            "type": "string",
+            "description": "User role type",
+            "example": "user"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "User phone number",
+            "example": "+233244123456"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Guest session ID to sync cart items (optional, for guest users signing up)",
+            "example": "guest-1234567890"
+          }
         },
         "required": ["name", "email", "password", "confirmPassword", "userType"]
       },
@@ -4175,8 +4654,22 @@
       "SignInDto": {
         "type": "object",
         "properties": {
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" }
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Password123!"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Guest session ID to sync cart items (optional, for guest users logging in)",
+            "example": "guest-1234567890"
+          }
         },
         "required": ["email", "password"]
       },
@@ -5845,6 +6338,45 @@
         },
         "required": ["message", "data"]
       },
+      "AddToGuestCartDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest user",
+            "example": "guest-session-123"
+          },
+          "id": {
+            "type": "string",
+            "description": "The UUID of the product to add to cart",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "description": "The quantity of the product in the cart (must be a positive integer)",
+            "example": 5
+          }
+        },
+        "required": ["sessionId", "id"]
+      },
+      "UpdateGuestCartQuantityDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest user",
+            "example": "guest-session-123"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "description": "The new quantity for the cart item",
+            "example": 3
+          }
+        },
+        "required": ["sessionId", "quantity"]
+      },
       "UserDto": {
         "type": "object",
         "properties": {
@@ -5960,7 +6492,14 @@
           "id": { "type": "string" },
           "customer": { "$ref": "#/components/schemas/CustomerDto" },
           "checkout": { "$ref": "#/components/schemas/CheckoutDto" },
-          "status": { "type": "string" },
+          "orderStatus": {
+            "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+            "type": "string"
+          },
+          "paymentStatus": {
+            "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
+            "type": "string"
+          },
           "lineItems": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/SaleLineItemDto" }
@@ -5973,7 +6512,8 @@
           "id",
           "customer",
           "checkout",
-          "status",
+          "orderStatus",
+          "paymentStatus",
           "lineItems",
           "createdAt",
           "updatedAt",
@@ -6092,43 +6632,84 @@
         },
         "required": ["country", "region", "city", "phoneNumber"]
       },
-      "SaleStatus": {
+      "OrderStatus": {
         "type": "string",
-        "enum": [
-          "invoice_requested",
-          "pending_payment",
-          "paid",
-          "packaging",
-          "in_transit",
-          "delivered",
-          "cancelled"
-        ]
+        "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"]
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": ["invoice_requested", "pending_payment", "paid", "refunded"]
       },
       "UpdateSaleStatusDto": {
         "type": "object",
         "properties": {
-          "status": {
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered",
-              "cancelled"
-            ],
+          "orderStatus": {
+            "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+            "type": "string"
+          },
+          "paymentStatus": {
+            "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
             "type": "string"
           }
-        },
-        "required": ["status"]
+        }
       },
       "SaleResponseDto": {
         "type": "object",
         "properties": {
-          "message": { "type": "string" },
-          "data": { "$ref": "#/components/schemas/SaleDto" }
+          "id": { "type": "string", "description": "Sale/Order ID", "example": "sale-uuid-123" },
+          "customer": {
+            "description": "Customer information",
+            "allOf": [{ "$ref": "#/components/schemas/SaleCustomerDto" }]
+          },
+          "checkout": {
+            "description": "Checkout information (null for admin-created orders)",
+            "allOf": [{ "$ref": "#/components/schemas/SaleCheckoutDto" }]
+          },
+          "orderStatus": {
+            "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+            "type": "string",
+            "description": "Order status",
+            "example": "pending"
+          },
+          "paymentStatus": {
+            "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
+            "type": "string",
+            "description": "Payment status",
+            "example": "paid"
+          },
+          "lineItems": {
+            "description": "Line items in the sale",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SaleLineItemResponseDto" }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Sale creation date",
+            "example": "2026-01-14T10:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Sale last update date",
+            "example": "2026-01-14T10:30:00Z"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Sale deletion date (soft delete)",
+            "example": null
+          }
         },
-        "required": ["message", "data"]
+        "required": [
+          "id",
+          "customer",
+          "orderStatus",
+          "paymentStatus",
+          "lineItems",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "UpdateDeliveryCostDto": {
         "type": "object",
@@ -6142,6 +6723,94 @@
         },
         "required": ["deliveryCost"]
       },
+      "GuestGetDeliveryCostDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" }
+        },
+        "required": ["sessionId", "country", "region", "city"]
+      },
+      "GuestInitializeTransactionDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Guest email address for order updates",
+            "example": "guest@example.com"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
+          },
+          "name": { "type": "string", "description": "Guest name", "example": "John Doe" }
+        },
+        "required": ["email", "sessionId", "country", "region", "city", "phoneNumber", "name"]
+      },
+      "GuestPlaceOrderDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Guest email address for order updates",
+            "example": "guest@example.com"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session ID for guest cart",
+            "example": "guest-session-123"
+          },
+          "country": { "type": "string", "description": "Delivery country", "example": "Ghana" },
+          "region": {
+            "type": "string",
+            "description": "Delivery state/region",
+            "example": "Northern Region"
+          },
+          "city": { "type": "string", "description": "Delivery city/town", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Contact phone number for delivery (in case of issues)",
+            "example": "+233244123456"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Additional information about the order (e.g., house number, landmarks)",
+            "example": "House No. 123, near the market. Please call before delivery"
+          },
+          "name": { "type": "string", "description": "Guest name", "example": "John Doe" }
+        },
+        "required": ["email", "sessionId", "country", "region", "city", "phoneNumber", "name"]
+      },
       "UploadResponseDto": {
         "type": "object",
         "properties": {
@@ -6154,9 +6823,13 @@
         "type": "object",
         "properties": {
           "customerId": { "type": "string" },
-          "status": {
+          "orderStatus": {
+            "default": "pending",
+            "allOf": [{ "$ref": "#/components/schemas/OrderStatus" }]
+          },
+          "paymentStatus": {
             "default": "invoice_requested",
-            "allOf": [{ "$ref": "#/components/schemas/SaleStatus" }]
+            "allOf": [{ "$ref": "#/components/schemas/PaymentStatus" }]
           },
           "lineItems": {
             "type": "array",
@@ -6165,153 +6838,156 @@
         },
         "required": ["customerId", "lineItems"]
       },
-      "User": {
+      "SaleCustomerDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "name": { "type": "string" },
-          "password": { "type": "string" },
-          "userType": { "type": "string", "enum": ["user", "admin", "superadmin"] },
-          "phoneNumber": { "type": "string" },
-          "avatarUrl": { "type": "string" },
-          "permissions": { "type": "string" },
-          "mustChangePassword": { "type": "boolean" },
-          "rememberToken": { "type": "string" },
-          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
-          "dob": { "format": "date-time", "type": "string" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "emailVerifiedAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": [
-          "id",
-          "email",
-          "name",
-          "password",
-          "userType",
-          "phoneNumber",
-          "avatarUrl",
-          "permissions",
-          "mustChangePassword",
-          "rememberToken",
-          "status",
-          "dob",
-          "createdAt",
-          "emailVerifiedAt",
-          "updatedAt"
-        ]
-      },
-      "Cart": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "user": { "$ref": "#/components/schemas/User" },
-          "product": { "$ref": "#/components/schemas/Product" },
-          "quantity": { "type": "number", "minimum": 1 },
-          "checkout": { "nullable": true, "allOf": [{ "$ref": "#/components/schemas/Checkout" }] },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": ["id", "user", "product", "quantity", "createdAt", "updatedAt"]
-      },
-      "Checkout": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "sale": { "$ref": "#/components/schemas/Sale" },
-          "carts": { "type": "array", "items": { "$ref": "#/components/schemas/Cart" } },
-          "amount": { "type": "number" },
-          "paystackReference": { "type": "string" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" },
-          "deletedAt": { "format": "date-time", "type": "string" }
-        },
-        "required": [
-          "id",
-          "sale",
-          "carts",
-          "amount",
-          "paystackReference",
-          "createdAt",
-          "updatedAt",
-          "deletedAt"
-        ]
-      },
-      "Sale": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "customer": { "$ref": "#/components/schemas/Customer" },
-          "checkout": { "$ref": "#/components/schemas/Checkout" },
-          "status": {
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered",
-              "cancelled"
-            ],
-            "type": "string"
+          "id": { "type": "string", "description": "Customer ID", "example": "customer-uuid-123" },
+          "name": { "type": "string", "description": "Customer name", "example": "John Doe" },
+          "phone": {
+            "type": "string",
+            "description": "Customer phone number",
+            "example": "+233123456789"
           },
-          "lineItems": { "type": "array", "items": { "type": "object" } },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" },
-          "deletedAt": { "format": "date-time", "type": "string" }
+          "email": {
+            "type": "string",
+            "description": "Customer email address",
+            "example": "john.doe@example.com"
+          },
+          "address": {
+            "type": "string",
+            "description": "Customer address",
+            "example": "123 Main Street, Tamale"
+          },
+          "country": { "type": "string", "description": "Customer country", "example": "Ghana" },
+          "region": { "type": "string", "description": "Customer region", "example": "Northern" },
+          "city": { "type": "string", "description": "Customer city", "example": "Tamale" },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Additional phone number",
+            "example": "+233987654321"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Extra customer information",
+            "example": "VIP customer"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Customer creation date",
+            "example": "2026-01-14T10:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Customer last update date",
+            "example": "2026-01-14T10:30:00Z"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Customer deletion date (soft delete)",
+            "example": null
+          }
         },
-        "required": [
-          "id",
-          "customer",
-          "checkout",
-          "status",
-          "lineItems",
-          "createdAt",
-          "updatedAt",
-          "deletedAt"
-        ]
+        "required": ["id", "name", "createdAt", "updatedAt"]
       },
-      "Customer": {
+      "SaleCheckoutDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "phone": { "type": "string" },
-          "email": { "type": "string" },
-          "address": { "type": "string" },
-          "country": { "type": "string" },
-          "region": { "type": "string" },
-          "city": { "type": "string" },
-          "phoneNumber": { "type": "string" },
-          "extraInfo": { "type": "string" },
-          "sales": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
-          "user": { "$ref": "#/components/schemas/User" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" },
-          "deletedAt": { "format": "date-time", "type": "string" }
+          "id": { "type": "string", "description": "Checkout ID", "example": "checkout-uuid-123" },
+          "amount": {
+            "type": "number",
+            "description": "Total checkout amount",
+            "example": 500,
+            "minimum": 0
+          },
+          "paystackReference": {
+            "type": "string",
+            "description": "Paystack payment reference",
+            "example": "ref_xyz123"
+          },
+          "guestEmail": {
+            "type": "string",
+            "description": "Guest email (for guest checkouts)",
+            "example": "guest@example.com"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Checkout creation date",
+            "example": "2026-01-14T10:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Checkout last update date",
+            "example": "2026-01-14T10:30:00Z"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Checkout deletion date (soft delete)",
+            "example": null
+          }
         },
-        "required": [
-          "id",
-          "name",
-          "phone",
-          "email",
-          "address",
-          "country",
-          "region",
-          "city",
-          "phoneNumber",
-          "extraInfo",
-          "sales",
-          "user",
-          "createdAt",
-          "updatedAt",
-          "deletedAt"
-        ]
+        "required": ["id", "amount", "createdAt", "updatedAt"]
       },
       "BatchAllocationDto": {
         "type": "object",
-        "properties": { "batchId": { "type": "string" }, "quantity": { "type": "number" } }
+        "properties": {
+          "batchId": { "type": "string", "description": "Batch ID", "example": "batch-uuid-123" },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity allocated from this batch",
+            "example": 5,
+            "minimum": 1
+          }
+        },
+        "required": ["batchId", "quantity"]
+      },
+      "SaleLineItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "Product ID",
+            "example": "product-uuid-123"
+          },
+          "productName": {
+            "type": "string",
+            "description": "Product name",
+            "example": "Premium Rice 50kg"
+          },
+          "category": { "type": "string", "description": "Product category", "example": "Grains" },
+          "batchAllocations": {
+            "description": "Batch allocations for this line item",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BatchAllocationDto" }
+          },
+          "requestedQuantity": {
+            "type": "number",
+            "description": "Requested quantity",
+            "example": 10,
+            "minimum": 1
+          },
+          "customPrice": {
+            "type": "number",
+            "description": "Custom price per unit (if different from retail price)",
+            "example": 45.5
+          },
+          "finalPrice": {
+            "type": "number",
+            "description": "Final price per unit used for calculation",
+            "example": 50
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Total amount for this line item",
+            "example": 500
+          }
+        },
+        "required": ["productId", "batchAllocations", "requestedQuantity", "finalPrice"]
       },
       "UpdateSaleLineItemDto": {
         "type": "object",
@@ -6329,19 +7005,8 @@
         "type": "object",
         "properties": {
           "customerId": { "type": "string" },
-          "status": {
-            "enum": [
-              "invoice_requested",
-              "pending_payment",
-              "paid",
-              "packaging",
-              "in_transit",
-              "delivered",
-              "cancelled"
-            ],
-            "type": "string",
-            "default": "invoice_requested"
-          },
+          "orderStatus": { "allOf": [{ "$ref": "#/components/schemas/OrderStatus" }] },
+          "paymentStatus": { "allOf": [{ "$ref": "#/components/schemas/PaymentStatus" }] },
           "lineItems": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/UpdateSaleLineItemDto" }
@@ -6371,6 +7036,54 @@
           }
         },
         "required": ["productId", "batchAllocations"]
+      },
+      "TrackOrderResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Order tracked successfully"
+          },
+          "data": {
+            "description": "Sale/Order data",
+            "allOf": [{ "$ref": "#/components/schemas/SaleResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "SalePaginationDto": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "number",
+            "description": "Total number of items",
+            "example": 100
+          },
+          "currentPage": { "type": "number", "description": "Current page number", "example": 1 },
+          "totalPages": { "type": "number", "description": "Total number of pages", "example": 10 },
+          "items": {
+            "description": "Array of sale items",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SaleResponseDto" }
+          }
+        },
+        "required": ["totalItems", "currentPage", "totalPages", "items"]
+      },
+      "PaginatedSaleResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Sales loaded successfully"
+          },
+          "data": {
+            "description": "Paginated data",
+            "allOf": [{ "$ref": "#/components/schemas/SalePaginationDto" }]
+          }
+        },
+        "required": ["message", "data"]
       },
       "GenerateInvoiceDto": {
         "type": "object",

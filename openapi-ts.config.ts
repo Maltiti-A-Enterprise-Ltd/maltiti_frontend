@@ -1,7 +1,7 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: './openapi.json',
+  input: 'http://localhost:3002/swagger/json',
   output: 'app/api',
   parser: {
     transforms: { enums: 'root' },

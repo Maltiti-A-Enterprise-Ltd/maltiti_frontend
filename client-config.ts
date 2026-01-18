@@ -2,6 +2,6 @@ import { Config, CreateClientConfig } from '@/app/api/client';
 
 export const createClientConfig: CreateClientConfig = (config: Config | undefined) => ({
   ...config,
-  baseUrl: 'http://localhost:3002',
+  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   credentials: 'include',
 });

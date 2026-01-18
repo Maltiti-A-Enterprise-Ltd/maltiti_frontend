@@ -23,9 +23,11 @@ export type CartState = {
 };
 
 /**
- * State for guest user cart (stored locally)
- * Simpler structure since it's purely local
+ * State for guest user cart (stored locally with optional API sync)
+ * Supports both offline and online operations
  */
 export type GuestCartState = {
   items: CartItemDto[];
+  isLoading?: boolean;
+  error?: string | null;
 };

@@ -11,6 +11,7 @@ import { testimonialsData } from '@/lib/testimonials-data';
 import { LocationSection } from '@/components/home/location-section';
 import { maltitiLocationInfo } from '@/lib/location-data';
 import { ContactSection } from '@/components/home/contact-section';
+import { TrackOrderSection } from '@/components/home/track-order-section';
 
 export default function Home(): JSX.Element {
   return (
@@ -19,6 +20,7 @@ export default function Home(): JSX.Element {
       <div className="px-8">
         <BestProductsSection />
       </div>
+      <TrackOrderSection />
       <AboutUsSection />
       <LeadershipTeamSection teamMembers={teamMembers} />
       <TestimonialsSection testimonials={testimonialsData} />

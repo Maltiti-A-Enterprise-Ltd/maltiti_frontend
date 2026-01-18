@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuditControllerFindAllData, AuditControllerFindAllResponses, AuditControllerFindOneData, AuditControllerFindOneResponses, AuditControllerGetStatisticsData, AuditControllerGetStatisticsResponses, AuthenticationControllerChangePasswordData, AuthenticationControllerChangePasswordErrors, AuthenticationControllerChangePasswordResponses, AuthenticationControllerCreateAdminData, AuthenticationControllerCreateAdminErrors, AuthenticationControllerCreateAdminResponses, AuthenticationControllerCustomerSignupData, AuthenticationControllerCustomerSignupErrors, AuthenticationControllerCustomerSignupResponses, AuthenticationControllerEmailVerificationData, AuthenticationControllerEmailVerificationErrors, AuthenticationControllerEmailVerificationResponses, AuthenticationControllerForgotPasswordData, AuthenticationControllerForgotPasswordErrors, AuthenticationControllerForgotPasswordResponses, AuthenticationControllerLogoutData, AuthenticationControllerLogoutErrors, AuthenticationControllerLogoutResponses, AuthenticationControllerRefreshTokenData, AuthenticationControllerRefreshTokenErrors, AuthenticationControllerRefreshTokenResponses, AuthenticationControllerRegisterData, AuthenticationControllerRegisterErrors, AuthenticationControllerRegisterResponses, AuthenticationControllerResendVerificationEmailData, AuthenticationControllerResendVerificationEmailErrors, AuthenticationControllerResendVerificationEmailResponses, AuthenticationControllerResetPasswordData, AuthenticationControllerResetPasswordErrors, AuthenticationControllerResetPasswordResponses, AuthenticationControllerSignInData, AuthenticationControllerSignInErrors, AuthenticationControllerSignInResponses, AuthenticationControllerVerifyPhoneData, AuthenticationControllerVerifyPhoneErrors, AuthenticationControllerVerifyPhoneResponses, BatchesControllerCreateBatchData, BatchesControllerCreateBatchErrors, BatchesControllerCreateBatchResponses, BatchesControllerGetAllBatchesData, BatchesControllerGetAllBatchesResponses, BatchesControllerGetBatchData, BatchesControllerGetBatchErrors, BatchesControllerGetBatchesByProductData, BatchesControllerGetBatchesByProductErrors, BatchesControllerGetBatchesByProductResponses, BatchesControllerGetBatchResponses, CartControllerAddQuantityData, CartControllerAddQuantityErrors, CartControllerAddQuantityResponses, CartControllerAddToCartData, CartControllerAddToCartErrors, CartControllerAddToCartResponses, CartControllerBulkAddToCartData, CartControllerBulkAddToCartErrors, CartControllerBulkAddToCartResponses, CartControllerGetCartData, CartControllerGetCartErrors, CartControllerGetCartResponses, CartControllerRemoveAllFromCartData, CartControllerRemoveAllFromCartErrors, CartControllerRemoveAllFromCartResponses, CartControllerRemoveFromCartData, CartControllerRemoveFromCartErrors, CartControllerRemoveFromCartResponses, CheckoutControllerCancelOrderData, CheckoutControllerCancelOrderResponses, CheckoutControllerConfirmPaymentData, CheckoutControllerConfirmPaymentResponses, CheckoutControllerGetAllOrdersData, CheckoutControllerGetAllOrdersResponses, CheckoutControllerGetDeliveryCostData, CheckoutControllerGetDeliveryCostResponses, CheckoutControllerGetOrderData, CheckoutControllerGetOrderResponses, CheckoutControllerGetOrdersData, CheckoutControllerGetOrdersResponses, CheckoutControllerInitializeTransactionData, CheckoutControllerInitializeTransactionResponses, CheckoutControllerPayForOrderData, CheckoutControllerPayForOrderResponses, CheckoutControllerPlaceOrderData, CheckoutControllerPlaceOrderResponses, CheckoutControllerUpdateDeliveryCostData, CheckoutControllerUpdateDeliveryCostResponses, CheckoutControllerUpdateSaleStatusData, CheckoutControllerUpdateSaleStatusResponses, ContactControllerSubmitContactFormData, ContactControllerSubmitContactFormErrors, ContactControllerSubmitContactFormResponses, CooperativeControllerAddCooperativeData, CooperativeControllerAddCooperativeResponses, CooperativeControllerAddMemberData, CooperativeControllerAddMemberResponses, CooperativeControllerDeleteCooperativeData, CooperativeControllerDeleteCooperativeResponses, CooperativeControllerDeleteMemberData, CooperativeControllerDeleteMemberResponses, CooperativeControllerEditCooperativeData, CooperativeControllerEditCooperativeResponses, CooperativeControllerEditMemberData, CooperativeControllerEditMemberResponses, CooperativeControllerGetAllCooperativeMembersData, CooperativeControllerGetAllCooperativeMembersResponses, CooperativeControllerGetAllCooperativesData, CooperativeControllerGetAllCooperativesResponses, CooperativeControllerGetCooperativeData, CooperativeControllerGetCooperativeMemberData, CooperativeControllerGetCooperativeMemberResponses, CooperativeControllerGetCooperativeResponses, CooperativeControllerGetMembersByCooperativeData, CooperativeControllerGetMembersByCooperativeResponses, CustomerControllerCreateCustomerData, CustomerControllerCreateCustomerErrors, CustomerControllerCreateCustomerResponses, CustomerControllerDeleteCustomerData, CustomerControllerDeleteCustomerErrors, CustomerControllerDeleteCustomerResponses, CustomerControllerGetAllCustomersData, CustomerControllerGetAllCustomersResponses, CustomerControllerGetCustomerData, CustomerControllerGetCustomerErrors, CustomerControllerGetCustomerResponses, CustomerControllerUpdateCustomerData, CustomerControllerUpdateCustomerErrors, CustomerControllerUpdateCustomerResponses, DashboardControllerGetActivityData, DashboardControllerGetActivityResponses, DashboardControllerGetAlertsData, DashboardControllerGetAlertsResponses, DashboardControllerGetHighlightsData, DashboardControllerGetHighlightsResponses, DashboardControllerGetSummaryData, DashboardControllerGetSummaryResponses, DashboardControllerGetTrendsData, DashboardControllerGetTrendsResponses, IngredientsControllerCreateData, IngredientsControllerCreateErrors, IngredientsControllerCreateResponses, IngredientsControllerFindAllData, IngredientsControllerFindAllResponses, IngredientsControllerFindOneData, IngredientsControllerFindOneErrors, IngredientsControllerFindOneResponses, IngredientsControllerRemoveData, IngredientsControllerRemoveErrors, IngredientsControllerRemoveResponses, IngredientsControllerUpdateData, IngredientsControllerUpdateErrors, IngredientsControllerUpdateResponses, ProductsControllerAddProductData, ProductsControllerAddProductErrors, ProductsControllerAddProductResponses, ProductsControllerChangeProductStatusData, ProductsControllerChangeProductStatusErrors, ProductsControllerChangeProductStatusResponses, ProductsControllerDeleteProductData, ProductsControllerDeleteProductErrors, ProductsControllerDeleteProductResponses, ProductsControllerEditProductData, ProductsControllerEditProductErrors, ProductsControllerEditProductResponses, ProductsControllerExportProductsToExcelData, ProductsControllerExportProductsToExcelErrors, ProductsControllerExportProductsToExcelResponses, ProductsControllerGetAllProductsBasicData, ProductsControllerGetAllProductsBasicResponses, ProductsControllerGetAllProductsData, ProductsControllerGetAllProductsErrors, ProductsControllerGetAllProductsResponses, ProductsControllerGetBestProductsData, ProductsControllerGetBestProductsResponses, ProductsControllerGetProductData, ProductsControllerGetProductErrors, ProductsControllerGetProductResponses, ProductsControllerToggleFavoriteData, ProductsControllerToggleFavoriteErrors, ProductsControllerToggleFavoriteResponses, ProfileControllerGetProfileData, ProfileControllerGetProfileErrors, ProfileControllerGetProfileResponses, ProfileControllerUpdateProfileData, ProfileControllerUpdateProfileErrors, ProfileControllerUpdateProfileResponses, ProfileControllerUploadAvatarData, ProfileControllerUploadAvatarErrors, ProfileControllerUploadAvatarResponses, ReportsControllerGetBatchAgingReportData, ReportsControllerGetBatchAgingReportResponses, ReportsControllerGetBatchReportData, ReportsControllerGetBatchReportResponses, ReportsControllerGetComparativeReportData, ReportsControllerGetComparativeReportResponses, ReportsControllerGetDashboardSummaryData, ReportsControllerGetDashboardSummaryResponses, ReportsControllerGetInventoryReportData, ReportsControllerGetInventoryReportResponses, ReportsControllerGetRevenueDistributionData, ReportsControllerGetRevenueDistributionResponses, ReportsControllerGetSalesByCategoryData, ReportsControllerGetSalesByCategoryResponses, ReportsControllerGetSalesByProductData, ReportsControllerGetSalesByProductResponses, ReportsControllerGetSalesReportData, ReportsControllerGetSalesReportResponses, ReportsControllerGetStockMovementReportData, ReportsControllerGetStockMovementReportResponses, ReportsControllerGetTopProductsData, ReportsControllerGetTopProductsResponses, SalesControllerAddLineItemData, SalesControllerAddLineItemResponses, SalesControllerAssignBatchesData, SalesControllerAssignBatchesResponses, SalesControllerCancelSaleData, SalesControllerCancelSaleResponses, SalesControllerCreateSaleData, SalesControllerCreateSaleResponses, SalesControllerGenerateInvoiceData, SalesControllerGenerateInvoiceResponses, SalesControllerGenerateReceiptData, SalesControllerGenerateReceiptResponses, SalesControllerGenerateWaybillData, SalesControllerGenerateWaybillResponses, SalesControllerGetSaleDetailsData, SalesControllerGetSaleDetailsResponses, SalesControllerListSalesData, SalesControllerListSalesResponses, SalesControllerUpdateSaleData, SalesControllerUpdateSaleResponses, SalesControllerUpdateSaleStatusData, SalesControllerUpdateSaleStatusResponses, UploadControllerUploadImageData, UploadControllerUploadImageResponses, UsersControllerChangeRoleData, UsersControllerChangeRoleResponses, UsersControllerChangeStatusData, UsersControllerChangeStatusResponses, UsersControllerFindAllData, UsersControllerFindAllResponses, UsersControllerFindOneData, UsersControllerFindOneResponses, UsersControllerRemoveData, UsersControllerRemoveResponses, UsersControllerUpdateData, UsersControllerUpdateResponses } from './types.gen';
+import type { AuditControllerFindAllData, AuditControllerFindAllResponses, AuditControllerFindOneData, AuditControllerFindOneResponses, AuditControllerGetStatisticsData, AuditControllerGetStatisticsResponses, AuthenticationControllerChangePasswordData, AuthenticationControllerChangePasswordErrors, AuthenticationControllerChangePasswordResponses, AuthenticationControllerCreateAdminData, AuthenticationControllerCreateAdminErrors, AuthenticationControllerCreateAdminResponses, AuthenticationControllerCustomerSignupData, AuthenticationControllerCustomerSignupErrors, AuthenticationControllerCustomerSignupResponses, AuthenticationControllerEmailVerificationData, AuthenticationControllerEmailVerificationErrors, AuthenticationControllerEmailVerificationResponses, AuthenticationControllerForgotPasswordData, AuthenticationControllerForgotPasswordErrors, AuthenticationControllerForgotPasswordResponses, AuthenticationControllerLogoutData, AuthenticationControllerLogoutErrors, AuthenticationControllerLogoutResponses, AuthenticationControllerRefreshTokenData, AuthenticationControllerRefreshTokenErrors, AuthenticationControllerRefreshTokenResponses, AuthenticationControllerRegisterData, AuthenticationControllerRegisterErrors, AuthenticationControllerRegisterResponses, AuthenticationControllerResendVerificationEmailData, AuthenticationControllerResendVerificationEmailErrors, AuthenticationControllerResendVerificationEmailResponses, AuthenticationControllerResetPasswordData, AuthenticationControllerResetPasswordErrors, AuthenticationControllerResetPasswordResponses, AuthenticationControllerSignInData, AuthenticationControllerSignInErrors, AuthenticationControllerSignInResponses, AuthenticationControllerVerifyPhoneData, AuthenticationControllerVerifyPhoneErrors, AuthenticationControllerVerifyPhoneResponses, BatchesControllerCreateBatchData, BatchesControllerCreateBatchErrors, BatchesControllerCreateBatchResponses, BatchesControllerGetAllBatchesData, BatchesControllerGetAllBatchesResponses, BatchesControllerGetBatchData, BatchesControllerGetBatchErrors, BatchesControllerGetBatchesByProductData, BatchesControllerGetBatchesByProductErrors, BatchesControllerGetBatchesByProductResponses, BatchesControllerGetBatchResponses, CartControllerAddQuantityData, CartControllerAddQuantityErrors, CartControllerAddQuantityResponses, CartControllerAddToCartData, CartControllerAddToCartErrors, CartControllerAddToCartResponses, CartControllerAddToGuestCartData, CartControllerAddToGuestCartResponses, CartControllerBulkAddToCartData, CartControllerBulkAddToCartErrors, CartControllerBulkAddToCartResponses, CartControllerGetCartData, CartControllerGetCartErrors, CartControllerGetCartResponses, CartControllerGetGuestCartData, CartControllerGetGuestCartResponses, CartControllerRemoveAllFromCartData, CartControllerRemoveAllFromCartErrors, CartControllerRemoveAllFromCartResponses, CartControllerRemoveAllFromGuestCartData, CartControllerRemoveAllFromGuestCartResponses, CartControllerRemoveFromCartData, CartControllerRemoveFromCartErrors, CartControllerRemoveFromCartResponses, CartControllerRemoveFromGuestCartData, CartControllerRemoveFromGuestCartResponses, CartControllerUpdateGuestCartQuantityData, CartControllerUpdateGuestCartQuantityResponses, CheckoutControllerCancelOrderData, CheckoutControllerCancelOrderResponses, CheckoutControllerConfirmGuestPaymentData, CheckoutControllerConfirmGuestPaymentResponses, CheckoutControllerConfirmPaymentData, CheckoutControllerConfirmPaymentResponses, CheckoutControllerGetAllOrdersData, CheckoutControllerGetAllOrdersResponses, CheckoutControllerGetDeliveryCostData, CheckoutControllerGetDeliveryCostResponses, CheckoutControllerGetGuestDeliveryCostData, CheckoutControllerGetGuestDeliveryCostResponses, CheckoutControllerGetOrderData, CheckoutControllerGetOrderResponses, CheckoutControllerGetOrdersData, CheckoutControllerGetOrdersResponses, CheckoutControllerGetOrderStatusData, CheckoutControllerGetOrderStatusResponses, CheckoutControllerGuestInitializeTransactionData, CheckoutControllerGuestInitializeTransactionResponses, CheckoutControllerGuestPlaceOrderData, CheckoutControllerGuestPlaceOrderResponses, CheckoutControllerInitializeTransactionData, CheckoutControllerInitializeTransactionResponses, CheckoutControllerPayForGuestOrderData, CheckoutControllerPayForGuestOrderResponses, CheckoutControllerPayForOrderData, CheckoutControllerPayForOrderResponses, CheckoutControllerPlaceOrderData, CheckoutControllerPlaceOrderResponses, CheckoutControllerUpdateDeliveryCostData, CheckoutControllerUpdateDeliveryCostResponses, CheckoutControllerUpdateSaleStatusData, CheckoutControllerUpdateSaleStatusResponses, ContactControllerSubmitContactFormData, ContactControllerSubmitContactFormErrors, ContactControllerSubmitContactFormResponses, CooperativeControllerAddCooperativeData, CooperativeControllerAddCooperativeResponses, CooperativeControllerAddMemberData, CooperativeControllerAddMemberResponses, CooperativeControllerDeleteCooperativeData, CooperativeControllerDeleteCooperativeResponses, CooperativeControllerDeleteMemberData, CooperativeControllerDeleteMemberResponses, CooperativeControllerEditCooperativeData, CooperativeControllerEditCooperativeResponses, CooperativeControllerEditMemberData, CooperativeControllerEditMemberResponses, CooperativeControllerGetAllCooperativeMembersData, CooperativeControllerGetAllCooperativeMembersResponses, CooperativeControllerGetAllCooperativesData, CooperativeControllerGetAllCooperativesResponses, CooperativeControllerGetCooperativeData, CooperativeControllerGetCooperativeMemberData, CooperativeControllerGetCooperativeMemberResponses, CooperativeControllerGetCooperativeResponses, CooperativeControllerGetMembersByCooperativeData, CooperativeControllerGetMembersByCooperativeResponses, CustomerControllerCreateCustomerData, CustomerControllerCreateCustomerErrors, CustomerControllerCreateCustomerResponses, CustomerControllerDeleteCustomerData, CustomerControllerDeleteCustomerErrors, CustomerControllerDeleteCustomerResponses, CustomerControllerGetAllCustomersData, CustomerControllerGetAllCustomersResponses, CustomerControllerGetCustomerData, CustomerControllerGetCustomerErrors, CustomerControllerGetCustomerResponses, CustomerControllerUpdateCustomerData, CustomerControllerUpdateCustomerErrors, CustomerControllerUpdateCustomerResponses, DashboardControllerGetActivityData, DashboardControllerGetActivityResponses, DashboardControllerGetAlertsData, DashboardControllerGetAlertsResponses, DashboardControllerGetHighlightsData, DashboardControllerGetHighlightsResponses, DashboardControllerGetSummaryData, DashboardControllerGetSummaryResponses, DashboardControllerGetTrendsData, DashboardControllerGetTrendsResponses, IngredientsControllerCreateData, IngredientsControllerCreateErrors, IngredientsControllerCreateResponses, IngredientsControllerFindAllData, IngredientsControllerFindAllResponses, IngredientsControllerFindOneData, IngredientsControllerFindOneErrors, IngredientsControllerFindOneResponses, IngredientsControllerRemoveData, IngredientsControllerRemoveErrors, IngredientsControllerRemoveResponses, IngredientsControllerUpdateData, IngredientsControllerUpdateErrors, IngredientsControllerUpdateResponses, ProductsControllerAddProductData, ProductsControllerAddProductErrors, ProductsControllerAddProductResponses, ProductsControllerChangeProductStatusData, ProductsControllerChangeProductStatusErrors, ProductsControllerChangeProductStatusResponses, ProductsControllerDeleteProductData, ProductsControllerDeleteProductErrors, ProductsControllerDeleteProductResponses, ProductsControllerEditProductData, ProductsControllerEditProductErrors, ProductsControllerEditProductResponses, ProductsControllerExportProductsToExcelData, ProductsControllerExportProductsToExcelErrors, ProductsControllerExportProductsToExcelResponses, ProductsControllerGetAllProductsBasicData, ProductsControllerGetAllProductsBasicResponses, ProductsControllerGetAllProductsData, ProductsControllerGetAllProductsErrors, ProductsControllerGetAllProductsResponses, ProductsControllerGetBestProductsData, ProductsControllerGetBestProductsResponses, ProductsControllerGetProductData, ProductsControllerGetProductErrors, ProductsControllerGetProductResponses, ProductsControllerToggleFavoriteData, ProductsControllerToggleFavoriteErrors, ProductsControllerToggleFavoriteResponses, ProfileControllerGetProfileData, ProfileControllerGetProfileErrors, ProfileControllerGetProfileResponses, ProfileControllerUpdateProfileData, ProfileControllerUpdateProfileErrors, ProfileControllerUpdateProfileResponses, ProfileControllerUploadAvatarData, ProfileControllerUploadAvatarErrors, ProfileControllerUploadAvatarResponses, ReportsControllerGetBatchAgingReportData, ReportsControllerGetBatchAgingReportResponses, ReportsControllerGetBatchReportData, ReportsControllerGetBatchReportResponses, ReportsControllerGetComparativeReportData, ReportsControllerGetComparativeReportResponses, ReportsControllerGetDashboardSummaryData, ReportsControllerGetDashboardSummaryResponses, ReportsControllerGetInventoryReportData, ReportsControllerGetInventoryReportResponses, ReportsControllerGetRevenueDistributionData, ReportsControllerGetRevenueDistributionResponses, ReportsControllerGetSalesByCategoryData, ReportsControllerGetSalesByCategoryResponses, ReportsControllerGetSalesByProductData, ReportsControllerGetSalesByProductResponses, ReportsControllerGetSalesReportData, ReportsControllerGetSalesReportResponses, ReportsControllerGetStockMovementReportData, ReportsControllerGetStockMovementReportResponses, ReportsControllerGetTopProductsData, ReportsControllerGetTopProductsResponses, SalesControllerAddLineItemData, SalesControllerAddLineItemResponses, SalesControllerAssignBatchesData, SalesControllerAssignBatchesResponses, SalesControllerCancelSaleData, SalesControllerCancelSaleResponses, SalesControllerCreateSaleData, SalesControllerCreateSaleResponses, SalesControllerGenerateInvoiceData, SalesControllerGenerateInvoiceResponses, SalesControllerGenerateReceiptData, SalesControllerGenerateReceiptResponses, SalesControllerGenerateWaybillData, SalesControllerGenerateWaybillResponses, SalesControllerGetSaleDetailsData, SalesControllerGetSaleDetailsResponses, SalesControllerListSalesByEmailData, SalesControllerListSalesByEmailResponses, SalesControllerListSalesData, SalesControllerListSalesResponses, SalesControllerPayForOrderData, SalesControllerPayForOrderResponses, SalesControllerTrackOrderData, SalesControllerTrackOrderResponses, SalesControllerUpdateSaleData, SalesControllerUpdateSaleResponses, SalesControllerUpdateSaleStatusData, SalesControllerUpdateSaleStatusResponses, UploadControllerUploadImageData, UploadControllerUploadImageResponses, UsersControllerChangeRoleData, UsersControllerChangeRoleResponses, UsersControllerChangeStatusData, UsersControllerChangeStatusResponses, UsersControllerFindAllData, UsersControllerFindAllResponses, UsersControllerFindOneData, UsersControllerFindOneResponses, UsersControllerRemoveData, UsersControllerRemoveResponses, UsersControllerUpdateData, UsersControllerUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -70,7 +70,7 @@ export const authenticationControllerVerifyPhone = <ThrowOnError extends boolean
 /**
  * Customer signup
  *
- * Register a new customer account with email verification
+ * Register a new customer account with email verification. If sessionId is provided, guest cart items will be synced when email is verified.
  */
 export const authenticationControllerCustomerSignup = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerCustomerSignupData, ThrowOnError>) => (options.client ?? client).post<AuthenticationControllerCustomerSignupResponses, AuthenticationControllerCustomerSignupErrors, ThrowOnError>({
     url: '/authentication/customer-signup',
@@ -84,7 +84,7 @@ export const authenticationControllerCustomerSignup = <ThrowOnError extends bool
 /**
  * User login
  *
- * Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs.
+ * Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs. If sessionId is provided, guest cart items will be synced with user cart.
  */
 export const authenticationControllerSignIn = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerSignInData, ThrowOnError>) => (options.client ?? client).post<AuthenticationControllerSignInResponses, AuthenticationControllerSignInErrors, ThrowOnError>({
     url: '/authentication/login',
@@ -126,7 +126,7 @@ export const authenticationControllerResetPassword = <ThrowOnError extends boole
 /**
  * Verify email address
  *
- * Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day).
+ * Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day). If sessionId is provided, guest cart items will be synced with user cart.
  */
 export const authenticationControllerEmailVerification = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerEmailVerificationData, ThrowOnError>) => (options.client ?? client).get<AuthenticationControllerEmailVerificationResponses, AuthenticationControllerEmailVerificationErrors, ThrowOnError>({ url: '/authentication/verify/{id}/{token}', ...options });
 
@@ -509,6 +509,55 @@ export const cartControllerBulkAddToCart = <ThrowOnError extends boolean = false
 });
 
 /**
+ * Get guest shopping cart
+ *
+ * Retrieves all cart items for a guest user session. Only returns items that have not been checked out.
+ */
+export const cartControllerGetGuestCart = <ThrowOnError extends boolean = false>(options: Options<CartControllerGetGuestCartData, ThrowOnError>) => (options.client ?? client).get<CartControllerGetGuestCartResponses, unknown, ThrowOnError>({ url: '/cart/guest/{sessionId}', ...options });
+
+/**
+ * Add product to guest cart
+ *
+ * Adds a product to the guest user's shopping cart. If product already exists in cart, the quantity is incremented.
+ */
+export const cartControllerAddToGuestCart = <ThrowOnError extends boolean = false>(options: Options<CartControllerAddToGuestCartData, ThrowOnError>) => (options.client ?? client).post<CartControllerAddToGuestCartResponses, unknown, ThrowOnError>({
+    url: '/cart/guest',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove product from guest cart
+ *
+ * Removes a specific cart item from the guest user's cart.
+ */
+export const cartControllerRemoveFromGuestCart = <ThrowOnError extends boolean = false>(options: Options<CartControllerRemoveFromGuestCartData, ThrowOnError>) => (options.client ?? client).delete<CartControllerRemoveFromGuestCartResponses, unknown, ThrowOnError>({ url: '/cart/guest/{cartId}', ...options });
+
+/**
+ * Update guest cart item quantity
+ *
+ * Updates the quantity of a specific item in the guest cart.
+ */
+export const cartControllerUpdateGuestCartQuantity = <ThrowOnError extends boolean = false>(options: Options<CartControllerUpdateGuestCartQuantityData, ThrowOnError>) => (options.client ?? client).patch<CartControllerUpdateGuestCartQuantityResponses, unknown, ThrowOnError>({
+    url: '/cart/guest/{cartId}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Clear all items from guest cart
+ *
+ * Removes all items from the guest user's shopping cart.
+ */
+export const cartControllerRemoveAllFromGuestCart = <ThrowOnError extends boolean = false>(options: Options<CartControllerRemoveAllFromGuestCartData, ThrowOnError>) => (options.client ?? client).delete<CartControllerRemoveAllFromGuestCartResponses, unknown, ThrowOnError>({ url: '/cart/guest/all/{sessionId}', ...options });
+
+/**
  * Get all orders for current user
  */
 export const checkoutControllerGetOrders = <ThrowOnError extends boolean = false>(options?: Options<CheckoutControllerGetOrdersData, ThrowOnError>) => (options?.client ?? client).get<CheckoutControllerGetOrdersResponses, unknown, ThrowOnError>({ url: '/checkout/orders', ...options });
@@ -517,6 +566,13 @@ export const checkoutControllerGetOrders = <ThrowOnError extends boolean = false
  * Get a specific order
  */
 export const checkoutControllerGetOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetOrderData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerGetOrderResponses, unknown, ThrowOnError>({ url: '/checkout/order/{id}', ...options });
+
+/**
+ * Confirm payment for a guest order (no authentication required)
+ *
+ * Public endpoint to confirm payment after Paystack redirect for guest users
+ */
+export const checkoutControllerConfirmGuestPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmGuestPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmGuestPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/guest/confirm-payment/{checkoutId}', ...options });
 
 /**
  * Confirm payment for an order
@@ -597,6 +653,56 @@ export const checkoutControllerUpdateDeliveryCost = <ThrowOnError extends boolea
  * Cancel an order
  */
 export const checkoutControllerCancelOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerCancelOrderData, ThrowOnError>) => (options.client ?? client).patch<CheckoutControllerCancelOrderResponses, unknown, ThrowOnError>({ url: '/checkout/cancel-order/{id}', ...options });
+
+/**
+ * Calculate delivery cost for guest checkout
+ */
+export const checkoutControllerGetGuestDeliveryCost = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetGuestDeliveryCostData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerGetGuestDeliveryCostResponses, unknown, ThrowOnError>({
+    url: '/checkout/guest/delivery',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Initialize payment transaction for guest user
+ */
+export const checkoutControllerGuestInitializeTransaction = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGuestInitializeTransactionData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerGuestInitializeTransactionResponses, unknown, ThrowOnError>({
+    url: '/checkout/guest/initialize-transaction',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Place an order as guest without immediate payment - payment can be made later
+ */
+export const checkoutControllerGuestPlaceOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGuestPlaceOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerGuestPlaceOrderResponses, unknown, ThrowOnError>({
+    url: '/checkout/guest/place-order',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Track order status by checkout ID and email (no authentication required - works for all orders)
+ *
+ * Track any order using the checkout ID and email address. Works for orders placed by guests, registered users, or created by admins.
+ */
+export const checkoutControllerGetOrderStatus = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerGetOrderStatusData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerGetOrderStatusResponses, unknown, ThrowOnError>({ url: '/checkout/track/{checkoutId}', ...options });
+
+/**
+ * Initialize payment for any order without authentication (invoice requested or pending payment)
+ *
+ * Initialize payment for any order using checkout ID and email. Works for orders placed by guests, registered users, or created by admins.
+ */
+export const checkoutControllerPayForGuestOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerPayForGuestOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerPayForGuestOrderResponses, unknown, ThrowOnError>({ url: '/checkout/guest/pay-for-order/{checkoutId}', ...options });
 
 /**
  * Upload an image
@@ -685,6 +791,27 @@ export const salesControllerAssignBatches = <ThrowOnError extends boolean = fals
         ...options.headers
     }
 });
+
+/**
+ * Track order status by sale ID and email (no authentication required)
+ *
+ * Track any order using the sale ID and email address. Works for orders placed by guests, registered users, or created by admins.
+ */
+export const salesControllerTrackOrder = <ThrowOnError extends boolean = false>(options: Options<SalesControllerTrackOrderData, ThrowOnError>) => (options.client ?? client).get<SalesControllerTrackOrderResponses, unknown, ThrowOnError>({ url: '/sales/track/{saleId}', ...options });
+
+/**
+ * Initialize payment for order by sale ID (no authentication required)
+ *
+ * Initialize payment for any order using sale ID and email. Works for orders with INVOICE_REQUESTED or PENDING_PAYMENT status.
+ */
+export const salesControllerPayForOrder = <ThrowOnError extends boolean = false>(options: Options<SalesControllerPayForOrderData, ThrowOnError>) => (options.client ?? client).post<SalesControllerPayForOrderResponses, unknown, ThrowOnError>({ url: '/sales/pay/{saleId}', ...options });
+
+/**
+ * List sales by customer email (no authentication required)
+ *
+ * Retrieve all sales associated with a specific customer email address. Supports filtering by order status and payment status with pagination.
+ */
+export const salesControllerListSalesByEmail = <ThrowOnError extends boolean = false>(options: Options<SalesControllerListSalesByEmailData, ThrowOnError>) => (options.client ?? client).get<SalesControllerListSalesByEmailResponses, unknown, ThrowOnError>({ url: '/sales/by-email', ...options });
 
 /**
  * Generate invoice PDF for a sale

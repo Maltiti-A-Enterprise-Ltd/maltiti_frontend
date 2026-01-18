@@ -48,3 +48,13 @@ export function debounce<T extends (...args: any[]) => any>(
     }, delay);
   };
 }
+
+/**
+ * Extracts the error message from an error object or returns a fallback message if the error is not an Error instance.
+ * @param error - The error object, which could be of any type.
+ * @param fallBackMessage - The message to return if the error is not an Error instance.
+ * @returns The error message or the fallback message.
+ */
+export function getErrorMessage(error: unknown, fallBackMessage: string): string {
+  return error instanceof Error ? error.message : fallBackMessage;
+}

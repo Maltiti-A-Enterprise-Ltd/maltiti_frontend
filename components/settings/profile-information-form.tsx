@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { updateProfileSchema, type UpdateProfileFormData } from '@/lib/validations/settings';
 import { toast } from 'sonner';
+import { useAppDispatch } from '@/lib/store/hooks';
+import { updateUser } from '@/lib/store/features/auth/authSlice';
 import {
   profileControllerGetProfile,
   profileControllerUpdateProfile,
@@ -19,8 +21,6 @@ import {
   ProfileResponseDto,
   UpdateProfileDto,
 } from '@/app/api';
-import { useAppDispatch } from '@/lib/store/hooks';
-import { updateUser } from '@/lib/store/features/auth/authSlice';
 
 export function ProfileInformationForm(): JSX.Element {
   const dispatch = useAppDispatch();

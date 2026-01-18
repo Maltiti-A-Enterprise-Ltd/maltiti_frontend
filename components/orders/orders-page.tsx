@@ -108,6 +108,51 @@ const OrdersPage = (): JSX.Element => {
     });
   };
 
+  const getPaymentStatusIcon = (status: string): JSX.Element => {
+    switch (status.toLowerCase()) {
+      case 'invoice_requested':
+        return <Clock className="h-4 w-4" />;
+      case 'pending_payment':
+        return <Clock className="h-4 w-4" />;
+      case 'paid':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'refunded':
+        return <XCircle className="h-4 w-4" />;
+      default:
+        return <AlertCircle className="h-4 w-4" />;
+    }
+  };
+
+  const getPaymentStatusColor = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case 'invoice_requested':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'pending_payment':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'paid':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'refunded':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getPaymentStatusText = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case 'invoice_requested':
+        return 'Invoice Requested';
+      case 'pending_payment':
+        return 'Pending Payment';
+      case 'paid':
+        return 'Paid';
+      case 'refunded':
+        return 'Refunded';
+      default:
+        return status;
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
@@ -173,19 +218,30 @@ const OrdersPage = (): JSX.Element => {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <Card key={order.id} className="overflow-hidden">
+              <Card
+                key={order.id}
+                className="overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+              >
                 <CardHeader className="bg-gray-50/50">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
                       <CardTitle className="text-lg">Order #{order.id.slice(0, 8)}</CardTitle>
                       <CardDescription>Placed on {formatDate(order.createdAt)}</CardDescription>
                     </div>
-                    <Badge
-                      className={`${getStatusColor(order.sale.status)} flex w-fit items-center gap-1 border`}
-                    >
-                      {getStatusIcon(order.sale.status)}
-                      {getStatusText(order.sale.status)}
-                    </Badge>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <Badge
+                        className={`${getStatusColor(order.sale.orderStatus)} flex w-fit items-center gap-1 border`}
+                      >
+                        {getStatusIcon(order.sale.orderStatus)}
+                        {getStatusText(order.sale.orderStatus)}
+                      </Badge>
+                      <Badge
+                        className={`${getPaymentStatusColor(order.sale.paymentStatus)} flex w-fit items-center gap-1 border`}
+                      >
+                        {getPaymentStatusIcon(order.sale.paymentStatus)}
+                        {getPaymentStatusText(order.sale.paymentStatus)}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
@@ -219,13 +275,26 @@ const OrdersPage = (): JSX.Element => {
                     )}
 
                     {/* Status-specific messages */}
-                    {(order.sale.status.toLowerCase() === 'invoice_requested' ||
-                      order.sale.status.toLowerCase() === 'pending_payment') && (
+                    {order.sale.paymentStatus.toLowerCase() === 'invoice_requested' && (
+                      <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+                        <p className="text-sm text-orange-800">
+                          We are calculating your delivery cost. You will be contacted shortly to
+                          complete payment.
+                        </p>
+                      </div>
+                    )}
+                    {order.sale.paymentStatus.toLowerCase() === 'pending_payment' && (
                       <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
                         <p className="text-sm text-yellow-800">
-                          {order.sale.status.toLowerCase() === 'invoice_requested'
-                            ? 'We are calculating your delivery cost. You will be contacted shortly to complete payment.'
-                            : 'Please complete your payment to proceed with this order.'}
+                          Please complete your payment to proceed with this order.
+                        </p>
+                      </div>
+                    )}
+                    {order.sale.paymentStatus.toLowerCase() === 'refunded' && (
+                      <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+                        <p className="text-sm text-red-800">
+                          This order has been refunded. Please contact support if you have any
+                          questions.
                         </p>
                       </div>
                     )}
@@ -242,8 +311,8 @@ const OrdersPage = (): JSX.Element => {
                     >
                       View Details
                     </Button>
-                    {(order.sale.status.toLowerCase() === 'pending_payment' ||
-                      order.sale.status.toLowerCase() === 'invoice_requested') && (
+                    {(order.sale.paymentStatus.toLowerCase() === 'pending_payment' ||
+                      order.sale.paymentStatus.toLowerCase() === 'invoice_requested') && (
                       <Button
                         onClick={() => {
                           // TODO: Implement payment logic when ready
