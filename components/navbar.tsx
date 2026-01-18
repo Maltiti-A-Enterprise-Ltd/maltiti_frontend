@@ -173,7 +173,7 @@ export function NavBar(): JSX.Element {
               <Menu className="h-6 w-6" />
             </button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-80">
+          <SheetContent side="left" className="w-80">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
