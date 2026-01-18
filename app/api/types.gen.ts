@@ -1735,6 +1735,36 @@ export type TrackOrderResponseDto = {
     data: SaleResponseDto;
 };
 
+export type SalePaginationDto = {
+    /**
+     * Total number of items
+     */
+    totalItems: number;
+    /**
+     * Current page number
+     */
+    currentPage: number;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
+    /**
+     * Array of sale items
+     */
+    items: Array<SaleResponseDto>;
+};
+
+export type PaginatedSaleResponseDto = {
+    /**
+     * Response message
+     */
+    message: string;
+    /**
+     * Paginated data
+     */
+    data: SalePaginationDto;
+};
+
 export type GenerateInvoiceDto = {
     /**
      * Discount amount
@@ -4269,6 +4299,43 @@ export type SalesControllerPayForOrderResponses = {
     200: unknown;
     201: unknown;
 };
+
+export type SalesControllerListSalesByEmailData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Email address of the customer
+         */
+        email: string;
+        /**
+         * Filter by order status
+         */
+        orderStatus?: OrderStatus;
+        /**
+         * Filter by payment status
+         */
+        paymentStatus?: PaymentStatus;
+        /**
+         * Page number for pagination
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         */
+        limit?: number;
+    };
+    url: '/sales/by-email';
+};
+
+export type SalesControllerListSalesByEmailResponses = {
+    /**
+     * Sales retrieved successfully
+     */
+    200: PaginatedSaleResponseDto;
+};
+
+export type SalesControllerListSalesByEmailResponse = SalesControllerListSalesByEmailResponses[keyof SalesControllerListSalesByEmailResponses];
 
 export type SalesControllerGenerateInvoiceData = {
     body: GenerateInvoiceDto;

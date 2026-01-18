@@ -3032,6 +3032,67 @@
         "tags": ["Sales"]
       }
     },
+    "/sales/by-email": {
+      "get": {
+        "description": "Retrieve all sales associated with a specific customer email address. Supports filtering by order status and payment status with pagination.",
+        "operationId": "SalesController_listSalesByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "description": "Email address of the customer",
+            "schema": { "format": "email", "example": "customer@example.com", "type": "string" }
+          },
+          {
+            "name": "orderStatus",
+            "required": false,
+            "in": "query",
+            "description": "Filter by order status",
+            "schema": {
+              "enum": ["pending", "packaging", "in_transit", "delivered", "cancelled"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentStatus",
+            "required": false,
+            "in": "query",
+            "description": "Filter by payment status",
+            "schema": {
+              "enum": ["invoice_requested", "pending_payment", "paid", "refunded"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": { "default": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": { "default": 10, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedSaleResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "List sales by customer email (no authentication required)",
+        "tags": ["Sales"]
+      }
+    },
     "/sales/{id}/invoice": {
       "post": {
         "operationId": "SalesController_generateInvoice",
@@ -6987,6 +7048,39 @@
           "data": {
             "description": "Sale/Order data",
             "allOf": [{ "$ref": "#/components/schemas/SaleResponseDto" }]
+          }
+        },
+        "required": ["message", "data"]
+      },
+      "SalePaginationDto": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "number",
+            "description": "Total number of items",
+            "example": 100
+          },
+          "currentPage": { "type": "number", "description": "Current page number", "example": 1 },
+          "totalPages": { "type": "number", "description": "Total number of pages", "example": 10 },
+          "items": {
+            "description": "Array of sale items",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SaleResponseDto" }
+          }
+        },
+        "required": ["totalItems", "currentPage", "totalPages", "items"]
+      },
+      "PaginatedSaleResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message",
+            "example": "Sales loaded successfully"
+          },
+          "data": {
+            "description": "Paginated data",
+            "allOf": [{ "$ref": "#/components/schemas/SalePaginationDto" }]
           }
         },
         "required": ["message", "data"]

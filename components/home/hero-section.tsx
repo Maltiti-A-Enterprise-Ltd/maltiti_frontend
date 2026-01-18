@@ -4,7 +4,7 @@ import { JSX, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, ArrowRight } from 'lucide-react';
+import { Play, ArrowRight, Package } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -181,6 +181,25 @@ export function HeroSection({}: HeroSectionProps): JSX.Element {
                 <Play className="mr-2 h-5 w-5 fill-current transition-transform group-hover:scale-110" />
                 Watch Our Story
               </Button>
+            </motion.div>
+
+            {/* Track Order CTA */}
+            <motion.div
+              variants={fadeInUp}
+              className="flex items-center gap-3 rounded-xl border-2 border-green-100 bg-green-50/50 p-4 backdrop-blur-sm"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100">
+                <Package className="h-5 w-5 text-green-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-900">Already placed an order?</p>
+                <Link
+                  href="/track-order"
+                  className="text-sm font-semibold text-green-600 transition-colors hover:text-green-700 hover:underline"
+                >
+                  Track your order here →
+                </Link>
+              </div>
             </motion.div>
           </motion.div>
 
