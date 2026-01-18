@@ -13,6 +13,7 @@ import {
   Role,
 } from '@/app/api';
 import { getGuestSessionId, hasGuestSession, clearGuestSessionId } from '@/lib/session-utils';
+import { getErrorMessage } from '@/lib/utils';
 
 /**
  * Login thunk
@@ -70,7 +71,7 @@ export const signup = createAsyncThunk(
         },
       });
       if (!data) {
-        return rejectWithValue(error?.message || 'Login failed');
+        return rejectWithValue(getErrorMessage(error, 'Something went wrong during signup'));
       }
       return data;
     } catch (error: unknown) {
