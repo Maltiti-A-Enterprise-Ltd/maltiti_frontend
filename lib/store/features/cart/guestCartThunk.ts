@@ -68,11 +68,6 @@ export const addToGuestCartAPI = createAsyncThunk(
         return rejectWithValue(errorMessage);
       }
 
-      // Show success feedback
-      toast.success('Added to cart', {
-        description: 'Item has been added to your cart',
-      });
-
       // Fetch updated cart after adding item
       dispatch(fetchGuestCart());
 

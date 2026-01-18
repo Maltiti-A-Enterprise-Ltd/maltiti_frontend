@@ -155,5 +155,21 @@
 }
 
 .emoji-flag {
-  font-family: "Twemoji Country Flags", serif
+  font-family: 'Twemoji Country Flags', serif;
+}
+
+/* Prevent background scroll when modal/sheet is open */
+body:has([data-state='open'][data-slot='sheet-overlay']) {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+html:has([data-state='open'][data-slot='sheet-overlay']) {
+  overflow: hidden !important;
+}
+
+/* Ensure sheet content can scroll */
+[data-slot='sheet-content'] {
+  overflow: hidden;
 }
