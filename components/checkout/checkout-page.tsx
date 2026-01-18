@@ -59,7 +59,7 @@ const CheckoutPage = (): JSX.Element => {
   const isCartLoading = isLoading || isFetching;
 
   const scrollToCheckout = (): void => {
-    if (window.innerWidth < 768 && checkoutButtonRef.current) {
+    if (window.innerWidth < 1025 && checkoutButtonRef.current) {
       setTimeout(() => {
         checkoutButtonRef.current?.scrollIntoView({
           behavior: 'smooth',
@@ -170,6 +170,7 @@ const CheckoutPage = (): JSX.Element => {
         setDeliveryCost(cost);
         setIsInternationalDelivery(false);
       }
+      scrollToCheckout();
     } catch (error) {
       console.error('Delivery cost calculation error:', error);
       const errorMessage =
@@ -187,12 +188,17 @@ const CheckoutPage = (): JSX.Element => {
 
   const handleGuestLocationSubmit = (data: GuestLocationData): void => {
     setGuestLocationData(data);
-    // Calculate delivery cost when location is submitted
-    calculateGuestDeliveryCost(data);
+    void calculateGuestDeliveryCost(data);
   };
 
   const handleContinueAsGuest = (): void => {
     setShowGuestCheckout(true);
+    if (window.innerWidth < 1025) {
+      window.scroll({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
   };
 
   const handleCheckout = async (): Promise<void> => {

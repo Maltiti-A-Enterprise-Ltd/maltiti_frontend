@@ -312,8 +312,12 @@ export function ShopContent(): JSX.Element {
                   <span>Loading products...</span>
                 ) : productsData ? (
                   <span>
-                    Showing <strong>{productsData.items?.length}</strong> of{' '}
-                    <strong>{productsData.totalItems}</strong> products
+                    Showing{' '}
+                    <strong>
+                      {(productsData.currentPage - 1) * filters.limit + 1}–
+                      {Math.min(productsData.currentPage * filters.limit, productsData.totalItems)}
+                    </strong>{' '}
+                    of <strong>{productsData.totalItems}</strong> products
                   </span>
                 ) : null}
               </div>
