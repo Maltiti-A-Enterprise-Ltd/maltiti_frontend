@@ -37,11 +37,11 @@ const GuestAuthPrompt = ({ onContinueAsGuest }: GuestAuthPromptProps): JSX.Eleme
       transition={{ duration: 0.4 }}
       className="w-full"
     >
-      <Card className="border-2 border-green-100 bg-gradient-to-br from-white to-green-50/30 shadow-lg">
+      <Card className="border-2 border-green-100 bg-linear-to-br from-white to-green-50/30 shadow-lg">
         <CardContent className="p-8">
           {/* Header */}
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-green-500 to-green-600 shadow-lg">
               <ShoppingCart className="h-8 w-8 text-white" />
             </div>
             <h2 className="mb-2 text-2xl font-bold text-gray-900">Ready to Complete Your Order?</h2>
@@ -70,16 +70,43 @@ const GuestAuthPrompt = ({ onContinueAsGuest }: GuestAuthPromptProps): JSX.Eleme
             })}
           </div>
 
-          {/* Action Buttons */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          {/* Guest Checkout */}
+          <div className="text-center">
             <Button
-              onClick={() => router.push('/auth/login')}
-              className="group relative h-12 overflow-hidden bg-gradient-to-r from-green-600 to-green-700 text-base font-semibold shadow-md transition-all hover:from-green-700 hover:to-green-800 hover:shadow-lg"
+              onClick={onContinueAsGuest}
+              className="group relative h-12 overflow-hidden bg-linear-to-r from-green-600 to-green-700 text-base font-semibold shadow-md transition-all hover:from-green-700 hover:to-green-800 hover:shadow-lg"
             >
               <motion.div
                 className="absolute inset-0 bg-white opacity-0 transition-opacity group-hover:opacity-10"
                 whileHover={{ scale: 1.05 }}
               />
+              <ShoppingCart className="mr-2 h-5 w-5" />
+              Continue as Guest
+            </Button>
+            <p className="mt-3 text-xs text-gray-500">
+              You&apos;ll receive an order tracking link via email
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-linear-to-br from-white to-green-50/30 px-4 text-gray-500">
+                or
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Button
+              onClick={() => router.push('/auth/login')}
+              variant="outline"
+              className="h-12 border-2 border-green-600 bg-white text-base font-semibold text-green-700 transition-all hover:bg-green-50 hover:text-green-800"
+            >
               <User className="mr-2 h-5 w-5" />
               Sign In
             </Button>
@@ -92,32 +119,6 @@ const GuestAuthPrompt = ({ onContinueAsGuest }: GuestAuthPromptProps): JSX.Eleme
               <UserPlus className="mr-2 h-5 w-5" />
               Create Account
             </Button>
-          </div>
-
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-gradient-to-br from-white to-green-50/30 px-4 text-gray-500">
-                or
-              </span>
-            </div>
-          </div>
-
-          {/* Guest Checkout */}
-          <div className="text-center">
-            <Button
-              onClick={onContinueAsGuest}
-              variant="ghost"
-              className="h-12 w-full text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Continue as Guest
-            </Button>
-            <p className="mt-3 text-xs text-gray-500">
-              You&apos;ll receive an order tracking link via email
-            </p>
           </div>
         </CardContent>
       </Card>
