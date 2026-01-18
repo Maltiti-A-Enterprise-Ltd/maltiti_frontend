@@ -76,21 +76,19 @@ export default function PrivacyPage(): JSX.Element {
         transition={{ duration: 0.6 }}
         className="mx-auto max-w-4xl p-6"
       >
-        <div className="mb-8 flex items-center justify-between">
-          <Button variant="ghost" onClick={() => router.back()} className="text-primary">
+        <div className="mb-8 text-center">
+          <Button variant="ghost" onClick={() => router.back()} className="text-primary mb-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
-          <div className="flex-1 text-center">
-            <h1 className="from-primary via-primary to-primary/80 mb-3 bg-linear-to-r bg-clip-text text-4xl font-bold tracking-wide text-transparent drop-shadow-sm">
-              Privacy Policy
-            </h1>
-            <div className="from-primary/60 to-primary/30 mx-auto mb-4 h-0.5 w-16 rounded-full bg-linear-to-r"></div>
-            <p className="text-primary/70 mx-auto max-w-md text-sm leading-relaxed font-medium">
-              Your privacy is important to us. Please read this policy carefully.
-            </p>
-            <p className="text-muted-foreground mt-4 text-sm">Effective Date: December 31, 2025</p>
-          </div>
+          <h1 className="from-primary via-primary to-primary/80 mb-3 bg-linear-to-r bg-clip-text text-4xl font-bold tracking-wide text-transparent drop-shadow-sm">
+            Privacy Policy
+          </h1>
+          <div className="from-primary/60 to-primary/30 mx-auto mb-4 h-0.5 w-16 rounded-full bg-linear-to-r"></div>
+          <p className="text-primary/70 mx-auto max-w-md text-sm leading-relaxed font-medium">
+            Your privacy is important to us. Please read this policy carefully.
+          </p>
+          <p className="text-muted-foreground mt-4 text-sm">Effective Date: December 31, 2025</p>
         </div>
         <Accordion type="single" collapsible className="space-y-4">
           {privacyData.map((item, index) => (
