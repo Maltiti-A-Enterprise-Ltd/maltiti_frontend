@@ -1,17 +1,20 @@
 'use client';
 
-import { JSX, useState } from 'react';
+import { JSX, useState, lazy, Suspense, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Lock, ShoppingBag, Loader2 } from 'lucide-react';
+import { ArrowLeft, Lock, ShoppingBag, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCart } from '@/lib/store/useCart';
-import LocationForm from './location-form';
-import GuestLocationForm, { type GuestLocationFormValues } from './guest-location-form';
-import GuestAuthPrompt from './guest-auth-prompt';
-import OrderSummary from './order-summary';
+
+// Lazy load components
+const LocationForm = lazy(() => import('./location-form'));
+const GuestLocationForm = lazy(() => import('./guest-location-form'));
+const GuestAuthPrompt = lazy(() => import('./guest-auth-prompt'));
+const OrderSummary = lazy(() => import('./order-summary'));
+
 import {
   checkoutControllerInitializeTransaction,
   checkoutControllerGetDeliveryCost,
@@ -27,6 +30,7 @@ import {
 } from '@/app/api';
 import { toast } from 'sonner';
 import { getGuestSessionId } from '@/lib/session-utils';
+import { GuestLocationFormValues } from '@/components/checkout/guest-location-form';
 
 type LocationData = {
   country: string;
@@ -48,12 +52,27 @@ const CheckoutPage = (): JSX.Element => {
   const [isCalculatingDelivery, setIsCalculatingDelivery] = useState(false);
   const [isInternationalDelivery, setIsInternationalDelivery] = useState(false);
   const [showGuestCheckout, setShowGuestCheckout] = useState(false);
+  const [deliveryError, setDeliveryError] = useState<string | null>(null);
+
+  const checkoutButtonRef = useRef<HTMLButtonElement>(null);
 
   const isCartLoading = isLoading || isFetching;
+
+  const scrollToCheckout = (): void => {
+    if (window.innerWidth < 768 && checkoutButtonRef.current) {
+      setTimeout(() => {
+        checkoutButtonRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300);
+    }
+  };
 
   const calculateDeliveryCost = async (location: LocationData): Promise<void> => {
     setIsCalculatingDelivery(true);
     setIsInternationalDelivery(false);
+    setDeliveryError(null);
 
     try {
       const payload: GetDeliveryCostDto = {
@@ -90,13 +109,16 @@ const CheckoutPage = (): JSX.Element => {
         setDeliveryCost(cost);
         setIsInternationalDelivery(false);
       }
+      scrollToCheckout();
     } catch (error) {
       console.error('Delivery cost calculation error:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unable to calculate delivery cost. Please try again.';
+      setDeliveryError(errorMessage);
       toast.error('Delivery Calculation Failed', {
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Unable to calculate delivery cost. Please try again.',
+        description: errorMessage,
       });
     } finally {
       setIsCalculatingDelivery(false);
@@ -112,6 +134,7 @@ const CheckoutPage = (): JSX.Element => {
   const calculateGuestDeliveryCost = async (location: GuestLocationData): Promise<void> => {
     setIsCalculatingDelivery(true);
     setIsInternationalDelivery(false);
+    setDeliveryError(null);
 
     try {
       const sessionId = getGuestSessionId();
@@ -149,11 +172,13 @@ const CheckoutPage = (): JSX.Element => {
       }
     } catch (error) {
       console.error('Delivery cost calculation error:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Unable to calculate delivery cost. Please try again.';
+      setDeliveryError(errorMessage);
       toast.error('Delivery Calculation Failed', {
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Unable to calculate delivery cost. Please try again.',
+        description: errorMessage,
       });
     } finally {
       setIsCalculatingDelivery(false);
@@ -451,7 +476,9 @@ const CheckoutPage = (): JSX.Element => {
           <div className="space-y-6">
             {/* Show guest auth prompt if user is not authenticated and hasn't chosen guest checkout */}
             {!isAuthenticated && !showGuestCheckout ? (
-              <GuestAuthPrompt onContinueAsGuest={handleContinueAsGuest} />
+              <Suspense fallback={<Skeleton className="h-32 w-full" />}>
+                <GuestAuthPrompt onContinueAsGuest={handleContinueAsGuest} />
+              </Suspense>
             ) : (
               <>
                 <Card>
@@ -467,15 +494,19 @@ const CheckoutPage = (): JSX.Element => {
                   </CardHeader>
                   <CardContent>
                     {isAuthenticated ? (
-                      <LocationForm
-                        onSubmit={handleLocationSubmit}
-                        onReset={() => setLocationData(null)}
-                      />
+                      <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+                        <LocationForm
+                          onSubmit={handleLocationSubmit}
+                          onReset={() => setLocationData(null)}
+                        />
+                      </Suspense>
                     ) : (
-                      <GuestLocationForm
-                        onSubmit={handleGuestLocationSubmit}
-                        onReset={() => setGuestLocationData(null)}
-                      />
+                      <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+                        <GuestLocationForm
+                          onSubmit={handleGuestLocationSubmit}
+                          onReset={() => setGuestLocationData(null)}
+                        />
+                      </Suspense>
                     )}
                   </CardContent>
                 </Card>
@@ -508,24 +539,82 @@ const CheckoutPage = (): JSX.Element => {
                 <CardDescription>{items.length} items in your cart</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <OrderSummary
-                  items={items}
-                  totalPrice={totalPrice}
-                  deliveryCost={deliveryCost}
-                  isCalculatingDelivery={isCalculatingDelivery}
-                  isInternationalDelivery={isInternationalDelivery}
-                />
+                <Suspense
+                  fallback={
+                    <div className="space-y-3">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <Skeleton className="h-16 w-16 rounded-md" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-3 w-24" />
+                          </div>
+                          <Skeleton className="h-5 w-16" />
+                        </div>
+                      ))}
+                    </div>
+                  }
+                >
+                  <OrderSummary
+                    items={items}
+                    totalPrice={totalPrice}
+                    deliveryCost={deliveryCost}
+                    isCalculatingDelivery={isCalculatingDelivery}
+                    isInternationalDelivery={isInternationalDelivery}
+                  />
+                </Suspense>
 
                 <Separator />
 
+                {/* Delivery Error with Retry Option */}
+                {deliveryError && (locationData || guestLocationData) && (
+                  <Card className="border-red-200 bg-red-50/50">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-red-900">
+                            Failed to calculate delivery cost
+                          </p>
+                          <p className="mt-1 text-xs text-red-700">{deliveryError}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (isAuthenticated && locationData) {
+                              calculateDeliveryCost(locationData);
+                            } else if (!isAuthenticated && guestLocationData) {
+                              calculateGuestDeliveryCost(guestLocationData);
+                            }
+                          }}
+                          disabled={isCalculatingDelivery}
+                          className="border-red-300 text-red-700 hover:bg-red-100"
+                        >
+                          {isCalculatingDelivery ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="h-4 w-4" />
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Button
+                  ref={checkoutButtonRef}
                   onClick={handleCheckout}
                   disabled={
                     isProcessing ||
                     (!isAuthenticated && !showGuestCheckout) ||
                     (isAuthenticated && !locationData) ||
                     (!isAuthenticated && !guestLocationData) ||
-                    isCalculatingDelivery
+                    isCalculatingDelivery ||
+                    (deliveryError !== null && !isInternationalDelivery && deliveryCost === null)
                   }
                   className="w-full bg-[#0F6938] text-lg font-semibold hover:bg-[#0F6938]/90"
                   size="lg"

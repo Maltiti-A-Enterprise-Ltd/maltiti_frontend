@@ -7,6 +7,7 @@ import { getBestProducts } from '@/lib/store/features/products/productsThunk';
 import ProductCard from './product-card';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const BestProductsSection = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -155,7 +156,9 @@ const BestProductsSection = (): JSX.Element => {
                 delay: 0.1 * (index % 8), // Stagger animation for first 8 items
               }}
             >
-              <ProductCard product={product} />
+              <Link href={`/shop/${product.id}`} className="block h-full">
+                <ProductCard product={product} />
+              </Link>
             </motion.div>
           ))}
         </motion.div>
