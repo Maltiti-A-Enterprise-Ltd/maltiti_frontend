@@ -1,4 +1,6 @@
-import { JSX } from 'react';
+'use client';
+
+import { JSX, useEffect } from 'react';
 import { FAQ } from '@/components/faq';
 import { faqData } from '@/lib/faq-data';
 import { BestProductsSection } from '@/components/products';
@@ -14,6 +16,14 @@ import { ContactSection } from '@/components/home/contact-section';
 import { TrackOrderSection } from '@/components/home/track-order-section';
 
 export default function Home(): JSX.Element {
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    const element = document.getElementById(hash);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
   return (
     <main className="mx-auto mt-20">
       <HeroSection />

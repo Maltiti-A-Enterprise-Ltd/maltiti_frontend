@@ -135,7 +135,6 @@ export function ShopContent(): JSX.Element {
       });
 
       if (response.data) {
-        console.log('Products:', response.data);
         setProductsData(response.data.data);
       }
     } catch (err) {
