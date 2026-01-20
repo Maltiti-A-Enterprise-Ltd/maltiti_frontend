@@ -56,5 +56,19 @@ export function debounce<T extends (...args: any[]) => any>(
  * @returns The error message or the fallback message.
  */
 export function getErrorMessage(error: unknown, fallBackMessage: string): string {
-  return error instanceof Error ? error.message : fallBackMessage;
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  const isObject = typeof error === 'object' && error !== null;
+  if (isObject && 'message' in error && typeof error.message === 'string') {
+    return error.message;
+  }
+
+  if (isObject && 'error' in error && typeof error.error === 'string') {
+    return error.error;
+  }
+  return fallBackMessage;
 }
