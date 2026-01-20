@@ -146,7 +146,7 @@ export function Footer(): JSX.Element {
             <p className="text-sm">
               © {currentYear} Maltiti A. Enterprise Ltd. All rights reserved.
             </p>
-            <p className="text-primary text-sm font-medium">Certified | Organic | Export-Ready</p>
+            <p className="text-sm font-medium text-white">Certified | Organic | Export-Ready</p>
           </div>
         </div>
       </div>
