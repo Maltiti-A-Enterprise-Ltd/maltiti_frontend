@@ -118,7 +118,7 @@ export function NavBar(): JSX.Element {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/orders" className="cursor-pointer">
+            <Link href="/track-order" className="cursor-pointer">
               <ShoppingBag className="mr-2 h-4 w-4" />
               My Orders
             </Link>
