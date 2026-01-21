@@ -118,15 +118,9 @@ export function NavBar(): JSX.Element {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/orders" className="cursor-pointer">
+            <Link href="/track-order" className="cursor-pointer">
               <ShoppingBag className="mr-2 h-4 w-4" />
               My Orders
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/profile" className="cursor-pointer">
-              <User className="mr-2 h-4 w-4" />
-              Profile
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -218,22 +212,6 @@ export function NavBar(): JSX.Element {
                 >
                   <HelpCircle className="h-5 w-5" />
                   <span>FAQs</span>
-                </Link>
-                <Link
-                  href="/terms"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Info className="h-5 w-5" />
-                  <span>Terms</span>
-                </Link>
-                <Link
-                  href="/privacy"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Info className="h-5 w-5" />
-                  <span>Privacy</span>
                 </Link>
                 <Link
                   href="/#contactus"

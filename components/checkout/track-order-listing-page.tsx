@@ -38,6 +38,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { useAppSelector } from '@/lib/store/hooks';
+import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
 
 type TrackOrderListingPageProps = Record<string, never>;
 
@@ -117,11 +119,18 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
   const searchParams = useSearchParams();
   const emailFromQuery = searchParams.get('email');
 
-  const [email, setEmail] = useState(emailFromQuery || '');
+  // Get user authentication state
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
+
+  const [email, setEmail] = useState(
+    emailFromQuery || (isAuthenticated && user?.email ? user.email : ''),
+  );
   const [searchEmail, setSearchEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<SaleResponseDto[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [showSearchCard, setShowSearchCard] = useState(!isAuthenticated || !user?.email);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -196,6 +205,14 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
     }
   }, [emailFromQuery, fetchOrders]);
 
+  // Auto-fetch orders for logged-in user if no email query param
+  useEffect(() => {
+    if (!emailFromQuery && isAuthenticated && user?.email && !hasSearched) {
+      setEmail(user.email);
+      void fetchOrders(user.email);
+    }
+  }, [emailFromQuery, isAuthenticated, user, hasSearched, fetchOrders]);
+
   const handleSearch = (): void => {
     if (!searchEmail) {
       toast.error('Please enter an email address');
@@ -245,59 +262,71 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
           >
             <h1 className="text-4xl font-bold text-gray-900">Track Your Orders</h1>
             <p className="mt-2 text-gray-600">View and track all your orders in one place</p>
+            {isAuthenticated && user?.email && (
+              <Button
+                variant="outline"
+                onClick={() => setShowSearchCard(!showSearchCard)}
+                className="mt-4 gap-2"
+              >
+                <Search className="h-4 w-4" />
+                {showSearchCard ? 'Hide Search' : 'Search Other Orders'}
+              </Button>
+            )}
           </motion.div>
         </div>
 
         {/* Search Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
-          <Card className="mb-8 border-2 border-green-100">
-            <CardContent className="p-6">
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <div className="flex-1">
-                  <label
-                    htmlFor="search-email"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                  >
-                    Email Address
-                  </label>
-                  <Input
-                    id="search-email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    value={searchEmail || email}
-                    onChange={(e) => setSearchEmail(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="h-12 border-gray-300"
-                    disabled={isLoading}
-                  />
+        {showSearchCard && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <Card className="mb-8 border-2 border-green-100">
+              <CardContent>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="flex-1">
+                    <label
+                      htmlFor="search-email"
+                      className="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                      Email Address
+                    </label>
+                    <Input
+                      id="search-email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={searchEmail || email}
+                      onChange={(e) => setSearchEmail(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="h-12 border-gray-300"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      onClick={handleSearch}
+                      disabled={isLoading || (!searchEmail && !email)}
+                      className="h-12 w-full gap-2 bg-[#0F6938] hover:bg-[#0F6938]/90 sm:w-auto"
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Searching...
+                        </>
+                      ) : (
+                        <>
+                          <Search className="h-4 w-4" />
+                          Search Orders
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-end">
-                  <Button
-                    onClick={handleSearch}
-                    disabled={isLoading || (!searchEmail && !email)}
-                    className="h-12 w-full gap-2 bg-[#0F6938] hover:bg-[#0F6938]/90 sm:w-auto"
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Searching...
-                      </>
-                    ) : (
-                      <>
-                        <Search className="h-4 w-4" />
-                        Search Orders
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Filter Section */}
         {hasSearched && (

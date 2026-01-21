@@ -33,7 +33,7 @@ export function FAQ({ items, className }: FAQProps): JSX.Element {
           Find answers to common questions about our products and services.
         </p>
       </div>
-      <Accordion type="single" collapsible className="space-y-4">
+      <Accordion type="single" collapsible className="space-y-4" defaultValue="item-0">
         {items.map((item, index) => {
           const IconComponent = item.icon ? iconMap[item.icon] : null;
           return (
