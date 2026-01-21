@@ -3248,6 +3248,25 @@
         "tags": ["customers"]
       }
     },
+    "/customers/me": {
+      "get": {
+        "operationId": "CustomerController_getMyCustomer",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Customer information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CustomerResponseDto" }
+              }
+            }
+          },
+          "404": { "description": "Customer not found for the user" }
+        },
+        "summary": "Get the customer information for the logged-in user",
+        "tags": ["customers"]
+      }
+    },
     "/reports/sales": {
       "get": {
         "description": "Returns total revenue, sales count, average order value, and optional time series data. Supports filtering by date range, product, and category. Perfect for dashboard KPIs and charts.",
@@ -7201,6 +7220,74 @@
           }
         },
         "required": ["id"]
+      },
+      "CustomerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the customer",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the customer",
+            "example": "John Doe"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone number of the customer",
+            "example": "+233123456789"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the customer",
+            "example": "john.doe@example.com"
+          },
+          "address": {
+            "type": "string",
+            "description": "The address of the customer",
+            "example": "123 Main St, Accra"
+          },
+          "country": {
+            "type": "string",
+            "description": "The country of the customer",
+            "example": "Ghana"
+          },
+          "region": {
+            "type": "string",
+            "description": "The region of the customer",
+            "example": "Greater Accra"
+          },
+          "city": {
+            "type": "string",
+            "description": "The city of the customer",
+            "example": "Accra"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Additional phone number of the customer",
+            "example": "+233987654321"
+          },
+          "extraInfo": {
+            "type": "string",
+            "description": "Extra information about the customer",
+            "example": "Prefers morning deliveries"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date the customer was created",
+            "example": "2023-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date the customer was last updated",
+            "example": "2023-01-01T00:00:00.000Z"
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
       },
       "ProfileResponseDto": {
         "type": "object",

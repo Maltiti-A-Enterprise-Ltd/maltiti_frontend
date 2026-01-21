@@ -1886,6 +1886,57 @@ export type UpdateCustomerDto = {
     address?: string;
 };
 
+export type CustomerResponseDto = {
+    /**
+     * The unique identifier of the customer
+     */
+    id: string;
+    /**
+     * The name of the customer
+     */
+    name: string;
+    /**
+     * The phone number of the customer
+     */
+    phone?: string;
+    /**
+     * The email address of the customer
+     */
+    email?: string;
+    /**
+     * The address of the customer
+     */
+    address?: string;
+    /**
+     * The country of the customer
+     */
+    country?: string;
+    /**
+     * The region of the customer
+     */
+    region?: string;
+    /**
+     * The city of the customer
+     */
+    city?: string;
+    /**
+     * Additional phone number of the customer
+     */
+    phoneNumber?: string;
+    /**
+     * Extra information about the customer
+     */
+    extraInfo?: string;
+    /**
+     * The date the customer was created
+     */
+    createdAt: string;
+    /**
+     * The date the customer was last updated
+     */
+    updatedAt: string;
+};
+
 export type ProfileResponseDto = {
     /**
      * User ID
@@ -4508,6 +4559,29 @@ export type CustomerControllerGetCustomerResponses = {
      */
     200: unknown;
 };
+
+export type CustomerControllerGetMyCustomerData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/customers/me';
+};
+
+export type CustomerControllerGetMyCustomerErrors = {
+    /**
+     * Customer not found for the user
+     */
+    404: unknown;
+};
+
+export type CustomerControllerGetMyCustomerResponses = {
+    /**
+     * Customer information retrieved successfully
+     */
+    200: CustomerResponseDto;
+};
+
+export type CustomerControllerGetMyCustomerResponse = CustomerControllerGetMyCustomerResponses[keyof CustomerControllerGetMyCustomerResponses];
 
 export type ReportsControllerGetSalesReportData = {
     body?: never;
