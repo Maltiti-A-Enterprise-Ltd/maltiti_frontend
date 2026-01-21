@@ -10,12 +10,12 @@ import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated } from '@/lib/store/features/auth';
 
 type ConfirmPaymentPageProps = {
-  checkoutId: string;
+  saleId: string;
 };
 
 type PaymentStatus = 'loading' | 'success' | 'error';
 
-const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Element => {
+const ConfirmPaymentPage = ({ saleId }: ConfirmPaymentPageProps): JSX.Element => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -27,7 +27,7 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
     setStatus('loading');
     setErrorMessage('');
 
-    if (!checkoutId) {
+    if (!saleId) {
       setStatus('error');
       setErrorMessage('Invalid checkout ID. Please contact support.');
       return;
@@ -38,7 +38,7 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
       if (isAuthenticated) {
         // Authenticated user - use regular confirm payment endpoint
         const { error } = await checkoutControllerConfirmPayment({
-          path: { checkoutId },
+          path: { saleId },
         });
 
         if (error) {
@@ -51,12 +51,12 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
 
         // Redirect to orders page after 3 seconds
         setTimeout(() => {
-          router.push('/orders');
+          router.push('/track-order');
         }, 3000);
       } else {
         // Guest user - use guest confirm payment endpoint
         const { error, data } = await checkoutControllerConfirmGuestPayment({
-          path: { checkoutId },
+          path: { saleId },
         });
 
         if (error || !data) {
@@ -74,8 +74,8 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
         // Redirect to track order page after 3 seconds
         setTimeout(() => {
           const trackUrl = email
-            ? `/track-order/${checkoutId}?email=${encodeURIComponent(email)}`
-            : `/track-order/${checkoutId}`;
+            ? `/track-order/${saleId}?email=${encodeURIComponent(email)}`
+            : `/track-order/${saleId}`;
           router.push(trackUrl);
         }, 3000);
       }
@@ -88,7 +88,7 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
           : 'Unable to confirm payment. Please contact support.',
       );
     }
-  }, [checkoutId, router, isAuthenticated, searchParams]);
+  }, [saleId, router, isAuthenticated, searchParams]);
 
   useEffect(() => {
     void confirmPayment();
@@ -145,8 +145,8 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
                     <Button
                       onClick={() => {
                         const trackUrl = guestEmail
-                          ? `/track-order/${checkoutId}?email=${encodeURIComponent(guestEmail)}`
-                          : `/track-order/${checkoutId}`;
+                          ? `/track-order/${saleId}?email=${encodeURIComponent(guestEmail)}`
+                          : `/track-order/${saleId}`;
                         router.push(trackUrl);
                       }}
                       className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
@@ -188,8 +188,8 @@ const ConfirmPaymentPage = ({ checkoutId }: ConfirmPaymentPageProps): JSX.Elemen
                 </Button>
               </div>
               <p className="mt-4 text-sm text-gray-500">
-                If you believe this is an error, please contact our support team with checkout ID:{' '}
-                <span className="font-mono font-semibold">{checkoutId}</span>
+                If you believe this is an error, please contact our support team with Sale ID:{' '}
+                <span className="font-mono font-semibold">{saleId}</span>
               </p>
             </>
           )}

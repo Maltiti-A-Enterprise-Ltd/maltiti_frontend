@@ -572,12 +572,12 @@ export const checkoutControllerGetOrder = <ThrowOnError extends boolean = false>
  *
  * Public endpoint to confirm payment after Paystack redirect for guest users
  */
-export const checkoutControllerConfirmGuestPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmGuestPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmGuestPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/guest/confirm-payment/{checkoutId}', ...options });
+export const checkoutControllerConfirmGuestPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmGuestPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmGuestPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/guest/confirm-payment/{saleId}', ...options });
 
 /**
  * Confirm payment for an order
  */
-export const checkoutControllerConfirmPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/confirm-payment/{checkoutId}', ...options });
+export const checkoutControllerConfirmPayment = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerConfirmPaymentData, ThrowOnError>) => (options.client ?? client).get<CheckoutControllerConfirmPaymentResponses, unknown, ThrowOnError>({ url: '/checkout/confirm-payment/{saleId}', ...options });
 
 /**
  * Calculate delivery cost based on location details
@@ -623,7 +623,7 @@ export const checkoutControllerPlaceOrder = <ThrowOnError extends boolean = fals
 /**
  * Initialize payment for a previously placed order (invoice requested or pending payment)
  */
-export const checkoutControllerPayForOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerPayForOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerPayForOrderResponses, unknown, ThrowOnError>({ url: '/checkout/pay-for-order/{checkoutId}', ...options });
+export const checkoutControllerPayForOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerPayForOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerPayForOrderResponses, unknown, ThrowOnError>({ url: '/checkout/pay-for-order/{saleId}', ...options });
 
 /**
  * Update sale status
@@ -702,7 +702,7 @@ export const checkoutControllerGetOrderStatus = <ThrowOnError extends boolean = 
  *
  * Initialize payment for any order using checkout ID and email. Works for orders placed by guests, registered users, or created by admins.
  */
-export const checkoutControllerPayForGuestOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerPayForGuestOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerPayForGuestOrderResponses, unknown, ThrowOnError>({ url: '/checkout/guest/pay-for-order/{checkoutId}', ...options });
+export const checkoutControllerPayForGuestOrder = <ThrowOnError extends boolean = false>(options: Options<CheckoutControllerPayForGuestOrderData, ThrowOnError>) => (options.client ?? client).post<CheckoutControllerPayForGuestOrderResponses, unknown, ThrowOnError>({ url: '/checkout/guest/pay-for-order/{saleId}', ...options });
 
 /**
  * Upload an image
@@ -879,6 +879,11 @@ export const customerControllerCreateCustomer = <ThrowOnError extends boolean = 
 });
 
 /**
+ * Get the customer information for the logged-in user
+ */
+export const customerControllerGetMyCustomer = <ThrowOnError extends boolean = false>(options?: Options<CustomerControllerGetMyCustomerData, ThrowOnError>) => (options?.client ?? client).get<CustomerControllerGetMyCustomerResponses, CustomerControllerGetMyCustomerErrors, ThrowOnError>({ url: '/customers/me', ...options });
+
+/**
  * Delete a customer (soft delete)
  */
 export const customerControllerDeleteCustomer = <ThrowOnError extends boolean = false>(options: Options<CustomerControllerDeleteCustomerData, ThrowOnError>) => (options.client ?? client).delete<CustomerControllerDeleteCustomerResponses, CustomerControllerDeleteCustomerErrors, ThrowOnError>({ url: '/customers/{id}', ...options });
@@ -887,11 +892,6 @@ export const customerControllerDeleteCustomer = <ThrowOnError extends boolean = 
  * Get a customer by ID
  */
 export const customerControllerGetCustomer = <ThrowOnError extends boolean = false>(options: Options<CustomerControllerGetCustomerData, ThrowOnError>) => (options.client ?? client).get<CustomerControllerGetCustomerResponses, CustomerControllerGetCustomerErrors, ThrowOnError>({ url: '/customers/{id}', ...options });
-
-/**
- * Get the customer information for the logged-in user
- */
-export const customerControllerGetMyCustomer = <ThrowOnError extends boolean = false>(options?: Options<CustomerControllerGetMyCustomerData, ThrowOnError>) => (options?.client ?? client).get<CustomerControllerGetMyCustomerResponses, CustomerControllerGetMyCustomerErrors, ThrowOnError>({ url: '/customers/me', ...options });
 
 /**
  * Get comprehensive sales report

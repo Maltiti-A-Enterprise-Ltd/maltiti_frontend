@@ -43,3 +43,6 @@ export const resendVerificationSchema = z.object({
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ResendVerificationFormData = z.infer<typeof resendVerificationSchema>;
+
+// Export password validation schemas
+export * from './password';

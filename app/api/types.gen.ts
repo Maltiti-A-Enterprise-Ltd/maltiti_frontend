@@ -1844,48 +1844,6 @@ export type GenerateWaybillDto = {
     remarks?: string;
 };
 
-export type CreateCustomerDto = {
-    /**
-     * The name of the customer
-     */
-    name: string;
-    /**
-     * The phone number of the customer
-     */
-    phone?: string;
-    /**
-     * The email address of the customer
-     */
-    email?: string;
-    /**
-     * The address of the customer
-     */
-    address?: string;
-};
-
-export type UpdateCustomerDto = {
-    /**
-     * The ID of the customer to update
-     */
-    id: string;
-    /**
-     * The name of the customer
-     */
-    name?: string;
-    /**
-     * The phone number of the customer
-     */
-    phone?: string;
-    /**
-     * The email address of the customer
-     */
-    email?: string;
-    /**
-     * The address of the customer
-     */
-    address?: string;
-};
-
 export type CustomerResponseDto = {
     /**
      * The unique identifier of the customer
@@ -1946,6 +1904,48 @@ export type CustomerMeResponseDto = {
      * Customer data
      */
     data: CustomerResponseDto;
+};
+
+export type CreateCustomerDto = {
+    /**
+     * The name of the customer
+     */
+    name: string;
+    /**
+     * The phone number of the customer
+     */
+    phone?: string;
+    /**
+     * The email address of the customer
+     */
+    email?: string;
+    /**
+     * The address of the customer
+     */
+    address?: string;
+};
+
+export type UpdateCustomerDto = {
+    /**
+     * The ID of the customer to update
+     */
+    id: string;
+    /**
+     * The name of the customer
+     */
+    name?: string;
+    /**
+     * The phone number of the customer
+     */
+    phone?: string;
+    /**
+     * The email address of the customer
+     */
+    email?: string;
+    /**
+     * The address of the customer
+     */
+    address?: string;
 };
 
 export type ProfileResponseDto = {
@@ -3872,12 +3872,12 @@ export type CheckoutControllerConfirmGuestPaymentData = {
     body?: never;
     path: {
         /**
-         * Checkout ID
+         * Sale ID
          */
-        checkoutId: string;
+        saleId: string;
     };
     query?: never;
-    url: '/checkout/guest/confirm-payment/{checkoutId}';
+    url: '/checkout/guest/confirm-payment/{saleId}';
 };
 
 export type CheckoutControllerConfirmGuestPaymentResponses = {
@@ -3893,12 +3893,12 @@ export type CheckoutControllerConfirmPaymentData = {
     body?: never;
     path: {
         /**
-         * Checkout ID
+         * Sale ID
          */
-        checkoutId: string;
+        saleId: string;
     };
     query?: never;
-    url: '/checkout/confirm-payment/{checkoutId}';
+    url: '/checkout/confirm-payment/{saleId}';
 };
 
 export type CheckoutControllerConfirmPaymentResponses = {
@@ -3983,12 +3983,12 @@ export type CheckoutControllerPayForOrderData = {
     body?: never;
     path: {
         /**
-         * Checkout ID
+         * Sale ID
          */
-        checkoutId: string;
+        saleId: string;
     };
     query?: never;
-    url: '/checkout/pay-for-order/{checkoutId}';
+    url: '/checkout/pay-for-order/{saleId}';
 };
 
 export type CheckoutControllerPayForOrderResponses = {
@@ -4142,9 +4142,9 @@ export type CheckoutControllerPayForGuestOrderData = {
     body?: never;
     path: {
         /**
-         * Checkout ID
+         * Sale ID
          */
-        checkoutId: string;
+        saleId: string;
     };
     query: {
         /**
@@ -4152,7 +4152,7 @@ export type CheckoutControllerPayForGuestOrderData = {
          */
         email: string;
     };
-    url: '/checkout/guest/pay-for-order/{checkoutId}';
+    url: '/checkout/guest/pay-for-order/{saleId}';
 };
 
 export type CheckoutControllerPayForGuestOrderResponses = {
@@ -4519,6 +4519,29 @@ export type CustomerControllerCreateCustomerResponses = {
     201: unknown;
 };
 
+export type CustomerControllerGetMyCustomerData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/customers/me';
+};
+
+export type CustomerControllerGetMyCustomerErrors = {
+    /**
+     * Customer not found for the user
+     */
+    404: unknown;
+};
+
+export type CustomerControllerGetMyCustomerResponses = {
+    /**
+     * Customer information retrieved successfully
+     */
+    200: CustomerMeResponseDto;
+};
+
+export type CustomerControllerGetMyCustomerResponse = CustomerControllerGetMyCustomerResponses[keyof CustomerControllerGetMyCustomerResponses];
+
 export type CustomerControllerDeleteCustomerData = {
     body?: never;
     path: {
@@ -4570,29 +4593,6 @@ export type CustomerControllerGetCustomerResponses = {
      */
     200: unknown;
 };
-
-export type CustomerControllerGetMyCustomerData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/customers/me';
-};
-
-export type CustomerControllerGetMyCustomerErrors = {
-    /**
-     * Customer not found for the user
-     */
-    404: unknown;
-};
-
-export type CustomerControllerGetMyCustomerResponses = {
-    /**
-     * Customer information retrieved successfully
-     */
-    200: CustomerMeResponseDto;
-};
-
-export type CustomerControllerGetMyCustomerResponse = CustomerControllerGetMyCustomerResponses[keyof CustomerControllerGetMyCustomerResponses];
 
 export type ReportsControllerGetSalesReportData = {
     body?: never;
