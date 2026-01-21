@@ -15,6 +15,7 @@ import {
   Phone,
   MapPin,
   Calendar,
+  AlertTriangle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,8 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { OrderStatus, PaymentStatus, SaleResponseDto, salesControllerTrackOrder } from '@/app/api';
 import { toast } from 'sonner';
+import { useAppSelector } from '@/lib/store/hooks';
+import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
 
 type TrackOrderPageProps = {
   saleId: string;
@@ -122,6 +125,11 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState(initialEmail || '');
   const [needsEmail, setNeedsEmail] = useState(!initialEmail);
+  const [triedUserEmail, setTriedUserEmail] = useState(false);
+
+  // Get user authentication state
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
 
   const subTotal = useMemo(
     () =>
@@ -131,9 +139,13 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
     [orderDetails],
   );
 
-  const deliveryFee = useMemo(() => Number(orderDetails?.checkout?.amount) - subTotal, [subTotal]);
+  const deliveryFee = useMemo(
+    () => Number(orderDetails?.checkout?.amount) - subTotal,
+    [subTotal, orderDetails?.checkout?.amount],
+  );
 
   const fetchOrderStatus = useCallback(async (): Promise<void> => {
+    console.log('No email', email);
     if (!email) {
       setNeedsEmail(true);
       setIsLoading(false);
@@ -159,17 +171,32 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
       toast.error('Error', {
         description: 'Unable to load order details. Please check your order ID.',
       });
+      // If we tried the user's email and it failed, show email input
+      if (isAuthenticated && user?.email && email === user.email && !triedUserEmail) {
+        setTriedUserEmail(true);
+        setNeedsEmail(true);
+        setIsLoading(false);
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [email, saleId]);
+  }, [saleId, email, isAuthenticated, user, triedUserEmail]);
 
   useEffect(() => {
-    if (saleId) {
-      console.log('Fetching order status...');
+    if (saleId && !initialEmail && isAuthenticated && user?.email && !triedUserEmail) {
+      // Try with user's email first
+      setEmail(user.email);
+      setTriedUserEmail(true);
       void fetchOrderStatus();
+    } else if (saleId && initialEmail) {
+      // If email is provided in props, use it directly
+      void fetchOrderStatus();
+    } else if (saleId && !isAuthenticated) {
+      // If not authenticated and no email, show email input
+      setNeedsEmail(true);
+      setIsLoading(false);
     }
-  }, [saleId, email, fetchOrderStatus]);
+  }, [saleId, initialEmail, isAuthenticated, user, triedUserEmail, fetchOrderStatus]);
 
   if (isLoading) {
     return (
@@ -186,10 +213,17 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
     return (
       <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
         <div className="mx-auto max-w-2xl">
-          <Card>
+          <Card className={triedUserEmail ? 'border-amber-200 bg-amber-50/50' : ''}>
             <CardHeader>
-              <CardTitle>Track Your Order</CardTitle>
-              <CardDescription>Enter your email to view order details</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                {triedUserEmail && <AlertTriangle className="h-5 w-5 text-amber-600" />}
+                Track Your Order
+              </CardTitle>
+              <CardDescription className={triedUserEmail ? 'text-amber-800' : ''}>
+                {triedUserEmail
+                  ? "We couldn't find this order with your account email. Please try another email address."
+                  : 'Enter your email to view order details'}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
