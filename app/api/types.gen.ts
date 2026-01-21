@@ -1937,6 +1937,17 @@ export type CustomerResponseDto = {
     updatedAt: string;
 };
 
+export type CustomerMeResponseDto = {
+    /**
+     * Response message
+     */
+    message: string;
+    /**
+     * Customer data
+     */
+    data: CustomerResponseDto;
+};
+
 export type ProfileResponseDto = {
     /**
      * User ID
@@ -4578,7 +4589,7 @@ export type CustomerControllerGetMyCustomerResponses = {
     /**
      * Customer information retrieved successfully
      */
-    200: CustomerResponseDto;
+    200: CustomerMeResponseDto;
 };
 
 export type CustomerControllerGetMyCustomerResponse = CustomerControllerGetMyCustomerResponses[keyof CustomerControllerGetMyCustomerResponses];

@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useState, lazy, Suspense, useRef } from 'react';
+import { JSX, useState, lazy, Suspense, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Lock, ShoppingBag, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,11 +22,13 @@ import {
   checkoutControllerGuestInitializeTransaction,
   checkoutControllerGuestPlaceOrder,
   checkoutControllerGetGuestDeliveryCost,
+  customerControllerGetMyCustomer,
   InitializeTransaction,
   GetDeliveryCostDto,
   PlaceOrderDto,
   GuestInitializeTransactionDto,
   GuestPlaceOrderDto,
+  CustomerResponseDto,
 } from '@/app/api';
 import { toast } from 'sonner';
 import { getGuestSessionId } from '@/lib/session-utils';
@@ -53,10 +55,43 @@ const CheckoutPage = (): JSX.Element => {
   const [isInternationalDelivery, setIsInternationalDelivery] = useState(false);
   const [showGuestCheckout, setShowGuestCheckout] = useState(false);
   const [deliveryError, setDeliveryError] = useState<string | null>(null);
+  const [isLoadingCustomerData, setIsLoadingCustomerData] = useState(false);
+  const [customerData, setCustomerData] = useState<CustomerResponseDto | null>(null);
 
   const checkoutButtonRef = useRef<HTMLButtonElement>(null);
 
   const isCartLoading = isLoading || isFetching;
+
+  // Fetch customer data for logged-in users
+  useEffect(() => {
+    const fetchCustomerData = async (): Promise<void> => {
+      if (!isAuthenticated) {
+        return;
+      }
+
+      setIsLoadingCustomerData(true);
+      try {
+        const { data, error } = await customerControllerGetMyCustomer();
+
+        if (error) {
+          // Customer data not found - this is okay for first-time customers
+          console.log('No existing customer data found');
+          return;
+        }
+
+        if (data) {
+          setCustomerData(data.data);
+        }
+      } catch (error) {
+        // Silently handle errors - user can still fill in the form manually
+        console.error('Error fetching customer data:', error);
+      } finally {
+        setIsLoadingCustomerData(false);
+      }
+    };
+
+    void fetchCustomerData();
+  }, [isAuthenticated]);
 
   const scrollToCheckout = (): void => {
     if (window.innerWidth < 1025 && checkoutButtonRef.current) {
@@ -504,6 +539,18 @@ const CheckoutPage = (): JSX.Element => {
                         <LocationForm
                           onSubmit={handleLocationSubmit}
                           onReset={() => setLocationData(null)}
+                          initialData={
+                            customerData
+                              ? {
+                                  country: customerData.country || '',
+                                  region: customerData.region || '',
+                                  city: customerData.city || '',
+                                  phoneNumber: customerData.phoneNumber || customerData.phone || '',
+                                  extraInfo: customerData.extraInfo || '',
+                                }
+                              : undefined
+                          }
+                          isLoading={isLoadingCustomerData}
                         />
                       </Suspense>
                     ) : (
