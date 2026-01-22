@@ -126,7 +126,7 @@ const ConfirmPaymentPage = ({ saleId }: ConfirmPaymentPageProps): JSX.Element =>
                 {isAuthenticated ? (
                   <>
                     <Button
-                      onClick={() => router.push('/orders')}
+                      onClick={() => router.push('/track-order')}
                       className="w-full bg-[#0F6938] hover:bg-[#0F6938]/90"
                     >
                       View My Orders

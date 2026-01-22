@@ -240,7 +240,7 @@ export function NavBar(): JSX.Element {
                     </div>
                     {/* User Menu Items */}
                     <Link
-                      href="/orders"
+                      href="/track-order"
                       className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
                       onClick={() => setMobileMenuOpen(false)}
                     >

@@ -306,7 +306,7 @@ const OrdersPage = (): JSX.Element => {
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
-                      onClick={() => router.push(`/orders/${order.id}`)}
+                      onClick={() => router.push(`/track-order/${order.id}`)}
                       className="flex-1"
                     >
                       View Details
