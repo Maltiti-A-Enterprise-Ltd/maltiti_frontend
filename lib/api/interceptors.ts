@@ -8,8 +8,9 @@ import type { ResolvedRequestOptions } from '@/app/api/client/types.gen';
 let isRefreshing = false;
 // Queue of requests waiting for token refresh
 let failedQueue: Array<{
-  resolve: (value?: unknown) => void;
+  resolve: (value: Response) => void;
   reject: (reason?: unknown) => void;
+  response: Response;
 }> = [];
 
 const processQueue = (error: Error | null): void => {
@@ -17,7 +18,7 @@ const processQueue = (error: Error | null): void => {
     if (error) {
       promise.reject(error);
     } else {
-      promise.resolve();
+      promise.resolve(promise.response);
     }
   });
   failedQueue = [];
@@ -98,21 +99,6 @@ const handleSessionExpiry = (): void => {
 };
 
 /**
- * Recreate a Response object with the same properties but fresh body stream
- */
-const recreateResponse = async (originalResponse: Response): Promise<Response> => {
-  // Clone the response body before it's consumed
-  const body = await originalResponse.clone().text();
-
-  // Create a new Response with the same properties
-  return new Response(body, {
-    status: originalResponse.status,
-    statusText: originalResponse.statusText,
-    headers: originalResponse.headers,
-  });
-};
-
-/**
  * Setup API client interceptors for token refresh
  */
 export const setupInterceptors = (): void => {
@@ -133,24 +119,14 @@ export const setupInterceptors = (): void => {
 
     // If currently refreshing, queue this request
     if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        failedQueue.push({ resolve, reject });
+      return new Promise<Response>((resolve, reject) => {
+        failedQueue.push({ resolve, reject, response });
       })
-        .then(async () => {
-          // Retry the original request with a new token
-          const method = (originalRequest.method || 'GET').toLowerCase() as Lowercase<
-            NonNullable<typeof originalRequest.method>
-          >;
-          const clientMethod = client[method] as typeof client.get;
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { method: _, ...requestOptions } = originalRequest;
-          const retryResult = await clientMethod({
-            ...requestOptions,
-            _retry: true,
-          } as Omit<ResolvedRequestOptions, 'method'>);
-          // Return a fresh Response object to avoid body stream consumption issues
-          return recreateResponse(retryResult.response);
-        })
+        .then(
+          () =>
+            // Do not retry the request - return the 401 response as is
+            response,
+        )
         .catch((err) => {
           throw err;
         });
@@ -168,18 +144,8 @@ export const setupInterceptors = (): void => {
         processQueue(null);
         isRefreshing = false;
 
-        // Retry the original request with new token
-        const method = (originalRequest.method || 'GET').toLowerCase() as Lowercase<
-          NonNullable<typeof originalRequest.method>
-        >;
-        const clientMethod = client[method] as typeof client.get;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { method: _, ...requestOptions } = originalRequest;
-        const retryResult = await clientMethod(
-          requestOptions as Omit<ResolvedRequestOptions, 'method'>,
-        );
-        // Return a fresh Response object to avoid body stream consumption issues
-        return recreateResponse(retryResult.response);
+        // Do not retry the original request - return the 401 response as is
+        return response;
       }
       // Token refresh failed, clear queue and handle session expiry
       processQueue(new Error('Token refresh failed'));

@@ -19,13 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { SelectDropdown } from '@/components/ui/select';
 import CountryDropdown from '@/components/ui/country-dropdown';
 import { PhoneInput, phoneSchema } from '@/components/ui/phone-input';
 
@@ -42,21 +36,28 @@ type LocationFormValues = z.infer<typeof locationSchema>;
 type LocationFormProps = {
   onSubmit: (data: LocationFormValues) => void;
   onReset?: () => void;
+  initialData?: Partial<LocationFormValues>;
+  isLoading?: boolean;
 };
 
-const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => {
+const LocationForm = ({
+  onSubmit,
+  onReset,
+  initialData,
+  isLoading = false,
+}: LocationFormProps): JSX.Element => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
-  const [selectedState, setSelectedState] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState<string>(initialData?.country || '');
+  const [selectedState, setSelectedState] = useState<string>(initialData?.region || '');
 
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationSchema),
     defaultValues: {
-      country: '',
-      region: '',
-      city: '',
-      phoneNumber: '',
-      extraInfo: '',
+      country: initialData?.country || '',
+      region: initialData?.region || '',
+      city: initialData?.city || '',
+      phoneNumber: initialData?.phoneNumber || '',
+      extraInfo: initialData?.extraInfo || '',
     },
     mode: 'onTouched',
   });
@@ -101,6 +102,29 @@ const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => 
     onReset?.();
   };
 
+  // Update form values when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      if (initialData.country) {
+        form.setValue('country', initialData.country);
+        setSelectedCountry(initialData.country);
+      }
+      if (initialData.region) {
+        form.setValue('region', initialData.region);
+        setSelectedState(initialData.region);
+      }
+      if (initialData.city) {
+        form.setValue('city', initialData.city);
+      }
+      if (initialData.phoneNumber) {
+        form.setValue('phoneNumber', initialData.phoneNumber);
+      }
+      if (initialData.extraInfo) {
+        form.setValue('extraInfo', initialData.extraInfo);
+      }
+    }
+  }, [initialData, form]);
+
   useEffect(() => {
     if (isSubmitted) {
       const subscription = form.watch((value) => {
@@ -115,6 +139,25 @@ const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        {/* Show info message if data was prefilled */}
+        {initialData && Object.keys(initialData).length > 0 && (
+          <div className="rounded-lg bg-blue-50 p-4">
+            <p className="text-sm font-medium text-blue-900">
+              ✓ Your details have been prefilled from your previous order
+            </p>
+            <p className="mt-1 text-xs text-blue-700">
+              You can review and update any information before proceeding
+            </p>
+          </div>
+        )}
+
+        {/* Show loading state */}
+        {isLoading && (
+          <div className="rounded-lg bg-gray-50 p-4">
+            <p className="text-sm text-gray-600">Loading your information...</p>
+          </div>
+        )}
+
         {/* Country */}
         <FormField
           control={form.control}
@@ -163,7 +206,6 @@ const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => 
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="region"
@@ -171,34 +213,24 @@ const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => 
             <FormItem>
               <FormLabel>Region / State / Province</FormLabel>
               {states.length > 0 ? (
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    setSelectedState(value);
-                    // Reset city when state changes
-                    form.setValue('city', '');
-
-                    // Reset confirmation if location fields change
-                    if (isSubmitted) {
-                      resetSubmission();
-                    }
-                  }}
-                  value={field.value}
-                  disabled={!selectedCountry}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select region/state" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-75">
-                    {states.map((state) => (
-                      <SelectItem key={state.isoCode} value={state.name}>
-                        {state.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <SelectDropdown
+                    options={states.map((state) => ({ label: state.name, value: state.name }))}
+                    placeholder="Select region/state"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSelectedState(value);
+                      // Reset city when state changes
+                      form.setValue('city', '');
+                      // Reset confirmation if location fields change
+                      if (isSubmitted) {
+                        resetSubmission();
+                      }
+                    }}
+                    disabled={!selectedCountry}
+                  />
+                </FormControl>
               ) : (
                 <FormControl>
                   <Input
@@ -236,31 +268,21 @@ const LocationForm = ({ onSubmit, onReset }: LocationFormProps): JSX.Element => 
             <FormItem>
               <FormLabel>City / Town</FormLabel>
               {cities.length > 0 ? (
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(value);
-
-                    // Reset confirmation if location fields change
-                    if (isSubmitted) {
-                      resetSubmission();
-                    }
-                  }}
-                  value={field.value}
-                  disabled={!selectedState}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select city/town" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-75">
-                    {cities.map((city) => (
-                      <SelectItem key={city.name} value={city.name}>
-                        {city.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <SelectDropdown
+                    options={cities.map((city) => ({ label: city.name, value: city.name }))}
+                    placeholder="Select city/town"
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // Reset confirmation if location fields change
+                      if (isSubmitted) {
+                        resetSubmission();
+                      }
+                    }}
+                    disabled={!selectedState}
+                  />
+                </FormControl>
               ) : (
                 <FormControl>
                   <div className="relative">

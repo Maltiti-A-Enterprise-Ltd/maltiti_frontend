@@ -5,3 +5,5 @@ export { EmailVerificationNotice } from './email-verification-notice';
 export { ResendVerificationForm } from './resend-verification-form';
 export { EmailVerificationHandler } from './email-verification-handler';
 export { SessionExpiryHandler } from './session-expiry-handler';
+export { ForgotPasswordForm } from './forgot-password-form';
+export { ResetPasswordForm } from './reset-password-form';
