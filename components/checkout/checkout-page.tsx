@@ -288,7 +288,7 @@ const CheckoutPage = (): JSX.Element => {
           });
 
           setTimeout(() => {
-            router.push('/orders');
+            router.push('/track-order');
           }, 2000);
         } else {
           // Normal flow: proceed to payment
