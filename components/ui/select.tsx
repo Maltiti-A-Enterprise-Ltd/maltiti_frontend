@@ -2,9 +2,41 @@
 
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { Check, CheckIcon, ChevronDownIcon, ChevronsUpDown, ChevronUpIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { JSX, Ref, useState } from 'react';
+import { Label } from './label';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './command';
+import { Control } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import LoadingOverlay from '@/components/loadingOverlay/loadingOverlay';
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
+type SelectInputProps = {
+  name: string;
+  options: SelectOption[];
+  error?: string;
+  ref: Ref<HTMLButtonElement>;
+  label?: string;
+  placeholder?: string;
+  // Any is used here because the type of control is known at the instance this property is passed in as prop
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
+  className?: string;
+};
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -161,6 +193,163 @@ function SelectScrollDownButton({
   );
 }
 
+type ComboboxProps = {
+  isLoading?: boolean;
+  wrapperClassName?: string;
+  className?: string;
+  defaultMaxWidth?: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  searchPlaceholder?: string;
+  onSearchChange?: (value: string) => void;
+  isLoadingResults?: boolean;
+  disabled?: boolean;
+} & Pick<SelectInputProps, 'options' | 'label' | 'placeholder'>;
+const Combobox = ({
+  options,
+  label,
+  defaultMaxWidth = true,
+  wrapperClassName,
+  className,
+  placeholder,
+  value: currentValue,
+  onChange,
+  isLoading,
+  searchPlaceholder,
+  onSearchChange,
+  isLoadingResults,
+  disabled,
+}: ComboboxProps): JSX.Element => {
+  const [open, setOpen] = useState(false);
+  const [currentOption, setCurrentOption] = useState<string | null>(null);
+
+  return (
+    <div
+      className={cn(
+        'relative grid w-full items-center gap-2',
+        wrapperClassName,
+        defaultMaxWidth ? 'max-w-sm' : '',
+      )}
+    >
+      {label && <Label>{label}</Label>}
+      <Popover modal={true} open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={disabled}
+            className={cn('hover:bg-background! text-accent-foreground justify-between', className)}
+          >
+            <>
+              {isLoading ? 'Loading... Please wait' : currentOption || placeholder}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="z-100 w-[85vw] max-w-sm p-0">
+          {isLoadingResults && <LoadingOverlay />}
+          <Command>
+            <CommandInput placeholder={searchPlaceholder} onValueChange={onSearchChange} />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                {Array.isArray(options) &&
+                  options.map(({ label, value }) => (
+                    <CommandItem
+                      key={value}
+                      value={label}
+                      onSelect={() => {
+                        setCurrentOption(label);
+                        onChange(value);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          value === currentValue ? 'opacity-100' : 'opacity-0',
+                        )}
+                      />
+                      {label}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
+
+type SelectDropdownProps = {
+  options: { label: string; value: string }[];
+  value?: string;
+  onValueChange: (value: string) => void;
+  disabled?: boolean;
+  placeholder?: string;
+  searchPlaceholder?: string;
+};
+
+const SelectDropdown = ({
+  options,
+  value,
+  onValueChange,
+  disabled,
+  placeholder = 'Select...',
+  searchPlaceholder = 'Search...',
+}: SelectDropdownProps): React.JSX.Element => {
+  const [open, setOpen] = React.useState(false);
+
+  const selectedOption = options.find((option) => option.value === value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled}
+          className={cn('w-full justify-between', !value && 'text-muted-foreground')}
+        >
+          {selectedOption ? selectedOption.label : placeholder}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="z-0 w-full p-0" align="start">
+        <Command>
+          <CommandInput placeholder={searchPlaceholder} className="h-9" />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {options.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  value={option.value}
+                  onSelect={(currentValue) => {
+                    onValueChange(currentValue === value ? '' : currentValue);
+                    setOpen(false);
+                  }}
+                >
+                  <span>{option.label}</span>
+                  <Check
+                    className={cn(
+                      'ml-auto h-4 w-4',
+                      value === option.value ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export {
   Select,
   SelectContent,
@@ -172,4 +361,6 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
+  Combobox,
+  SelectDropdown,
 };
