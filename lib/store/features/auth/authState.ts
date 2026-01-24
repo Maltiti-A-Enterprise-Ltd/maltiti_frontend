@@ -11,6 +11,7 @@ interface AuthPageState<T> {
 
 export interface AuthState {
   user: UserResponseDto | null;
+  accessToken: string | null;
   isLoading: AuthPageState<boolean>;
   error: AuthPageState<string | null>;
 }

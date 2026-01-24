@@ -1,7 +1,7 @@
 import { client } from '@/app/api/client.gen';
 import { authenticationControllerRefreshToken } from '@/app/api';
 import { store } from '@/lib/store/store';
-import { clearUser } from '@/lib/store/features/auth/authSlice';
+import { clearUser, updateAccessToken } from '@/lib/store/features/auth/authSlice';
 import type { ResolvedRequestOptions } from '@/app/api/client/types.gen';
 
 // Track if we're currently refreshing to prevent multiple refresh attempts
@@ -54,7 +54,8 @@ const refreshAccessToken = async (): Promise<boolean> => {
     const { data, error } = await authenticationControllerRefreshToken();
 
     if (data) {
-      // Token refresh successful - new tokens are set in HTTP-only cookies by the backend
+      // Update the access token in the store
+      store.dispatch(updateAccessToken(data));
       return true;
     }
 
@@ -102,6 +103,28 @@ const handleSessionExpiry = (): void => {
  * Setup API client interceptors for token refresh
  */
 export const setupInterceptors = (): void => {
+  // Request interceptor to add Authorization header
+  client.interceptors.request.use((options: ResolvedRequestOptions) => {
+    const accessToken = store.getState().auth.accessToken;
+    console.log('Request interceptor called for URL:', options.url);
+    console.log('Access token:', accessToken ? 'present' : 'null');
+
+    // Add Authorization header if token exists and not an auth endpoint
+    if (accessToken && !isAuthEndpoint(options.url || '')) {
+      console.log('Adding Authorization header');
+      if (!options.headers) {
+        options.headers = new Headers();
+      }
+      if (options.headers instanceof Headers) {
+        options.headers.set('Authorization', `Bearer ${accessToken}`);
+      } else if (typeof options.headers === 'object') {
+        (options.headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
+      }
+    } else {
+      console.log('Not adding Authorization header - token missing or auth endpoint');
+    }
+  });
+
   // Response interceptor to handle 401 errors
   client.interceptors.response.use(async (response: Response, options: ResolvedRequestOptions) => {
     const originalRequest = options;

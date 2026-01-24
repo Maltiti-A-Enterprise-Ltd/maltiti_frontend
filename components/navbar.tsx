@@ -60,7 +60,7 @@ export function NavBar(): JSX.Element {
 
   // Get user initials for avatar
   const getUserInitials = (name: string): string => {
-    const names = name.split(' ');
+    const names = name.split(' ').filter((n) => n !== '');
     if (names.length >= 2) {
       return `${names[0][0]}${names[1][0]}`.toUpperCase();
     }

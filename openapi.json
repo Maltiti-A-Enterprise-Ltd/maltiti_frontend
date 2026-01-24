@@ -435,7 +435,7 @@
     },
     "/authentication/login": {
       "post": {
-        "description": "Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs. If sessionId is provided, guest cart items will be synced with user cart.",
+        "description": "Authenticates user credentials and returns a success message with user data and access token in the response body. Sets a refresh token in an HTTP-only cookie for session persistence. Logs the login event for audit purposes. If sessionId is provided, synchronizes guest cart items with the user's cart.",
         "operationId": "AuthenticationController_signIn",
         "parameters": [],
         "requestBody": {
@@ -446,13 +446,13 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "description": "Login successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
           },
           "201": {
-            "description": "Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
+            "description": "Login successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
@@ -570,7 +570,7 @@
     },
     "/authentication/verify/{id}/{token}": {
       "get": {
-        "description": "Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day). If sessionId is provided, guest cart items will be synced with user cart.",
+        "description": "Verifies user email using the verification token from email and logs the user in. Returns user data and access token in response body, and sets refresh token in HTTP-only cookie. If sessionId is provided, guest cart items will be synced with user cart.",
         "operationId": "AuthenticationController_emailVerification",
         "parameters": [
           {
@@ -591,7 +591,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Email verification successful and user logged in",
+            "description": "Email verification successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
             }
@@ -615,19 +615,18 @@
     },
     "/authentication/refresh-token": {
       "post": {
-        "description": "Generates new access and refresh tokens using the refresh token from cookies. Implements token rotation for security.",
+        "description": "Generates new access token in response body and refresh token in HTTP-only cookie using the refresh token from cookies. Implements token rotation for security.",
         "operationId": "AuthenticationController_refreshToken",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenRefreshResponseDto" }
-              }
-            }
+            "description": "Tokens refreshed successfully, accessToken returned in body, refreshToken set in cookie (1day)",
+            "content": { "application/json": { "schema": { "type": "string" } } }
           },
-          "201": { "description": "" },
+          "201": {
+            "description": "",
+            "content": { "application/json": { "schema": { "type": "string" } } }
+          },
           "401": {
             "description": "Invalid, expired, or missing refresh token",
             "content": {
@@ -2299,16 +2298,16 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/guest/confirm-payment/{saleId}": {
+    "/checkout/guest/confirm-payment/{checkoutId}": {
       "get": {
         "description": "Public endpoint to confirm payment after Paystack redirect for guest users",
         "operationId": "CheckoutController_confirmGuestPayment",
         "parameters": [
           {
-            "name": "saleId",
+            "name": "checkoutId",
             "required": true,
             "in": "path",
-            "description": "Sale ID",
+            "description": "Checkout ID",
             "schema": { "type": "string" }
           }
         ],
@@ -2326,15 +2325,15 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/confirm-payment/{saleId}": {
+    "/checkout/confirm-payment/{checkoutId}": {
       "get": {
         "operationId": "CheckoutController_confirmPayment",
         "parameters": [
           {
-            "name": "saleId",
+            "name": "checkoutId",
             "required": true,
             "in": "path",
-            "description": "Sale ID",
+            "description": "Checkout ID",
             "schema": { "type": "string" }
           }
         ],
@@ -2470,15 +2469,15 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/pay-for-order/{saleId}": {
+    "/checkout/pay-for-order/{checkoutId}": {
       "post": {
         "operationId": "CheckoutController_payForOrder",
         "parameters": [
           {
-            "name": "saleId",
+            "name": "checkoutId",
             "required": true,
             "in": "path",
-            "description": "Sale ID",
+            "description": "Checkout ID",
             "schema": { "type": "string" }
           }
         ],
@@ -2697,16 +2696,16 @@
         "tags": ["Checkout"]
       }
     },
-    "/checkout/guest/pay-for-order/{saleId}": {
+    "/checkout/guest/pay-for-order/{checkoutId}": {
       "post": {
         "description": "Initialize payment for any order using checkout ID and email. Works for orders placed by guests, registered users, or created by admins.",
         "operationId": "CheckoutController_payForGuestOrder",
         "parameters": [
           {
-            "name": "saleId",
+            "name": "checkoutId",
             "required": true,
             "in": "path",
-            "description": "Sale ID",
+            "description": "Checkout ID",
             "schema": { "type": "string" }
           },
           {
@@ -3207,25 +3206,6 @@
           "409": { "description": "Customer with email already exists" }
         },
         "summary": "Update an existing customer",
-        "tags": ["customers"]
-      }
-    },
-    "/customers/me": {
-      "get": {
-        "operationId": "CustomerController_getMyCustomer",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Customer information retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/CustomerMeResponseDto" }
-              }
-            }
-          },
-          "404": { "description": "Customer not found for the user" }
-        },
-        "summary": "Get the customer information for the logged-in user",
         "tags": ["customers"]
       }
     },
@@ -4701,8 +4681,12 @@
             "example": "You have successfully logged in"
           },
           "data": {
-            "description": "User data (password excluded)",
-            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+            "type": "object",
+            "properties": {
+              "user": { "$ref": "#/components/schemas/UserResponseDto" },
+              "accessToken": { "type": "string" }
+            },
+            "required": ["user", "accessToken"]
           }
         },
         "required": ["message", "data"]
@@ -4750,17 +4734,6 @@
           }
         },
         "required": ["message", "data"]
-      },
-      "TokenRefreshResponseDto": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success message",
-            "example": "Tokens refreshed successfully"
-          }
-        },
-        "required": ["message"]
       },
       "LogoutResponseDto": {
         "type": "object",
@@ -7157,89 +7130,6 @@
           }
         },
         "required": ["driver"]
-      },
-      "CustomerResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the customer",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the customer",
-            "example": "John Doe"
-          },
-          "phone": {
-            "type": "string",
-            "description": "The phone number of the customer",
-            "example": "+233123456789"
-          },
-          "email": {
-            "type": "string",
-            "description": "The email address of the customer",
-            "example": "john.doe@example.com"
-          },
-          "address": {
-            "type": "string",
-            "description": "The address of the customer",
-            "example": "123 Main St, Accra"
-          },
-          "country": {
-            "type": "string",
-            "description": "The country of the customer",
-            "example": "Ghana"
-          },
-          "region": {
-            "type": "string",
-            "description": "The region of the customer",
-            "example": "Greater Accra"
-          },
-          "city": {
-            "type": "string",
-            "description": "The city of the customer",
-            "example": "Accra"
-          },
-          "phoneNumber": {
-            "type": "string",
-            "description": "Additional phone number of the customer",
-            "example": "+233987654321"
-          },
-          "extraInfo": {
-            "type": "string",
-            "description": "Extra information about the customer",
-            "example": "Prefers morning deliveries"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "The date the customer was created",
-            "example": "2023-01-01T00:00:00.000Z"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "The date the customer was last updated",
-            "example": "2023-01-01T00:00:00.000Z"
-          }
-        },
-        "required": ["id", "name", "createdAt", "updatedAt"]
-      },
-      "CustomerMeResponseDto": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Response message",
-            "example": "Customer information loaded successfully"
-          },
-          "data": {
-            "description": "Customer data",
-            "allOf": [{ "$ref": "#/components/schemas/CustomerResponseDto" }]
-          }
-        },
-        "required": ["message", "data"]
       },
       "CreateCustomerDto": {
         "type": "object",
