@@ -84,7 +84,7 @@ export const authenticationControllerCustomerSignup = <ThrowOnError extends bool
 /**
  * User login
  *
- * Authenticates user and returns access token and refresh token in HTTP-only cookies. Also logs the login event in audit logs. If sessionId is provided, guest cart items will be synced with user cart.
+ * Authenticates user credentials and returns a success message with user data and access token in the response body. Sets a refresh token in an HTTP-only cookie for session persistence. Logs the login event for audit purposes. If sessionId is provided, synchronizes guest cart items with the user's cart.
  */
 export const authenticationControllerSignIn = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerSignInData, ThrowOnError>) => (options.client ?? client).post<AuthenticationControllerSignInResponses, AuthenticationControllerSignInErrors, ThrowOnError>({
     url: '/authentication/login',
@@ -126,14 +126,14 @@ export const authenticationControllerResetPassword = <ThrowOnError extends boole
 /**
  * Verify email address
  *
- * Verifies user email using the verification token from email and logs the user in. Sets authentication cookies (accessToken: 15min, refreshToken: 1day). If sessionId is provided, guest cart items will be synced with user cart.
+ * Verifies user email using the verification token from email and logs the user in. Returns user data and access token in response body, and sets refresh token in HTTP-only cookie. If sessionId is provided, guest cart items will be synced with user cart.
  */
 export const authenticationControllerEmailVerification = <ThrowOnError extends boolean = false>(options: Options<AuthenticationControllerEmailVerificationData, ThrowOnError>) => (options.client ?? client).get<AuthenticationControllerEmailVerificationResponses, AuthenticationControllerEmailVerificationErrors, ThrowOnError>({ url: '/authentication/verify/{id}/{token}', ...options });
 
 /**
  * Refresh access token
  *
- * Generates new access and refresh tokens using the refresh token from cookies. Implements token rotation for security.
+ * Generates new access token in response body and refresh token in HTTP-only cookie using the refresh token from cookies. Implements token rotation for security.
  */
 export const authenticationControllerRefreshToken = <ThrowOnError extends boolean = false>(options?: Options<AuthenticationControllerRefreshTokenData, ThrowOnError>) => (options?.client ?? client).post<AuthenticationControllerRefreshTokenResponses, AuthenticationControllerRefreshTokenErrors, ThrowOnError>({ url: '/authentication/refresh-token', ...options });
 

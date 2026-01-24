@@ -11,6 +11,7 @@ import { AuthState } from '@/lib/store/features/auth/authState';
 
 const initialState: AuthState = {
   user: null,
+  accessToken: null,
   isLoading: {
     login: false,
     signup: false,
@@ -49,6 +50,7 @@ const authSlice = createSlice({
     },
     clearUser: (state) => {
       state.user = null;
+      state.accessToken = null;
       state.error = {
         login: null,
         signup: null,
@@ -75,6 +77,9 @@ const authSlice = createSlice({
         };
       }
     },
+    updateAccessToken: (state, action: PayloadAction<string>) => {
+      state.accessToken = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // Login
@@ -85,7 +90,8 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading.login = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
         state.error.login = null;
       })
       .addCase(login.rejected, (state, action) => {
@@ -151,7 +157,8 @@ const authSlice = createSlice({
       })
       .addCase(verifyEmail.fulfilled, (state, action) => {
         state.isLoading.verifyEmail = false;
-        state.user = action.payload; // Set user data like login does
+        state.user = action.payload.user; // Set user data like login does
+        state.accessToken = action.payload.accessToken;
         state.error.verifyEmail = null;
       })
       .addCase(verifyEmail.rejected, (state, action) => {
@@ -163,7 +170,7 @@ const authSlice = createSlice({
 });
 
 // Actions
-export const { setUser, clearUser, clearError, updateUser } = authSlice.actions;
+export const { setUser, clearUser, clearError, updateUser, updateAccessToken } = authSlice.actions;
 
 // Reducer
 export default authSlice.reducer;

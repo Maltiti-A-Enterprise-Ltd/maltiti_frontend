@@ -9,7 +9,7 @@ import storage from 'redux-persist/lib/storage';
 const authPersistConfig = {
   key: 'user',
   storage,
-  whitelist: ['user'],
+  whitelist: ['user', 'accessToken'],
 };
 
 // Persist config for guest cart - persist all guest cart data

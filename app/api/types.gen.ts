@@ -230,10 +230,10 @@ export type LoginResponseDto = {
      * Success message
      */
     message: string;
-    /**
-     * User data (password excluded)
-     */
-    data: UserResponseDto;
+    data: {
+        user: UserResponseDto;
+        accessToken: string;
+    };
 };
 
 export type ForgotPasswordDto = {
@@ -266,13 +266,6 @@ export type PasswordResetResponseDto = {
      * User data
      */
     data: UserResponseDto;
-};
-
-export type TokenRefreshResponseDto = {
-    /**
-     * Success message
-     */
-    message: string;
 };
 
 export type LogoutResponseDto = {
@@ -2361,11 +2354,11 @@ export type AuthenticationControllerSignInError = AuthenticationControllerSignIn
 
 export type AuthenticationControllerSignInResponses = {
     /**
-     * Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)
+     * Login successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.
      */
     200: LoginResponseDto;
     /**
-     * Login successful, tokens set in cookies (accessToken: 15min, refreshToken: 1day)
+     * Login successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.
      */
     201: LoginResponseDto;
 };
@@ -2469,7 +2462,7 @@ export type AuthenticationControllerEmailVerificationError = AuthenticationContr
 
 export type AuthenticationControllerEmailVerificationResponses = {
     /**
-     * Email verification successful and user logged in
+     * Email verification successful. Returns user data and access token in response body. Refresh token is set in HTTP-only cookie.
      */
     200: LoginResponseDto;
 };
@@ -2498,10 +2491,10 @@ export type AuthenticationControllerRefreshTokenError = AuthenticationController
 
 export type AuthenticationControllerRefreshTokenResponses = {
     /**
-     * Tokens refreshed successfully, new tokens set in cookies (accessToken: 15min, refreshToken: 1day)
+     * Tokens refreshed successfully, accessToken returned in body, refreshToken set in cookie (1day)
      */
-    200: TokenRefreshResponseDto;
-    201: unknown;
+    200: string;
+    201: string;
 };
 
 export type AuthenticationControllerRefreshTokenResponse = AuthenticationControllerRefreshTokenResponses[keyof AuthenticationControllerRefreshTokenResponses];
