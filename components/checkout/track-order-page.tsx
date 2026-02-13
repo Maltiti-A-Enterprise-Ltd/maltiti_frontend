@@ -485,7 +485,11 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                 <p className="mb-4 text-sm text-gray-600">
                   If you have any questions about your order, please contact our support team.
                 </p>
-                <Button variant="outline" className="w-full" onClick={() => router.push('/shop')}>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => window.open('mailto:support@maltitiaenterprise.com')}
+                >
                   Contact Support
                 </Button>
               </CardContent>
