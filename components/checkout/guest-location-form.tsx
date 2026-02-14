@@ -19,13 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { SelectDropdown } from '@/components/ui/select';
 import CountryDropdown from '@/components/ui/country-dropdown';
 import { PhoneInput, phoneSchema } from '@/components/ui/phone-input';
 
@@ -232,32 +226,23 @@ const GuestLocationForm = ({ onSubmit, onReset }: GuestLocationFormProps): JSX.E
               <FormItem>
                 <FormLabel>Region / State / Province</FormLabel>
                 {states.length > 0 ? (
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setSelectedState(value);
-                      form.setValue('city', '');
+                  <FormControl>
+                    <SelectDropdown
+                      options={states.map((state) => ({ label: state.name, value: state.name }))}
+                      placeholder="Select region/state"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        setSelectedState(value);
+                        form.setValue('city', '');
 
-                      if (isSubmitted) {
-                        resetSubmission();
-                      }
-                    }}
-                    value={field.value}
-                    disabled={!selectedCountry}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select region/state" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-75">
-                      {states.map((state) => (
-                        <SelectItem key={state.isoCode} value={state.name}>
-                          {state.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        if (isSubmitted) {
+                          resetSubmission();
+                        }
+                      }}
+                      disabled={!selectedCountry}
+                    />
+                  </FormControl>
                 ) : (
                   <FormControl>
                     <Input
@@ -293,29 +278,20 @@ const GuestLocationForm = ({ onSubmit, onReset }: GuestLocationFormProps): JSX.E
               <FormItem>
                 <FormLabel>City / Town</FormLabel>
                 {cities.length > 0 ? (
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      if (isSubmitted) {
-                        resetSubmission();
-                      }
-                    }}
-                    value={field.value}
-                    disabled={!selectedState}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select city/town" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-75">
-                      {cities.map((city) => (
-                        <SelectItem key={city.name} value={city.name}>
-                          {city.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <SelectDropdown
+                      options={cities.map((city) => ({ label: city.name, value: city.name }))}
+                      placeholder="Select city/town"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        if (isSubmitted) {
+                          resetSubmission();
+                        }
+                      }}
+                      disabled={!selectedState}
+                    />
+                  </FormControl>
                 ) : (
                   <FormControl>
                     <div className="relative">
