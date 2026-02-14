@@ -1448,6 +1448,10 @@ export type SaleResponseDto = {
      */
     deliveryFee?: number;
     /**
+     * Customer confirmation of delivery (null for walk-in customers)
+     */
+    confirmedDelivery?: boolean;
+    /**
      * Total payable amount (amount + deliveryFee)
      */
     total?: number;
@@ -1855,6 +1859,13 @@ export type GenerateWaybillDto = {
      * Remarks about the condition of goods
      */
     remarks?: string;
+};
+
+export type ConfirmDeliveryDto = {
+    /**
+     * Confirmation status for delivery
+     */
+    confirmed: boolean;
 };
 
 export type CustomerResponseDto = {
@@ -4463,6 +4474,24 @@ export type SalesControllerGenerateWaybillResponses = {
     200: unknown;
     201: unknown;
 };
+
+export type SalesControllerConfirmDeliveryData = {
+    body: ConfirmDeliveryDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/sales/{id}/confirm-delivery';
+};
+
+export type SalesControllerConfirmDeliveryResponses = {
+    /**
+     * Delivery confirmation updated successfully
+     */
+    200: SaleResponseDto;
+};
+
+export type SalesControllerConfirmDeliveryResponse = SalesControllerConfirmDeliveryResponses[keyof SalesControllerConfirmDeliveryResponses];
 
 export type CustomerControllerGetAllCustomersData = {
     body?: never;
