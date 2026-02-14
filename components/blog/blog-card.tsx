@@ -35,10 +35,6 @@ export function BlogCard({ post }: Readonly<BlogCardProps>): JSX.Element {
             >
               {post.category}
             </Badge>
-            <div className="text-muted-foreground flex items-center text-xs">
-              <Clock className="mr-1 h-3 w-3" />
-              <span>{post.readingTime} min read</span>
-            </div>
           </div>
 
           <h3 className="line-clamp-2 text-xl leading-tight font-bold transition-colors group-hover:text-[#0F6938] group-hover:underline">
@@ -50,21 +46,38 @@ export function BlogCard({ post }: Readonly<BlogCardProps>): JSX.Element {
           <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
             {post.excerpt}
           </p>
-          <div className="mt-3 flex items-center text-sm font-medium text-[#0F6938] opacity-0 transition-opacity group-hover:opacity-100">
-            Read More <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
+
+          {/* Read More Call-to-Action */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-muted-foreground flex items-center text-xs">
+              <Clock className="mr-1 h-3 w-3" />
+              <span>{post.readingTime} min read</span>
+            </div>
+            <div className="text-sm font-medium text-[#0F6938] transition-colors hover:text-[#0F6938]/80">
+              Click to read more →
+            </div>
           </div>
         </CardContent>
 
         <CardFooter className="pt-0 pb-6">
-          <div className="text-muted-foreground flex w-full items-center justify-between text-xs">
-            <span>{post.author}</span>
-            <span>
-              {new Date(post.publishDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </span>
+          <div className="flex w-full items-center justify-between">
+            <div className="text-muted-foreground flex items-center text-xs">
+              <span>{post.author}</span>
+              <span className="mx-2">•</span>
+              <span>
+                {new Date(post.publishDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </div>
+            <Badge
+              variant="outline"
+              className="cursor-pointer border-[#0F6938] text-[#0F6938] transition-colors hover:bg-[#0F6938] hover:text-white"
+            >
+              Read More →
+            </Badge>
           </div>
         </CardFooter>
       </Card>
