@@ -254,11 +254,12 @@ export function NavBar(): JSX.Element {
                       <span>Settings</span>
                     </Link>
                     <button
+                      type="button"
                       onClick={() => {
                         setMobileMenuOpen(false);
                         void handleLogout();
                       }}
-                      className="hover:text-primary flex w-full items-center space-x-3 rounded-lg px-4 py-3 text-left text-lg font-medium text-red-600 transition-colors hover:bg-gray-100"
+                      className="hover:text-primary flex w-full items-center space-x-3 rounded-lg px-4 py-3 text-left text-lg font-medium text-red-600 hover:bg-gray-100"
                     >
                       <LogOut className="h-5 w-5" />
                       <span>Logout</span>

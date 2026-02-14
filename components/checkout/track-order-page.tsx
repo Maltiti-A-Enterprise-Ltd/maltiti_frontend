@@ -386,7 +386,8 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                     <h3 className="mb-4 text-lg font-semibold text-gray-900">Order Progress</h3>
                     <div className="flex items-center justify-between">
                       {steps.map((step, index) => {
-                        const isCompleted = index < currentIndex || index === steps.length - 1;
+                        const isCompleted =
+                          index < currentIndex || currentIndex === steps.length - 1;
                         const isCurrent = index === currentIndex;
                         const iconElement = isCompleted ? (
                           <CheckCircle className="h-5 w-5 text-green-600" />
