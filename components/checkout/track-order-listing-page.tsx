@@ -41,8 +41,6 @@ import { Label } from '@/components/ui/label';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
 
-type TrackOrderListingPageProps = Record<string, never>;
-
 const statusConfig: Record<
   OrderStatus,
   {
@@ -97,6 +95,11 @@ const paymentStatusConfig: Record<
     color: 'text-blue-700',
     bgColor: 'bg-blue-100',
   },
+  [PaymentStatus.AWAITING_DELIVERY]: {
+    label: 'Awaiting Delivery',
+    color: 'text-orange-700',
+    bgColor: 'bg-orange-100',
+  },
   [PaymentStatus.PENDING_PAYMENT]: {
     label: 'Payment Pending',
     color: 'text-yellow-700',
@@ -114,7 +117,7 @@ const paymentStatusConfig: Record<
   },
 };
 
-export default function TrackOrderListingPage({}: TrackOrderListingPageProps): JSX.Element {
+export default function TrackOrderListingPage(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailFromQuery = searchParams.get('email');
@@ -339,7 +342,7 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
               <div className="mb-4 flex items-center justify-between">
                 <p className="text-sm text-gray-600">
                   Found <span className="font-semibold text-gray-900">{totalItems}</span> order
-                  {totalItems !== 1 ? 's' : ''} for <span className="font-medium">{email}</span>
+                  {totalItems === 1 ? '' : 's'} for <span className="font-medium">{email}</span>
                 </p>
                 {totalPages > 1 && (
                   <p className="text-sm text-gray-500">
@@ -394,6 +397,9 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
                       <SelectItem value="all">All payment statuses</SelectItem>
                       <SelectItem value={PaymentStatus.INVOICE_REQUESTED}>
                         Invoice Requested
+                      </SelectItem>
+                      <SelectItem value={PaymentStatus.AWAITING_DELIVERY}>
+                        Awaiting Delivery
                       </SelectItem>
                       <SelectItem value={PaymentStatus.PENDING_PAYMENT}>Payment Pending</SelectItem>
                       <SelectItem value={PaymentStatus.PAID}>Paid</SelectItem>
@@ -571,7 +577,7 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
                             <span className="font-medium text-gray-900">
                               {order.lineItems.length}
                             </span>{' '}
-                            item{order.lineItems.length !== 1 ? 's' : ''}
+                            item{order.lineItems.length === 1 ? '' : 's'}
                           </div>
                         </div>
 
@@ -580,9 +586,7 @@ export default function TrackOrderListingPage({}: TrackOrderListingPageProps): J
                           <div className="flex-1 sm:flex-none">
                             <p className="text-sm text-gray-500">Total</p>
                             <p className="text-2xl font-bold text-green-600">
-                              {order.checkout?.amount
-                                ? `GHS ${Number(order.checkout.amount).toFixed(2)}`
-                                : 'Pending'}
+                              {order.amount ? `GHS ${Number(order.amount).toFixed(2)}` : 'Pending'}
                             </p>
                           </div>
                           <ChevronRight className="h-6 w-6 shrink-0 text-gray-400 transition-transform group-hover:translate-x-1 group-hover:text-green-600" />

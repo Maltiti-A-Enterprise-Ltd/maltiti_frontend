@@ -36,7 +36,7 @@ const OrdersPage = (): JSX.Element => {
       }
     };
 
-    fetchOrders();
+    void fetchOrders();
   }, []);
 
   const getStatusIcon = (status: string): JSX.Element => {
@@ -252,7 +252,7 @@ const OrdersPage = (): JSX.Element => {
                         <div>
                           <p className="text-sm text-gray-600">Order Total</p>
                           <p className="text-2xl font-bold text-[#0F6938]">
-                            GH₵ {Number(order.amount).toFixed(2)}
+                            GH₵ {Number(order.sale.total).toFixed(2)}
                           </p>
                         </div>
                         {order.sale.lineItems && order.sale.lineItems.length > 0 && (

@@ -1262,7 +1262,6 @@ export type CheckoutDto = {
     id: string;
     sale: SaleDto;
     carts: Array<CartDto>;
-    amount: number;
     paystackReference: string;
     createdAt: string;
     updatedAt: string;
@@ -1286,6 +1285,18 @@ export type SaleDto = {
     checkout: CheckoutDto;
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
+    /**
+     * Product total (excluding delivery)
+     */
+    amount?: number;
+    /**
+     * Delivery/shipping fee
+     */
+    deliveryFee?: number;
+    /**
+     * Total payable amount (amount + deliveryFee)
+     */
+    total?: number;
     lineItems: Array<SaleLineItemDto>;
     createdAt: string;
     updatedAt: string;
@@ -1402,6 +1413,7 @@ export enum OrderStatus {
 
 export enum PaymentStatus {
     INVOICE_REQUESTED = 'invoice_requested',
+    AWAITING_DELIVERY = 'awaiting_delivery',
     PENDING_PAYMENT = 'pending_payment',
     PAID = 'paid',
     REFUNDED = 'refunded'
@@ -1427,6 +1439,18 @@ export type SaleResponseDto = {
     checkout?: SaleCheckoutDto;
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
+    /**
+     * Product total (excluding delivery)
+     */
+    amount?: number;
+    /**
+     * Delivery/shipping fee
+     */
+    deliveryFee?: number;
+    /**
+     * Total payable amount (amount + deliveryFee)
+     */
+    total?: number;
     /**
      * Line items in the sale
      */
@@ -1619,10 +1643,6 @@ export type SaleCheckoutDto = {
      * Checkout ID
      */
     id: string;
-    /**
-     * Total checkout amount
-     */
-    amount: number;
     /**
      * Paystack payment reference
      */
@@ -4186,6 +4206,7 @@ export type SalesControllerListSalesData = {
         orderStatus?: OrderStatus;
         paymentStatus?: PaymentStatus;
         customerId?: string;
+        customerName?: string;
         page?: number;
         limit?: number;
     };
@@ -4964,6 +4985,45 @@ export type ReportsControllerGetComparativeReportData = {
 export type ReportsControllerGetComparativeReportResponses = {
     /**
      * Comparative report generated successfully
+     */
+    200: unknown;
+};
+
+export type ReportsControllerGetDeliveryReportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Start date for filtering (ISO format)
+         */
+        fromDate?: string;
+        /**
+         * End date for filtering (ISO format)
+         */
+        toDate?: string;
+        /**
+         * Filter by product ID
+         */
+        productId?: string;
+        /**
+         * Filter by product category
+         */
+        category?: ProductCategory;
+        /**
+         * Filter by batch ID
+         */
+        batchId?: string;
+        /**
+         * Time aggregation level
+         */
+        aggregation?: SchemaEnum4;
+    };
+    url: '/reports/delivery';
+};
+
+export type ReportsControllerGetDeliveryReportResponses = {
+    /**
+     * Delivery report generated successfully
      */
     200: unknown;
 };

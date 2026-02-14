@@ -247,7 +247,10 @@ const Combobox = ({
             </>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="z-100 w-[85vw] max-w-sm p-0">
+        <PopoverContent
+          className="z-100 w-[85vw] max-w-sm p-0"
+          onWheel={(e) => e.stopPropagation()}
+        >
           {isLoadingResults && <LoadingOverlay />}
           <Command>
             <CommandInput placeholder={searchPlaceholder} onValueChange={onSearchChange} />
@@ -318,7 +321,7 @@ const SelectDropdown = ({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="z-0 w-full p-0" align="start">
+      <PopoverContent className="z-0 w-full p-0" align="start" onWheel={(e) => e.stopPropagation()}>
         <Command>
           <CommandInput placeholder={searchPlaceholder} className="h-9" />
           <CommandList>

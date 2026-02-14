@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useCallback, useEffect, useMemo, useState } from 'react';
+import { JSX, useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -95,6 +95,13 @@ const paymentStatusConfig: Record<
     icon: <Clock className="h-5 w-5" />,
     description: 'Invoice has been requested',
   },
+  [PaymentStatus.AWAITING_DELIVERY]: {
+    label: 'Awaiting Delivery',
+    color: 'text-orange-700',
+    bgColor: 'bg-orange-100',
+    icon: <Truck className="h-5 w-5" />,
+    description: 'Payment is pending delivery confirmation',
+  },
   [PaymentStatus.PENDING_PAYMENT]: {
     label: 'Payment Pending',
     color: 'text-yellow-700',
@@ -118,6 +125,13 @@ const paymentStatusConfig: Record<
   },
 };
 
+const stepOrder: OrderStatus[] = [
+  OrderStatus.PENDING,
+  OrderStatus.PACKAGING,
+  OrderStatus.IN_TRANSIT,
+  OrderStatus.DELIVERED,
+];
+
 const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): JSX.Element => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -131,17 +145,14 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
-  const subTotal = useMemo(
-    () =>
-      orderDetails?.lineItems
-        .map((item) => item.finalPrice * item.requestedQuantity)
-        .reduce((acc, curr) => acc + curr, 0) ?? 0,
-    [orderDetails],
+  const deliveryFee = useMemo(
+    () => Number(orderDetails?.deliveryFee ?? 0),
+    [orderDetails?.deliveryFee],
   );
 
-  const deliveryFee = useMemo(
-    () => Number(orderDetails?.checkout?.amount) - subTotal,
-    [subTotal, orderDetails?.checkout?.amount],
+  const total = useMemo(
+    () => Number(orderDetails?.amount ?? 0) + deliveryFee,
+    [deliveryFee, orderDetails?.amount],
   );
 
   const fetchOrderStatus = useCallback(async (): Promise<void> => {
@@ -287,6 +298,10 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
     day: 'numeric',
   });
 
+  const isCancelled = orderDetails.orderStatus === OrderStatus.CANCELLED;
+  const steps = stepOrder.map((status) => ({ status, ...statusConfig[status] }));
+  const currentIndex = steps.findIndex((step) => step.status === orderDetails.orderStatus);
+
   return (
     <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
       <div className="mx-auto max-w-4xl">
@@ -312,29 +327,82 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
         >
           <Card className="mb-6 border-2 border-green-100">
             <CardContent className="p-8">
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Order Status */}
-                <div className="flex items-start gap-4">
-                  <div className={`rounded-full ${statusInfo.bgColor} shrink-0 p-3`}>
-                    <div className={statusInfo.color}>{statusInfo.icon}</div>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-2 flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-gray-900">Order Status</h3>
-                      <Badge
-                        variant="outline"
-                        className={`${statusInfo.color} ${statusInfo.bgColor} text-xs font-medium`}
-                      >
-                        {orderDetails.orderStatus.replace('_', ' ')}
-                      </Badge>
+              <div className="space-y-6">
+                {isCancelled ? (
+                  <div className="flex items-start gap-4">
+                    <div className={`rounded-full ${statusInfo.bgColor} shrink-0 p-3`}>
+                      <div className={statusInfo.color}>{statusInfo.icon}</div>
                     </div>
-                    <p className="text-sm leading-relaxed text-gray-600">
-                      {statusInfo.description}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-gray-900">Order Status</h3>
+                        <Badge
+                          variant="outline"
+                          className={`${statusInfo.color} ${statusInfo.bgColor} text-xs font-medium`}
+                        >
+                          {orderDetails.orderStatus.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                      <p className="text-sm leading-relaxed text-gray-600">
+                        {statusInfo.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-
-                {/* Payment Status */}
+                ) : (
+                  <div>
+                    <h3 className="mb-4 text-lg font-semibold text-gray-900">Order Progress</h3>
+                    <div className="flex items-center justify-between">
+                      {steps.map((step, index) => {
+                        const isCompleted = index < currentIndex;
+                        const isCurrent = index === currentIndex;
+                        const iconElement = isCompleted ? (
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                        ) : (
+                          step.icon
+                        );
+                        let circleClass: string;
+                        if (isCompleted) {
+                          circleClass = 'bg-green-100';
+                        } else if (isCurrent) {
+                          circleClass = 'bg-blue-100 animate-pulse';
+                        } else {
+                          circleClass = 'bg-gray-100';
+                        }
+                        let textColor: string;
+                        if (isCompleted) {
+                          textColor = 'text-green-600';
+                        } else if (isCurrent) {
+                          textColor = 'text-blue-600';
+                        } else {
+                          textColor = 'text-gray-400';
+                        }
+                        let lineClass: string;
+                        if (index < steps.length - 1) {
+                          if (isCompleted) {
+                            lineClass = 'bg-green-500';
+                          } else {
+                            lineClass = 'bg-gray-300';
+                          }
+                        } else {
+                          lineClass = '';
+                        }
+                        return (
+                          <Fragment key={step.status}>
+                            <div className="flex flex-col items-center">
+                              <div className={`rounded-full p-3 ${circleClass}`}>{iconElement}</div>
+                              <p className={`mt-2 text-sm font-medium ${textColor}`}>
+                                {step.label}
+                              </p>
+                            </div>
+                            {index < steps.length - 1 && (
+                              <div className={`h-0.5 flex-1 ${lineClass}`} />
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-start gap-4">
                   <div className={`rounded-full ${paymentStatusInfo.bgColor} shrink-0 p-3`}>
                     <div className={paymentStatusInfo.color}>{paymentStatusInfo.icon}</div>
@@ -385,7 +453,10 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                 <div className="space-y-3">
                   <h3 className="font-semibold text-gray-900">Items Ordered</h3>
                   {orderDetails.lineItems.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm">
+                    <div
+                      key={`${index}-${item.productId}`}
+                      className="flex justify-between text-sm"
+                    >
                       <span className="text-gray-600">
                         {item.productName} x{item.requestedQuantity}
                       </span>
@@ -401,28 +472,26 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium text-gray-900">GHS {subTotal.toFixed(2)}</span>
+                    <span className="font-medium text-gray-900">GHS {orderDetails.amount}</span>
                   </div>
-                  {orderDetails.checkout?.amount !== null ? (
+                  {orderDetails.deliveryFee == null ? (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Delivery</span>
+                      <span className="text-xs text-blue-600">To be determined</span>
+                    </div>
+                  ) : (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Delivery</span>
                       <span className="font-medium text-gray-900">
                         GHS {deliveryFee.toFixed(2)}
                       </span>
                     </div>
-                  ) : (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Delivery</span>
-                      <span className="text-xs text-blue-600">To be determined</span>
-                    </div>
                   )}
                   <Separator />
                   <div className="flex justify-between">
                     <span className="font-semibold text-gray-900">Total</span>
                     <span className="text-lg font-bold text-green-600">
-                      {orderDetails.checkout?.amount
-                        ? `GHS ${Number(orderDetails.checkout.amount).toFixed(2)}`
-                        : 'Pending'}
+                      {total ? `GHS ${total}` : 'Pending'}
                     </span>
                   </div>
                 </div>
