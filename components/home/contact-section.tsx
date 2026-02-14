@@ -1,6 +1,6 @@
 'use client';
 
-import React, { JSX, useState } from 'react';
+import React, { JSX, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,13 +12,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { contactSchema, type ContactFormData } from '@/lib/validations/contact';
 import { contactControllerSubmitContactForm } from '@/app/api/sdk.gen';
 import { toast } from 'sonner';
+import { useAppSelector } from '@/lib/store/hooks';
+import { selectUser, selectIsAuthenticated } from '@/lib/store/features/auth/authSelectors';
 
 type ContactSectionProps = {
   className?: string;
 };
 
-export function ContactSection({ className = '' }: ContactSectionProps): JSX.Element {
+export function ContactSection({ className = '' }: Readonly<ContactSectionProps>): JSX.Element {
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Get user authentication state
+  const user = useAppSelector(selectUser);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const {
     register,
@@ -29,6 +35,19 @@ export function ContactSection({ className = '' }: ContactSectionProps): JSX.Ele
     resolver: zodResolver(contactSchema),
     mode: 'onBlur',
   });
+
+  // Pre-populate form with user data when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      reset({
+        fullName: user.name || undefined,
+        email: user.email || undefined,
+        phoneNumber: user.phoneNumber || undefined,
+        message: '',
+      });
+    }
+  }, [isAuthenticated, user, reset]);
+
   const onSubmit = async (data: ContactFormData): Promise<void> => {
     try {
       // Trim all text inputs before submission
@@ -45,7 +64,7 @@ export function ContactSection({ className = '' }: ContactSectionProps): JSX.Ele
       });
 
       if (error) {
-        throw new Error(String(error));
+        throw new Error(String(error.error));
       }
 
       // Success state
