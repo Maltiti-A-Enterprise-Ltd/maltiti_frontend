@@ -172,56 +172,54 @@ export function NavBar(): JSX.Element {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="mt-4 flex flex-col space-y-2">
-              <>
-                <Link
-                  href="/"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Home className="h-5 w-5" />
-                  <span>Home</span>
-                </Link>
-                <Link
-                  href="/#about"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Info className="h-5 w-5" />
-                  <span>About</span>
-                </Link>
-                <Link
-                  href="/shop"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <ShoppingBag className="h-5 w-5" />
-                  <span>Shop</span>
-                </Link>
-                <Link
-                  href="/blog"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <BookOpen className="h-5 w-5" />
-                  <span>Blog</span>
-                </Link>
-                <Link
-                  href="/#faqs"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <HelpCircle className="h-5 w-5" />
-                  <span>FAQs</span>
-                </Link>
-                <Link
-                  href="/#contactus"
-                  className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Phone className="h-5 w-5" />
-                  <span>Contact Us</span>
-                </Link>
-              </>
+              <Link
+                href="/"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Home className="h-5 w-5" />
+                <span>Home</span>
+              </Link>
+              <Link
+                href="/#about"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Info className="h-5 w-5" />
+                <span>About</span>
+              </Link>
+              <Link
+                href="/shop"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                <span>Shop</span>
+              </Link>
+              <Link
+                href="/blog"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <BookOpen className="h-5 w-5" />
+                <span>Blog</span>
+              </Link>
+              <Link
+                href="/#faqs"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <HelpCircle className="h-5 w-5" />
+                <span>FAQs</span>
+              </Link>
+              <Link
+                href="/#contactus"
+                className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Phone className="h-5 w-5" />
+                <span>Contact Us</span>
+              </Link>
               {/* Mobile User Links */}
               <div className="mt-6 border-t pt-4">
                 {isAuthenticated && user ? (
@@ -248,14 +246,6 @@ export function NavBar(): JSX.Element {
                       <span>My Orders</span>
                     </Link>
                     <Link
-                      href="/profile"
-                      className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <User className="h-5 w-5" />
-                      <span>Profile</span>
-                    </Link>
-                    <Link
                       href="/settings"
                       className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
                       onClick={() => setMobileMenuOpen(false)}
@@ -266,7 +256,7 @@ export function NavBar(): JSX.Element {
                     <button
                       onClick={() => {
                         setMobileMenuOpen(false);
-                        handleLogout();
+                        void handleLogout();
                       }}
                       className="hover:text-primary flex w-full items-center space-x-3 rounded-lg px-4 py-3 text-left text-lg font-medium text-red-600 transition-colors hover:bg-gray-100"
                     >

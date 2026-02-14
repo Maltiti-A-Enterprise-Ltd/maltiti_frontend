@@ -21,7 +21,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { OrderStatus, PaymentStatus, SaleResponseDto, salesControllerTrackOrder } from '@/app/api';
+import {
+  OrderStatus,
+  PaymentStatus,
+  SaleResponseDto,
+  salesControllerTrackOrder,
+  salesControllerConfirmDelivery,
+} from '@/app/api';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
@@ -140,6 +146,7 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
   const [email, setEmail] = useState(initialEmail || '');
   const [needsEmail, setNeedsEmail] = useState(!initialEmail);
   const [triedUserEmail, setTriedUserEmail] = useState(false);
+  const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
 
   // Get user authentication state
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -192,6 +199,32 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
       setIsLoading(false);
     }
   }, [saleId, email, isAuthenticated, user, triedUserEmail]);
+
+  const confirmDelivery = useCallback(async (): Promise<void> => {
+    try {
+      setIsConfirmingDelivery(true);
+      const { data, error } = await salesControllerConfirmDelivery({
+        path: { id: saleId },
+        body: { confirmed: true },
+      });
+
+      if (error || !data) {
+        throw new Error('Failed to confirm delivery');
+      }
+
+      setOrderDetails(data);
+      toast.success('Delivery Confirmed', {
+        description: 'Thank you for confirming your delivery!',
+      });
+    } catch (err) {
+      console.error('Error confirming delivery:', err);
+      toast.error('Confirmation Failed', {
+        description: 'Unable to confirm delivery. Please try again.',
+      });
+    } finally {
+      setIsConfirmingDelivery(false);
+    }
+  }, [saleId]);
 
   useEffect(() => {
     if (saleId && !initialEmail && isAuthenticated && user?.email && !triedUserEmail) {
@@ -353,7 +386,7 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                     <h3 className="mb-4 text-lg font-semibold text-gray-900">Order Progress</h3>
                     <div className="flex items-center justify-between">
                       {steps.map((step, index) => {
-                        const isCompleted = index < currentIndex;
+                        const isCompleted = index < currentIndex || index === steps.length - 1;
                         const isCurrent = index === currentIndex;
                         const iconElement = isCompleted ? (
                           <CheckCircle className="h-5 w-5 text-green-600" />
@@ -361,19 +394,15 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                           step.icon
                         );
                         let circleClass: string;
-                        if (isCompleted) {
-                          circleClass = 'bg-green-100';
-                        } else if (isCurrent) {
-                          circleClass = 'bg-blue-100 animate-pulse';
-                        } else {
-                          circleClass = 'bg-gray-100';
-                        }
                         let textColor: string;
                         if (isCompleted) {
+                          circleClass = 'bg-green-100';
                           textColor = 'text-green-600';
                         } else if (isCurrent) {
+                          circleClass = 'bg-blue-100 animate-pulse';
                           textColor = 'text-blue-600';
                         } else {
+                          circleClass = 'bg-gray-100';
                           textColor = 'text-gray-400';
                         }
                         let lineClass: string;
@@ -422,6 +451,77 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                     </p>
                   </div>
                 </div>
+
+                {/* Delivery Confirmation Section */}
+                {orderDetails.orderStatus === OrderStatus.DELIVERED &&
+                  orderDetails.confirmedDelivery !== true && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      className="rounded-lg border-2 border-dashed border-amber-200 bg-amber-50/50 p-6"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="shrink-0 rounded-full bg-amber-100 p-3">
+                          <Package className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                            Confirm Your Delivery
+                          </h3>
+                          <p className="mb-4 text-sm leading-relaxed text-gray-600">
+                            Great news! Your order has been delivered. Please confirm that
+                            you&#39;ve received your items in good condition. This helps us ensure
+                            the best service for all our customers.
+                          </p>
+                          <Button
+                            onClick={() => void confirmDelivery()}
+                            disabled={isConfirmingDelivery}
+                            className="rounded-md bg-green-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-green-700"
+                          >
+                            {isConfirmingDelivery ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Confirming...
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Confirm Delivery
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                {/* Delivery Confirmed Section */}
+                {orderDetails.orderStatus === OrderStatus.DELIVERED &&
+                  orderDetails.confirmedDelivery === true && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      className="rounded-lg border-2 border-green-200 bg-green-50/50 p-6"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="shrink-0 rounded-full bg-green-100 p-3">
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                            Delivery Confirmed
+                          </h3>
+                          <p className="text-sm leading-relaxed text-gray-600">
+                            Thank you for confirming your delivery! We&#39;re glad your order
+                            arrived arrived safely. If you have any feedback or need assistance,
+                            please hesitate to contact our support team.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
               </div>
             </CardContent>
           </Card>

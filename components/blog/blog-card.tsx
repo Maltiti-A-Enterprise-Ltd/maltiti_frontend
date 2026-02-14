@@ -12,10 +12,10 @@ type BlogCardProps = {
   post: BlogPost;
 };
 
-export function BlogCard({ post }: BlogCardProps): JSX.Element {
+export function BlogCard({ post }: Readonly<BlogCardProps>): JSX.Element {
   return (
-    <Link href={`/blog/${post.slug}`} className="group block h-full">
-      <Card className="h-full overflow-hidden border-none shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Link href={`/blog/${post.slug}`} className="group block h-full cursor-pointer">
+      <Card className="h-full overflow-hidden border-none shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#0F6938]/20 hover:shadow-xl">
         <div className="relative h-56 overflow-hidden">
           <Image
             src={post.featuredImage}
@@ -41,7 +41,7 @@ export function BlogCard({ post }: BlogCardProps): JSX.Element {
             </div>
           </div>
 
-          <h3 className="line-clamp-2 text-xl leading-tight font-bold transition-colors group-hover:text-[#0F6938]">
+          <h3 className="line-clamp-2 text-xl leading-tight font-bold transition-colors group-hover:text-[#0F6938] group-hover:underline">
             {post.title}
           </h3>
         </CardHeader>
@@ -50,6 +50,9 @@ export function BlogCard({ post }: BlogCardProps): JSX.Element {
           <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
             {post.excerpt}
           </p>
+          <div className="mt-3 flex items-center text-sm font-medium text-[#0F6938] opacity-0 transition-opacity group-hover:opacity-100">
+            Read More <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
+          </div>
         </CardContent>
 
         <CardFooter className="pt-0 pb-6">
