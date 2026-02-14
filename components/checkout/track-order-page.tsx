@@ -31,6 +31,8 @@ import {
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
+import { ReviewModal } from '@/components/reviews';
+import { Icon } from '@iconify/react';
 
 type TrackOrderPageProps = {
   saleId: string;
@@ -147,6 +149,7 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
   const [needsEmail, setNeedsEmail] = useState(!initialEmail);
   const [triedUserEmail, setTriedUserEmail] = useState(false);
   const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   // Get user authentication state
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -216,6 +219,11 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
       toast.success('Delivery Confirmed', {
         description: 'Thank you for confirming your delivery!',
       });
+
+      // Show review modal after successful confirmation
+      setTimeout(() => {
+        setShowReviewModal(true);
+      }, 1000);
     } catch (err) {
       console.error('Error confirming delivery:', err);
       toast.error('Confirmation Failed', {
@@ -514,11 +522,18 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                           <h3 className="mb-2 text-lg font-semibold text-gray-900">
                             Delivery Confirmed
                           </h3>
-                          <p className="text-sm leading-relaxed text-gray-600">
-                            Thank you for confirming your delivery! We&#39;re glad your order
-                            arrived arrived safely. If you have any feedback or need assistance,
-                            please hesitate to contact our support team.
+                          <p className="mb-4 text-sm leading-relaxed text-gray-600">
+                            Thank you for confirming your delivery! We&apos;re glad your order
+                            arrived safely. Your feedback helps us improve our service.
                           </p>
+                          <Button
+                            onClick={() => setShowReviewModal(true)}
+                            variant="outline"
+                            className="border-green-600 text-green-700 hover:bg-green-50"
+                          >
+                            <Icon icon="ph:star" className="mr-2 h-4 w-4" />
+                            Write a Review
+                          </Button>
                         </div>
                       </div>
                     </motion.div>
@@ -666,6 +681,13 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
             </Card>
           </motion.div>
         </div>
+
+        {/* Review Modal */}
+        <ReviewModal
+          isOpen={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          saleId={saleId}
+        />
       </div>
     </div>
   );
