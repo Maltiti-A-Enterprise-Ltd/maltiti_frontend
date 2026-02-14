@@ -2087,6 +2087,75 @@ export type ContactUsErrorResponseDto = {
     error: string;
 };
 
+export type CreateReviewDto = {
+    /**
+     * ID of the sale being reviewed
+     */
+    saleId: string;
+    /**
+     * Rating from 1 to 5
+     */
+    rating: number;
+    /**
+     * Title of the review
+     */
+    title?: string;
+    /**
+     * Comment or feedback text
+     */
+    comment: string;
+};
+
+export type ReviewResponseDto = {
+    /**
+     * Unique identifier of the review
+     */
+    id: string;
+    /**
+     * ID of the sale
+     */
+    saleId: string;
+    /**
+     * Customer name
+     */
+    customerName: string;
+    /**
+     * Rating given
+     */
+    rating: number;
+    /**
+     * Title of the review
+     */
+    title?: string;
+    /**
+     * Review comment
+     */
+    comment: string;
+    /**
+     * Date when the review was created
+     */
+    createdAt: string;
+    /**
+     * Date when the review was last updated
+     */
+    updatedAt: string;
+};
+
+export type UpdateReviewDto = {
+    /**
+     * Rating from 1 to 5
+     */
+    rating?: number;
+    /**
+     * Title of the review
+     */
+    title?: string;
+    /**
+     * Comment or feedback text
+     */
+    comment?: string;
+};
+
 export enum SchemaEnum {
     LOGIN = 'LOGIN',
     LOGOUT = 'LOGOUT',
@@ -5325,3 +5394,170 @@ export type ContactControllerSubmitContactFormResponses = {
 };
 
 export type ContactControllerSubmitContactFormResponse = ContactControllerSubmitContactFormResponses[keyof ContactControllerSubmitContactFormResponses];
+
+export type ReviewControllerGetAllReviewsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/reviews';
+};
+
+export type ReviewControllerGetAllReviewsResponses = {
+    /**
+     * Reviews retrieved successfully
+     */
+    200: Array<ReviewResponseDto>;
+};
+
+export type ReviewControllerGetAllReviewsResponse = ReviewControllerGetAllReviewsResponses[keyof ReviewControllerGetAllReviewsResponses];
+
+export type ReviewControllerCreateReviewData = {
+    body: CreateReviewDto;
+    path?: never;
+    query?: never;
+    url: '/reviews';
+};
+
+export type ReviewControllerCreateReviewErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+    /**
+     * Customer or Sale not found
+     */
+    404: unknown;
+};
+
+export type ReviewControllerCreateReviewResponses = {
+    /**
+     * Review created successfully
+     */
+    201: ReviewResponseDto;
+};
+
+export type ReviewControllerCreateReviewResponse = ReviewControllerCreateReviewResponses[keyof ReviewControllerCreateReviewResponses];
+
+export type ReviewControllerDeleteReviewData = {
+    body?: never;
+    path: {
+        /**
+         * Review ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/reviews/{id}';
+};
+
+export type ReviewControllerDeleteReviewErrors = {
+    /**
+     * Review not found
+     */
+    404: unknown;
+};
+
+export type ReviewControllerDeleteReviewResponses = {
+    /**
+     * Review deleted successfully
+     */
+    200: unknown;
+};
+
+export type ReviewControllerGetReviewByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Review ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/reviews/{id}';
+};
+
+export type ReviewControllerGetReviewByIdErrors = {
+    /**
+     * Review not found
+     */
+    404: unknown;
+};
+
+export type ReviewControllerGetReviewByIdResponses = {
+    /**
+     * Review retrieved successfully
+     */
+    200: ReviewResponseDto;
+};
+
+export type ReviewControllerGetReviewByIdResponse = ReviewControllerGetReviewByIdResponses[keyof ReviewControllerGetReviewByIdResponses];
+
+export type ReviewControllerUpdateReviewData = {
+    body: UpdateReviewDto;
+    path: {
+        /**
+         * Review ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/reviews/{id}';
+};
+
+export type ReviewControllerUpdateReviewErrors = {
+    /**
+     * Review not found
+     */
+    404: unknown;
+};
+
+export type ReviewControllerUpdateReviewResponses = {
+    /**
+     * Review updated successfully
+     */
+    200: ReviewResponseDto;
+};
+
+export type ReviewControllerUpdateReviewResponse = ReviewControllerUpdateReviewResponses[keyof ReviewControllerUpdateReviewResponses];
+
+export type ReviewControllerGetReviewsByCustomerData = {
+    body?: never;
+    path: {
+        /**
+         * Customer ID
+         */
+        customerId: string;
+    };
+    query?: never;
+    url: '/reviews/customer/{customerId}';
+};
+
+export type ReviewControllerGetReviewsByCustomerResponses = {
+    /**
+     * Reviews retrieved successfully
+     */
+    200: Array<ReviewResponseDto>;
+};
+
+export type ReviewControllerGetReviewsByCustomerResponse = ReviewControllerGetReviewsByCustomerResponses[keyof ReviewControllerGetReviewsByCustomerResponses];
+
+export type ReviewControllerGetReviewsBySaleData = {
+    body?: never;
+    path: {
+        /**
+         * Sale ID
+         */
+        saleId: string;
+    };
+    query?: never;
+    url: '/reviews/sale/{saleId}';
+};
+
+export type ReviewControllerGetReviewsBySaleResponses = {
+    /**
+     * Reviews retrieved successfully
+     */
+    200: Array<ReviewResponseDto>;
+};
+
+export type ReviewControllerGetReviewsBySaleResponse = ReviewControllerGetReviewsBySaleResponses[keyof ReviewControllerGetReviewsBySaleResponses];

@@ -17,7 +17,7 @@ import { TrackOrderSection } from '@/components/home/track-order-section';
 
 export default function Home(): JSX.Element {
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
+    const hash = globalThis.location.hash.slice(1);
     const element = document.getElementById(hash);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });

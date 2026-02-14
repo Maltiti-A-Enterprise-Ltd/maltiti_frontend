@@ -8,7 +8,7 @@ type PageProps = {
   params: Promise<{ saleId: string }>;
 };
 
-export default function TrackOrder({ params }: PageProps): JSX.Element {
+export default function TrackOrder({ params }: Readonly<PageProps>): JSX.Element {
   const { saleId } = use(params);
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || undefined;
