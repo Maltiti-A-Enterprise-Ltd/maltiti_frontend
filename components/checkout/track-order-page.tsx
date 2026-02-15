@@ -27,6 +27,7 @@ import {
   SaleResponseDto,
   salesControllerTrackOrder,
   salesControllerConfirmDelivery,
+  salesControllerPayForOrder,
 } from '@/app/api';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
@@ -150,6 +151,7 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
   const [triedUserEmail, setTriedUserEmail] = useState(false);
   const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [isInitializingPayment, setIsInitializingPayment] = useState(false);
 
   // Get user authentication state
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -233,6 +235,29 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
       setIsConfirmingDelivery(false);
     }
   }, [saleId]);
+
+  const handlePayNow = useCallback(async (): Promise<void> => {
+    try {
+      setIsInitializingPayment(true);
+      const { data, error } = await salesControllerPayForOrder({
+        path: { saleId },
+        query: { email },
+      });
+
+      if (error || !data) {
+        throw new Error('Failed to initialize payment');
+      }
+
+      globalThis.location.href = data.data.authorization_url;
+    } catch (err) {
+      console.error('Error initializing payment:', err);
+      toast.error('Payment Initialization Failed', {
+        description: 'Unable to start payment process. Please try again.',
+      });
+    } finally {
+      setIsInitializingPayment(false);
+    }
+  }, [saleId, email]);
 
   useEffect(() => {
     if (saleId && !initialEmail && isAuthenticated && user?.email && !triedUserEmail) {
@@ -458,6 +483,25 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                     <p className="text-sm leading-relaxed text-gray-600">
                       {paymentStatusInfo.description}
                     </p>
+                    {orderDetails.paymentStatus === PaymentStatus.PENDING_PAYMENT && (
+                      <Button
+                        onClick={() => void handlePayNow()}
+                        disabled={isInitializingPayment}
+                        className="mt-3 rounded-md bg-green-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-green-700"
+                      >
+                        {isInitializingPayment ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Initializing Payment...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Pay Now
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -673,7 +717,7 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => window.open('mailto:support@maltitiaenterprise.com')}
+                  onClick={() => globalThis.open('mailto:support@maltitiaenterprise.com')}
                 >
                   Contact Support
                 </Button>

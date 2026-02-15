@@ -1262,7 +1262,7 @@ export type CheckoutDto = {
     id: string;
     sale: SaleDto;
     carts: Array<CartDto>;
-    paystackReference: string;
+    paymentReference: string;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
@@ -1473,13 +1473,6 @@ export type SaleResponseDto = {
     deletedAt?: string;
 };
 
-export type UpdateDeliveryCostDto = {
-    /**
-     * New delivery cost amount
-     */
-    deliveryCost: number;
-};
-
 export type GuestGetDeliveryCostDto = {
     /**
      * Session ID for guest cart
@@ -1648,9 +1641,9 @@ export type SaleCheckoutDto = {
      */
     id: string;
     /**
-     * Paystack payment reference
+     * Payment reference
      */
-    paystackReference?: string;
+    paymentReference?: string;
     /**
      * Guest email (for guest checkouts)
      */
@@ -1866,6 +1859,13 @@ export type ConfirmDeliveryDto = {
      * Confirmation status for delivery
      */
     confirmed: boolean;
+};
+
+export type UpdateDeliveryCostDto = {
+    /**
+     * New delivery cost amount
+     */
+    deliveryCost: number;
 };
 
 export type CustomerResponseDto = {
@@ -4089,7 +4089,7 @@ export type CheckoutControllerPayForOrderResponses = {
      * Payment initialized successfully
      */
     200: InitializeTransactionResponseDto;
-    201: unknown;
+    201: InitializeTransactionResponseDto;
 };
 
 export type CheckoutControllerPayForOrderResponse = CheckoutControllerPayForOrderResponses[keyof CheckoutControllerPayForOrderResponses];
@@ -4114,27 +4114,6 @@ export type CheckoutControllerUpdateSaleStatusResponses = {
 };
 
 export type CheckoutControllerUpdateSaleStatusResponse = CheckoutControllerUpdateSaleStatusResponses[keyof CheckoutControllerUpdateSaleStatusResponses];
-
-export type CheckoutControllerUpdateDeliveryCostData = {
-    body: UpdateDeliveryCostDto;
-    path: {
-        /**
-         * Checkout ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/checkout/delivery-cost/{id}';
-};
-
-export type CheckoutControllerUpdateDeliveryCostResponses = {
-    /**
-     * Delivery cost updated successfully. Customer will be notified.
-     */
-    200: CheckoutResponseDto;
-};
-
-export type CheckoutControllerUpdateDeliveryCostResponse = CheckoutControllerUpdateDeliveryCostResponses[keyof CheckoutControllerUpdateDeliveryCostResponses];
 
 export type CheckoutControllerCancelOrderData = {
     body?: never;
@@ -4253,10 +4232,35 @@ export type CheckoutControllerPayForGuestOrderResponses = {
      * Payment initialized successfully
      */
     200: InitializeTransactionResponseDto;
-    201: unknown;
+    201: InitializeTransactionResponseDto;
 };
 
 export type CheckoutControllerPayForGuestOrderResponse = CheckoutControllerPayForGuestOrderResponses[keyof CheckoutControllerPayForGuestOrderResponses];
+
+export type CheckoutControllerHandleWebhookData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/checkout/webhook';
+};
+
+export type CheckoutControllerHandleWebhookErrors = {
+    /**
+     * Invalid signature
+     */
+    401: unknown;
+};
+
+export type CheckoutControllerHandleWebhookResponses = {
+    /**
+     * Webhook processed successfully
+     */
+    200: {
+        status?: string;
+    };
+};
+
+export type CheckoutControllerHandleWebhookResponse = CheckoutControllerHandleWebhookResponses[keyof CheckoutControllerHandleWebhookResponses];
 
 export type UploadControllerUploadImageData = {
     body: {
@@ -4452,9 +4456,14 @@ export type SalesControllerPayForOrderResponses = {
     /**
      * Payment initialized successfully
      */
-    200: unknown;
-    201: unknown;
+    200: InitializeTransactionResponseDto;
+    /**
+     * Payment initialized successfully
+     */
+    201: InitializeTransactionResponseDto;
 };
+
+export type SalesControllerPayForOrderResponse = SalesControllerPayForOrderResponses[keyof SalesControllerPayForOrderResponses];
 
 export type SalesControllerListSalesByEmailData = {
     body?: never;
@@ -4561,6 +4570,27 @@ export type SalesControllerConfirmDeliveryResponses = {
 };
 
 export type SalesControllerConfirmDeliveryResponse = SalesControllerConfirmDeliveryResponses[keyof SalesControllerConfirmDeliveryResponses];
+
+export type SalesControllerUpdateDeliveryCostData = {
+    body: UpdateDeliveryCostDto;
+    path: {
+        /**
+         * Sale ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/sales/{id}/delivery-cost';
+};
+
+export type SalesControllerUpdateDeliveryCostResponses = {
+    /**
+     * Delivery cost updated successfully. Customer will be notified.
+     */
+    200: SaleResponseDto;
+};
+
+export type SalesControllerUpdateDeliveryCostResponse = SalesControllerUpdateDeliveryCostResponses[keyof SalesControllerUpdateDeliveryCostResponses];
 
 export type CustomerControllerGetAllCustomersData = {
     body?: never;

@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, lazy, Suspense } from 'react';
+import { JSX, lazy, Ref, Suspense } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ type OrderSummarySectionProps = {
   onCheckout: () => void;
   buttonContent: JSX.Element;
   showInternationalNote: boolean;
+  buttonRef: Ref<HTMLButtonElement | null>;
 };
 
 const OrderSummarySection = ({
@@ -34,6 +35,7 @@ const OrderSummarySection = ({
   deliveryError,
   onRetryDelivery,
   buttonDisabled,
+  buttonRef,
   onCheckout,
   buttonContent,
   showInternationalNote,
@@ -101,6 +103,7 @@ const OrderSummarySection = ({
       )}
 
       <Button
+        ref={buttonRef}
         onClick={onCheckout}
         disabled={buttonDisabled}
         className="w-full bg-[#0F6938] text-lg font-semibold hover:bg-[#0F6938]/90"

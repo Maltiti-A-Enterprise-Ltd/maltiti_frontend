@@ -29,6 +29,7 @@ const CheckoutPage = (): JSX.Element => {
     items,
     totalPrice,
     isAuthenticated,
+    checkoutButtonRef,
 
     // Handlers
     handleLocationSubmit,
@@ -116,6 +117,7 @@ const CheckoutPage = (): JSX.Element => {
           {/* Right Column: Order Summary Section */}
           <div className="lg:sticky lg:top-8 lg:h-fit">
             <OrderSummarySection
+              buttonRef={checkoutButtonRef}
               items={items}
               totalPrice={totalPrice}
               deliveryCost={deliveryCost}

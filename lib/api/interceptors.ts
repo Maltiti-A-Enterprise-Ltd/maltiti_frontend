@@ -77,9 +77,10 @@ const refreshAccessToken = async (): Promise<boolean> => {
 const handleSessionExpiry = (): void => {
   // Clear user from store
   store.dispatch(clearUser());
+  sessionStorage.clear();
 
   // Store current URL to redirect back after login
-  const currentPath = window.location.pathname + window.location.search;
+  const currentPath = globalThis.location.pathname + globalThis.location.search;
 
   // Don't save auth pages as return URL
   const authPages = ['/auth/login', '/auth/signup', '/auth/verify', '/auth/resend-verification'];
@@ -93,10 +94,10 @@ const handleSessionExpiry = (): void => {
   const event = new CustomEvent('session-expired', {
     detail: { message: 'Your session has expired. Please login again to continue.' },
   });
-  window.dispatchEvent(event);
+  globalThis.dispatchEvent(event);
 
   // Redirect to login page
-  window.location.href = '/auth/login';
+  globalThis.location.href = '/auth/login';
 };
 
 /**
