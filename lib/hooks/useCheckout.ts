@@ -364,7 +364,7 @@ export const useCheckout = (): UseCheckoutReturn => {
 
           // Redirect to order tracking page
           setTimeout(() => {
-            router.push(`/track-order/${data.data.id}`);
+            router.push(`/track-order/${data.data.sale.id}`);
           }, 2000);
         } else {
           // Normal flow: proceed to payment
