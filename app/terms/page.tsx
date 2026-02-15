@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import { REFUND_TIMELINE } from '@/lib/constants/refund-config';
+
 interface TermItem {
   title: string;
   content: string;
@@ -36,35 +38,39 @@ const termsData: TermItem[] = [
     content: `We ship across Ghana and internationally\n\nDelivery timelines vary depending on destination and logistics partners\n\nCustomers are responsible for providing accurate shipping information\n\nMaltiti A. Enterprise Ltd is not liable for delays caused by customs, port authorities, or third-party carriers`,
   },
   {
-    title: '5. Returns & Refunds',
+    title: '5. Order Cancellation',
+    content: `Orders can be cancelled through the order tracking page with the following conditions:\n\n• **Pending Orders**: Can be cancelled with full refund\n\n• **Processing/Packaging Orders**: If payment has been made, cancellation incurs a 10% penalty fee\n\n• **In Transit or Delivered Orders**: Cannot be cancelled. Please contact support for assistance\n\nRefunds for cancelled orders are processed within ${REFUND_TIMELINE}. The 10% penalty fee covers processing and administrative costs.`,
+  },
+  {
+    title: '6. Returns & Refunds',
     content: `Due to the nature of our products:\n\nReturns are accepted only for damaged, incorrect, or contaminated goods\n\nClaims must be reported within 48 hours of delivery\n\nRefunds or replacements are handled on a case-by-case basis\n\nCustom, bulk, or export orders are generally non-refundable unless otherwise agreed in writing.`,
   },
   {
-    title: '6. Quality Assurance',
+    title: '7. Quality Assurance',
     content:
       'We maintain strict quality control standards. Certifications such as FDA, GSA, and others apply to specific products and batches as applicable.\n\nNatural variations in color, texture, or scent do not constitute defects.',
   },
   {
-    title: '7. Intellectual Property',
+    title: '8. Intellectual Property',
     content:
       'All website content including text, images, logos, and designs belongs to Maltiti A. Enterprise Ltd and may not be reproduced without written permission.',
   },
   {
-    title: '8. Limitation of Liability',
+    title: '9. Limitation of Liability',
     content: `Maltiti A. Enterprise Ltd shall not be liable for:\n\nIndirect or consequential damages\n\nLosses resulting from misuse of products\n\nDelays beyond our reasonable control\n\nOur liability, where applicable, shall not exceed the value of the purchased product.`,
   },
   {
-    title: '9. Governing Law',
+    title: '10. Governing Law',
     content:
       'These Terms & Conditions are governed by the laws of the Republic of Ghana. Any disputes shall be resolved under Ghanaian jurisdiction.',
   },
   {
-    title: '10. Changes to Terms',
+    title: '11. Changes to Terms',
     content:
       'We reserve the right to modify these Terms & Conditions at any time. Continued use of the website constitutes acceptance of updated terms.',
   },
   {
-    title: '11. Contact Information',
+    title: '12. Contact Information',
     content:
       'For questions regarding these Terms & Conditions, please contact us at [email] or [phone].',
   },

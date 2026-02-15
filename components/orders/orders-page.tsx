@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { checkoutControllerGetOrders, type CheckoutDto } from '@/app/api';
 import { toast } from 'sonner';
+import { REFUND_TIMELINE } from '@/lib/constants/refund-config';
 
 const OrdersPage = (): JSX.Element => {
   const router = useRouter();
@@ -295,7 +296,9 @@ const OrdersPage = (): JSX.Element => {
                     {order.sale.paymentStatus.toLowerCase() === 'refunded' && (
                       <div className="rounded-lg border border-red-200 bg-red-50 p-3">
                         <p className="text-sm text-red-800">
-                          This order has been refunded. Please contact support if you have any
+                          This order has been refunded. Approved refunds typically take{' '}
+                          {REFUND_TIMELINE}
+                          to reflect in your account. Please contact support if you have any
                           questions.
                         </p>
                       </div>
