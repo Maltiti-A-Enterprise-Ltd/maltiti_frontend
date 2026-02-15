@@ -267,10 +267,12 @@ const OrdersPage = (): JSX.Element => {
                     </div>
 
                     {/* Show payment reference if available */}
-                    {order.paystackReference && (
+                    {order.sale.paymentReference && (
                       <div className="rounded-lg border border-gray-200 bg-white p-3">
                         <p className="text-xs text-gray-500">Payment Reference</p>
-                        <p className="font-mono text-sm text-gray-900">{order.paystackReference}</p>
+                        <p className="font-mono text-sm text-gray-900">
+                          {order.sale.paymentReference}
+                        </p>
                       </div>
                     )}
 

@@ -1281,6 +1281,7 @@ export type SaleLineItemDto = {
 
 export type SaleDto = {
     id: string;
+    paymentReference?: string;
     customer: CustomerDto;
     checkout: CheckoutDto;
     orderStatus: OrderStatus;
