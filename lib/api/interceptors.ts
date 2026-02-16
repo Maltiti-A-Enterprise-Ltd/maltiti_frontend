@@ -10,7 +10,7 @@ let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value: Response) => void;
   reject: (reason?: unknown) => void;
-  response: Response;
+  options: ResolvedRequestOptions;
 }> = [];
 
 const processQueue = (error: Error | null): void => {
@@ -18,7 +18,18 @@ const processQueue = (error: Error | null): void => {
     if (error) {
       promise.reject(error);
     } else {
-      promise.resolve(promise.response);
+      console.log('Retrying queued request for URL:', promise.options.url);
+      // Set retry to true to prevent infinite loops
+      promise.options._retry = true;
+      // Re-run the request with the new token
+      client
+        .request(promise.options as Parameters<typeof client.request>[0])
+        .then((result) => {
+          promise.resolve(result.response);
+        })
+        .catch((err) => {
+          promise.reject(err);
+        });
     }
   });
   failedQueue = [];
@@ -113,9 +124,7 @@ export const setupInterceptors = (): void => {
     // Add Authorization header if token exists and not an auth endpoint
     if (accessToken && !isAuthEndpoint(options.url || '')) {
       console.log('Adding Authorization header');
-      if (!options.headers) {
-        options.headers = new Headers();
-      }
+      options.headers ??= new Headers();
       if (options.headers instanceof Headers) {
         options.headers.set('Authorization', `Bearer ${accessToken}`);
       } else if (typeof options.headers === 'object') {
@@ -143,17 +152,10 @@ export const setupInterceptors = (): void => {
 
     // If currently refreshing, queue this request
     if (isRefreshing) {
+      console.log('Token refresh in progress, queuing request:', originalRequest.url);
       return new Promise<Response>((resolve, reject) => {
-        failedQueue.push({ resolve, reject, response });
-      })
-        .then(
-          () =>
-            // Do not retry the request - return the 401 response as is
-            response,
-        )
-        .catch((err) => {
-          throw err;
-        });
+        failedQueue.push({ resolve, reject, options: originalRequest });
+      });
     }
 
     // Mark as retrying and attempt to refresh
@@ -164,12 +166,16 @@ export const setupInterceptors = (): void => {
       const refreshSuccess = await refreshAccessToken();
 
       if (refreshSuccess) {
+        console.log('Token refresh successful, processing queue and retrying original request');
         // Token refreshed successfully, process queued requests
         processQueue(null);
         isRefreshing = false;
 
-        // Do not retry the original request - return the 401 response as is
-        return response;
+        // Retry the original request
+        const result = await client.request(
+          originalRequest as Parameters<typeof client.request>[0],
+        );
+        return result.response;
       }
       // Token refresh failed, clear queue and handle session expiry
       processQueue(new Error('Token refresh failed'));
