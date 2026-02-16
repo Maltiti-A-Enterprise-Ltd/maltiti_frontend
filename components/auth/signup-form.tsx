@@ -16,9 +16,10 @@ import { selectSignupLoading, selectSignupError, signup } from '@/lib/store/feat
 
 interface SignupFormProps {
   onSuccess?: () => void;
+  redirect?: string | null;
 }
 
-export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
+export function SignupForm({ onSuccess, redirect }: Readonly<SignupFormProps>): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isAuthLoading = useAppSelector(selectSignupLoading);
@@ -31,11 +32,25 @@ export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: 'onChange',
   });
+
+  const password = watch('password') || '';
+
+  const requirements = [
+    { label: 'At least 8 characters', check: (p: string): boolean => p.length >= 8 },
+    { label: 'One uppercase letter', check: (p: string): boolean => /[A-Z]/.test(p) },
+    { label: 'One lowercase letter', check: (p: string): boolean => /[a-z]/.test(p) },
+    { label: 'One number', check: (p: string): boolean => /\d/.test(p) },
+    {
+      label: 'One special character',
+      check: (p: string): boolean => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(p),
+    },
+  ];
 
   const onSubmit = async (data: SignupFormData): Promise<void> => {
     try {
@@ -50,7 +65,10 @@ export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
 
       // Redirect to email verification notice after 2 seconds
       setTimeout(() => {
-        router.push('/auth/verify-email');
+        const verifyEmailUrl = redirect
+          ? `/auth/verify-email?redirect=${encodeURIComponent(redirect)}`
+          : '/auth/verify-email';
+        router.push(verifyEmailUrl);
       }, 2000);
     } catch (error: unknown) {
       // Error is handled by Redux state
@@ -171,14 +189,21 @@ export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
       </div>
 
       {/* Password Requirements */}
-      <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-600">
-        <p className="mb-2 font-medium">Password must contain:</p>
+      <div className="rounded-lg bg-gray-50 p-4">
+        <p className="mb-2 text-xs font-medium text-gray-600">Password must contain:</p>
         <ul className="space-y-1 pl-4">
-          <li>• At least 8 characters</li>
-          <li>• One uppercase letter</li>
-          <li>• One lowercase letter</li>
-          <li>• One number</li>
-          <li>• One special character</li>
+          {requirements.map((req, index) => (
+            <li key={`${index}-${req.label}`} className="flex items-center text-xs">
+              {req.check(password) ? (
+                <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
+              ) : (
+                <div className="mr-2 h-3 w-3 rounded-full border border-gray-400"></div>
+              )}
+              <span className={req.check(password) ? 'text-green-600' : 'text-gray-600'}>
+                {req.label}
+              </span>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -201,7 +226,10 @@ export function SignupForm({ onSuccess }: SignupFormProps): JSX.Element {
       {/* Login Link */}
       <p className="text-center text-sm text-gray-600">
         Already have an account?{' '}
-        <Link href="/auth/login" className="font-medium text-green-600 hover:text-green-700">
+        <Link
+          href={redirect ? `/auth/login?redirect=${encodeURIComponent(redirect)}` : '/auth/login'}
+          className="font-medium text-green-600 hover:text-green-700"
+        >
           Log In
         </Link>
       </p>
