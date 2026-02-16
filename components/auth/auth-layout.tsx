@@ -16,7 +16,12 @@ interface AuthLayoutProps {
   footer?: React.ReactNode;
 }
 
-export function AuthLayout({ children, title, subtitle, footer }: AuthLayoutProps): JSX.Element {
+export function AuthLayout({
+  children,
+  title,
+  subtitle,
+  footer,
+}: Readonly<AuthLayoutProps>): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,9 +41,9 @@ export function AuthLayout({ children, title, subtitle, footer }: AuthLayoutProp
         transition={{ duration: 0.5 }}
         className="flex w-full flex-col justify-center px-6 py-12 max-lg:mt-16 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24"
       >
-        <div className="mx-auto w-full max-w-md">
+        <div className="mx-auto w-full max-w-md md:mt-10">
           {/* Logo */}
-          <Link href="/" className="mb-8 flex items-center justify-center lg:justify-start">
+          <Link href="/" className="mb-5 flex items-center justify-center lg:justify-start">
             <Image src={CompanyLogo} alt="Maltiti Logo" width={60} height={60} priority />
           </Link>
 

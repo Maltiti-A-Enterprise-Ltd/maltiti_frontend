@@ -103,7 +103,7 @@ const GuestAuthPrompt = ({ onContinueAsGuest }: GuestAuthPromptProps): JSX.Eleme
           {/* Action Buttons */}
           <div className="grid gap-4 sm:grid-cols-2">
             <Button
-              onClick={() => router.push('/auth/login')}
+              onClick={() => router.push('/auth/login?redirect=/checkout')}
               variant="outline"
               className="h-12 border-2 border-green-600 bg-white text-base font-semibold text-green-700 transition-all hover:bg-green-50 hover:text-green-800"
             >
@@ -112,7 +112,7 @@ const GuestAuthPrompt = ({ onContinueAsGuest }: GuestAuthPromptProps): JSX.Eleme
             </Button>
 
             <Button
-              onClick={() => router.push('/auth/signup')}
+              onClick={() => router.push('/auth/signup?redirect=/checkout')}
               variant="outline"
               className="h-12 border-2 border-green-600 bg-white text-base font-semibold text-green-700 transition-all hover:bg-green-50 hover:text-green-800"
             >

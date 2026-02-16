@@ -10,6 +10,7 @@ import {
   DeliverySection,
   OrderSummarySection,
 } from '@/components/checkout';
+import LoadingOverlay from '@/components/loadingOverlay/loadingOverlay';
 
 const CheckoutPage = (): JSX.Element => {
   const router = useRouter();
@@ -82,7 +83,7 @@ const CheckoutPage = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
-      <div className="mx-auto max-w-7xl">
+      <div className="relative mx-auto max-w-7xl">
         <CheckoutHeader
           onBack={() => router.back()}
           title="Checkout"
@@ -133,6 +134,7 @@ const CheckoutPage = (): JSX.Element => {
             />
           </div>
         </div>
+        {isCalculatingDelivery && <LoadingOverlay message="Calculating your delivery fees..." />}
       </div>
     </div>
   );

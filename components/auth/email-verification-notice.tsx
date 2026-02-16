@@ -9,12 +9,14 @@ import { Button } from '@/components/ui/button';
 interface EmailVerificationNoticeProps {
   email?: string;
   onResend?: () => Promise<void>;
+  redirect?: string | null;
 }
 
 export function EmailVerificationNotice({
   email,
   onResend,
-}: EmailVerificationNoticeProps): JSX.Element {
+  redirect,
+}: Readonly<EmailVerificationNoticeProps>): JSX.Element {
   const [isResending, setIsResending] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
   const [resendError, setResendError] = useState<string>('');
@@ -40,6 +42,31 @@ export function EmailVerificationNotice({
       setIsResending(false);
     }
   };
+
+  const sendingContent: JSX.Element = (
+    <>
+      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+      Sending...
+    </>
+  );
+
+  const sentContent: JSX.Element = (
+    <>
+      <CheckCircle2 className="mr-2 h-5 w-5" />
+      Email Sent
+    </>
+  );
+
+  const defaultContent: string = 'Resend Verification Email';
+
+  let buttonContent: JSX.Element | string;
+  if (isResending) {
+    buttonContent = sendingContent;
+  } else if (resendSuccess) {
+    buttonContent = sentContent;
+  } else {
+    buttonContent = defaultContent;
+  }
 
   return (
     <div className="space-y-6">
@@ -124,24 +151,16 @@ export function EmailVerificationNotice({
             variant="outline"
             className="w-full rounded-lg py-6"
           >
-            {isResending ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Sending...
-              </>
-            ) : resendSuccess ? (
-              <>
-                <CheckCircle2 className="mr-2 h-5 w-5" />
-                Email Sent
-              </>
-            ) : (
-              'Resend Verification Email'
-            )}
+            {buttonContent}
           </Button>
         )}
 
         <Button asChild variant="outline" className="w-full rounded-lg py-6">
-          <Link href="/auth/login">Back to Login</Link>
+          <Link
+            href={redirect ? `/auth/login?redirect=${encodeURIComponent(redirect)}` : '/auth/login'}
+          >
+            Back to Login
+          </Link>
         </Button>
       </div>
     </div>
