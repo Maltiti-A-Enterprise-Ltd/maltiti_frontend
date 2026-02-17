@@ -191,6 +191,27 @@ export function ShopContent(): JSX.Element {
     [updateFilters],
   );
 
+  const renderResultsCount = (): JSX.Element | null => {
+    if (isLoading) {
+      return <span>Loading products...</span>;
+    }
+
+    if (!productsData) {
+      return null;
+    }
+
+    return (
+      <span>
+        Showing{' '}
+        <strong>
+          {(productsData.currentPage - 1) * filters.limit + 1}–
+          {Math.min(productsData.currentPage * filters.limit, productsData.totalItems)}
+        </strong>{' '}
+        of <strong>{productsData.totalItems}</strong> products
+      </span>
+    );
+  };
+
   return (
     <div className="mt-10 min-h-screen bg-gray-50">
       {/* Header Section */}
@@ -306,23 +327,10 @@ export function ShopContent(): JSX.Element {
             {/* Toolbar */}
             <div className="mb-6 flex items-center justify-between gap-4">
               {/* Results Count */}
-              <div className="text-sm text-gray-600">
-                {isLoading ? (
-                  <span>Loading products...</span>
-                ) : productsData ? (
-                  <span>
-                    Showing{' '}
-                    <strong>
-                      {(productsData.currentPage - 1) * filters.limit + 1}–
-                      {Math.min(productsData.currentPage * filters.limit, productsData.totalItems)}
-                    </strong>{' '}
-                    of <strong>{productsData.totalItems}</strong> products
-                  </span>
-                ) : null}
-              </div>
+              <div className="text-sm text-gray-600">{renderResultsCount()}</div>
 
               {/* Mobile Filter Button */}
-              <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+              <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen} modal={false}>
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="lg:hidden">
                     <Icon icon="ph:funnel" className="h-4 w-4" />
@@ -334,14 +342,22 @@ export function ShopContent(): JSX.Element {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-full sm:max-w-md">
-                  <SheetHeader>
+                <SheetContent
+                  side="left"
+                  className="flex w-full flex-col gap-0 p-0 sm:max-w-md"
+                  data-lenis-prevent
+                  onOpenAutoFocus={(e): void => e.preventDefault()}
+                >
+                  <SheetHeader className="border-b border-gray-200 p-4 pb-3">
                     <SheetTitle>Filter Products</SheetTitle>
                     <SheetDescription>
                       Refine your search to find the perfect products
                     </SheetDescription>
                   </SheetHeader>
-                  <div className="mt-6">
+                  <div
+                    className="flex-1 touch-pan-y overflow-y-auto overscroll-contain p-4"
+                    data-lenis-prevent
+                  >
                     <ProductFilters
                       filters={filters}
                       onFilterChangeAction={(newFilters) => {
