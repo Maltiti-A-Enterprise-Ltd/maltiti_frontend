@@ -16,7 +16,7 @@ type ProductInfoSectionProps = {
   product: ProductResponseDto;
 };
 
-export function ProductInfoSection({ product }: ProductInfoSectionProps): JSX.Element {
+export function ProductInfoSection({ product }: Readonly<ProductInfoSectionProps>): JSX.Element {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const { addItem, isAdding } = useCart();
@@ -129,7 +129,7 @@ export function ProductInfoSection({ product }: ProductInfoSectionProps): JSX.El
         {/* Category Badge */}
         <Badge variant="outline" className="gap-1.5">
           <Icon icon="ph:tag" className="h-4 w-4" />
-          {product.category.replace(/_/g, ' ')}
+          {product.category.replaceAll('_', ' ')}
         </Badge>
 
         {/* Status Badge */}
@@ -224,7 +224,7 @@ export function ProductInfoSection({ product }: ProductInfoSectionProps): JSX.El
                 id="quantity"
                 type="number"
                 value={quantity}
-                onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                onChange={(e) => handleQuantityChange(Number.parseInt(e.target.value) || 1)}
                 disabled={isUnavailable}
                 className="text-foreground h-12 w-20 border-none bg-transparent text-center text-lg font-medium focus:outline-none disabled:cursor-not-allowed"
                 min="1"
@@ -306,7 +306,9 @@ export function ProductInfoSection({ product }: ProductInfoSectionProps): JSX.El
           <Icon icon="ph:package" className="text-muted-foreground h-5 w-5" />
           <div className="flex-1">
             <p className="text-muted-foreground text-sm">Unit of Measurement</p>
-            <p className="text-foreground font-medium">{product.unitOfMeasurement.toUpperCase()}</p>
+            <p className="text-foreground font-medium">
+              {product.unitOfMeasurement?.toUpperCase()}
+            </p>
           </div>
         </div>
       </div>
