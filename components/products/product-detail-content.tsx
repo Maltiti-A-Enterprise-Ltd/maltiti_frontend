@@ -25,17 +25,16 @@ type ProductDetailContentProps = {
 export function ProductDetailContent({
   product,
   relatedProducts,
-}: ProductDetailContentProps): JSX.Element {
+}: Readonly<ProductDetailContentProps>): JSX.Element {
   // Get product images
+  const defaultImageList = product.image ? [product.image] : ['/placeholder-product.svg'];
   const productImages =
     product.images && product.images.length > 0
       ? [product.image, ...product.images]
-      : product.image
-        ? [product.image]
-        : ['/placeholder-product.svg'];
+      : defaultImageList;
 
   return (
-    <div className="container mx-auto mt-5 px-4 py-8">
+    <div className="container mx-auto mt-20 px-4 py-8">
       {/* Breadcrumb Navigation */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -63,7 +62,7 @@ export function ProductDetailContent({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link href={`/shop?category=${product.category}`}>
-                  {product.category.replace(/_/g, ' ')}
+                  {product.category.replaceAll('_', ' ')}
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>

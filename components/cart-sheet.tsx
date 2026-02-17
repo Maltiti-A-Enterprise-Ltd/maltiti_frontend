@@ -6,7 +6,7 @@ import { ShoppingCartIcon, ShoppingCart, Minus, Plus, Trash2, Loader2 } from 'lu
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCart } from '@/lib/store/useCart';
 import { ProductPlaceholder } from '@/app/assets';
@@ -29,12 +29,9 @@ const CartSheet = (): JSX.Element => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [optimisticQuantities, setOptimisticQuantities] = useState<Record<string, number>>({});
   const debounceTimers = useRef<Record<string, NodeJS.Timeout>>({});
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const isCartLoading = isLoading || isFetching;
-
-  const toggleCart = (): void => setIsCartOpen(!isCartOpen);
 
   const handleCheckout = (): void => {
     setIsCartOpen(false);
@@ -85,14 +82,6 @@ const CartSheet = (): JSX.Element => {
   const getDisplayQuantity = (itemId: string, actualQuantity: number): number =>
     optimisticQuantities[itemId] ?? actualQuantity;
 
-  const resetScrollStyles = (): void => {
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-    document.body.style.position = '';
-    document.body.style.width = '';
-  };
-
   useEffect(
     () => (): void => {
       Object.values(debounceTimers.current).forEach((timer) => clearTimeout(timer));
@@ -104,45 +93,10 @@ const CartSheet = (): JSX.Element => {
     getCart();
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    resetScrollStyles(); // Always reset styles first
-    if (isCartOpen) {
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-      // Prevent touch scrolling on mobile
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-
-      // Prevent wheel events from propagating to body
-      const handleWheel = (e: WheelEvent): void => {
-        const target = scrollContainerRef.current;
-        if (target) {
-          const { scrollTop, scrollHeight, clientHeight } = target;
-          const isAtTop = scrollTop === 0;
-          const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-          // Prevent default if trying to scroll beyond boundaries
-          if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
-            e.preventDefault();
-          }
-        }
-      };
-
-      document.addEventListener('wheel', handleWheel, { passive: false });
-
-      return (): void => {
-        resetScrollStyles();
-        document.removeEventListener('wheel', handleWheel);
-      };
-    }
-  }, [isCartOpen]);
-
   const renderCartContent = (): JSX.Element => {
     if (isCartLoading) {
       return (
-        <div className="space-y-4 px-4 py-4">
+        <div className="flex flex-1 flex-col gap-4 px-4 py-4">
           <div className="flex items-center justify-center gap-2 py-8 text-gray-600">
             <Loader2 className="h-5 w-5 animate-spin" />
             <span className="text-sm">Loading your cart...</span>
@@ -168,7 +122,7 @@ const CartSheet = (): JSX.Element => {
       );
     } else if (items.length === 0) {
       return (
-        <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center">
           <div className="animate-bounce">
             <ShoppingCart className="h-24 w-24 text-gray-400" />
           </div>
@@ -189,8 +143,8 @@ const CartSheet = (): JSX.Element => {
     return (
       <>
         <div
-          ref={scrollContainerRef}
           className="flex-1 touch-pan-y overflow-y-auto overscroll-contain px-4 py-4"
+          data-lenis-prevent
         >
           <div className="mb-4 text-sm text-gray-700">{totalItems} Products in your cart</div>
           <ul className="space-y-4">
@@ -259,34 +213,28 @@ const CartSheet = (): JSX.Element => {
   };
 
   return (
-    <>
-      {/* Cart Icon Button */}
-      <button
-        className="relative w-fit cursor-pointer border-none bg-transparent"
-        onClick={toggleCart}
-      >
-        <Avatar className="size-9 rounded-sm">
-          <AvatarFallback className="rounded-full">
-            <ShoppingCartIcon className="size-5" />
-          </AvatarFallback>
-        </Avatar>
-        {totalItems > 0 && (
-          <Badge className="absolute -top-2.5 -right-2.5 h-5 min-w-5 px-1 tabular-nums">
-            {totalItems}
-          </Badge>
-        )}
-      </button>
-
-      {/* Cart Sheet */}
-      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-        <SheetContent side="right" className="flex w-96 flex-col bg-green-50 p-0">
-          <SheetHeader className="border-b border-gray-200 p-4 pb-3">
-            <SheetTitle>Your Cart</SheetTitle>
-          </SheetHeader>
-          <div className="flex flex-1 flex-col overflow-hidden">{renderCartContent()}</div>
-        </SheetContent>
-      </Sheet>
-    </>
+    <Sheet open={isCartOpen} onOpenChange={setIsCartOpen} modal={true}>
+      <SheetTrigger asChild>
+        <button type="button" className="relative w-fit cursor-pointer border-none bg-transparent">
+          <Avatar className="size-9 rounded-sm">
+            <AvatarFallback className="rounded-full">
+              <ShoppingCartIcon className="size-5" />
+            </AvatarFallback>
+          </Avatar>
+          {totalItems > 0 && (
+            <Badge className="absolute -top-2.5 -right-2.5 h-5 min-w-5 px-1 tabular-nums">
+              {totalItems}
+            </Badge>
+          )}
+        </button>
+      </SheetTrigger>
+      <SheetContent side="right" className="flex w-96 flex-col gap-0 bg-green-50 p-0">
+        <SheetHeader className="border-b border-gray-200 p-4 pb-3">
+          <SheetTitle>Your Cart</SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-1 flex-col overflow-hidden">{renderCartContent()}</div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         `Buy ${product.name} from Maltiti A. Enterprise Ltd. Premium organic products from Northern Ghana.`,
       keywords: [
         product.name,
-        product.category.replace(/_/g, ' '),
+        product.category.replaceAll('_', ' '),
         'organic',
         'Ghana',
         'Northern Ghana',
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         title: `${product.name} | Maltiti A. Enterprise Ltd`,
         description:
           product.description ||
-          `Premium ${product.category.replace(/_/g, ' ')} from Northern Ghana`,
+          `Premium ${product.category.replaceAll('_', ' ')} from Northern Ghana`,
         type: 'website',
         images: [
           {
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         title: `${product.name} | Maltiti A. Enterprise Ltd`,
         description:
           product.description ||
-          `Premium ${product.category.replace(/_/g, ' ')} from Northern Ghana`,
+          `Premium ${product.category.replaceAll('_', ' ')} from Northern Ghana`,
         images: [product.image || product.images?.[0] || '/placeholder-product.svg'],
       },
     };
@@ -113,11 +113,13 @@ async function getProductData(id: string): Promise<{
   }
 }
 
-export default async function ProductPage({ params }: ProductPageProps): Promise<JSX.Element> {
+export default async function ProductPage({
+  params,
+}: Readonly<ProductPageProps>): Promise<JSX.Element> {
   const { id } = await params;
   const data = await getProductData(id);
 
-  if (!data || !data.product) {
+  if (!data?.product) {
     notFound();
   }
 
