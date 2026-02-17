@@ -161,17 +161,28 @@ export function NavBar(): JSX.Element {
       <div className="hidden items-center md:flex">{desktopNavLinks}</div>
       {/* Mobile Container */}
       <div className="flex items-center md:hidden">
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} modal={true}>
           <SheetTrigger asChild>
-            <button className="text-primary z-20 mr-4 transition duration-300 hover:text-black focus:outline-none md:hidden">
+            <button
+              type="button"
+              className="text-primary z-20 mr-4 transition duration-300 hover:text-black focus:outline-none md:hidden"
+            >
               <Menu className="h-6 w-6" />
             </button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-80">
-            <SheetHeader>
+          <SheetContent
+            side="left"
+            className="flex w-80 flex-col gap-0 p-0"
+            data-lenis-prevent
+            onOpenAutoFocus={(e): void => e.preventDefault()}
+          >
+            <SheetHeader className="border-b border-gray-200 p-4 pb-3">
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="mt-4 flex flex-col space-y-2">
+            <div
+              className="mt-4 flex flex-1 touch-pan-y flex-col space-y-2 overflow-y-auto overscroll-contain p-4 pt-0"
+              data-lenis-prevent
+            >
               <Link
                 href="/"
                 className="hover:text-primary flex items-center space-x-3 rounded-lg px-4 py-3 text-lg font-medium text-gray-700 transition-colors hover:bg-gray-100"
