@@ -19,11 +19,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { AboutUsCEO, SvgDecoratorBlob2, SvgDecoratorBlob4 } from '@/app/assets';
 
-type AboutUsSectionProps = Record<string, never>;
-
-export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
+export function AboutUsSection(): JSX.Element {
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
@@ -206,7 +205,9 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
                 transition={{ delay: 0.5 }}
               >
                 <div className="text-center">
-                  <div className="text-3xl font-bold sm:text-4xl">22+</div>
+                  <div className="text-3xl font-bold sm:text-4xl">
+                    <AnimatedCounter value="22+" />
+                  </div>
                   <div className="text-sm sm:text-base">Years of Excellence</div>
                 </div>
               </motion.div>
@@ -262,24 +263,21 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
           variants={staggerChildren}
         >
           <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-            {impactStats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                >
-                  <Card className="border-none bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl">
-                    <Icon className={`mx-auto mb-3 h-8 w-8 ${stat.color}`} />
-                    <div className="mb-1 text-3xl font-bold text-gray-900 sm:text-4xl">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-gray-600 sm:text-base">{stat.label}</div>
-                  </Card>
-                </motion.div>
-              );
-            })}
+            {impactStats.map(({ icon: Icon, value, label, color }, index) => (
+              <motion.div
+                key={`${index}-${value}`}
+                variants={fadeInUp}
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+              >
+                <Card className="border-none bg-white p-6 text-center shadow-lg transition-shadow hover:shadow-xl">
+                  <Icon className={`mx-auto mb-3 h-8 w-8 ${color}`} />
+                  <div className="mb-1 text-3xl font-bold text-gray-900 sm:text-4xl">
+                    <AnimatedCounter value={value} />
+                  </div>
+                  <div className="text-sm text-gray-600 sm:text-base">{label}</div>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
@@ -323,7 +321,7 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
                 <h3 className="mb-3 text-2xl font-bold">What We Do</h3>
                 <ul className="space-y-2 text-sm leading-relaxed">
                   {products.slice(0, 3).map((product, index) => (
-                    <li key={index} className="flex items-start gap-2">
+                    <li key={`${index}-${product}`} className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
                       <span>{product}</span>
                     </li>
@@ -359,7 +357,7 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
           >
             {products.map((product, index) => (
               <motion.div
-                key={index}
+                key={`${index}-${product}`}
                 variants={fadeInUp}
                 whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
               >
@@ -391,26 +389,23 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
             variants={staggerChildren}
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
           >
-            {values.map((value, index) => {
-              const Icon = value.icon;
-              return (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <Card className="h-full border-none bg-white p-6 text-center shadow-lg transition-all hover:shadow-xl">
-                    <div className="mb-4 flex justify-center">
-                      <div className="rounded-full bg-green-100 p-4">
-                        <Icon className="h-8 w-8 text-green-600" />
-                      </div>
+            {values.map(({ icon: Icon, title, description }, index) => (
+              <motion.div
+                key={`${index}-${title}`}
+                variants={fadeInUp}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <Card className="h-full border-none bg-white p-6 text-center shadow-lg transition-all hover:shadow-xl">
+                  <div className="mb-4 flex justify-center">
+                    <div className="rounded-full bg-green-100 p-4">
+                      <Icon className="h-8 w-8 text-green-600" />
                     </div>
-                    <h4 className="mb-2 text-lg font-bold text-gray-900">{value.title}</h4>
-                    <p className="text-sm leading-relaxed text-gray-600">{value.description}</p>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                  </div>
+                  <h4 className="mb-2 text-lg font-bold text-gray-900">{title}</h4>
+                  <p className="text-sm leading-relaxed text-gray-600">{description}</p>
+                </Card>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
 
@@ -438,7 +433,7 @@ export function AboutUsSection({}: AboutUsSectionProps): JSX.Element {
                   <div className="flex flex-wrap gap-2">
                     {certifications.map((cert, index) => (
                       <Badge
-                        key={index}
+                        key={`${index}-${cert}`}
                         className="bg-green-600 px-3 py-1 text-white hover:bg-green-700"
                       >
                         {cert}

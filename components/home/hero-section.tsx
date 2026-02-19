@@ -17,10 +17,9 @@ import {
   SvgDecoratorBlob5,
   SvgDecoratorBlob7,
 } from '@/app/assets';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 
-type HeroSectionProps = Record<string, never>;
-
-export function HeroSection({}: HeroSectionProps): JSX.Element {
+export function HeroSection(): JSX.Element {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const fadeInUp = {
@@ -143,11 +142,15 @@ export function HeroSection({}: HeroSectionProps): JSX.Element {
               className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 lg:pt-8"
             >
               <div>
-                <div className="text-2xl font-bold text-green-600 sm:text-3xl">100%</div>
+                <div className="text-2xl font-bold text-green-600 sm:text-3xl">
+                  <AnimatedCounter value="100%" />
+                </div>
                 <div className="text-sm text-gray-600">Organic</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-600 sm:text-3xl">1000+</div>
+                <div className="text-2xl font-bold text-green-600 sm:text-3xl">
+                  <AnimatedCounter value="1000+" />
+                </div>
                 <div className="text-sm text-gray-600">Families</div>
               </div>
               <div>
