@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { GuestCartState } from './cartState';
-import type { CartProductDto, ProductResponseDto, CartDataDto } from '@/app/api';
+import type { CartProductDto, ProductResponseDto } from '@/app/api';
 import { generateUUID } from '@/lib/utils';
 import {
   fetchGuestCart,
@@ -51,6 +51,7 @@ const guestCartSlice = createSlice({
           quantity,
           createdAt: Date.now().toString(),
           updatedAt: Date.now().toString(),
+          userId: null,
         });
       }
     },
@@ -109,7 +110,7 @@ const guestCartSlice = createSlice({
       })
       .addCase(fetchGuestCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        const cartData = action.payload as CartDataDto;
+        const cartData = action.payload;
         state.items = cartData.items || [];
       })
       .addCase(fetchGuestCart.rejected, (state, action) => {
