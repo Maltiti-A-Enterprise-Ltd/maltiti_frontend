@@ -66,7 +66,7 @@ const refreshAccessToken = async (): Promise<boolean> => {
 
     if (data) {
       // Update the access token in the store
-      store.dispatch(updateAccessToken(data));
+      store.dispatch(updateAccessToken(data.data));
       return true;
     }
 
