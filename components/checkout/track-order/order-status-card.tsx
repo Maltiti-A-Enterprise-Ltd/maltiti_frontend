@@ -63,12 +63,13 @@ export const OrderStatusCard = ({
                   <div className="mt-3 flex items-start gap-2 rounded-md border border-blue-100 bg-blue-50/50 p-2.5 text-xs font-medium text-blue-700">
                     <Icon icon="ph:info" className="mt-0.5 h-4 w-4 shrink-0" />
                     <p>
-                      Refunds are processed automatically and take {REFUND_TIMELINE} to reflect in your account.
+                      Refunds are processed automatically and take {REFUND_TIMELINE} to reflect in
+                      your account.
                     </p>
                   </div>
                 </div>
               </div>
-              ) : (
+            ) : (
               <OrderProgressStepper currentStatus={orderDetails.orderStatus} />
             )}
 
@@ -114,7 +115,7 @@ export const OrderStatusCard = ({
 
             {/* Delivery Confirmation Section */}
             {orderDetails.orderStatus === OrderStatus.DELIVERED &&
-              orderDetails.confirmedDelivery !== true && (
+              !orderDetails.confirmedDeliveryDate && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -158,7 +159,7 @@ export const OrderStatusCard = ({
 
             {/* Delivery Confirmed Section */}
             {orderDetails.orderStatus === OrderStatus.DELIVERED &&
-              orderDetails.confirmedDelivery === true && (
+              !!orderDetails.confirmedDeliveryDate && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -176,6 +177,13 @@ export const OrderStatusCard = ({
                       <p className="mb-4 text-sm leading-relaxed text-gray-600">
                         Thank you for confirming your delivery! We&apos;re glad your order arrived
                         safely. Your feedback helps us improve our service.
+                        <br />
+                        <span className="text-xs font-medium text-green-700">
+                          Confirmed on:{' '}
+                          {orderDetails.confirmedDeliveryDate
+                            ? new Date(orderDetails.confirmedDeliveryDate).toLocaleString()
+                            : ''}
+                        </span>
                       </p>
                       <Button
                         onClick={onWriteReview}
