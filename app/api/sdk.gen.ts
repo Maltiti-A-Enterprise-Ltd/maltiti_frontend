@@ -187,107 +187,6 @@ export const authenticationControllerResendVerificationEmail = <ThrowOnError ext
 });
 
 /**
- * Get all users
- */
-export const usersControllerFindAll = <ThrowOnError extends boolean = false>(options?: Options<UsersControllerFindAllData, ThrowOnError>) => (options?.client ?? client).get<UsersControllerFindAllResponses, unknown, ThrowOnError>({ url: '/users', ...options });
-
-/**
- * Delete a user
- */
-export const usersControllerRemove = <ThrowOnError extends boolean = false>(options: Options<UsersControllerRemoveData, ThrowOnError>) => (options.client ?? client).delete<UsersControllerRemoveResponses, unknown, ThrowOnError>({ url: '/users/{id}', ...options });
-
-/**
- * Get a user by ID
- */
-export const usersControllerFindOne = <ThrowOnError extends boolean = false>(options: Options<UsersControllerFindOneData, ThrowOnError>) => (options.client ?? client).get<UsersControllerFindOneResponses, unknown, ThrowOnError>({ url: '/users/{id}', ...options });
-
-/**
- * Update a user
- */
-export const usersControllerUpdate = <ThrowOnError extends boolean = false>(options: Options<UsersControllerUpdateData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerUpdateResponses, unknown, ThrowOnError>({
-    url: '/users/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Change user status
- */
-export const usersControllerChangeStatus = <ThrowOnError extends boolean = false>(options: Options<UsersControllerChangeStatusData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerChangeStatusResponses, unknown, ThrowOnError>({
-    url: '/users/{id}/status',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Change user role
- */
-export const usersControllerChangeRole = <ThrowOnError extends boolean = false>(options: Options<UsersControllerChangeRoleData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerChangeRoleResponses, unknown, ThrowOnError>({
-    url: '/users/{id}/role',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const cooperativeControllerGetAllCooperatives = <ThrowOnError extends boolean = false>(options?: Options<CooperativeControllerGetAllCooperativesData, ThrowOnError>) => (options?.client ?? client).get<CooperativeControllerGetAllCooperativesResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperatives', ...options });
-
-export const cooperativeControllerGetCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetCooperativeData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperative/{id}', ...options });
-
-export const cooperativeControllerAddCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerAddCooperativeData, ThrowOnError>) => (options.client ?? client).post<CooperativeControllerAddCooperativeResponses, unknown, ThrowOnError>({
-    url: '/cooperative/add-cooperative',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const cooperativeControllerEditCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerEditCooperativeData, ThrowOnError>) => (options.client ?? client).patch<CooperativeControllerEditCooperativeResponses, unknown, ThrowOnError>({
-    url: '/cooperative/edit-cooperative',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const cooperativeControllerDeleteCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerDeleteCooperativeData, ThrowOnError>) => (options.client ?? client).delete<CooperativeControllerDeleteCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/delete-cooperative/{id}', ...options });
-
-export const cooperativeControllerGetAllCooperativeMembers = <ThrowOnError extends boolean = false>(options?: Options<CooperativeControllerGetAllCooperativeMembersData, ThrowOnError>) => (options?.client ?? client).get<CooperativeControllerGetAllCooperativeMembersResponses, unknown, ThrowOnError>({ url: '/cooperative/members', ...options });
-
-export const cooperativeControllerGetCooperativeMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetCooperativeMemberData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetCooperativeMemberResponses, unknown, ThrowOnError>({ url: '/cooperative/member/{id}', ...options });
-
-export const cooperativeControllerGetMembersByCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetMembersByCooperativeData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetMembersByCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperative-members/{id}', ...options });
-
-export const cooperativeControllerAddMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerAddMemberData, ThrowOnError>) => (options.client ?? client).post<CooperativeControllerAddMemberResponses, unknown, ThrowOnError>({
-    url: '/cooperative/add-member',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const cooperativeControllerEditMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerEditMemberData, ThrowOnError>) => (options.client ?? client).patch<CooperativeControllerEditMemberResponses, unknown, ThrowOnError>({
-    url: '/cooperative/edit-member',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const cooperativeControllerDeleteMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerDeleteMemberData, ThrowOnError>) => (options.client ?? client).delete<CooperativeControllerDeleteMemberResponses, unknown, ThrowOnError>({ url: '/cooperative/delete-member/{id}', ...options });
-
-/**
  * Get all products
  *
  * Retrieve all products with flexible filtering, pagination, and sorting options
@@ -444,6 +343,107 @@ export const ingredientsControllerUpdate = <ThrowOnError extends boolean = false
         ...options.headers
     }
 });
+
+/**
+ * Get all users
+ */
+export const usersControllerFindAll = <ThrowOnError extends boolean = false>(options?: Options<UsersControllerFindAllData, ThrowOnError>) => (options?.client ?? client).get<UsersControllerFindAllResponses, unknown, ThrowOnError>({ url: '/users', ...options });
+
+/**
+ * Delete a user
+ */
+export const usersControllerRemove = <ThrowOnError extends boolean = false>(options: Options<UsersControllerRemoveData, ThrowOnError>) => (options.client ?? client).delete<UsersControllerRemoveResponses, unknown, ThrowOnError>({ url: '/users/{id}', ...options });
+
+/**
+ * Get a user by ID
+ */
+export const usersControllerFindOne = <ThrowOnError extends boolean = false>(options: Options<UsersControllerFindOneData, ThrowOnError>) => (options.client ?? client).get<UsersControllerFindOneResponses, unknown, ThrowOnError>({ url: '/users/{id}', ...options });
+
+/**
+ * Update a user
+ */
+export const usersControllerUpdate = <ThrowOnError extends boolean = false>(options: Options<UsersControllerUpdateData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerUpdateResponses, unknown, ThrowOnError>({
+    url: '/users/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Change user status
+ */
+export const usersControllerChangeStatus = <ThrowOnError extends boolean = false>(options: Options<UsersControllerChangeStatusData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerChangeStatusResponses, unknown, ThrowOnError>({
+    url: '/users/{id}/status',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Change user role
+ */
+export const usersControllerChangeRole = <ThrowOnError extends boolean = false>(options: Options<UsersControllerChangeRoleData, ThrowOnError>) => (options.client ?? client).patch<UsersControllerChangeRoleResponses, unknown, ThrowOnError>({
+    url: '/users/{id}/role',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const cooperativeControllerGetAllCooperatives = <ThrowOnError extends boolean = false>(options?: Options<CooperativeControllerGetAllCooperativesData, ThrowOnError>) => (options?.client ?? client).get<CooperativeControllerGetAllCooperativesResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperatives', ...options });
+
+export const cooperativeControllerGetCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetCooperativeData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperative/{id}', ...options });
+
+export const cooperativeControllerAddCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerAddCooperativeData, ThrowOnError>) => (options.client ?? client).post<CooperativeControllerAddCooperativeResponses, unknown, ThrowOnError>({
+    url: '/cooperative/add-cooperative',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const cooperativeControllerEditCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerEditCooperativeData, ThrowOnError>) => (options.client ?? client).patch<CooperativeControllerEditCooperativeResponses, unknown, ThrowOnError>({
+    url: '/cooperative/edit-cooperative',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const cooperativeControllerDeleteCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerDeleteCooperativeData, ThrowOnError>) => (options.client ?? client).delete<CooperativeControllerDeleteCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/delete-cooperative/{id}', ...options });
+
+export const cooperativeControllerGetAllCooperativeMembers = <ThrowOnError extends boolean = false>(options?: Options<CooperativeControllerGetAllCooperativeMembersData, ThrowOnError>) => (options?.client ?? client).get<CooperativeControllerGetAllCooperativeMembersResponses, unknown, ThrowOnError>({ url: '/cooperative/members', ...options });
+
+export const cooperativeControllerGetCooperativeMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetCooperativeMemberData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetCooperativeMemberResponses, unknown, ThrowOnError>({ url: '/cooperative/member/{id}', ...options });
+
+export const cooperativeControllerGetMembersByCooperative = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerGetMembersByCooperativeData, ThrowOnError>) => (options.client ?? client).get<CooperativeControllerGetMembersByCooperativeResponses, unknown, ThrowOnError>({ url: '/cooperative/cooperative-members/{id}', ...options });
+
+export const cooperativeControllerAddMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerAddMemberData, ThrowOnError>) => (options.client ?? client).post<CooperativeControllerAddMemberResponses, unknown, ThrowOnError>({
+    url: '/cooperative/add-member',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const cooperativeControllerEditMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerEditMemberData, ThrowOnError>) => (options.client ?? client).patch<CooperativeControllerEditMemberResponses, unknown, ThrowOnError>({
+    url: '/cooperative/edit-member',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const cooperativeControllerDeleteMember = <ThrowOnError extends boolean = false>(options: Options<CooperativeControllerDeleteMemberData, ThrowOnError>) => (options.client ?? client).delete<CooperativeControllerDeleteMemberResponses, unknown, ThrowOnError>({ url: '/cooperative/delete-member/{id}', ...options });
 
 /**
  * Get user's shopping cart

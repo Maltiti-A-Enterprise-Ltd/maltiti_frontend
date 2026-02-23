@@ -337,246 +337,6 @@ export type ResendVerificationResponseDto = {
     data: UserResponseDto;
 };
 
-export type UpdateUserDto = {
-    name?: string;
-    email?: string;
-    phoneNumber?: string;
-    userType?: Role;
-    status?: StatusEnum;
-    dob?: string;
-};
-
-export type ChangeStatusDto = {
-    status: StatusEnum;
-};
-
-export type ChangeRoleDto = {
-    userType: Role;
-};
-
-export type AddCooperativeDto = {
-    /**
-     * The name of the cooperative
-     */
-    name: string;
-    /**
-     * The community or location where the cooperative operates
-     */
-    community: string;
-    /**
-     * The registration fee for joining the cooperative (in local currency)
-     */
-    registrationFee: string;
-    /**
-     * The monthly membership fee for the cooperative (in local currency)
-     */
-    monthlyFee: string;
-    /**
-     * The minimum share amount required for membership (in local currency)
-     */
-    minimalShare: string;
-};
-
-export type EditCooperativeDto = {
-    /**
-     * The UUID of the cooperative to edit
-     */
-    id: string;
-    /**
-     * The updated name of the cooperative
-     */
-    name: string;
-    /**
-     * The updated community or location where the cooperative operates
-     */
-    community: string;
-    /**
-     * The updated registration fee for joining the cooperative (in local currency)
-     */
-    registrationFee: string;
-    /**
-     * The updated monthly membership fee for the cooperative (in local currency)
-     */
-    monthlyFee: string;
-    /**
-     * The updated minimum share amount required for membership (in local currency)
-     */
-    minimalShare: string;
-};
-
-export enum IdType {
-    GHANA_CARD = 'Ghana Card',
-    VOTER_ID = 'Voter ID',
-    PASSPORT = 'Passport',
-    DRIVER_LICENSE = 'Driver License',
-    NHIS_CARD = 'NHIS Card'
-}
-
-export enum GhanaRegion {
-    AHAFO_REGION = 'Ahafo Region',
-    ASHANTI_REGION = 'Ashanti Region',
-    BONO_EAST_REGION = 'Bono East Region',
-    BONO_REGION = 'Bono Region',
-    CENTRAL_REGION = 'Central Region',
-    EASTERN_REGION = 'Eastern Region',
-    GREATER_ACCRA_REGION = 'Greater Accra Region',
-    NORTH_EAST_REGION = 'North East Region',
-    NORTHERN_REGION = 'Northern Region',
-    OTI_REGION = 'Oti Region',
-    SAVANNAH_REGION = 'Savannah Region',
-    UPPER_EAST_REGION = 'Upper East Region',
-    UPPER_WEST_REGION = 'Upper West Region',
-    VOLTA_REGION = 'Volta Region',
-    WESTERN_NORTH_REGION = 'Western North Region',
-    WESTERN_REGION = 'Western Region'
-}
-
-export enum EducationLevel {
-    NO_FORMAL_EDUCATION = 'No Formal Education',
-    PRIMARY_SCHOOL = 'Primary School',
-    JUNIOR_HIGH_SCHOOL = 'Junior High School',
-    SENIOR_HIGH_SCHOOL = 'Senior High School',
-    TERTIARY_EDUCATION = 'Tertiary Education',
-    VOCATIONAL_TRAINING = 'Vocational Training'
-}
-
-export type AddCooperativeMemberDto = {
-    /**
-     * The full name of the cooperative member
-     */
-    name: string;
-    /**
-     * The UUID of the cooperative this member belongs to
-     */
-    cooperative: string;
-    /**
-     * The phone number of the member (must be unique, Ghana format)
-     */
-    phoneNumber: string;
-    /**
-     * The house number or residential address identifier
-     */
-    houseNumber: string;
-    /**
-     * The GPS address or digital address
-     */
-    gpsAddress: string;
-    /**
-     * The profile image URL or file reference (uploaded separately)
-     */
-    image?: string;
-    /**
-     * The type of identification document (e.g., National ID, Voter ID, Passport)
-     */
-    idType: IdType;
-    /**
-     * The identification number (must be unique)
-     */
-    idNumber: string;
-    /**
-     * The community or locality where the member resides
-     */
-    community: string;
-    /**
-     * The district where the member resides
-     */
-    district: string;
-    /**
-     * The region of Ghana where the member resides
-     */
-    region: GhanaRegion;
-    /**
-     * The date of birth of the member (ISO 8601 format)
-     */
-    dob: string;
-    /**
-     * The highest level of education attained
-     */
-    education: EducationLevel;
-    /**
-     * The primary occupation of the member
-     */
-    occupation: string;
-    /**
-     * The secondary occupation of the member (if any)
-     */
-    secondaryOccupation?: string;
-    /**
-     * The types of crops cultivated by the member (comma-separated)
-     */
-    crops: string;
-    /**
-     * The size of the farm in acres
-     */
-    farmSize: number;
-};
-
-export type EditCooperativeMemberDto = {
-    /**
-     * The UUID of the cooperative member to edit
-     */
-    id: string;
-    /**
-     * The updated full name of the cooperative member
-     */
-    name: string;
-    /**
-     * The UUID of the cooperative this member belongs to
-     */
-    cooperative: string;
-    /**
-     * The updated phone number of the member (must be unique, Ghana format)
-     */
-    phoneNumber: string;
-    /**
-     * The updated house number or residential address identifier
-     */
-    houseNumber: string;
-    /**
-     * The updated GPS address or digital address
-     */
-    gpsAddress: string;
-    /**
-     * The updated profile image URL or file reference (uploaded separately)
-     */
-    image?: string;
-    idType: IdType;
-    /**
-     * The updated identification number (must be unique)
-     */
-    idNumber: string;
-    /**
-     * The updated community or locality where the member resides
-     */
-    community: string;
-    /**
-     * The updated district where the member resides
-     */
-    district: string;
-    region: GhanaRegion;
-    /**
-     * The updated date of birth of the member (ISO 8601 format)
-     */
-    dob: string;
-    education: EducationLevel;
-    /**
-     * The updated primary occupation of the member
-     */
-    occupation: string;
-    /**
-     * The updated secondary occupation of the member (if any)
-     */
-    secondaryOccupation?: string;
-    /**
-     * The updated types of crops cultivated by the member (comma-separated)
-     */
-    crops: string;
-    /**
-     * The updated size of the farm in acres
-     */
-    farmSize: number;
-};
-
 export enum ProductCategory {
     SHEA_BUTTER = 'Shea Butter',
     BLACK_SOAP = 'Black Soap',
@@ -905,10 +665,6 @@ export type UpdateProductDto = {
      * Cost price for internal tracking
      */
     costPrice?: number;
-    /**
-     * Whether to mark this update as a minor change
-     */
-    isMinorUpdate?: boolean;
 };
 
 export type CreateBatchDto = {
@@ -1013,6 +769,246 @@ export type UpdateIngredientDto = {
      * The name of the ingredient. Must be unique if provided.
      */
     name?: string;
+};
+
+export type UpdateUserDto = {
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    userType?: Role;
+    status?: StatusEnum;
+    dob?: string;
+};
+
+export type ChangeStatusDto = {
+    status: StatusEnum;
+};
+
+export type ChangeRoleDto = {
+    userType: Role;
+};
+
+export type AddCooperativeDto = {
+    /**
+     * The name of the cooperative
+     */
+    name: string;
+    /**
+     * The community or location where the cooperative operates
+     */
+    community: string;
+    /**
+     * The registration fee for joining the cooperative (in local currency)
+     */
+    registrationFee: string;
+    /**
+     * The monthly membership fee for the cooperative (in local currency)
+     */
+    monthlyFee: string;
+    /**
+     * The minimum share amount required for membership (in local currency)
+     */
+    minimalShare: string;
+};
+
+export type EditCooperativeDto = {
+    /**
+     * The UUID of the cooperative to edit
+     */
+    id: string;
+    /**
+     * The updated name of the cooperative
+     */
+    name: string;
+    /**
+     * The updated community or location where the cooperative operates
+     */
+    community: string;
+    /**
+     * The updated registration fee for joining the cooperative (in local currency)
+     */
+    registrationFee: string;
+    /**
+     * The updated monthly membership fee for the cooperative (in local currency)
+     */
+    monthlyFee: string;
+    /**
+     * The updated minimum share amount required for membership (in local currency)
+     */
+    minimalShare: string;
+};
+
+export enum IdType {
+    GHANA_CARD = 'Ghana Card',
+    VOTER_ID = 'Voter ID',
+    PASSPORT = 'Passport',
+    DRIVER_LICENSE = 'Driver License',
+    NHIS_CARD = 'NHIS Card'
+}
+
+export enum GhanaRegion {
+    AHAFO_REGION = 'Ahafo Region',
+    ASHANTI_REGION = 'Ashanti Region',
+    BONO_EAST_REGION = 'Bono East Region',
+    BONO_REGION = 'Bono Region',
+    CENTRAL_REGION = 'Central Region',
+    EASTERN_REGION = 'Eastern Region',
+    GREATER_ACCRA_REGION = 'Greater Accra Region',
+    NORTH_EAST_REGION = 'North East Region',
+    NORTHERN_REGION = 'Northern Region',
+    OTI_REGION = 'Oti Region',
+    SAVANNAH_REGION = 'Savannah Region',
+    UPPER_EAST_REGION = 'Upper East Region',
+    UPPER_WEST_REGION = 'Upper West Region',
+    VOLTA_REGION = 'Volta Region',
+    WESTERN_NORTH_REGION = 'Western North Region',
+    WESTERN_REGION = 'Western Region'
+}
+
+export enum EducationLevel {
+    NO_FORMAL_EDUCATION = 'No Formal Education',
+    PRIMARY_SCHOOL = 'Primary School',
+    JUNIOR_HIGH_SCHOOL = 'Junior High School',
+    SENIOR_HIGH_SCHOOL = 'Senior High School',
+    TERTIARY_EDUCATION = 'Tertiary Education',
+    VOCATIONAL_TRAINING = 'Vocational Training'
+}
+
+export type AddCooperativeMemberDto = {
+    /**
+     * The full name of the cooperative member
+     */
+    name: string;
+    /**
+     * The UUID of the cooperative this member belongs to
+     */
+    cooperative: string;
+    /**
+     * The phone number of the member (must be unique, Ghana format)
+     */
+    phoneNumber: string;
+    /**
+     * The house number or residential address identifier
+     */
+    houseNumber: string;
+    /**
+     * The GPS address or digital address
+     */
+    gpsAddress: string;
+    /**
+     * The profile image URL or file reference (uploaded separately)
+     */
+    image?: string;
+    /**
+     * The type of identification document (e.g., National ID, Voter ID, Passport)
+     */
+    idType: IdType;
+    /**
+     * The identification number (must be unique)
+     */
+    idNumber: string;
+    /**
+     * The community or locality where the member resides
+     */
+    community: string;
+    /**
+     * The district where the member resides
+     */
+    district: string;
+    /**
+     * The region of Ghana where the member resides
+     */
+    region: GhanaRegion;
+    /**
+     * The date of birth of the member (ISO 8601 format)
+     */
+    dob: string;
+    /**
+     * The highest level of education attained
+     */
+    education: EducationLevel;
+    /**
+     * The primary occupation of the member
+     */
+    occupation: string;
+    /**
+     * The secondary occupation of the member (if any)
+     */
+    secondaryOccupation?: string;
+    /**
+     * The types of crops cultivated by the member (comma-separated)
+     */
+    crops: string;
+    /**
+     * The size of the farm in acres
+     */
+    farmSize: number;
+};
+
+export type EditCooperativeMemberDto = {
+    /**
+     * The UUID of the cooperative member to edit
+     */
+    id: string;
+    /**
+     * The updated full name of the cooperative member
+     */
+    name: string;
+    /**
+     * The UUID of the cooperative this member belongs to
+     */
+    cooperative: string;
+    /**
+     * The updated phone number of the member (must be unique, Ghana format)
+     */
+    phoneNumber: string;
+    /**
+     * The updated house number or residential address identifier
+     */
+    houseNumber: string;
+    /**
+     * The updated GPS address or digital address
+     */
+    gpsAddress: string;
+    /**
+     * The updated profile image URL or file reference (uploaded separately)
+     */
+    image?: string;
+    idType: IdType;
+    /**
+     * The updated identification number (must be unique)
+     */
+    idNumber: string;
+    /**
+     * The updated community or locality where the member resides
+     */
+    community: string;
+    /**
+     * The updated district where the member resides
+     */
+    district: string;
+    region: GhanaRegion;
+    /**
+     * The updated date of birth of the member (ISO 8601 format)
+     */
+    dob: string;
+    education: EducationLevel;
+    /**
+     * The updated primary occupation of the member
+     */
+    occupation: string;
+    /**
+     * The updated secondary occupation of the member (if any)
+     */
+    secondaryOccupation?: string;
+    /**
+     * The updated types of crops cultivated by the member (comma-separated)
+     */
+    crops: string;
+    /**
+     * The updated size of the farm in acres
+     */
+    farmSize: number;
 };
 
 export type CartProductDto = {
@@ -1464,9 +1460,9 @@ export type SaleResponseDto = {
      */
     deliveryFee?: number;
     /**
-     * Customer confirmation of delivery (null for walk-in customers)
+     * Date when delivery was confirmed (null if not confirmed)
      */
-    confirmedDelivery?: boolean;
+    confirmedDeliveryDate?: string;
     /**
      * Total payable amount (amount + deliveryFee)
      */
@@ -1758,6 +1754,7 @@ export type UpdateSaleDto = {
     customerId?: string;
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
+    deliveryFee?: number;
     lineItems?: Array<UpdateSaleLineItemDto>;
 };
 
@@ -2795,256 +2792,6 @@ export type AuthenticationControllerResendVerificationEmailResponses = {
 
 export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
 
-export type UsersControllerFindAllData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/users';
-};
-
-export type UsersControllerFindAllResponses = {
-    /**
-     * Users retrieved successfully
-     */
-    200: Array<UserResponseDto>;
-};
-
-export type UsersControllerFindAllResponse = UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses];
-
-export type UsersControllerRemoveData = {
-    body?: never;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/users/{id}';
-};
-
-export type UsersControllerRemoveResponses = {
-    /**
-     * User deleted successfully
-     */
-    200: unknown;
-};
-
-export type UsersControllerFindOneData = {
-    body?: never;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/users/{id}';
-};
-
-export type UsersControllerFindOneResponses = {
-    /**
-     * User retrieved successfully
-     */
-    200: UserResponseDto;
-};
-
-export type UsersControllerFindOneResponse = UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses];
-
-export type UsersControllerUpdateData = {
-    body: UpdateUserDto;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/users/{id}';
-};
-
-export type UsersControllerUpdateResponses = {
-    /**
-     * User updated successfully
-     */
-    200: UserResponseDto;
-};
-
-export type UsersControllerUpdateResponse = UsersControllerUpdateResponses[keyof UsersControllerUpdateResponses];
-
-export type UsersControllerChangeStatusData = {
-    body: ChangeStatusDto;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/users/{id}/status';
-};
-
-export type UsersControllerChangeStatusResponses = {
-    /**
-     * User status changed successfully
-     */
-    200: UserResponseDto;
-};
-
-export type UsersControllerChangeStatusResponse = UsersControllerChangeStatusResponses[keyof UsersControllerChangeStatusResponses];
-
-export type UsersControllerChangeRoleData = {
-    body: ChangeRoleDto;
-    path: {
-        /**
-         * User ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/users/{id}/role';
-};
-
-export type UsersControllerChangeRoleResponses = {
-    /**
-     * User role changed successfully
-     */
-    200: UserResponseDto;
-};
-
-export type UsersControllerChangeRoleResponse = UsersControllerChangeRoleResponses[keyof UsersControllerChangeRoleResponses];
-
-export type CooperativeControllerGetAllCooperativesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/cooperative/cooperatives';
-};
-
-export type CooperativeControllerGetAllCooperativesResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerGetCooperativeData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cooperative/cooperative/{id}';
-};
-
-export type CooperativeControllerGetCooperativeResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerAddCooperativeData = {
-    body: AddCooperativeDto;
-    path?: never;
-    query?: never;
-    url: '/cooperative/add-cooperative';
-};
-
-export type CooperativeControllerAddCooperativeResponses = {
-    201: unknown;
-};
-
-export type CooperativeControllerEditCooperativeData = {
-    body: EditCooperativeDto;
-    path?: never;
-    query?: never;
-    url: '/cooperative/edit-cooperative';
-};
-
-export type CooperativeControllerEditCooperativeResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerDeleteCooperativeData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cooperative/delete-cooperative/{id}';
-};
-
-export type CooperativeControllerDeleteCooperativeResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerGetAllCooperativeMembersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/cooperative/members';
-};
-
-export type CooperativeControllerGetAllCooperativeMembersResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerGetCooperativeMemberData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cooperative/member/{id}';
-};
-
-export type CooperativeControllerGetCooperativeMemberResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerGetMembersByCooperativeData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cooperative/cooperative-members/{id}';
-};
-
-export type CooperativeControllerGetMembersByCooperativeResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerAddMemberData = {
-    body: AddCooperativeMemberDto;
-    path?: never;
-    query?: never;
-    url: '/cooperative/add-member';
-};
-
-export type CooperativeControllerAddMemberResponses = {
-    201: unknown;
-};
-
-export type CooperativeControllerEditMemberData = {
-    body: EditCooperativeMemberDto;
-    path?: never;
-    query?: never;
-    url: '/cooperative/edit-member';
-};
-
-export type CooperativeControllerEditMemberResponses = {
-    200: unknown;
-};
-
-export type CooperativeControllerDeleteMemberData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/cooperative/delete-member/{id}';
-};
-
-export type CooperativeControllerDeleteMemberResponses = {
-    200: unknown;
-};
-
 export type ProductsControllerGetAllProductsData = {
     body?: never;
     path?: never;
@@ -3682,6 +3429,256 @@ export type IngredientsControllerUpdateResponses = {
     /**
      * The updated ingredient
      */
+    200: unknown;
+};
+
+export type UsersControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/users';
+};
+
+export type UsersControllerFindAllResponses = {
+    /**
+     * Users retrieved successfully
+     */
+    200: Array<UserResponseDto>;
+};
+
+export type UsersControllerFindAllResponse = UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses];
+
+export type UsersControllerRemoveData = {
+    body?: never;
+    path: {
+        /**
+         * User ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersControllerRemoveResponses = {
+    /**
+     * User deleted successfully
+     */
+    200: unknown;
+};
+
+export type UsersControllerFindOneData = {
+    body?: never;
+    path: {
+        /**
+         * User ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersControllerFindOneResponses = {
+    /**
+     * User retrieved successfully
+     */
+    200: UserResponseDto;
+};
+
+export type UsersControllerFindOneResponse = UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses];
+
+export type UsersControllerUpdateData = {
+    body: UpdateUserDto;
+    path: {
+        /**
+         * User ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersControllerUpdateResponses = {
+    /**
+     * User updated successfully
+     */
+    200: UserResponseDto;
+};
+
+export type UsersControllerUpdateResponse = UsersControllerUpdateResponses[keyof UsersControllerUpdateResponses];
+
+export type UsersControllerChangeStatusData = {
+    body: ChangeStatusDto;
+    path: {
+        /**
+         * User ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}/status';
+};
+
+export type UsersControllerChangeStatusResponses = {
+    /**
+     * User status changed successfully
+     */
+    200: UserResponseDto;
+};
+
+export type UsersControllerChangeStatusResponse = UsersControllerChangeStatusResponses[keyof UsersControllerChangeStatusResponses];
+
+export type UsersControllerChangeRoleData = {
+    body: ChangeRoleDto;
+    path: {
+        /**
+         * User ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}/role';
+};
+
+export type UsersControllerChangeRoleResponses = {
+    /**
+     * User role changed successfully
+     */
+    200: UserResponseDto;
+};
+
+export type UsersControllerChangeRoleResponse = UsersControllerChangeRoleResponses[keyof UsersControllerChangeRoleResponses];
+
+export type CooperativeControllerGetAllCooperativesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/cooperative/cooperatives';
+};
+
+export type CooperativeControllerGetAllCooperativesResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerGetCooperativeData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/cooperative/cooperative/{id}';
+};
+
+export type CooperativeControllerGetCooperativeResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerAddCooperativeData = {
+    body: AddCooperativeDto;
+    path?: never;
+    query?: never;
+    url: '/cooperative/add-cooperative';
+};
+
+export type CooperativeControllerAddCooperativeResponses = {
+    201: unknown;
+};
+
+export type CooperativeControllerEditCooperativeData = {
+    body: EditCooperativeDto;
+    path?: never;
+    query?: never;
+    url: '/cooperative/edit-cooperative';
+};
+
+export type CooperativeControllerEditCooperativeResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerDeleteCooperativeData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/cooperative/delete-cooperative/{id}';
+};
+
+export type CooperativeControllerDeleteCooperativeResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerGetAllCooperativeMembersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/cooperative/members';
+};
+
+export type CooperativeControllerGetAllCooperativeMembersResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerGetCooperativeMemberData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/cooperative/member/{id}';
+};
+
+export type CooperativeControllerGetCooperativeMemberResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerGetMembersByCooperativeData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/cooperative/cooperative-members/{id}';
+};
+
+export type CooperativeControllerGetMembersByCooperativeResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerAddMemberData = {
+    body: AddCooperativeMemberDto;
+    path?: never;
+    query?: never;
+    url: '/cooperative/add-member';
+};
+
+export type CooperativeControllerAddMemberResponses = {
+    201: unknown;
+};
+
+export type CooperativeControllerEditMemberData = {
+    body: EditCooperativeMemberDto;
+    path?: never;
+    query?: never;
+    url: '/cooperative/edit-member';
+};
+
+export type CooperativeControllerEditMemberResponses = {
+    200: unknown;
+};
+
+export type CooperativeControllerDeleteMemberData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/cooperative/delete-member/{id}';
+};
+
+export type CooperativeControllerDeleteMemberResponses = {
     200: unknown;
 };
 
