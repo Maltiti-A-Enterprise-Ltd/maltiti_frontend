@@ -35,6 +35,12 @@ const eslintConfig = defineConfig([
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
       ...reactPlugin.configs.recommended.rules,
       ...reactPlugin.configs['jsx-runtime'].rules,
       ...nextPlugin.configs.recommended.rules,
