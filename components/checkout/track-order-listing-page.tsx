@@ -1,7 +1,7 @@
 'use client';
 
-import { JSX, useCallback, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { JSX } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -16,19 +16,14 @@ import {
   AlertCircle,
   ChevronRight,
   Calendar,
+  X,
+  Filter,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import {
-  OrderStatus,
-  PaymentStatus,
-  SaleResponseDto,
-  salesControllerListSalesByEmail,
-  SalesControllerListSalesByEmailData,
-} from '@/app/api';
-import { toast } from 'sonner';
+import { OrderStatus, PaymentStatus } from '@/app/api';
 import { ShopPagination } from '@/components/shop';
 import {
   Select,
@@ -38,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { useTrackOrderListing, isValidEmail } from './track-order-listing';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
 
@@ -119,131 +115,34 @@ const paymentStatusConfig: Record<
 
 export default function TrackOrderListingPage(): JSX.Element {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const emailFromQuery = searchParams.get('email');
-
-  // Get user authentication state
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
-  const [email, setEmail] = useState(
-    emailFromQuery || (isAuthenticated && user?.email ? user.email : ''),
-  );
-  const [searchEmail, setSearchEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [orders, setOrders] = useState<SaleResponseDto[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [showSearchCard, setShowSearchCard] = useState(!isAuthenticated || !user?.email);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [filters, setFilters] = useState<
-    Pick<SalesControllerListSalesByEmailData['query'], 'paymentStatus' | 'orderStatus'>
-  >({
-    orderStatus: (searchParams.get('status') as OrderStatus) || undefined,
-    paymentStatus: (searchParams.get('paymentStatus') as PaymentStatus) || undefined,
-  });
-
-  const fetchOrders = useCallback(
-    async (emailToSearch: string, page: number = 1): Promise<void> => {
-      if (!emailToSearch) {
-        toast.error('Please enter an email address');
-        return;
-      }
-
-      setIsLoading(true);
-      setHasSearched(true);
-
-      try {
-        const { data, error } = await salesControllerListSalesByEmail({
-          query: {
-            email: emailToSearch,
-            page,
-            limit: 10,
-            orderStatus: filters.orderStatus,
-            paymentStatus: filters.paymentStatus,
-          },
-        });
-
-        if (error || !data) {
-          console.error('Error fetching orders:', error);
-          toast.error('Error', {
-            description: 'Unable to load orders. Please try again.',
-          });
-          setOrders([]);
-          setTotalPages(1);
-          setTotalItems(0);
-          return;
-        }
-
-        // The response is always paginated
-        setOrders(data.data.items);
-        setCurrentPage(data.data.currentPage || page);
-        setTotalPages(data.data.totalPages || 1);
-        setTotalItems(data.data.totalItems || data.data.items.length);
-
-        if (data.data.items.length === 0) {
-          toast.info('No orders found', {
-            description: `No orders found for ${emailToSearch}`,
-          });
-        }
-      } catch (err) {
-        console.error('Error fetching orders:', err);
-        toast.error('Error', {
-          description: 'Unable to load orders. Please try again.',
-        });
-        setOrders([]);
-        setTotalPages(1);
-        setTotalItems(0);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [filters],
-  );
-
-  useEffect(() => {
-    if (emailFromQuery) {
-      void fetchOrders(emailFromQuery);
-    }
-  }, [emailFromQuery, fetchOrders]);
-
-  // Auto-fetch orders for logged-in user if no email query param
-  useEffect(() => {
-    if (!emailFromQuery && isAuthenticated && user?.email && !hasSearched) {
-      setEmail(user.email);
-      void fetchOrders(user.email);
-    }
-  }, [emailFromQuery, isAuthenticated, user, hasSearched, fetchOrders]);
-
-  const handleSearch = (): void => {
-    if (!searchEmail) {
-      toast.error('Please enter an email address');
-      return;
-    }
-    setEmail(searchEmail);
-    router.push(`/track-order?email=${encodeURIComponent(searchEmail)}`);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const handleViewOrder = (saleId: string): void => {
-    router.push(`/track-order/${saleId}?email=${encodeURIComponent(email)}`);
-  };
-
-  const handlePageChange = (newPage: number): void => {
-    if (newPage < 1 || newPage > totalPages || isLoading) {
-      return;
-    }
-    setCurrentPage(newPage);
-    void fetchOrders(email, newPage);
-    // Scroll to top of orders list
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const {
+    email,
+    searchInput,
+    setSearchInput,
+    isLoading,
+    orders,
+    hasSearched,
+    showSearchCard,
+    setShowSearchCard,
+    currentPage,
+    totalPages,
+    totalItems,
+    filters,
+    setFilters,
+    activeFilterCount,
+    handleSearch,
+    handleKeyDown,
+    handleApplyFilters,
+    handleClearFilters,
+    handleViewOrder,
+    handlePageChange,
+    handleRemoveStatusFilter,
+    handleRemovePaymentFilter,
+    handleResetSearch,
+  } = useTrackOrderListing();
 
   return (
     <div className="mt-16 min-h-screen bg-linear-to-br from-gray-50 to-green-50/30 px-4 py-12">
@@ -295,21 +194,46 @@ export default function TrackOrderListingPage(): JSX.Element {
                     >
                       Email Address
                     </label>
-                    <Input
-                      id="search-email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={searchEmail || email}
-                      onChange={(e) => setSearchEmail(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      className="h-12 border-gray-300"
-                      disabled={isLoading}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="search-email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className={`h-12 pr-10 transition-colors ${((): string => {
+                          if (!searchInput) {
+                            return 'border-gray-300';
+                          }
+                          if (!isValidEmail(searchInput)) {
+                            return 'border-red-300 focus-visible:ring-red-500';
+                          }
+                          return 'border-green-300 focus-visible:ring-green-500';
+                        })()}`}
+                        disabled={isLoading}
+                      />
+                      {searchInput && !isLoading && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchInput('')}
+                          className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                          aria-label="Clear email"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                    {searchInput && !isValidEmail(searchInput) && (
+                      <p className="mt-1 text-xs text-red-600">
+                        Please enter a valid email address
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-end">
                     <Button
                       onClick={handleSearch}
-                      disabled={isLoading || (!searchEmail && !email)}
+                      disabled={isLoading || !searchInput.trim() || !isValidEmail(searchInput)}
                       className="h-12 w-full gap-2 bg-[#0F6938] hover:bg-[#0F6938]/90 sm:w-auto"
                     >
                       {isLoading ? (
@@ -408,29 +332,62 @@ export default function TrackOrderListingPage(): JSX.Element {
                   </Select>
                 </div>
                 <Button
-                  onClick={() => {
-                    // update URL
-                    const params = new URLSearchParams(searchParams.toString());
-                    if (filters.orderStatus) {
-                      params.set('status', filters.orderStatus);
-                    } else {
-                      params.delete('status');
-                    }
-                    if (filters.paymentStatus) {
-                      params.set('paymentStatus', filters.paymentStatus);
-                    } else {
-                      params.delete('paymentStatus');
-                    }
-                    router.push(`/track-order?${params.toString()}`);
-                  }}
+                  onClick={handleApplyFilters}
+                  disabled={isLoading || !email}
+                  className="gap-2 bg-[#0F6938] hover:bg-[#0F6938]/90"
                 >
+                  <Filter className="h-4 w-4" />
                   Apply Filters
+                  {activeFilterCount > 0 && (
+                    <Badge variant="secondary" className="ml-1 h-5 min-w-5 bg-white text-[#0F6938]">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
                 </Button>
-                <Button variant="outline" onClick={() => setFilters({})}>
+                <Button
+                  variant="outline"
+                  onClick={handleClearFilters}
+                  disabled={isLoading || !email || activeFilterCount === 0}
+                  className="gap-2"
+                >
+                  <X className="h-4 w-4" />
                   Clear Filters
                 </Button>
               </div>
             </div>
+
+            {/* Active Filters Display */}
+            {activeFilterCount > 0 && (
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <span className="text-sm font-medium text-gray-600">Active Filters:</span>
+                {filters.orderStatus && (
+                  <Badge variant="secondary" className="gap-1">
+                    Status: {statusConfig[filters.orderStatus].label}
+                    <button
+                      type="button"
+                      onClick={handleRemoveStatusFilter}
+                      className="ml-1 rounded-full hover:bg-gray-300"
+                      aria-label="Remove status filter"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
+                {filters.paymentStatus && (
+                  <Badge variant="secondary" className="gap-1">
+                    Payment: {paymentStatusConfig[filters.paymentStatus].label}
+                    <button
+                      type="button"
+                      onClick={handleRemovePaymentFilter}
+                      className="ml-1 rounded-full hover:bg-gray-300"
+                      aria-label="Remove payment filter"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -493,14 +450,7 @@ export default function TrackOrderListingPage(): JSX.Element {
                   >
                     Start Shopping
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSearchEmail('');
-                      setEmail('');
-                      setHasSearched(false);
-                    }}
-                  >
+                  <Button variant="outline" onClick={handleResetSearch}>
                     Try Another Email
                   </Button>
                 </div>

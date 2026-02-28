@@ -1,12 +1,10 @@
 'use client';
 
-import { JSX, useState, useEffect, useMemo } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { MapPin, Globe, Mail, User } from 'lucide-react';
-import { Country, State, City } from 'country-state-city';
-import { lookup } from 'country-data-list';
+import { Mail, User, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -18,10 +16,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { SelectDropdown } from '@/components/ui/select';
-import CountryDropdown from '@/components/ui/country-dropdown';
-import { PhoneInput, phoneSchema } from '@/components/ui/phone-input';
+import { phoneSchema } from '@/components/ui/phone-input';
+import { useLocationForm } from '@/lib/hooks/useLocationForm';
+import {
+  CountryField,
+  RegionField,
+  CityField,
+  PhoneField,
+  ExtraInfoField,
+} from '@/components/checkout/location-form-fields';
 
 const guestLocationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -42,8 +45,8 @@ type GuestLocationFormProps = {
 
 const GuestLocationForm = ({ onSubmit, onReset }: GuestLocationFormProps): JSX.Element => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
-  const [selectedState, setSelectedState] = useState<string>('');
+
+  const locationState = useLocationForm();
 
   const form = useForm<GuestLocationFormValues>({
     resolver: zodResolver(guestLocationSchema),
@@ -58,36 +61,6 @@ const GuestLocationForm = ({ onSubmit, onReset }: GuestLocationFormProps): JSX.E
     },
     mode: 'onTouched',
   });
-
-  const countryIsoCode = useMemo(() => {
-    if (!selectedCountry) {
-      return '';
-    }
-    const country = Country.getAllCountries().find((c) => c.name === selectedCountry);
-    return country?.isoCode || '';
-  }, [selectedCountry]);
-
-  const states = useMemo(() => {
-    if (!countryIsoCode) {
-      return [];
-    }
-    return State.getStatesOfCountry(countryIsoCode);
-  }, [countryIsoCode]);
-
-  const stateIsoCode = useMemo(() => {
-    if (!selectedState || !countryIsoCode) {
-      return '';
-    }
-    const state = states.find((s) => s.name === selectedState);
-    return state?.isoCode || '';
-  }, [selectedState, countryIsoCode, states]);
-
-  const cities = useMemo(() => {
-    if (!countryIsoCode || !stateIsoCode) {
-      return [];
-    }
-    return City.getCitiesOfState(countryIsoCode, stateIsoCode);
-  }, [countryIsoCode, stateIsoCode]);
 
   const handleSubmit = (data: GuestLocationFormValues): void => {
     setIsSubmitted(true);
@@ -169,204 +142,43 @@ const GuestLocationForm = ({ onSubmit, onReset }: GuestLocationFormProps): JSX.E
             Delivery Location
           </h3>
 
-          {/* Country */}
-          <FormField
+          <CountryField
             control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <CountryDropdown
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      setSelectedCountry(value);
-                      form.setValue('region', '');
-                      form.setValue('city', '');
-                      setSelectedState('');
-
-                      // Get country calling code and reset phone number
-                      const country = Country.getAllCountries().find((c) => c.name === value);
-                      if (country?.isoCode) {
-                        const countryInfo = lookup.countries({
-                          alpha2: country.isoCode.toLowerCase(),
-                        })[0];
-                        if (countryInfo?.countryCallingCodes?.[0]) {
-                          form.setValue('phoneNumber', countryInfo.countryCallingCodes[0]);
-                        } else {
-                          form.setValue('phoneNumber', '');
-                        }
-                      } else {
-                        form.setValue('phoneNumber', '');
-                      }
-
-                      // Reset confirmation if location fields change
-                      if (isSubmitted) {
-                        resetSubmission();
-                      }
-                    }}
-                    placeholder="Select your country"
-                  />
-                </FormControl>
-                <FormDescription className="flex items-center gap-1">
-                  <Globe className="h-3 w-3" />
-                  We ship worldwide, including bulk export orders
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            locationState={locationState}
+            setValue={form.setValue}
+            isSubmitted={isSubmitted}
+            onResetSubmission={resetSubmission}
+            countryFieldName="country"
+            regionFieldName="region"
+            cityFieldName="city"
+            phoneFieldName="phoneNumber"
           />
 
-          {/* Region/State */}
-          <FormField
+          <RegionField
             control={form.control}
-            name="region"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Region / State / Province</FormLabel>
-                {states.length > 0 ? (
-                  <FormControl>
-                    <SelectDropdown
-                      options={states.map((state) => ({ label: state.name, value: state.name }))}
-                      placeholder="Select region/state"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setSelectedState(value);
-                        form.setValue('city', '');
-
-                        if (isSubmitted) {
-                          resetSubmission();
-                        }
-                      }}
-                      disabled={!selectedCountry}
-                    />
-                  </FormControl>
-                ) : (
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., Greater Accra, California, Ontario"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        if (isSubmitted) {
-                          resetSubmission();
-                        }
-                      }}
-                      disabled={!selectedCountry}
-                    />
-                  </FormControl>
-                )}
-                <FormDescription>
-                  {!selectedCountry
-                    ? 'Please select a country first'
-                    : states.length > 0
-                      ? 'Select your region or state'
-                      : 'Enter your region, state, or province'}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            locationState={locationState}
+            setValue={form.setValue}
+            isSubmitted={isSubmitted}
+            onResetSubmission={resetSubmission}
+            regionFieldName="region"
+            cityFieldName="city"
           />
 
-          {/* City */}
-          <FormField
+          <CityField
             control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>City / Town</FormLabel>
-                {cities.length > 0 ? (
-                  <FormControl>
-                    <SelectDropdown
-                      options={cities.map((city) => ({ label: city.name, value: city.name }))}
-                      placeholder="Select city/town"
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        if (isSubmitted) {
-                          resetSubmission();
-                        }
-                      }}
-                      disabled={!selectedState}
-                    />
-                  </FormControl>
-                ) : (
-                  <FormControl>
-                    <div className="relative">
-                      <MapPin className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                      <Input
-                        placeholder="e.g., Accra, New York, London"
-                        className="pl-10"
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          if (isSubmitted) {
-                            resetSubmission();
-                          }
-                        }}
-                        disabled={!selectedCountry}
-                      />
-                    </div>
-                  </FormControl>
-                )}
-                <FormDescription>
-                  {!selectedCountry
-                    ? 'Please select a country first'
-                    : cities.length > 0
-                      ? 'Select your city or town'
-                      : 'Enter your city or town name'}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            locationState={locationState}
+            isSubmitted={isSubmitted}
+            onResetSubmission={resetSubmission}
+            cityFieldName="city"
           />
 
-          {/* Phone Number */}
-          <FormField
+          <PhoneField
             control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Contact Phone Number</FormLabel>
-                <FormControl>
-                  <PhoneInput
-                    {...field}
-                    defaultCountry={countryIsoCode || undefined}
-                    placeholder="Enter phone number"
-                  />
-                </FormControl>
-                <FormDescription>
-                  Include country code for international deliveries (e.g., +233241234567)
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            phoneFieldName="phoneNumber"
+            countryIsoCode={locationState.countryIsoCode}
           />
 
-          {/* Extra Info */}
-          <FormField
-            control={form.control}
-            name="extraInfo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional Information (Optional)</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Street address, house number, landmarks, special delivery instructions..."
-                    className="resize-none"
-                    rows={4}
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Provide complete address details for accurate delivery
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <ExtraInfoField control={form.control} extraInfoFieldName="extraInfo" />
         </div>
 
         {!isSubmitted && (
