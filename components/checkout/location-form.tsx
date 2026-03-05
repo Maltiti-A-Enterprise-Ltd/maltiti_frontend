@@ -86,18 +86,7 @@ const LocationForm = ({
         form.setValue('extraInfo', initialData.extraInfo, { shouldValidate: true });
       }
     }
-  }, [initialData, form, locationState]);
-
-  useEffect(() => {
-    if (isSubmitted) {
-      const subscription = form.watch((value) => {
-        if (form.formState.isValid) {
-          onSubmit(value as LocationFormValues);
-        }
-      });
-      return (): void => subscription.unsubscribe();
-    }
-  }, [isSubmitted, form, onSubmit]);
+  }, [initialData]);
 
   return (
     <Form {...form}>

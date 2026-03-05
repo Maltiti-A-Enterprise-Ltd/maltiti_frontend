@@ -37,6 +37,7 @@ import { CompanyLogo } from '@/app/assets';
 import CartSheet from './cart-sheet';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser, logout } from '@/lib/store/features/auth';
+import { NotificationBell } from '@/components/notifications';
 
 export function NavBar(): JSX.Element {
   const router = useRouter();
@@ -307,6 +308,7 @@ export function NavBar(): JSX.Element {
       </div>
       {/* User Links and Cart */}
       <div className="flex items-center gap-x-4">
+        {isAuthenticated && <NotificationBell />}
         {userLinks}
         <CartSheet />
       </div>

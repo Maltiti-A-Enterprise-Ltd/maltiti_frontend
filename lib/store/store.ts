@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import productsReducer from './features/products/productsSlice';
 import authReducer from './features/auth/authSlice';
 import { cartReducer, guestCartReducer } from './features/cart';
+import { notificationsReducer } from './features/notifications';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   cart: cartReducer,
   guestCart: persistReducer(guestCartPersistConfig, guestCartReducer),
+  notifications: notificationsReducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

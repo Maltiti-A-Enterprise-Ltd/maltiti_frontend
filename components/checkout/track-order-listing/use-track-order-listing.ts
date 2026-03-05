@@ -6,11 +6,13 @@ import {
   SaleResponseDto,
   salesControllerListSalesByEmail,
   SalesControllerListSalesByEmailData,
+  TopicEnum,
 } from '@/app/api';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
-import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
+import { selectIsAuthenticated, selectUser, selectUserEmail } from '@/lib/store/features/auth';
 import { isValidEmail } from './helpers';
+import { useNotificationTopic } from '@/lib/hooks';
 
 type UseTrackOrderListingReturn = {
   email: string;
@@ -47,14 +49,11 @@ export const useTrackOrderListing = (): UseTrackOrderListingReturn => {
   const emailFromQuery = searchParams.get('email');
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const userEmail = useAppSelector(selectUserEmail);
   const user = useAppSelector(selectUser);
 
-  const [email, setEmail] = useState(
-    emailFromQuery || (isAuthenticated && user?.email ? user.email : ''),
-  );
-  const [searchInput, setSearchInput] = useState(
-    emailFromQuery || (isAuthenticated && user?.email ? user.email : ''),
-  );
+  const [email, setEmail] = useState(emailFromQuery || userEmail || '');
+  const [searchInput, setSearchInput] = useState(emailFromQuery || userEmail || '');
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<SaleResponseDto[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -146,18 +145,20 @@ export const useTrackOrderListing = (): UseTrackOrderListingReturn => {
     [filters],
   );
 
+  useNotificationTopic(Object.values(TopicEnum), (notification) => {
+    if (notification.topic === TopicEnum.ORDER_STATUS_UPDATED) {
+      void fetchOrders(email);
+    }
+  });
+
   useEffect(() => {
     if (emailFromQuery) {
       void fetchOrders(emailFromQuery);
-    }
-  }, [emailFromQuery, fetchOrders]);
-
-  useEffect(() => {
-    if (!emailFromQuery && isAuthenticated && user?.email && !hasSearched) {
+    } else if (isAuthenticated && user?.email && !hasSearched) {
       setEmail(user.email);
       void fetchOrders(user.email);
     }
-  }, [emailFromQuery, isAuthenticated, user, hasSearched, fetchOrders]);
+  }, [emailFromQuery, isAuthenticated, user, hasSearched]);
 
   const handleSearch = (): void => {
     const trimmedInput = searchInput.trim();

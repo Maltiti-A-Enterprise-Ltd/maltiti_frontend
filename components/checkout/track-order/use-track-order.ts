@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated, selectUser } from '@/lib/store/features/auth';
 import { REFUND_TIMELINE } from '@/lib/constants/refund-config';
+import { useOrderRealtimeUpdates } from '@/lib/hooks';
 
 export type UseTrackOrderReturn = {
   isLoading: boolean;
@@ -96,7 +97,7 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
         return;
       }
 
-      setOrderDetails(data.data as SaleResponseDto);
+      setOrderDetails(data.data);
       setNeedsEmail(false);
       setError(null);
     } catch (err) {
@@ -129,7 +130,7 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
         return;
       }
 
-      setOrderDetails(data as SaleResponseDto);
+      setOrderDetails(data);
       toast.success('Delivery Confirmed', {
         description: 'Thank you for confirming your delivery!',
       });
@@ -189,7 +190,7 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
           return;
         }
 
-        setOrderDetails(data.sale as SaleResponseDto);
+        setOrderDetails(data.sale);
         toast.success('Order Cancelled', {
           description: data.message || 'Your order has been successfully cancelled.',
         });
@@ -217,6 +218,35 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
       setIsLoading(false);
     }
   }, [saleId, initialEmail, isAuthenticated, user, triedUserEmail, fetchOrderStatus]);
+
+  // Set up real-time order updates
+  useOrderRealtimeUpdates({
+    saleId,
+    enabled: !!orderDetails && !needsEmail,
+    onOrderUpdateAction: (payload) => {
+      // Refresh order status when we receive an update notification
+      void fetchOrderStatus();
+
+      // Show a toast notification based on the update type
+      if (payload.status === OrderStatus.PACKAGING) {
+        toast.success('Order Update', {
+          description: 'Your order is now being processed!',
+        });
+      } else if (payload.status === OrderStatus.IN_TRANSIT) {
+        toast.success('Order Shipped', {
+          description: 'Your order has been shipped and is on its way!',
+        });
+      } else if (payload.status === OrderStatus.DELIVERED) {
+        toast.success('Order Delivered', {
+          description: 'Your order has been delivered!',
+        });
+      } else if (payload.status === OrderStatus.CANCELLED) {
+        toast.info('Order Cancelled', {
+          description: 'Your order has been cancelled.',
+        });
+      }
+    },
+  });
 
   return {
     isLoading,
