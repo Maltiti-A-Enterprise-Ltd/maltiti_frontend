@@ -98,7 +98,7 @@ export const NotificationList = ({ onCloseAction }: NotificationListProps): JSX.
   })();
 
   return (
-    <div className="flex h-125 flex-col">
+    <div className="flex h-125 flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between border-b p-4">
         <div>
@@ -115,7 +115,9 @@ export const NotificationList = ({ onCloseAction }: NotificationListProps): JSX.
       </div>
 
       {/* Notification List */}
-      <ScrollArea className="flex-1">{notificationContent}</ScrollArea>
+      <ScrollArea className="flex-1 overflow-auto" onWheel={(e) => e.stopPropagation()}>
+        {notificationContent}
+      </ScrollArea>
 
       {/* Footer */}
       {notifications.length > 0 && (

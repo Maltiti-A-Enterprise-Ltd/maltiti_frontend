@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,15 +15,10 @@ export default function NotificationsPage(): JSX.Element {
     isLoading,
     isLoadingMore,
     hasMore,
-    loadNotifications,
     loadMore,
     markAsRead,
     markAllAsRead,
   } = useNotifications();
-
-  useEffect(() => {
-    void loadNotifications();
-  }, [loadNotifications]);
 
   const handleNotificationClick = async (notificationId: string, link: string): Promise<void> => {
     await markAsRead(notificationId);

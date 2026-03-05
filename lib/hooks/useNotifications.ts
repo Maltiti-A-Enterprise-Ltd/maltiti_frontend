@@ -49,6 +49,10 @@ export const useNotifications = (): UseNotificationsReturn => {
     await dispatch(markAllNotificationsAsRead()).unwrap();
   }, [dispatch]);
 
+  useEffect(() => {
+    void loadNotifications();
+  }, []);
+
   return {
     notifications,
     unreadCount,
