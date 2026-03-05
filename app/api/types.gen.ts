@@ -771,6 +771,40 @@ export type UpdateIngredientDto = {
     name?: string;
 };
 
+export type Notification = {
+    userId: string;
+    topic: TopicEnum;
+    title: string;
+    message: string;
+    link: string;
+    payload: {
+        [key: string]: unknown;
+    };
+    isRead: boolean;
+    readAt: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type PaginatedNotificationsResponseDto = {
+    notifications: Array<Notification>;
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasMore: boolean;
+    unreadCount: number;
+};
+
+export type MarkAsReadDto = {
+    /**
+     * Notification ID to mark as read
+     */
+    notificationId: string;
+};
+
 export type UpdateUserDto = {
     name?: string;
     email?: string;
@@ -2288,6 +2322,33 @@ export enum StatusEnum {
     SUSPENDED = 'suspended'
 }
 
+export enum TopicEnum {
+    ORDER_CREATED = 'ORDER_CREATED',
+    ORDER_STATUS_UPDATED = 'ORDER_STATUS_UPDATED',
+    ORDER_CANCELLED = 'ORDER_CANCELLED',
+    ORDER_DELIVERED = 'ORDER_DELIVERED',
+    PAYMENT_RECEIVED = 'PAYMENT_RECEIVED',
+    PAYMENT_FAILED = 'PAYMENT_FAILED',
+    REFUND_PROCESSED = 'REFUND_PROCESSED',
+    PRODUCT_CREATED = 'PRODUCT_CREATED',
+    PRODUCT_PRICE_CHANGED = 'PRODUCT_PRICE_CHANGED',
+    PRODUCT_OUT_OF_STOCK = 'PRODUCT_OUT_OF_STOCK',
+    PRODUCT_BACK_IN_STOCK = 'PRODUCT_BACK_IN_STOCK',
+    USER_ACCOUNT_CREATED = 'USER_ACCOUNT_CREATED',
+    USER_EMAIL_VERIFIED = 'USER_EMAIL_VERIFIED',
+    USER_PASSWORD_RESET = 'USER_PASSWORD_RESET',
+    USER_PROFILE_UPDATED = 'USER_PROFILE_UPDATED',
+    ADMIN_NEW_ORDER = 'ADMIN_NEW_ORDER',
+    ADMIN_ORDER_CANCELLED = 'ADMIN_ORDER_CANCELLED',
+    ADMIN_CONTACT_FORM_SUBMITTED = 'ADMIN_CONTACT_FORM_SUBMITTED',
+    ADMIN_LOW_STOCK_ALERT = 'ADMIN_LOW_STOCK_ALERT',
+    REVIEW_SUBMITTED = 'REVIEW_SUBMITTED',
+    REVIEW_APPROVED = 'REVIEW_APPROVED',
+    REVIEW_REJECTED = 'REVIEW_REJECTED',
+    SYSTEM_MAINTENANCE = 'SYSTEM_MAINTENANCE',
+    SYSTEM_ANNOUNCEMENT = 'SYSTEM_ANNOUNCEMENT'
+}
+
 export type AuditControllerFindAllData = {
     body?: never;
     path?: never;
@@ -3259,6 +3320,38 @@ export type BatchesControllerCreateBatchResponses = {
 
 export type BatchesControllerCreateBatchResponse = BatchesControllerCreateBatchResponses[keyof BatchesControllerCreateBatchResponses];
 
+export type BatchesControllerGetBatchesByProductsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Array of product IDs to retrieve batches for
+         */
+        productIds: unknown;
+    };
+    url: '/products/batches/products';
+};
+
+export type BatchesControllerGetBatchesByProductsErrors = {
+    /**
+     * Invalid product IDs
+     */
+    400: unknown;
+    /**
+     * No products found for the provided IDs
+     */
+    404: unknown;
+};
+
+export type BatchesControllerGetBatchesByProductsResponses = {
+    /**
+     * Batches retrieved successfully
+     */
+    200: Array<BatchResponseDto>;
+};
+
+export type BatchesControllerGetBatchesByProductsResponse = BatchesControllerGetBatchesByProductsResponses[keyof BatchesControllerGetBatchesByProductsResponses];
+
 export type BatchesControllerGetBatchData = {
     body?: never;
     path: {
@@ -3429,6 +3522,61 @@ export type IngredientsControllerUpdateResponses = {
     /**
      * The updated ingredient
      */
+    200: unknown;
+};
+
+export type NotificationControllerGetNotificationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page number (1-indexed)
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         */
+        limit?: number;
+    };
+    url: '/notifications';
+};
+
+export type NotificationControllerGetNotificationsResponses = {
+    200: PaginatedNotificationsResponseDto;
+};
+
+export type NotificationControllerGetNotificationsResponse = NotificationControllerGetNotificationsResponses[keyof NotificationControllerGetNotificationsResponses];
+
+export type NotificationControllerGetUnreadCountData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/notifications/unread-count';
+};
+
+export type NotificationControllerGetUnreadCountResponses = {
+    200: unknown;
+};
+
+export type NotificationControllerMarkAsReadData = {
+    body: MarkAsReadDto;
+    path?: never;
+    query?: never;
+    url: '/notifications/mark-as-read';
+};
+
+export type NotificationControllerMarkAsReadResponses = {
+    200: unknown;
+};
+
+export type NotificationControllerMarkAllAsReadData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/notifications/mark-all-as-read';
+};
+
+export type NotificationControllerMarkAllAsReadResponses = {
     200: unknown;
 };
 
