@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 export function SessionExpiryHandler(): null {
   const router = useRouter();
   const pathname = usePathname();
+  const hasRedirectedRef = useRef<boolean>(false);
 
   useEffect(() => {
     const handleSessionExpiry = (event: Event): void => {
@@ -20,13 +21,19 @@ export function SessionExpiryHandler(): null {
       toast.error(customEvent.detail.message || 'Your session has expired. Please login again.', {
         duration: 10000,
       });
+
+      // Redirect to login if not already on an auth page and not already redirecting
+      if (!pathname.startsWith('/auth/') && !hasRedirectedRef.current) {
+        hasRedirectedRef.current = true;
+        router.push('/auth/login');
+      }
     };
 
     // Listen for session expired events
-    window.addEventListener('session-expired', handleSessionExpiry);
+    globalThis.addEventListener('session-expired', handleSessionExpiry);
 
     return (): void => {
-      window.removeEventListener('session-expired', handleSessionExpiry);
+      globalThis.removeEventListener('session-expired', handleSessionExpiry);
     };
   }, [router, pathname]);
 

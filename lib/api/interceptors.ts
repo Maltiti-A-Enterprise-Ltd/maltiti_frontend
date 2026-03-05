@@ -107,8 +107,7 @@ const handleSessionExpiry = (): void => {
   });
   globalThis.dispatchEvent(event);
 
-  // Redirect to login page
-  globalThis.location.href = '/auth/login';
+  // Redirect is now handled by SessionExpiryHandler component
 };
 
 /**
