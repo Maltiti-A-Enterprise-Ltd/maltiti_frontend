@@ -55,7 +55,7 @@ const CheckoutPage = (): JSX.Element => {
     if (isProcessing) {
       return (
         <>
-          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />{' '}
           Processing...
         </>
       );
@@ -126,7 +126,6 @@ const CheckoutPage = (): JSX.Element => {
               isInternationalDelivery={isInternationalDelivery}
               deliveryError={deliveryError}
               onRetryDelivery={handleRetryDelivery}
-              isProcessing={isProcessing}
               buttonDisabled={buttonDisabled}
               onCheckout={handleCheckout}
               buttonContent={buttonContent}
