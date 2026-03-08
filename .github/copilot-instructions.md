@@ -1,0 +1,10 @@
+- We are using Shadcn as our library so try to use it.
+- Always follow React, Next, TypeScript best practices
+- Always use a modern design feel, and try to use very good animations and illustrations in designs that will designs have good aesthetics and intuitive
+- Remember to use yarn always since that is our package manager
+- Enforce return types in all functions
+- Always type for props instead of interfaces
+- Don't create .md or documentation after implementations unless prompt asks for it
+- Never use any type in the codebase, always be specific with types and use union types if needed
+- Always use absolute imports instead of relative imports
+- Do not use nested ternary operators
