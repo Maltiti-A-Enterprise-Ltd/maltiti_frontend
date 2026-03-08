@@ -166,15 +166,6 @@ export const useCart = (): UseCartReturn => {
   }, [dispatch, isAuthenticated]);
 
   /**
-   * Get current cart items and totals
-   * Returns appropriate cart based on auth status
-   */
-  // let currentCart: CartItemDto = isAuthenticated ? cart : guestCart;
-  // const items = currentCart.items;
-  // const totalItems = currentCart.totalItems;
-  // const totalPrice = currentCart.totalPrice;
-
-  /**
    * Loading states - works for both authenticated and guest users
    */
   const isLoading = isAuthenticated
@@ -220,6 +211,6 @@ export const useCart = (): UseCartReturn => {
 
     // Raw cart states (for advanced use)
     cart: isAuthenticated ? cart : null,
-    guestCart: !isAuthenticated ? guestCart : null,
+    guestCart: isAuthenticated ? null : guestCart,
   };
 };

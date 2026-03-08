@@ -18,7 +18,6 @@ type OrderSummarySectionProps = {
   isInternationalDelivery: boolean;
   deliveryError: string | null;
   onRetryDelivery: () => void;
-  isProcessing: boolean;
   buttonDisabled: boolean;
   onCheckout: () => void;
   buttonContent: JSX.Element;

@@ -771,40 +771,6 @@ export type UpdateIngredientDto = {
     name?: string;
 };
 
-export type Notification = {
-    userId: string;
-    topic: TopicEnum;
-    title: string;
-    message: string;
-    link: string;
-    payload: {
-        [key: string]: unknown;
-    };
-    isRead: boolean;
-    readAt: string | null;
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-};
-
-export type PaginatedNotificationsResponseDto = {
-    notifications: Array<Notification>;
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-    hasMore: boolean;
-    unreadCount: number;
-};
-
-export type MarkAsReadDto = {
-    /**
-     * Notification ID to mark as read
-     */
-    notificationId: string;
-};
-
 export type UpdateUserDto = {
     name?: string;
     email?: string;
@@ -1340,7 +1306,11 @@ export type SaleDto = {
      */
     deliveryFee?: number;
     /**
-     * Total payable amount (amount + deliveryFee)
+     * Service processing fee charged to cover payment gateway costs (e.g. Paystack 1.95% of subtotal). Calculated as: (amount + deliveryFee) * 1.95%.
+     */
+    serviceFee?: number;
+    /**
+     * Grand total payable amount (amount + deliveryFee + serviceFee). This is the exact amount charged to the customer.
      */
     total?: number;
     lineItems: Array<SaleLineItemDto>;
@@ -1494,11 +1464,15 @@ export type SaleResponseDto = {
      */
     deliveryFee?: number;
     /**
+     * Service processing fee charged to cover payment gateway costs (e.g. Paystack 1.95% of subtotal). Calculated as: (amount + deliveryFee) * 1.95%.
+     */
+    serviceFee?: number;
+    /**
      * Date when delivery was confirmed (null if not confirmed)
      */
     confirmedDeliveryDate?: string;
     /**
-     * Total payable amount (amount + deliveryFee)
+     * Grand total payable amount (amount + deliveryFee + serviceFee). This is the exact amount charged to the customer.
      */
     total?: number;
     /**
@@ -1788,7 +1762,14 @@ export type UpdateSaleDto = {
     customerId?: string;
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
+    /**
+     * Delivery fee in GHS
+     */
     deliveryFee?: number;
+    /**
+     * Service processing fee in GHS. If not provided, it will be automatically recalculated as 1.95% of (amount + deliveryFee) whenever the delivery fee is updated.
+     */
+    serviceFee?: number;
     lineItems?: Array<UpdateSaleLineItemDto>;
 };
 
@@ -1955,7 +1936,7 @@ export type CancelSaleByAdminDto = {
 
 export type UpdateDeliveryCostDto = {
     /**
-     * New delivery cost amount
+     * New delivery cost amount in GHS. When set, the service processing fee (1.95% of product total + delivery fee) will be automatically recalculated and stored on the sale. The customer will be charged the grand total: product amount + delivery fee + service fee.
      */
     deliveryCost: number;
 };
@@ -2179,6 +2160,40 @@ export type ContactUsErrorResponseDto = {
     error: string;
 };
 
+export type Notification = {
+    userId: string;
+    topic: TopicEnum;
+    title: string;
+    message: string;
+    link: string;
+    payload: {
+        [key: string]: unknown;
+    };
+    isRead: boolean;
+    readAt: string | null;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+};
+
+export type PaginatedNotificationsResponseDto = {
+    notifications: Array<Notification>;
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasMore: boolean;
+    unreadCount: number;
+};
+
+export type MarkAsReadDto = {
+    /**
+     * Notification ID to mark as read
+     */
+    notificationId: string;
+};
+
 export type CreateReviewDto = {
     /**
      * ID of the sale being reviewed
@@ -2327,6 +2342,7 @@ export enum TopicEnum {
     ORDER_STATUS_UPDATED = 'ORDER_STATUS_UPDATED',
     ORDER_CANCELLED = 'ORDER_CANCELLED',
     ORDER_DELIVERED = 'ORDER_DELIVERED',
+    ORDER_DELIVERY_COST_UPDATED = 'ORDER_DELIVERY_COST_UPDATED',
     PAYMENT_RECEIVED = 'PAYMENT_RECEIVED',
     PAYMENT_FAILED = 'PAYMENT_FAILED',
     REFUND_PROCESSED = 'REFUND_PROCESSED',
@@ -2342,6 +2358,8 @@ export enum TopicEnum {
     ADMIN_ORDER_CANCELLED = 'ADMIN_ORDER_CANCELLED',
     ADMIN_CONTACT_FORM_SUBMITTED = 'ADMIN_CONTACT_FORM_SUBMITTED',
     ADMIN_LOW_STOCK_ALERT = 'ADMIN_LOW_STOCK_ALERT',
+    ADMIN_PAYMENT_RECEIVED = 'ADMIN_PAYMENT_RECEIVED',
+    ADMIN_REVIEW_SUBMITTED = 'ADMIN_REVIEW_SUBMITTED',
     REVIEW_SUBMITTED = 'REVIEW_SUBMITTED',
     REVIEW_APPROVED = 'REVIEW_APPROVED',
     REVIEW_REJECTED = 'REVIEW_REJECTED',
@@ -3525,61 +3543,6 @@ export type IngredientsControllerUpdateResponses = {
     200: unknown;
 };
 
-export type NotificationControllerGetNotificationsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Page number (1-indexed)
-         */
-        page?: number;
-        /**
-         * Number of items per page
-         */
-        limit?: number;
-    };
-    url: '/notifications';
-};
-
-export type NotificationControllerGetNotificationsResponses = {
-    200: PaginatedNotificationsResponseDto;
-};
-
-export type NotificationControllerGetNotificationsResponse = NotificationControllerGetNotificationsResponses[keyof NotificationControllerGetNotificationsResponses];
-
-export type NotificationControllerGetUnreadCountData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/notifications/unread-count';
-};
-
-export type NotificationControllerGetUnreadCountResponses = {
-    200: unknown;
-};
-
-export type NotificationControllerMarkAsReadData = {
-    body: MarkAsReadDto;
-    path?: never;
-    query?: never;
-    url: '/notifications/mark-as-read';
-};
-
-export type NotificationControllerMarkAsReadResponses = {
-    200: unknown;
-};
-
-export type NotificationControllerMarkAllAsReadData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/notifications/mark-all-as-read';
-};
-
-export type NotificationControllerMarkAllAsReadResponses = {
-    200: unknown;
-};
-
 export type UsersControllerFindAllData = {
     body?: never;
     path?: never;
@@ -4324,27 +4287,6 @@ export type CheckoutControllerUpdateSaleStatusResponses = {
 
 export type CheckoutControllerUpdateSaleStatusResponse = CheckoutControllerUpdateSaleStatusResponses[keyof CheckoutControllerUpdateSaleStatusResponses];
 
-export type CheckoutControllerCancelOrderData = {
-    body?: never;
-    path: {
-        /**
-         * Checkout ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/checkout/cancel-order/{id}';
-};
-
-export type CheckoutControllerCancelOrderResponses = {
-    /**
-     * Order has been successfully cancelled. If you have paid, you will receive refund in 7-12 business days
-     */
-    200: CheckoutResponseDto;
-};
-
-export type CheckoutControllerCancelOrderResponse = CheckoutControllerCancelOrderResponses[keyof CheckoutControllerCancelOrderResponses];
-
 export type CheckoutControllerGetGuestDeliveryCostData = {
     body: GuestGetDeliveryCostDto;
     path?: never;
@@ -4841,7 +4783,7 @@ export type SalesControllerUpdateDeliveryCostData = {
 
 export type SalesControllerUpdateDeliveryCostResponses = {
     /**
-     * Delivery cost updated successfully. Customer will be notified.
+     * Delivery cost updated successfully. Service fee recalculated. Customer will be notified.
      */
     200: SaleResponseDto;
 };
@@ -5680,6 +5622,61 @@ export type ContactControllerSubmitContactFormResponses = {
 };
 
 export type ContactControllerSubmitContactFormResponse = ContactControllerSubmitContactFormResponses[keyof ContactControllerSubmitContactFormResponses];
+
+export type NotificationControllerGetNotificationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page number (1-indexed)
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         */
+        limit?: number;
+    };
+    url: '/notifications';
+};
+
+export type NotificationControllerGetNotificationsResponses = {
+    200: PaginatedNotificationsResponseDto;
+};
+
+export type NotificationControllerGetNotificationsResponse = NotificationControllerGetNotificationsResponses[keyof NotificationControllerGetNotificationsResponses];
+
+export type NotificationControllerGetUnreadCountData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/notifications/unread-count';
+};
+
+export type NotificationControllerGetUnreadCountResponses = {
+    200: unknown;
+};
+
+export type NotificationControllerMarkAsReadData = {
+    body: MarkAsReadDto;
+    path?: never;
+    query?: never;
+    url: '/notifications/mark-as-read';
+};
+
+export type NotificationControllerMarkAsReadResponses = {
+    200: unknown;
+};
+
+export type NotificationControllerMarkAllAsReadData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/notifications/mark-all-as-read';
+};
+
+export type NotificationControllerMarkAllAsReadResponses = {
+    200: unknown;
+};
 
 export type ReviewControllerGetAllReviewsData = {
     body?: never;

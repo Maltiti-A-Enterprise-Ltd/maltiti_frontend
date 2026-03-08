@@ -476,6 +476,13 @@ export default function TrackOrderListingPage(): JSX.Element {
                 day: 'numeric',
               });
 
+              let displayTotal = 'Pending';
+              if (order.total) {
+                displayTotal = `GHS ${Number(order.total).toFixed(2)}`;
+              } else if (order.amount) {
+                displayTotal = `GHS ${Number(order.amount).toFixed(2)}+`;
+              }
+
               return (
                 <motion.div
                   key={order.id}
@@ -535,9 +542,7 @@ export default function TrackOrderListingPage(): JSX.Element {
                         <div className="flex items-center gap-4 sm:flex-col sm:items-end">
                           <div className="flex-1 sm:flex-none">
                             <p className="text-sm text-gray-500">Total</p>
-                            <p className="text-2xl font-bold text-green-600">
-                              {order.amount ? `GHS ${Number(order.amount).toFixed(2)}` : 'Pending'}
-                            </p>
+                            <p className="text-2xl font-bold text-green-600">{displayTotal}</p>
                           </div>
                           <ChevronRight className="h-6 w-6 shrink-0 text-gray-400 transition-transform group-hover:translate-x-1 group-hover:text-green-600" />
                         </div>
