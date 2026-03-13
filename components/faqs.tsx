@@ -11,12 +11,12 @@ import { motion } from 'framer-motion';
 import { FAQItem, iconMap } from '@/lib/faq-data';
 import { JSX } from 'react';
 
-interface FAQProps {
+interface FaqsProps {
   items: FAQItem[];
   className?: string;
 }
 
-export function FAQ({ items, className }: FAQProps): JSX.Element {
+export function Faqs({ items, className }: Readonly<FaqsProps>): JSX.Element {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -38,7 +38,7 @@ export function FAQ({ items, className }: FAQProps): JSX.Element {
           const IconComponent = item.icon ? iconMap[item.icon] : null;
           return (
             <motion.div
-              key={index}
+              key={`${index}-${item.question}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.4 }}
