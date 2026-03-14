@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX, useEffect } from 'react';
-import { FAQ } from '@/components/faq';
+import { Faqs } from '@/components/faqs';
 import { faqData } from '@/lib/faq-data';
 import { BestProductsSection } from '@/components/products';
 import { HeroSection } from '@/components/home/hero-section';
@@ -14,15 +14,31 @@ import { LocationSection } from '@/components/home/location-section';
 import { maltitiLocationInfo } from '@/lib/location-data';
 import { ContactSection } from '@/components/home/contact-section';
 import { TrackOrderSection } from '@/components/home/track-order-section';
+import { useAppSelector } from '@/lib/store/hooks';
 
 export default function Home(): JSX.Element {
+  const { loading } = useAppSelector(({ products }) => products);
+
   useEffect(() => {
-    const hash = globalThis.location.hash.slice(1);
-    const element = document.getElementById(hash);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (loading) {
+      return;
     }
-  }, []);
+
+    const hash = globalThis.location.hash.slice(1);
+    if (!hash) {
+      return;
+    }
+
+    // Small delay to ensure layout has fully settled after products load
+    const timer = setTimeout(() => {
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 0);
+
+    return (): void => clearTimeout(timer);
+  }, [loading]);
 
   return (
     <main className="mx-auto mt-20">
@@ -36,7 +52,7 @@ export default function Home(): JSX.Element {
       <TestimonialsSection testimonials={testimonialsData} />
       <div className="px-8">
         <section id="faqs" className="scroll-mt-20 py-20">
-          <FAQ items={faqData} />
+          <Faqs items={faqData} />
         </section>
       </div>
       <LocationSection location={maltitiLocationInfo} />
