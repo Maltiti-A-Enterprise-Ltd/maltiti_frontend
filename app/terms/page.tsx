@@ -8,16 +8,16 @@ import {
 } from '@/components/ui/accordion';
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { REFUND_TIMELINE } from '@/lib/constants/refund-config';
 
-interface TermItem {
+type TermItem = {
   title: string;
   content: string;
-}
+};
 
 const termsData: TermItem[] = [
   {
@@ -77,8 +77,6 @@ const termsData: TermItem[] = [
 ];
 
 export default function TermsPage(): JSX.Element {
-  const router = useRouter();
-
   return (
     <main className="mx-auto mt-20 px-8">
       <motion.div
@@ -88,9 +86,11 @@ export default function TermsPage(): JSX.Element {
         className="mx-auto max-w-4xl p-6"
       >
         <div className="mb-8 text-center">
-          <Button variant="ghost" onClick={() => router.back()} className="text-primary">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
+          <Button variant="ghost" asChild className="text-primary">
+            <Link href="/">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Link>
           </Button>
           <h1 className="from-primary via-primary to-primary/80 mb-3 bg-linear-to-r bg-clip-text text-4xl font-bold tracking-wide text-transparent drop-shadow-sm">
             Terms & Conditions
@@ -101,15 +101,15 @@ export default function TermsPage(): JSX.Element {
           <p className="text-muted-foreground mt-4 text-sm">Effective Date: December 31, 2025</p>
         </div>
         <Accordion type="single" collapsible className="space-y-4">
-          {termsData.map((item, index) => (
+          {termsData.map((item) => (
             <motion.div
-              key={index}
+              key={item.title}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
+              transition={{ delay: termsData.indexOf(item) * 0.1, duration: 0.4 }}
             >
               <AccordionItem
-                value={`item-${index}`}
+                value={item.title}
                 className="bg-card rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md"
               >
                 <AccordionTrigger className="px-6 py-4 text-left hover:no-underline">

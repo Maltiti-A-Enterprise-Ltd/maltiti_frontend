@@ -3,9 +3,13 @@ import { Metadata } from 'next';
 import { AuthLayout, ForgotPasswordForm } from '@/components/auth';
 
 export const metadata: Metadata = {
-  title: 'Forgot Password | Maltiti',
+  title: 'Forgot Password | Maltiti A. Enterprise Ltd',
   description:
     'Reset your Maltiti account password. Enter your email to receive a password reset link.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ForgotPasswordPage(): JSX.Element {

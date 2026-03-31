@@ -7,6 +7,9 @@ import {
   ProductResponseDto,
 } from '@/app/api';
 import { ProductDetailContent, ProductDetailSkeleton } from '@/components/products';
+import { getProductSchema, getBreadcrumbSchema } from '@/lib/seo/json-ld';
+
+const BASE_URL = 'https://maltitiaenterprise.com';
 
 type ProductPageProps = {
   params: Promise<{
@@ -14,7 +17,22 @@ type ProductPageProps = {
   }>;
 };
 
-// Generate metadata for SEO
+export const revalidate = 3600;
+
+export async function generateStaticParams(): Promise<{ id: string }[]> {
+  try {
+    const { data, error } = await productsControllerGetAllProducts({
+      query: { page: 1, limit: 100 },
+    });
+    if (error || !data) {
+      return [];
+    }
+    return (data.data?.items ?? []).map((product) => ({ id: product.id }));
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   try {
     const { id } = await params;
@@ -42,12 +60,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         'Maltiti',
         ...(product.isOrganic ? ['certified organic'] : []),
       ].join(', '),
+      alternates: {
+        canonical: `${BASE_URL}/shop/${id}`,
+      },
       openGraph: {
         title: `${product.name} | Maltiti A. Enterprise Ltd`,
         description:
           product.description ||
           `Premium ${product.category.replaceAll('_', ' ')} from Northern Ghana`,
         type: 'website',
+        url: `${BASE_URL}/shop/${id}`,
         images: [
           {
             url: product.image || product.images?.[0] || '/placeholder-product.svg',
@@ -70,26 +92,19 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return {
       title: 'Product Not Found | Maltiti A. Enterprise Ltd',
       description: 'The product you are looking for could not be found.',
+      robots: { index: false, follow: false },
     };
   }
 }
 
-// Fetch product data
 async function getProductData(id: string): Promise<{
   product: ProductResponseDto;
   relatedProducts: ProductResponseDto[];
 } | null> {
   try {
     const [productResponse, relatedProductsResponse] = await Promise.all([
-      productsControllerGetProduct({
-        path: { id },
-      }),
-      productsControllerGetAllProducts({
-        query: {
-          page: 1,
-          limit: 8,
-        },
-      }),
+      productsControllerGetProduct({ path: { id } }),
+      productsControllerGetAllProducts({ query: { page: 1, limit: 8 } }),
     ]);
 
     if (productResponse.error || relatedProductsResponse.error) {
@@ -103,10 +118,7 @@ async function getProductData(id: string): Promise<{
       throw new Error('Product or related products not found');
     }
 
-    return {
-      product,
-      relatedProducts,
-    };
+    return { product, relatedProducts };
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;
@@ -123,9 +135,26 @@ export default async function ProductPage({
     notFound();
   }
 
+  const productSchema = getProductSchema(data.product);
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: BASE_URL },
+    { name: 'Shop', url: `${BASE_URL}/shop` },
+    { name: data.product.name, url: `${BASE_URL}/shop/${id}` },
+  ]);
+
   return (
-    <Suspense fallback={<ProductDetailSkeleton />}>
-      <ProductDetailContent product={data.product} relatedProducts={data.relatedProducts} />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <Suspense fallback={<ProductDetailSkeleton />}>
+        <ProductDetailContent product={data.product} relatedProducts={data.relatedProducts} />
+      </Suspense>
+    </>
   );
 }
