@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { JSX, ReactNode } from 'react';
+import { JSX, ReactNode, Suspense } from 'react';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { Footer } from '@/components/footer';
 import { Toaster } from '@/components/ui/sonner';
@@ -12,6 +12,7 @@ import { NavBar } from '@/components/navbar';
 import { SessionExpiryHandler } from '@/components/auth';
 import { NotificationProvider, NotificationToastContainer } from '@/components/notifications';
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo/json-ld';
+import { GoogleAnalytics, AnalyticsTracker } from '@/components/analytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -121,6 +122,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
+        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <StoreProvider>
           <NotificationProvider>
             <SessionExpiryHandler />
