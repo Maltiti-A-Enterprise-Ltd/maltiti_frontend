@@ -1,9 +1,10 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
+import { trackProductView } from '@/lib/analytics';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,6 +27,11 @@ export function ProductDetailContent({
   product,
   relatedProducts,
 }: Readonly<ProductDetailContentProps>): JSX.Element {
+  // Fire GA4 view_item once per product page load
+  useEffect(() => {
+    trackProductView(product);
+  }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Get product images
   const defaultImageList = product.image ? [product.image] : ['/placeholder-product.svg'];
   const productImages =

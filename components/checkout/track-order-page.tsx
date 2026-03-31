@@ -13,12 +13,15 @@ import { EmailRequestCard } from './track-order/email-request-card';
 import { CancelOrderDialog } from './track-order/cancel-order-dialog';
 import { LoadingState } from './track-order/loading-state';
 import { ErrorState } from './track-order/error-state';
+import { DocumentActionsCard } from './track-order/document-actions-card';
+import { PaymentHistoryModal } from './track-order/payment-history-modal';
 import { TrackOrderPageProps } from './track-order/types';
 
 const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): JSX.Element => {
   const router = useRouter();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showPaymentHistory, setShowPaymentHistory] = useState(false);
 
   const {
     isLoading,
@@ -30,10 +33,13 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
     isConfirmingDelivery,
     isInitializingPayment,
     isCancellingOrder,
+    isGeneratingDocument,
     fetchOrderStatus,
     confirmDelivery,
     handlePayNow,
     handleCancelOrder,
+    handleGenerateInvoice,
+    handleGenerateReceipt,
     triedUserEmail,
     getCancellationStatusMessage,
     getCancellationDialogMessage,
@@ -93,6 +99,16 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
           cancellationMessage={getCancellationStatusMessage()}
         />
 
+        <div className="mb-6">
+          <DocumentActionsCard
+            orderDetails={orderDetails}
+            isGeneratingDocument={isGeneratingDocument}
+            onGenerateInvoiceAction={() => void handleGenerateInvoice()}
+            onGenerateReceiptAction={() => void handleGenerateReceipt()}
+            onViewPaymentsAction={() => setShowPaymentHistory(true)}
+          />
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-2">
           <OrderDetailsCard orderDetails={orderDetails} />
           <DeliveryInfoCard orderDetails={orderDetails} />
@@ -102,6 +118,12 @@ const TrackOrderPage = ({ saleId, email: initialEmail }: TrackOrderPageProps): J
           isOpen={showReviewModal}
           onClose={() => setShowReviewModal(false)}
           saleId={saleId}
+        />
+
+        <PaymentHistoryModal
+          saleId={saleId}
+          isOpen={showPaymentHistory}
+          onCloseAction={() => setShowPaymentHistory(false)}
         />
 
         <CancelOrderDialog

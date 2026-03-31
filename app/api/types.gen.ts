@@ -80,6 +80,9 @@ export type RegisterUserDto = {
     sessionId?: string;
 };
 
+/**
+ * User role/type
+ */
 export enum Role {
     USER = 'user',
     ADMIN = 'admin',
@@ -838,6 +841,9 @@ export type EditCooperativeDto = {
     minimalShare: string;
 };
 
+/**
+ * The type of identification document (e.g., National ID, Voter ID, Passport)
+ */
 export enum IdType {
     GHANA_CARD = 'Ghana Card',
     VOTER_ID = 'Voter ID',
@@ -846,6 +852,9 @@ export enum IdType {
     NHIS_CARD = 'NHIS Card'
 }
 
+/**
+ * The region of Ghana where the member resides
+ */
 export enum GhanaRegion {
     AHAFO_REGION = 'Ahafo Region',
     ASHANTI_REGION = 'Ashanti Region',
@@ -865,6 +874,9 @@ export enum GhanaRegion {
     WESTERN_REGION = 'Western Region'
 }
 
+/**
+ * The highest level of education attained
+ */
 export enum EducationLevel {
     NO_FORMAL_EDUCATION = 'No Formal Education',
     PRIMARY_SCHOOL = 'Primary School',
@@ -1281,10 +1293,10 @@ export type CheckoutDto = {
 
 export type SaleLineItemDto = {
     productId: string;
-    batchAllocations: {
+    batchAllocations: Array<{
         batchId?: string;
         quantity?: number;
-    };
+    }>;
     requestedQuantity: number;
     customPrice?: number;
     finalPrice: number;
@@ -1419,6 +1431,9 @@ export type PlaceOrderDto = {
     extraInfo?: string;
 };
 
+/**
+ * Order status
+ */
 export enum OrderStatus {
     PENDING = 'pending',
     PACKAGING = 'packaging',
@@ -1427,6 +1442,9 @@ export enum OrderStatus {
     CANCELLED = 'cancelled'
 }
 
+/**
+ * Payment status
+ */
 export enum PaymentStatus {
     INVOICE_REQUESTED = 'invoice_requested',
     AWAITING_DELIVERY = 'awaiting_delivery',
@@ -1479,6 +1497,18 @@ export type SaleResponseDto = {
      * Line items in the sale
      */
     lineItems: Array<SaleLineItemResponseDto>;
+    /**
+     * All payment records for this sale (partial and full payments). Populated when fetching a single sale's details.
+     */
+    payments?: Array<SalePaymentResponseDto>;
+    /**
+     * Total amount confirmed/paid across all payment records for this sale.
+     */
+    totalPaid?: number;
+    /**
+     * Outstanding balance remaining (total - totalPaid). Zero or negative means fully paid.
+     */
+    balanceRemaining?: number;
     /**
      * Sale creation date
      */
@@ -1618,6 +1648,10 @@ export type CancelSaleResponseDto = {
 
 export type CreateSaleDto = {
     customerId: string;
+    /**
+     * Delivery fee in GHS
+     */
+    deliveryFee?: number;
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
@@ -1749,6 +1783,43 @@ export type SaleLineItemResponseDto = {
      * Total amount for this line item
      */
     totalAmount?: number;
+};
+
+export type SalePaymentResponseDto = {
+    /**
+     * Payment record ID.
+     */
+    id: string;
+    /**
+     * The ID of the sale this payment belongs to.
+     */
+    saleId: string;
+    /**
+     * The amount paid in this transaction.
+     */
+    amount: number;
+    paymentMethod: PaymentMethodEnum;
+    status: StatusEnum2;
+    /**
+     * Optional payment reference (e.g., bank transfer reference, Paystack reference).
+     */
+    reference?: string;
+    /**
+     * Optional note or description for this payment.
+     */
+    note?: string;
+    /**
+     * Whether this payment was initiated by the customer (true) or recorded manually by admin (false).
+     */
+    isCustomerInitiated: boolean;
+    /**
+     * Date and time this payment record was created.
+     */
+    createdAt: string;
+    /**
+     * Date and time this payment record was last updated.
+     */
+    updatedAt: string;
 };
 
 export type UpdateSaleLineItemDto = {
@@ -1941,6 +2012,84 @@ export type UpdateDeliveryCostDto = {
     deliveryCost: number;
 };
 
+export type RecordSalePaymentDto = {
+    /**
+     * The amount paid in this payment transaction.
+     */
+    amount: number;
+    paymentMethod: PaymentMethodEnum;
+    status: StatusEnum2;
+    /**
+     * Optional payment reference (e.g., bank transfer reference, Paystack reference).
+     */
+    reference?: string;
+    /**
+     * Optional note or description for this payment (e.g., 'First instalment', 'Final payment').
+     */
+    note?: string;
+    /**
+     * Whether this payment was initiated by the customer (true) or recorded manually by admin (false).
+     */
+    isCustomerInitiated?: boolean;
+};
+
+export type SalePaymentResponseWrapperDto = {
+    /**
+     * Response message.
+     */
+    message: string;
+    /**
+     * Payment record data.
+     */
+    data: SalePaymentResponseDto;
+};
+
+export type SalePaymentSummaryResponseDto = {
+    /**
+     * The sale ID these payments belong to.
+     */
+    saleId: string;
+    /**
+     * The grand total amount of the sale (amount + delivery + service fee).
+     */
+    saleTotal: number;
+    /**
+     * Total amount that has been confirmed/paid across all payment records.
+     */
+    totalPaid: number;
+    /**
+     * Outstanding balance remaining (saleTotal - totalPaid). Zero or negative means fully paid.
+     */
+    balanceRemaining: number;
+    /**
+     * Whether the sale is fully paid (totalPaid >= saleTotal).
+     */
+    isFullyPaid: boolean;
+    /**
+     * All payment records for this sale.
+     */
+    payments: Array<SalePaymentResponseDto>;
+};
+
+export type SalePaymentSummaryResponseWrapperDto = {
+    /**
+     * Response message.
+     */
+    message: string;
+    /**
+     * Payment summary data.
+     */
+    data: SalePaymentSummaryResponseDto;
+};
+
+export type UpdatePaymentRecordStatusDto = {
+    status: StatusEnum2;
+    /**
+     * Optional reason or note for the status change.
+     */
+    note?: string;
+};
+
 export type CustomerResponseDto = {
     /**
      * The unique identifier of the customer
@@ -2013,13 +2162,33 @@ export type CreateCustomerDto = {
      */
     phone?: string;
     /**
+     * Alternative phone number of the customer
+     */
+    phoneNumber?: string;
+    /**
      * The email address of the customer
      */
     email?: string;
     /**
-     * The address of the customer
+     * The full address of the customer
      */
     address?: string;
+    /**
+     * The country the customer is from
+     */
+    country?: string;
+    /**
+     * The region or state the customer is from
+     */
+    region?: string;
+    /**
+     * The city the customer is from
+     */
+    city?: string;
+    /**
+     * Additional information about the customer
+     */
+    extraInfo?: string;
 };
 
 export type UpdateCustomerDto = {
@@ -2036,13 +2205,33 @@ export type UpdateCustomerDto = {
      */
     phone?: string;
     /**
+     * Alternative phone number of the customer
+     */
+    phoneNumber?: string;
+    /**
      * The email address of the customer
      */
     email?: string;
     /**
-     * The address of the customer
+     * The full address of the customer
      */
     address?: string;
+    /**
+     * The country the customer is from
+     */
+    country?: string;
+    /**
+     * The region or state the customer is from
+     */
+    region?: string;
+    /**
+     * The city the customer is from
+     */
+    city?: string;
+    /**
+     * Additional information about the customer
+     */
+    extraInfo?: string;
 };
 
 export type ProfileResponseDto = {
@@ -2279,9 +2468,15 @@ export enum SchemaEnum {
     BATCH_ASSIGNED = 'BATCH_ASSIGNED',
     REPORT_EXPORTED = 'REPORT_EXPORTED',
     DATA_EXPORTED = 'DATA_EXPORTED',
+    GENERATE_INVOICE = 'GENERATE_INVOICE',
+    GENERATE_RECEIPT = 'GENERATE_RECEIPT',
+    GENERATE_WAYBILL = 'GENERATE_WAYBILL',
     SALE_CREATED = 'SALE_CREATED',
     SALE_UPDATED = 'SALE_UPDATED',
     SALE_CANCELLED = 'SALE_CANCELLED',
+    ORDER_STATUS_UPDATED = 'ORDER_STATUS_UPDATED',
+    PAYMENT_RECORDED = 'PAYMENT_RECORDED',
+    PAYMENT_STATUS_UPDATED = 'PAYMENT_STATUS_UPDATED',
     CONFIGURATION_CHANGED = 'CONFIGURATION_CHANGED',
     SYSTEM_ACTION = 'SYSTEM_ACTION',
     USER_CREATED = 'USER_CREATED',
@@ -2299,10 +2494,14 @@ export enum SchemaEnum2 {
     SALE = 'SALE',
     CHECKOUT = 'CHECKOUT',
     CART = 'CART',
+    PAYMENT = 'PAYMENT',
     COOPERATIVE = 'COOPERATIVE',
     COOPERATIVE_MEMBER = 'COOPERATIVE_MEMBER',
     CUSTOMER = 'CUSTOMER',
     REPORT = 'REPORT',
+    INVOICE = 'INVOICE',
+    RECEIPT = 'RECEIPT',
+    WAYBILL = 'WAYBILL',
     SYSTEM = 'SYSTEM',
     CONFIGURATION = 'CONFIGURATION',
     AUTHENTICATION = 'AUTHENTICATION'
@@ -2316,13 +2515,20 @@ export enum SchemaEnum3 {
 }
 
 export enum SchemaEnum4 {
+    NAME = 'name',
+    CREATED_AT = 'createdAt',
+    EMAIL = 'email',
+    CITY = 'city'
+}
+
+export enum SchemaEnum5 {
     DAILY = 'daily',
     WEEKLY = 'weekly',
     MONTHLY = 'monthly',
     YEARLY = 'yearly'
 }
 
-export enum SchemaEnum5 {
+export enum SchemaEnum6 {
     _7 = '7',
     _30 = '30',
     _90 = '90'
@@ -2335,6 +2541,28 @@ export enum StatusEnum {
     ACTIVE = 'active',
     INACTIVE = 'inactive',
     SUSPENDED = 'suspended'
+}
+
+/**
+ * The payment method used.
+ */
+export enum PaymentMethodEnum {
+    PAYSTACK = 'paystack',
+    BANK_TRANSFER = 'bank_transfer',
+    CASH = 'cash',
+    MOBILE_MONEY = 'mobile_money',
+    CHEQUE = 'cheque',
+    OTHER = 'other'
+}
+
+/**
+ * The status of this payment record.
+ */
+export enum StatusEnum2 {
+    PENDING = 'pending',
+    CONFIRMED = 'confirmed',
+    FAILED = 'failed',
+    REFUNDED = 'refunded'
 }
 
 export enum TopicEnum {
@@ -2374,39 +2602,41 @@ export type AuditControllerFindAllData = {
         /**
          * Start date for filtering (ISO 8601 format)
          */
-        from?: unknown;
+        from?: string;
         /**
          * End date for filtering (ISO 8601 format)
          */
-        to?: unknown;
+        to?: string;
         /**
          * Filter by action type
          */
-        actionType?: SchemaEnum;
+        actionType?: string;
         /**
          * Filter by entity type
          */
-        entityType?: SchemaEnum2;
+        entityType?: string;
         /**
          * Filter by user ID who performed the action
          */
-        userId?: unknown;
+        userId?: string;
         /**
          * Filter by user role
          */
-        role?: Role;
+        role?: string;
         /**
          * Page number (starts from 1)
          */
-        page?: unknown;
+        page?: number;
         /**
          * Number of items per page
          */
-        limit?: unknown;
+        limit?: number;
         /**
          * Sort order (ASC or DESC)
          */
-        sortOrder?: unknown;
+        sortOrder?: {
+            [key: string]: unknown;
+        };
     };
     url: '/audits';
 };
@@ -3257,35 +3487,35 @@ export type BatchesControllerGetAllBatchesData = {
         /**
          * Page number for pagination
          */
-        page?: unknown;
+        page?: number;
         /**
          * Number of items per page
          */
-        limit?: unknown;
+        limit?: number;
         /**
          * Filter by product ID
          */
-        productId?: unknown;
+        productId?: string;
         /**
          * Search term for batch number
          */
-        batchNumber?: unknown;
+        batchNumber?: string;
         /**
          * Filter by quality check status
          */
-        qualityCheckStatus?: unknown;
+        qualityCheckStatus?: string;
         /**
          * Filter by active status
          */
-        isActive?: unknown;
+        isActive?: boolean;
         /**
          * Sort field
          */
-        sortBy?: unknown;
+        sortBy?: string;
         /**
          * Sort order
          */
-        sortOrder?: unknown;
+        sortOrder?: string;
     };
     url: '/products/batches';
 };
@@ -3345,7 +3575,7 @@ export type BatchesControllerGetBatchesByProductsData = {
         /**
          * Array of product IDs to retrieve batches for
          */
-        productIds: unknown;
+        productIds: Array<string>;
     };
     url: '/products/batches/products';
 };
@@ -4790,18 +5020,182 @@ export type SalesControllerUpdateDeliveryCostResponses = {
 
 export type SalesControllerUpdateDeliveryCostResponse = SalesControllerUpdateDeliveryCostResponses[keyof SalesControllerUpdateDeliveryCostResponses];
 
+export type SalePaymentControllerGetPaymentsForSaleData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the sale
+         */
+        saleId: string;
+    };
+    query?: never;
+    url: '/sales/{saleId}/payments';
+};
+
+export type SalePaymentControllerGetPaymentsForSaleErrors = {
+    /**
+     * Sale not found.
+     */
+    404: unknown;
+};
+
+export type SalePaymentControllerGetPaymentsForSaleResponses = {
+    /**
+     * Payment records retrieved successfully.
+     */
+    200: SalePaymentSummaryResponseWrapperDto;
+};
+
+export type SalePaymentControllerGetPaymentsForSaleResponse = SalePaymentControllerGetPaymentsForSaleResponses[keyof SalePaymentControllerGetPaymentsForSaleResponses];
+
+export type SalePaymentControllerRecordPaymentData = {
+    body: RecordSalePaymentDto;
+    path: {
+        /**
+         * ID of the sale
+         */
+        saleId: string;
+    };
+    query?: never;
+    url: '/sales/{saleId}/payments';
+};
+
+export type SalePaymentControllerRecordPaymentErrors = {
+    /**
+     * Invalid payment amount or sale state.
+     */
+    400: unknown;
+    /**
+     * Sale not found.
+     */
+    404: unknown;
+};
+
+export type SalePaymentControllerRecordPaymentResponses = {
+    /**
+     * Payment recorded successfully.
+     */
+    201: SalePaymentResponseWrapperDto;
+};
+
+export type SalePaymentControllerRecordPaymentResponse = SalePaymentControllerRecordPaymentResponses[keyof SalePaymentControllerRecordPaymentResponses];
+
+export type SalePaymentControllerGetPaymentRecordData = {
+    body?: never;
+    path: {
+        /**
+         * ID of the sale
+         */
+        saleId: string;
+        /**
+         * ID of the payment record
+         */
+        paymentId: string;
+    };
+    query?: never;
+    url: '/sales/{saleId}/payments/{paymentId}';
+};
+
+export type SalePaymentControllerGetPaymentRecordErrors = {
+    /**
+     * Sale or payment record not found.
+     */
+    404: unknown;
+};
+
+export type SalePaymentControllerGetPaymentRecordResponses = {
+    /**
+     * Payment record retrieved successfully.
+     */
+    200: SalePaymentResponseWrapperDto;
+};
+
+export type SalePaymentControllerGetPaymentRecordResponse = SalePaymentControllerGetPaymentRecordResponses[keyof SalePaymentControllerGetPaymentRecordResponses];
+
+export type SalePaymentControllerUpdatePaymentStatusData = {
+    body: UpdatePaymentRecordStatusDto;
+    path: {
+        /**
+         * ID of the sale
+         */
+        saleId: string;
+        /**
+         * ID of the payment record
+         */
+        paymentId: string;
+    };
+    query?: never;
+    url: '/sales/{saleId}/payments/{paymentId}/status';
+};
+
+export type SalePaymentControllerUpdatePaymentStatusErrors = {
+    /**
+     * Sale or payment record not found.
+     */
+    404: unknown;
+};
+
+export type SalePaymentControllerUpdatePaymentStatusResponses = {
+    /**
+     * Payment record status updated successfully.
+     */
+    200: SalePaymentResponseWrapperDto;
+};
+
+export type SalePaymentControllerUpdatePaymentStatusResponse = SalePaymentControllerUpdatePaymentStatusResponses[keyof SalePaymentControllerUpdatePaymentStatusResponses];
+
 export type CustomerControllerGetAllCustomersData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page number
+         * Page number for pagination
          */
         page?: number;
         /**
-         * Items per page
+         * Number of items per page
          */
         limit?: number;
+        /**
+         * Search term to match against name, email, or phone
+         */
+        search?: string;
+        /**
+         * Filter by exact email address
+         */
+        email?: string;
+        /**
+         * Filter by exact phone number
+         */
+        phone?: string;
+        /**
+         * Filter by country (partial match)
+         */
+        country?: string;
+        /**
+         * Filter by region or state (partial match)
+         */
+        region?: string;
+        /**
+         * Filter by city (partial match)
+         */
+        city?: string;
+        /**
+         * Filter customers created on or after this date (ISO format)
+         */
+        startDate?: string;
+        /**
+         * Filter customers created on or before this date (ISO format)
+         */
+        endDate?: string;
+        /**
+         * Field to sort by
+         */
+        sortBy?: SchemaEnum4;
+        /**
+         * Sort order
+         */
+        sortOrder?: SortOrder;
     };
     url: '/customers';
 };
@@ -4961,7 +5355,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
         /**
          * Include sales trends
          */
@@ -5004,7 +5398,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/sales/by-product';
 };
@@ -5043,7 +5437,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/sales/by-category';
 };
@@ -5082,7 +5476,7 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
         /**
          * Number of top products to return
          */
@@ -5126,7 +5520,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/products/revenue-distribution';
 };
@@ -5165,7 +5559,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/batches';
 };
@@ -5204,7 +5598,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/batches/aging';
 };
@@ -5271,7 +5665,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/stock-movement';
 };
@@ -5342,7 +5736,7 @@ export type ReportsControllerGetDeliveryReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/delivery';
 };
@@ -5381,7 +5775,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum4;
+        aggregation?: SchemaEnum5;
     };
     url: '/reports/dashboard-summary';
 };
@@ -5427,7 +5821,7 @@ export type DashboardControllerGetTrendsData = {
         /**
          * Period for trend data
          */
-        period?: SchemaEnum5;
+        period?: SchemaEnum6;
     };
     url: '/dashboard/trends';
 };

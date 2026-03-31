@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { checkoutControllerConfirmPayment, checkoutControllerConfirmGuestPayment } from '@/app/api';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectIsAuthenticated } from '@/lib/store/features/auth';
+import { trackPurchase } from '@/lib/analytics';
 
 type ConfirmPaymentPageProps = {
   saleId: string;
@@ -37,7 +38,7 @@ const ConfirmPaymentPage = ({ saleId }: ConfirmPaymentPageProps): JSX.Element =>
       // Determine if this is a guest or authenticated user payment
       if (isAuthenticated) {
         // Authenticated user - use regular confirm payment endpoint
-        const { error } = await checkoutControllerConfirmPayment({
+        const { error, data } = await checkoutControllerConfirmPayment({
           path: { saleId },
         });
 
@@ -45,6 +46,10 @@ const ConfirmPaymentPage = ({ saleId }: ConfirmPaymentPageProps): JSX.Element =>
           throw new Error(
             String((error as { message: string }).message || 'Payment confirmation failed.'),
           );
+        }
+
+        if (data) {
+          trackPurchase(data.data.sale);
         }
 
         setStatus('success');
@@ -64,6 +69,8 @@ const ConfirmPaymentPage = ({ saleId }: ConfirmPaymentPageProps): JSX.Element =>
             String((error as { message: string }).message || 'Payment confirmation failed.'),
           );
         }
+
+        trackPurchase(data.data.sale);
 
         setStatus('success');
 

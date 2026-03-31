@@ -7,6 +7,8 @@ import {
   salesControllerConfirmDelivery,
   salesControllerPayForOrder,
   salesControllerCancelSaleByCustomer,
+  salesControllerGenerateInvoice,
+  salesControllerGenerateReceipt,
 } from '@/app/api';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
@@ -24,10 +26,13 @@ export type UseTrackOrderReturn = {
   isConfirmingDelivery: boolean;
   isInitializingPayment: boolean;
   isCancellingOrder: boolean;
+  isGeneratingDocument: boolean;
   fetchOrderStatus: () => Promise<void>;
   confirmDelivery: () => Promise<void>;
   handlePayNow: () => Promise<void>;
   handleCancelOrder: (reason: string) => Promise<void>;
+  handleGenerateInvoice: () => Promise<void>;
+  handleGenerateReceipt: () => Promise<void>;
   triedUserEmail: boolean;
   getCancellationStatusMessage: () => string;
   getCancellationDialogMessage: () => string;
@@ -43,6 +48,7 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
   const [isConfirmingDelivery, setIsConfirmingDelivery] = useState(false);
   const [isInitializingPayment, setIsInitializingPayment] = useState(false);
   const [isCancellingOrder, setIsCancellingOrder] = useState(false);
+  const [isGeneratingDocument, setIsGeneratingDocument] = useState(false);
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
@@ -206,6 +212,77 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
     [saleId, email],
   );
 
+  const downloadBlob = (blob: Blob, filename: string): void => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleGenerateInvoice = useCallback(async (): Promise<void> => {
+    try {
+      setIsGeneratingDocument(true);
+      const { data, error } = await salesControllerGenerateInvoice({
+        path: { id: saleId },
+        body: {},
+        parseAs: 'blob',
+      });
+
+      if (error || !data) {
+        toast.error('Invoice Generation Failed', {
+          description: 'Unable to generate invoice. Please try again.',
+        });
+        return;
+      }
+
+      downloadBlob(data as Blob, `invoice-${saleId}.pdf`);
+      toast.success('Invoice Downloaded', {
+        description: 'Your invoice has been downloaded successfully.',
+      });
+    } catch (err) {
+      console.error('Error generating invoice:', err);
+      toast.error('Invoice Generation Failed', {
+        description: 'Unable to generate invoice. Please try again.',
+      });
+    } finally {
+      setIsGeneratingDocument(false);
+    }
+  }, [saleId]);
+
+  const handleGenerateReceipt = useCallback(async (): Promise<void> => {
+    try {
+      setIsGeneratingDocument(true);
+      const { data, error } = await salesControllerGenerateReceipt({
+        path: { id: saleId },
+        body: {},
+        parseAs: 'blob',
+      });
+
+      if (error || !data) {
+        toast.error('Receipt Generation Failed', {
+          description: 'Unable to generate receipt. Please try again.',
+        });
+        return;
+      }
+
+      downloadBlob(data as Blob, `receipt-${saleId}.pdf`);
+      toast.success('Receipt Downloaded', {
+        description: 'Your receipt has been downloaded successfully.',
+      });
+    } catch (err) {
+      console.error('Error generating receipt:', err);
+      toast.error('Receipt Generation Failed', {
+        description: 'Unable to generate receipt. Please try again.',
+      });
+    } finally {
+      setIsGeneratingDocument(false);
+    }
+  }, [saleId]);
+
   useEffect(() => {
     if (saleId && !initialEmail && isAuthenticated && user?.email && !triedUserEmail) {
       setEmail(user.email);
@@ -258,10 +335,13 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
     isConfirmingDelivery,
     isInitializingPayment,
     isCancellingOrder,
+    isGeneratingDocument,
     fetchOrderStatus,
     confirmDelivery,
     handlePayNow,
     handleCancelOrder,
+    handleGenerateInvoice,
+    handleGenerateReceipt,
     triedUserEmail,
     getCancellationStatusMessage,
     getCancellationDialogMessage,
