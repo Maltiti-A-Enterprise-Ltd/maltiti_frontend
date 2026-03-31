@@ -11,6 +11,7 @@ import { useCart } from '@/lib/store/useCart';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { trackAddToCart } from '@/lib/analytics';
 
 type ProductInfoSectionProps = {
   product: ProductResponseDto;
@@ -53,6 +54,7 @@ export function ProductInfoSection({ product }: Readonly<ProductInfoSectionProps
 
     try {
       await addItem(product, quantity);
+      trackAddToCart(product, quantity);
       toast.success('Added to cart', {
         description: `${quantity} × ${product.name} added to your cart`,
         duration: 3000,

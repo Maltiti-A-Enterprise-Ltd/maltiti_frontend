@@ -14,6 +14,7 @@ import { contactControllerSubmitContactForm } from '@/app/api/sdk.gen';
 import { toast } from 'sonner';
 import { useAppSelector } from '@/lib/store/hooks';
 import { selectUser, selectIsAuthenticated } from '@/lib/store/features/auth/authSelectors';
+import { trackContactFormSubmit } from '@/lib/analytics';
 
 type ContactSectionProps = {
   className?: string;
@@ -66,6 +67,8 @@ export function ContactSection({ className = '' }: Readonly<ContactSectionProps>
       if (error) {
         throw new Error(String(error.error));
       }
+
+      trackContactFormSubmit({ isAuthenticated });
 
       // Success state
       setIsSuccess(true);
