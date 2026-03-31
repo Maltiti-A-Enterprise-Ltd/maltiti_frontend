@@ -223,65 +223,63 @@ export const useTrackOrder = (saleId: string, initialEmail?: string): UseTrackOr
     URL.revokeObjectURL(url);
   };
 
-  const handleGenerateInvoice = useCallback(async (): Promise<void> => {
-    try {
-      setIsGeneratingDocument(true);
-      const { data, error } = await salesControllerGenerateInvoice({
-        path: { id: saleId },
-        body: {},
-        parseAs: 'blob',
-      });
+  type DocumentType = 'invoice' | 'receipt';
 
-      if (error || !data) {
-        toast.error('Invoice Generation Failed', {
-          description: 'Unable to generate invoice. Please try again.',
-        });
-        return;
-      }
-
-      downloadBlob(data as Blob, `invoice-${saleId}.pdf`);
-      toast.success('Invoice Downloaded', {
-        description: 'Your invoice has been downloaded successfully.',
-      });
-    } catch (err) {
-      console.error('Error generating invoice:', err);
-      toast.error('Invoice Generation Failed', {
-        description: 'Unable to generate invoice. Please try again.',
-      });
-    } finally {
-      setIsGeneratingDocument(false);
+  const documentConfig: Record<
+    DocumentType,
+    {
+      apiFn: typeof salesControllerGenerateInvoice | typeof salesControllerGenerateReceipt;
+      label: string;
     }
-  }, [saleId]);
+  > = {
+    invoice: { apiFn: salesControllerGenerateInvoice, label: 'Invoice' },
+    receipt: { apiFn: salesControllerGenerateReceipt, label: 'Receipt' },
+  };
 
-  const handleGenerateReceipt = useCallback(async (): Promise<void> => {
-    try {
-      setIsGeneratingDocument(true);
-      const { data, error } = await salesControllerGenerateReceipt({
-        path: { id: saleId },
-        body: {},
-        parseAs: 'blob',
-      });
-
-      if (error || !data) {
-        toast.error('Receipt Generation Failed', {
-          description: 'Unable to generate receipt. Please try again.',
+  const handleGenerateDocument = useCallback(
+    async (type: DocumentType): Promise<void> => {
+      const { apiFn, label } = documentConfig[type];
+      try {
+        setIsGeneratingDocument(true);
+        const { data, error } = await apiFn({
+          path: { id: saleId },
+          body: {},
+          parseAs: 'blob',
         });
-        return;
-      }
 
-      downloadBlob(data as Blob, `receipt-${saleId}.pdf`);
-      toast.success('Receipt Downloaded', {
-        description: 'Your receipt has been downloaded successfully.',
-      });
-    } catch (err) {
-      console.error('Error generating receipt:', err);
-      toast.error('Receipt Generation Failed', {
-        description: 'Unable to generate receipt. Please try again.',
-      });
-    } finally {
-      setIsGeneratingDocument(false);
-    }
-  }, [saleId]);
+        if (error || !data) {
+          toast.error(`${label} Generation Failed`, {
+            description: `Unable to generate ${label.toLowerCase()}. Please try again.`,
+          });
+          return;
+        }
+
+        downloadBlob(data as Blob, `${type}-${saleId}.pdf`);
+        toast.success(`${label} Downloaded`, {
+          description: `Your ${label.toLowerCase()} has been downloaded successfully.`,
+        });
+      } catch (err) {
+        console.error(`Error generating ${label.toLowerCase()}:`, err);
+        toast.error(`${label} Generation Failed`, {
+          description: `Unable to generate ${label.toLowerCase()}. Please try again.`,
+        });
+      } finally {
+        setIsGeneratingDocument(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [saleId],
+  );
+
+  const handleGenerateInvoice = useCallback(
+    (): Promise<void> => handleGenerateDocument('invoice'),
+    [handleGenerateDocument],
+  );
+
+  const handleGenerateReceipt = useCallback(
+    (): Promise<void> => handleGenerateDocument('receipt'),
+    [handleGenerateDocument],
+  );
 
   useEffect(() => {
     if (saleId && !initialEmail && isAuthenticated && user?.email && !triedUserEmail) {
