@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: 'Settings | Maltiti A. Enterprise Ltd',
   description:
     'Manage your account settings, update your profile information, and change your password.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function Settings(): JSX.Element {

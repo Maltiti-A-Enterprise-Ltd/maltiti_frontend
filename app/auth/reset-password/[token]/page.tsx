@@ -4,8 +4,12 @@ import { notFound } from 'next/navigation';
 import { AuthLayout, ResetPasswordForm } from '@/components/auth';
 
 export const metadata: Metadata = {
-  title: 'Reset Password | Maltiti',
+  title: 'Reset Password | Maltiti A. Enterprise Ltd',
   description: 'Create a new password for your Maltiti account.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 type ResetPasswordPageProps = {
