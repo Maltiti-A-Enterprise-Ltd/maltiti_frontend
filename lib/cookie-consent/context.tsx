@@ -28,6 +28,11 @@ export function CookieConsentProvider({ children }: CookieConsentProviderProps):
     setConsentState(state);
     setShowBanner(!state);
     setIsInitialized(true);
+
+    // Restore previously-granted consent so GA4 can track on return visits
+    if (state?.preferences && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: state.preferences }));
+    }
   }, []);
   const acceptAll = (): void => {
     const preferences: CookieConsentPreferences = {
