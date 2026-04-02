@@ -2,7 +2,7 @@
 
 import Script from 'next/script';
 import { useEffect, JSX } from 'react';
-import { GA_MEASUREMENT_ID, getConsentInitScript, updateGtagConsent } from '@/lib/analytics';
+import { GA_MEASUREMENT_ID, getConsentInitScript, updateGtagConsent, trackPageView } from '@/lib/analytics';
 import { CookieConsentPreferences } from '@/lib/cookie-consent';
 
 /**
@@ -22,6 +22,16 @@ export function GoogleAnalytics(): JSX.Element {
     const handleConsentChange = (e: Event): void => {
       const preferences = (e as CustomEvent<CookieConsentPreferences>).detail;
       updateGtagConsent(preferences.analytics);
+
+      // Fire a page_view immediately after consent is granted so the current
+      // page is tracked — covers both return visitors (consent restored on load)
+      // and first-time visitors accepting the banner.
+      if (preferences.analytics) {
+        const url = window.location.search
+          ? `${window.location.pathname}${window.location.search}`
+          : window.location.pathname;
+        trackPageView(url);
+      }
     };
 
     globalThis.addEventListener('cookieConsentChanged', handleConsentChange);
