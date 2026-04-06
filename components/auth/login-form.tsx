@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,7 @@ interface LoginFormProps {
   onSuccess?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
+export function LoginForm({ onSuccess }: Readonly<LoginFormProps>): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isAuthLoading = useAppSelector(selectLoginLoading);
@@ -164,6 +165,26 @@ export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
         ) : (
           'Sign In'
         )}
+      </Button>
+
+      {/* Divider */}
+      <div className="relative flex items-center">
+        <div className="grow border-t border-gray-200" />
+        <span className="mx-4 shrink-0 text-sm text-gray-400">or continue with</span>
+        <div className="grow border-t border-gray-200" />
+      </div>
+
+      {/* Google Sign In */}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full rounded-lg py-6 text-base font-medium"
+        onClick={() => {
+          globalThis.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication/google`;
+        }}
+      >
+        <Icon icon="flat-color-icons:google" className="mr-2 h-5 w-5" />
+        Sign in with Google
       </Button>
 
       {/* Signup Link */}
