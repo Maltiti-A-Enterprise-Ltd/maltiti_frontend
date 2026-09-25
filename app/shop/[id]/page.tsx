@@ -8,6 +8,7 @@ import {
 } from '@/app/api';
 import { ProductDetailContent, ProductDetailSkeleton } from '@/components/products';
 import { getProductSchema, getBreadcrumbSchema } from '@/lib/seo/json-ld';
+import { fetchForBuild } from '@/lib/build-data';
 
 const BASE_URL = 'https://maltitiaenterprise.com';
 
@@ -20,17 +21,22 @@ type ProductPageProps = {
 export const revalidate = 3600;
 
 export async function generateStaticParams(): Promise<{ id: string }[]> {
-  try {
-    const { data, error } = await productsControllerGetAllProducts({
-      query: { page: 1, limit: 100 },
-    });
-    if (error || !data) {
-      return [];
-    }
-    return (data.data?.items ?? []).map((product) => ({ id: product.id }));
-  } catch {
-    return [];
-  }
+  /* Falling back to [] means no product pages are prerendered; `dynamicParams` still renders
+     them on demand, so the shop keeps working. A stalled backend must not fail the deploy. */
+  return fetchForBuild(
+    'shop product pages to prerender',
+    async (signal) => {
+      const { data, error } = await productsControllerGetAllProducts({
+        query: { page: 1, limit: 100 },
+        signal,
+      });
+      if (error || !data) {
+        throw new Error('the products endpoint returned no data');
+      }
+      return (data.data?.items ?? []).map((product) => ({ id: product.id }));
+    },
+    [],
+  );
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
