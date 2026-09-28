@@ -3101,6 +3101,50 @@ export type AuthenticationControllerResendVerificationEmailResponses = {
 
 export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
 
+export type AuthenticationControllerGoogleAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google';
+};
+
+export type AuthenticationControllerGoogleAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerGoogleCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google/callback';
+};
+
+export type AuthenticationControllerGoogleCallbackResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft';
+};
+
+export type AuthenticationControllerMicrosoftAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft/callback';
+};
+
+export type AuthenticationControllerMicrosoftCallbackResponses = {
+    200: unknown;
+};
+
 export type ProductsControllerGetAllProductsData = {
     body?: never;
     path?: never;
