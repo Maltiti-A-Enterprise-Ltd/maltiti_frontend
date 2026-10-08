@@ -1,0 +1,94 @@
+# Dependabot keeps dependencies current without drowning the repo in PRs.
+#
+# Strategy: minor and patch updates only, batched into a handful of grouped PRs
+# each week. Major bumps are ignored here on purpose — a Next.js or React major
+# is a migration, not something to merge off a bot PR. Do those deliberately.
+#
+# Security updates are NOT governed by this file. GitHub raises those regardless
+# of the `ignore` rules below, including for majors. Make sure
+# Settings → Code security → Dependabot security updates is enabled.
+#
+# This repo uses yarn; Dependabot's `npm` ecosystem covers npm, yarn and pnpm
+# and will update yarn.lock correctly.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Africa/Accra
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+
+    groups:
+      # Next and React are upgraded as a unit — Next pins the React versions it
+      # supports, so bumping one alone tends to break the build.
+      next-and-react:
+        patterns:
+          - next
+          - "next-*"
+          - "@next/*"
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
+          - eslint-config-next
+        update-types:
+          - minor
+          - patch
+
+      # 13 separate Radix packages would otherwise be 13 separate PRs.
+      radix-ui:
+        patterns:
+          - "@radix-ui/*"
+        update-types:
+          - minor
+          - patch
+
+      # The API client is generated from the backend's OpenAPI schema; keep the
+      # generator and its runtime in step.
+      api-client:
+        patterns:
+          - "@hey-api/*"
+        update-types:
+          - minor
+          - patch
+
+      styling:
+        patterns:
+          - tailwindcss
+          - "@tailwindcss/*"
+          - postcss
+          - autoprefixer
+          - "tailwind-*"
+          - class-variance-authority
+          - clsx
+        update-types:
+          - minor
+          - patch
+
+      production:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+
+      development:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+
+    ignore:
+      # Majors are opt-in. Remove a line here when you want to take one on.
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
