@@ -372,6 +372,7 @@ export enum ProductGrade {
 export enum UnitOfMeasurement {
     KILOGRAM = 'kilogram',
     GRAM = 'gram',
+    POUND = 'pound',
     LITRE = 'litre',
     MILLILITRE = 'millilitre'
 }
@@ -2096,9 +2097,13 @@ export type CustomerResponseDto = {
      */
     id: string;
     /**
-     * The name of the customer
+     * The full name of the contact person. Null when the customer is identified by organization only.
      */
-    name: string;
+    name?: string | null;
+    /**
+     * The organization the customer represents. Null when the customer is an individual.
+     */
+    organizationName?: string | null;
     /**
      * The phone number of the customer
      */
@@ -2154,9 +2159,13 @@ export type CustomerMeResponseDto = {
 
 export type CreateCustomerDto = {
     /**
-     * The name of the customer
+     * The full name of the contact person. Required when no organization name is supplied.
      */
-    name: string;
+    name?: string;
+    /**
+     * The organization the customer represents. Required when no contact name is supplied.
+     */
+    organizationName?: string;
     /**
      * The phone number of the customer
      */
@@ -2197,9 +2206,13 @@ export type UpdateCustomerDto = {
      */
     id: string;
     /**
-     * The name of the customer
+     * The full name of the contact person. Send an empty string to clear it — only allowed when an organization name remains.
      */
-    name?: string;
+    name?: string | null;
+    /**
+     * The organization the customer represents. Send an empty string to clear it — only allowed when a contact name remains.
+     */
+    organizationName?: string | null;
     /**
      * The phone number of the customer
      */
@@ -2516,6 +2529,7 @@ export enum SchemaEnum3 {
 
 export enum SchemaEnum4 {
     NAME = 'name',
+    ORGANIZATION_NAME = 'organizationName',
     CREATED_AT = 'createdAt',
     EMAIL = 'email',
     CITY = 'city'
@@ -3100,6 +3114,50 @@ export type AuthenticationControllerResendVerificationEmailResponses = {
 };
 
 export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
+
+export type AuthenticationControllerGoogleAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google';
+};
+
+export type AuthenticationControllerGoogleAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerGoogleCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google/callback';
+};
+
+export type AuthenticationControllerGoogleCallbackResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft';
+};
+
+export type AuthenticationControllerMicrosoftAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft/callback';
+};
+
+export type AuthenticationControllerMicrosoftCallbackResponses = {
+    200: unknown;
+};
 
 export type ProductsControllerGetAllProductsData = {
     body?: never;
@@ -5157,9 +5215,13 @@ export type CustomerControllerGetAllCustomersData = {
          */
         limit?: number;
         /**
-         * Search term to match against name, email, or phone
+         * Search term to match against name, organization name, email, or phone
          */
         search?: string;
+        /**
+         * Filter by organization name (partial match)
+         */
+        organizationName?: string;
         /**
          * Filter by exact email address
          */
