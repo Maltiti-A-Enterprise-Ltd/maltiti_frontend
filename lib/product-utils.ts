@@ -6,6 +6,7 @@ import { UnitOfMeasurement } from '@/app/api';
 export const unitSymbols: Record<UnitOfMeasurement, string> = {
   [UnitOfMeasurement.KILOGRAM]: 'kg',
   [UnitOfMeasurement.GRAM]: 'g',
+  [UnitOfMeasurement.POUND]: 'lb',
   [UnitOfMeasurement.LITRE]: 'L',
   [UnitOfMeasurement.MILLILITRE]: 'ml',
 };

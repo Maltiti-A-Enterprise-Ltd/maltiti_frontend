@@ -372,6 +372,7 @@ export enum ProductGrade {
 export enum UnitOfMeasurement {
     KILOGRAM = 'kilogram',
     GRAM = 'gram',
+    POUND = 'pound',
     LITRE = 'litre',
     MILLILITRE = 'millilitre'
 }
@@ -412,6 +413,7 @@ export type Product = {
     ingredients: Array<Ingredient>;
     weight: string;
     unitOfMeasurement: UnitOfMeasurement;
+    quantityUnit: QuantityUnitEnum;
     category: ProductCategory;
     description: string;
     status: ProductStatus;
@@ -453,6 +455,7 @@ export type ProductResponseDto = {
     ingredients: Array<Ingredient>;
     weight: string;
     unitOfMeasurement: UnitOfMeasurement;
+    quantityUnit: QuantityUnitEnum;
     category: ProductCategory;
     description: string;
     status: ProductStatus;
@@ -538,6 +541,7 @@ export type CreateProductDto = {
      */
     weight?: string;
     unitOfMeasurement?: UnitOfMeasurement;
+    quantityUnit?: QuantityUnitEnum;
     category: ProductCategory;
     /**
      * Detailed product description
@@ -593,6 +597,10 @@ export type CreateProductDto = {
      * Cost price for internal tracking
      */
     costPrice?: number;
+    /**
+     * Announce this product by email to every customer. Opt-in: a new product is added silently unless this is true. Describes the action, not the product — it is not stored.
+     */
+    notifyNewProduct?: boolean;
 };
 
 export type UpdateProductDto = {
@@ -613,6 +621,7 @@ export type UpdateProductDto = {
      */
     weight?: string;
     unitOfMeasurement?: UnitOfMeasurement;
+    quantityUnit?: QuantityUnitEnum;
     category?: ProductCategory;
     /**
      * Detailed product description
@@ -668,6 +677,14 @@ export type UpdateProductDto = {
      * Cost price for internal tracking
      */
     costPrice?: number;
+    /**
+     * Announce this product by email to every customer. Opt-in: a new product is added silently unless this is true. Describes the action, not the product — it is not stored.
+     */
+    notifyNewProduct?: boolean;
+    /**
+     * Email every customer about the new prices. Opt-in: price changes are silent unless this is true, and it is ignored when no price actually changed. Describes the action, not the product — it is not stored.
+     */
+    notifyPriceChange?: boolean;
 };
 
 export type CreateBatchDto = {
@@ -1655,6 +1672,10 @@ export type CreateSaleDto = {
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
+    /**
+     * Email the customer their order confirmation, and the invoice or receipt for this sale. Opt-in: recording a sale is silent unless this is true, so historical and offline sales can be entered without reaching the customer. Describes the action, not the sale — it is not stored.
+     */
+    notifyCustomer?: boolean;
 };
 
 export type SaleCustomerDto = {
@@ -1908,6 +1929,13 @@ export type GenerateInvoiceDto = {
     transportation?: number;
 };
 
+export type SendInvoiceEmailDto = {
+    /**
+     * Where to send it. Defaults to the address on the customer record. Supplying one here does not change that record.
+     */
+    email?: string;
+};
+
 export type GenerateReceiptDto = {
     /**
      * Payment method
@@ -2096,9 +2124,13 @@ export type CustomerResponseDto = {
      */
     id: string;
     /**
-     * The name of the customer
+     * The full name of the contact person. Null when the customer is identified by organization only.
      */
-    name: string;
+    name?: string | null;
+    /**
+     * The organization the customer represents. Null when the customer is an individual.
+     */
+    organizationName?: string | null;
     /**
      * The phone number of the customer
      */
@@ -2154,9 +2186,13 @@ export type CustomerMeResponseDto = {
 
 export type CreateCustomerDto = {
     /**
-     * The name of the customer
+     * The full name of the contact person. Required when no organization name is supplied.
      */
-    name: string;
+    name?: string;
+    /**
+     * The organization the customer represents. Required when no contact name is supplied.
+     */
+    organizationName?: string;
     /**
      * The phone number of the customer
      */
@@ -2197,9 +2233,13 @@ export type UpdateCustomerDto = {
      */
     id: string;
     /**
-     * The name of the customer
+     * The full name of the contact person. Send an empty string to clear it — only allowed when an organization name remains.
      */
-    name?: string;
+    name?: string | null;
+    /**
+     * The organization the customer represents. Send an empty string to clear it — only allowed when a contact name remains.
+     */
+    organizationName?: string | null;
     /**
      * The phone number of the customer
      */
@@ -2516,6 +2556,7 @@ export enum SchemaEnum3 {
 
 export enum SchemaEnum4 {
     NAME = 'name',
+    ORGANIZATION_NAME = 'organizationName',
     CREATED_AT = 'createdAt',
     EMAIL = 'email',
     CITY = 'city'
@@ -2541,6 +2582,26 @@ export enum StatusEnum {
     ACTIVE = 'active',
     INACTIVE = 'inactive',
     SUSPENDED = 'suspended'
+}
+
+/**
+ * How this product is counted when sold — pieces, boxes, gallons. Separate
+ * from `unitOfMeasurement`, which says how much is inside one of them.
+ */
+export enum QuantityUnitEnum {
+    PIECE = 'piece',
+    BOX = 'box',
+    CARTON = 'carton',
+    BAG = 'bag',
+    SACHET = 'sachet',
+    BOTTLE = 'bottle',
+    GALLON = 'gallon',
+    JERRY_CAN = 'jerry_can',
+    JAR = 'jar',
+    TUB = 'tub',
+    DRUM = 'drum',
+    KEG = 'keg',
+    PALLET = 'pallet'
 }
 
 /**
@@ -3101,6 +3162,50 @@ export type AuthenticationControllerResendVerificationEmailResponses = {
 
 export type AuthenticationControllerResendVerificationEmailResponse = AuthenticationControllerResendVerificationEmailResponses[keyof AuthenticationControllerResendVerificationEmailResponses];
 
+export type AuthenticationControllerGoogleAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google';
+};
+
+export type AuthenticationControllerGoogleAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerGoogleCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/google/callback';
+};
+
+export type AuthenticationControllerGoogleCallbackResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftAuthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft';
+};
+
+export type AuthenticationControllerMicrosoftAuthResponses = {
+    200: unknown;
+};
+
+export type AuthenticationControllerMicrosoftCallbackData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authentication/microsoft/callback';
+};
+
+export type AuthenticationControllerMicrosoftCallbackResponses = {
+    200: unknown;
+};
+
 export type ProductsControllerGetAllProductsData = {
     body?: never;
     path?: never;
@@ -3141,6 +3246,10 @@ export type ProductsControllerGetAllProductsData = {
          * Filter by organic products
          */
         isOrganic?: boolean;
+        /**
+         * Return only products that have a picture. Used by the storefront, which shows a grey placeholder for products with no image — that reads as a broken listing rather than a product for sale. Off by default so the admin portal still sees them and can fix them.
+         */
+        hasImage?: boolean;
         /**
          * Minimum price filter
          */
@@ -3184,7 +3293,12 @@ export type ProductsControllerGetAllProductsResponse = ProductsControllerGetAllP
 export type ProductsControllerGetBestProductsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Return only products that have a picture. Used by the storefront, where a product with no image renders as a grey placeholder.
+         */
+        hasImage?: boolean;
+    };
     url: '/products/best-products';
 };
 
@@ -4900,6 +5014,36 @@ export type SalesControllerGenerateInvoiceResponses = {
     201: unknown;
 };
 
+export type SalesControllerSendInvoiceEmailData = {
+    body: SendInvoiceEmailDto;
+    path: {
+        /**
+         * Sale ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/sales/{id}/invoice/email';
+};
+
+export type SalesControllerSendInvoiceEmailErrors = {
+    /**
+     * No recipient — the customer has no email and none was given
+     */
+    400: unknown;
+    /**
+     * Sale not found
+     */
+    404: unknown;
+};
+
+export type SalesControllerSendInvoiceEmailResponses = {
+    /**
+     * Invoice email sent
+     */
+    201: unknown;
+};
+
 export type SalesControllerGenerateReceiptData = {
     body: GenerateReceiptDto;
     path: {
@@ -5157,9 +5301,13 @@ export type CustomerControllerGetAllCustomersData = {
          */
         limit?: number;
         /**
-         * Search term to match against name, email, or phone
+         * Search term to match against name, organization name, email, or phone
          */
         search?: string;
+        /**
+         * Filter by organization name (partial match)
+         */
+        organizationName?: string;
         /**
          * Filter by exact email address
          */

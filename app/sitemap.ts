@@ -9,7 +9,9 @@ type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'y
 async function getAllProductIds(): Promise<string[]> {
   try {
     const { data, error } = await productsControllerGetAllProducts({
-      query: { page: 1, limit: 100 },
+      // Products we do not show should not be advertised to search engines
+      // either — the crawler would land on a page we deliberately hide.
+      query: { page: 1, limit: 100, hasImage: true },
     });
     if (error || !data) {
       return [];
