@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(checkout|notifications|settings|track-order|confirm-payment)(.*)',
+        source: '/(checkout|notifications|settings|track-order|confirm-payment|ecosystem)(.*)',
         headers: [
           {
             key: 'X-Robots-Tag',

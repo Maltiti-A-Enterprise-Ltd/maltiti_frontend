@@ -131,6 +131,10 @@ export function ShopContent(): JSX.Element {
           maxPrice: filters.maxPrice,
           sortBy: filters.sortBy,
           sortOrder: filters.sortOrder,
+          // A product with no picture renders as a grey placeholder, which
+          // reads as a broken listing rather than something for sale. Filtered
+          // server-side so the page counts and totals stay honest.
+          hasImage: true,
         },
       });
 

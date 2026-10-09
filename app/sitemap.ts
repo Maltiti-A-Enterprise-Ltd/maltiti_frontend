@@ -1,24 +1,29 @@
 import type { MetadataRoute } from 'next';
 import { productsControllerGetAllProducts } from '@/app/api';
 import { blogPosts } from '@/lib/blog-data';
+import { fetchForBuild } from '@/lib/build-data';
 
 const BASE_URL = 'https://maltitiaenterprise.com';
 
 type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
 
 async function getAllProductIds(): Promise<string[]> {
-  try {
-    const { data, error } = await productsControllerGetAllProducts({
-      query: { page: 1, limit: 100 },
-    });
-    if (error || !data) {
-      return [];
-    }
-    const items = data.data?.items ?? [];
-    return items.map((product) => product.id);
-  } catch {
-    return [];
-  }
+  return fetchForBuild(
+    'sitemap product URLs',
+    async (signal) => {
+      const { data, error } = await productsControllerGetAllProducts({
+        // Products we do not show should not be advertised to search engines
+        // either — the crawler would land on a page we deliberately hide.
+        query: { page: 1, limit: 100, hasImage: true },
+        signal,
+      });
+      if (error || !data) {
+        throw new Error('the products endpoint returned no data');
+      }
+      return (data.data?.items ?? []).map((product) => product.id);
+    },
+    [],
+  );
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
