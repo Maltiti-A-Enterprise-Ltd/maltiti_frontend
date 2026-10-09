@@ -12,7 +12,9 @@ async function getAllProductIds(): Promise<string[]> {
     'sitemap product URLs',
     async (signal) => {
       const { data, error } = await productsControllerGetAllProducts({
-        query: { page: 1, limit: 100 },
+        // Products we do not show should not be advertised to search engines
+        // either — the crawler would land on a page we deliberately hide.
+        query: { page: 1, limit: 100, hasImage: true },
         signal,
       });
       if (error || !data) {

@@ -413,6 +413,7 @@ export type Product = {
     ingredients: Array<Ingredient>;
     weight: string;
     unitOfMeasurement: UnitOfMeasurement;
+    quantityUnit: QuantityUnitEnum;
     category: ProductCategory;
     description: string;
     status: ProductStatus;
@@ -454,6 +455,7 @@ export type ProductResponseDto = {
     ingredients: Array<Ingredient>;
     weight: string;
     unitOfMeasurement: UnitOfMeasurement;
+    quantityUnit: QuantityUnitEnum;
     category: ProductCategory;
     description: string;
     status: ProductStatus;
@@ -539,6 +541,7 @@ export type CreateProductDto = {
      */
     weight?: string;
     unitOfMeasurement?: UnitOfMeasurement;
+    quantityUnit?: QuantityUnitEnum;
     category: ProductCategory;
     /**
      * Detailed product description
@@ -594,6 +597,10 @@ export type CreateProductDto = {
      * Cost price for internal tracking
      */
     costPrice?: number;
+    /**
+     * Announce this product by email to every customer. Opt-in: a new product is added silently unless this is true. Describes the action, not the product — it is not stored.
+     */
+    notifyNewProduct?: boolean;
 };
 
 export type UpdateProductDto = {
@@ -614,6 +621,7 @@ export type UpdateProductDto = {
      */
     weight?: string;
     unitOfMeasurement?: UnitOfMeasurement;
+    quantityUnit?: QuantityUnitEnum;
     category?: ProductCategory;
     /**
      * Detailed product description
@@ -669,6 +677,14 @@ export type UpdateProductDto = {
      * Cost price for internal tracking
      */
     costPrice?: number;
+    /**
+     * Announce this product by email to every customer. Opt-in: a new product is added silently unless this is true. Describes the action, not the product — it is not stored.
+     */
+    notifyNewProduct?: boolean;
+    /**
+     * Email every customer about the new prices. Opt-in: price changes are silent unless this is true, and it is ignored when no price actually changed. Describes the action, not the product — it is not stored.
+     */
+    notifyPriceChange?: boolean;
 };
 
 export type CreateBatchDto = {
@@ -1656,6 +1672,10 @@ export type CreateSaleDto = {
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
+    /**
+     * Email the customer their order confirmation, and the invoice or receipt for this sale. Opt-in: recording a sale is silent unless this is true, so historical and offline sales can be entered without reaching the customer. Describes the action, not the sale — it is not stored.
+     */
+    notifyCustomer?: boolean;
 };
 
 export type SaleCustomerDto = {
@@ -1907,6 +1927,13 @@ export type GenerateInvoiceDto = {
      * Transportation cost
      */
     transportation?: number;
+};
+
+export type SendInvoiceEmailDto = {
+    /**
+     * Where to send it. Defaults to the address on the customer record. Supplying one here does not change that record.
+     */
+    email?: string;
 };
 
 export type GenerateReceiptDto = {
@@ -2558,6 +2585,26 @@ export enum StatusEnum {
 }
 
 /**
+ * How this product is counted when sold — pieces, boxes, gallons. Separate
+ * from `unitOfMeasurement`, which says how much is inside one of them.
+ */
+export enum QuantityUnitEnum {
+    PIECE = 'piece',
+    BOX = 'box',
+    CARTON = 'carton',
+    BAG = 'bag',
+    SACHET = 'sachet',
+    BOTTLE = 'bottle',
+    GALLON = 'gallon',
+    JERRY_CAN = 'jerry_can',
+    JAR = 'jar',
+    TUB = 'tub',
+    DRUM = 'drum',
+    KEG = 'keg',
+    PALLET = 'pallet'
+}
+
+/**
  * The payment method used.
  */
 export enum PaymentMethodEnum {
@@ -3200,6 +3247,10 @@ export type ProductsControllerGetAllProductsData = {
          */
         isOrganic?: boolean;
         /**
+         * Return only products that have a picture. Used by the storefront, which shows a grey placeholder for products with no image — that reads as a broken listing rather than a product for sale. Off by default so the admin portal still sees them and can fix them.
+         */
+        hasImage?: boolean;
+        /**
          * Minimum price filter
          */
         minPrice?: number;
@@ -3242,7 +3293,12 @@ export type ProductsControllerGetAllProductsResponse = ProductsControllerGetAllP
 export type ProductsControllerGetBestProductsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Return only products that have a picture. Used by the storefront, where a product with no image renders as a grey placeholder.
+         */
+        hasImage?: boolean;
+    };
     url: '/products/best-products';
 };
 
@@ -4955,6 +5011,36 @@ export type SalesControllerGenerateInvoiceResponses = {
      * Invoice PDF generated successfully
      */
     200: unknown;
+    201: unknown;
+};
+
+export type SalesControllerSendInvoiceEmailData = {
+    body: SendInvoiceEmailDto;
+    path: {
+        /**
+         * Sale ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/sales/{id}/invoice/email';
+};
+
+export type SalesControllerSendInvoiceEmailErrors = {
+    /**
+     * No recipient — the customer has no email and none was given
+     */
+    400: unknown;
+    /**
+     * Sale not found
+     */
+    404: unknown;
+};
+
+export type SalesControllerSendInvoiceEmailResponses = {
+    /**
+     * Invoice email sent
+     */
     201: unknown;
 };
 
