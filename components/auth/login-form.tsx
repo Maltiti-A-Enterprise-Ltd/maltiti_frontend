@@ -8,6 +8,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { AuthDivider, GoogleAuthButton } from '@/components/auth/google-auth-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
@@ -18,7 +19,7 @@ interface LoginFormProps {
   onSuccess?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
+export function LoginForm({ onSuccess }: Readonly<LoginFormProps>): JSX.Element {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isAuthLoading = useAppSelector(selectLoginLoading);
@@ -165,6 +166,10 @@ export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
           'Sign In'
         )}
       </Button>
+
+      <AuthDivider />
+
+      <GoogleAuthButton label="Sign in with Google" />
 
       {/* Signup Link */}
       <p className="text-center text-sm text-gray-600">

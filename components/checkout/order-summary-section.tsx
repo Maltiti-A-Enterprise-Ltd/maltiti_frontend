@@ -1,6 +1,7 @@
 'use client';
 
 import { JSX, lazy, Ref, Suspense } from 'react';
+import { LegalConsentNotice } from '@/components/legal-consent-notice';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -117,16 +118,7 @@ const OrderSummarySection = ({
         </p>
       )}
 
-      <p className="text-center text-xs text-gray-500">
-        By proceeding, you agree to our{' '}
-        <a href="/terms" className="underline hover:text-gray-700">
-          Terms of Service
-        </a>{' '}
-        and{' '}
-        <a href="/privacy" className="underline hover:text-gray-700">
-          Privacy Policy
-        </a>
-      </p>
+      <LegalConsentNotice action="By proceeding" />
     </CardContent>
   </Card>
 );
