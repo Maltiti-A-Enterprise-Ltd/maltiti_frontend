@@ -62,7 +62,7 @@ export default function OAuthCallbackPage(): JSX.Element {
       }
     };
 
-    handleCallback();
+    void handleCallback();
     // Runs once on mount by design: the token is a single-use value from the
     // redirect, and re-running on a router or dispatch identity change would
     // re-exchange a token that has already been consumed.

@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
-import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { AuthDivider, GoogleAuthButton } from '@/components/auth/google-auth-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signupSchema, type SignupFormData } from '@/lib/validations/auth';
@@ -224,28 +224,25 @@ export function SignupForm({ onSuccess, redirect }: Readonly<SignupFormProps>): 
         )}
       </Button>
 
-      {/* Divider */}
-      <div className="relative flex items-center">
-        <div className="grow border-t border-gray-200" />
-        <span className="mx-4 shrink-0 text-sm text-gray-400">or continue with</span>
-        <div className="grow border-t border-gray-200" />
-      </div>
-
       {/*
-        The same endpoint as sign-in: Google has no separate sign-up, and the
-        API creates the account on first callback if the email is new.
+        Shown under both paths rather than only the password form: signing up
+        with Google creates an account just the same, so the agreement has to
+        cover it. Matches the wording already used at checkout.
       */}
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full rounded-lg py-6 text-base font-medium"
-        onClick={() => {
-          globalThis.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication/google`;
-        }}
-      >
-        <Icon icon="flat-color-icons:google" className="mr-2 h-5 w-5" />
-        Sign up with Google
-      </Button>
+      <p className="text-center text-xs text-gray-500">
+        By creating an account, you agree to our{' '}
+        <Link href="/terms" className="underline hover:text-gray-700">
+          Terms of Service
+        </Link>{' '}
+        and{' '}
+        <Link href="/privacy" className="underline hover:text-gray-700">
+          Privacy Policy
+        </Link>
+      </p>
+
+      <AuthDivider />
+
+      <GoogleAuthButton label="Sign up with Google" />
 
       {/* Login Link */}
       <p className="text-center text-sm text-gray-600">
