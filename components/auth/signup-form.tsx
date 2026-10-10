@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { AuthDivider, GoogleAuthButton } from '@/components/auth/google-auth-button';
+import { LegalConsentNotice } from '@/components/legal-consent-notice';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signupSchema, type SignupFormData } from '@/lib/validations/auth';
@@ -227,18 +228,9 @@ export function SignupForm({ onSuccess, redirect }: Readonly<SignupFormProps>): 
       {/*
         Shown under both paths rather than only the password form: signing up
         with Google creates an account just the same, so the agreement has to
-        cover it. Matches the wording already used at checkout.
+        cover it.
       */}
-      <p className="text-center text-xs text-gray-500">
-        By creating an account, you agree to our{' '}
-        <Link href="/terms" className="underline hover:text-gray-700">
-          Terms of Service
-        </Link>{' '}
-        and{' '}
-        <Link href="/privacy" className="underline hover:text-gray-700">
-          Privacy Policy
-        </Link>
-      </p>
+      <LegalConsentNotice action="By creating an account" />
 
       <AuthDivider />
 
