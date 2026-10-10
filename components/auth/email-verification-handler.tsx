@@ -2,7 +2,8 @@
 
 import React, { JSX, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { AuthErrorPanel } from '@/components/auth/auth-error-panel';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -102,21 +103,7 @@ export function EmailVerificationHandler({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="space-y-6 text-center"
-    >
-      <div className="flex justify-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-          className="rounded-full bg-red-100 p-6"
-        >
-          <XCircle className="h-12 w-12 text-red-600" />
-        </motion.div>
-      </div>
+    <AuthErrorPanel>
       <div className="space-y-2">
         <h3 className="text-foreground text-xl font-semibold">Verification Failed</h3>
         <p className="text-muted-foreground">
@@ -152,6 +139,6 @@ export function EmailVerificationHandler({
           Contact Support
         </Link>
       </div>
-    </motion.div>
+    </AuthErrorPanel>
   );
 }

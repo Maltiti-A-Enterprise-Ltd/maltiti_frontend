@@ -2,9 +2,9 @@
 
 import { JSX } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { XCircle, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { AuthLayout } from '@/components/auth';
+import { AuthErrorPanel } from '@/components/auth/auth-error-panel';
 import { Button } from '@/components/ui/button';
 import { GOOGLE_SIGN_IN_URL } from '@/components/auth/google-auth-button';
 
@@ -32,22 +32,7 @@ export default function OAuthErrorPage(): JSX.Element {
 
   return (
     <AuthLayout title="Sign In Failed" subtitle="We couldn't complete your Google sign in">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="space-y-6 text-center"
-      >
-        <div className="flex justify-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="rounded-full bg-red-100 p-6"
-          >
-            <XCircle className="h-12 w-12 text-red-600" />
-          </motion.div>
-        </div>
-
+      <AuthErrorPanel>
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-left">
           <div className="flex gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
@@ -68,7 +53,7 @@ export default function OAuthErrorPage(): JSX.Element {
             Back to Login
           </Button>
         </div>
-      </motion.div>
+      </AuthErrorPanel>
     </AuthLayout>
   );
 }
