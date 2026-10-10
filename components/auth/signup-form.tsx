@@ -8,6 +8,8 @@ import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { AuthDivider, GoogleAuthButton } from '@/components/auth/google-auth-button';
+import { LegalConsentNotice } from '@/components/legal-consent-notice';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signupSchema, type SignupFormData } from '@/lib/validations/auth';
@@ -222,6 +224,17 @@ export function SignupForm({ onSuccess, redirect }: Readonly<SignupFormProps>): 
           'Sign Up'
         )}
       </Button>
+
+      {/*
+        Shown under both paths rather than only the password form: signing up
+        with Google creates an account just the same, so the agreement has to
+        cover it.
+      */}
+      <LegalConsentNotice action="By creating an account" />
+
+      <AuthDivider />
+
+      <GoogleAuthButton label="Sign up with Google" />
 
       {/* Login Link */}
       <p className="text-center text-sm text-gray-600">
