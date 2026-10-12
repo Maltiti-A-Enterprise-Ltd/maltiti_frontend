@@ -4,16 +4,17 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { ECOSYSTEM_SESSION_COOKIE, resolveEcosystemAccess } from '@/lib/ecosystem/config';
 import { verifySessionToken } from '@/lib/ecosystem/session';
-import { EcosystemExplorer } from '@/components/ecosystem/ecosystem-explorer';
+import { RosterExplorer } from '@/components/ecosystem/roster-explorer';
 
 /* Reads a cookie in password mode, so it can never be statically rendered or cached. */
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Ecosystem Map',
-  description: 'Knowledge model of the Maltiti A. Enterprise Ltd ecosystem.',
-  /* Kept out of search results regardless of access mode. Indexing a map that is mostly
-     unverified claims is a separate decision from making it reachable by URL. */
+  title: 'The women behind the butter',
+  description: 'The certified women of Maltiti A. Enterprise Ltd.',
+  /* Kept out of search results regardless of access mode. This is the names of eighteen real
+     communities and how many women work in each; making it reachable by URL and making it
+     indexable are separate decisions, and only the first has been taken. */
   robots: {
     index: false,
     follow: false,
@@ -47,8 +48,8 @@ export default async function EcosystemPage(): Promise<JSX.Element> {
   }
 
   return (
-    <main className="h-[calc(100svh-5rem)] min-h-[560px] pt-20">
-      <EcosystemExplorer requiresAuth={access.mode === 'password'} />
+    <main className="pt-20">
+      <RosterExplorer />
     </main>
   );
 }
