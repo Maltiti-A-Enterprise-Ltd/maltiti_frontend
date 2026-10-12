@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ECOSYSTEM_SESSION_COOKIE, resolveEcosystemAccess } from '@/lib/ecosystem/config';
 import { verifySessionToken } from '@/lib/ecosystem/session';
-import graph from '@/lib/ecosystem/data/ecosystem-graph.json';
+import { BANDS, CENTRES, TOTALS } from '@/lib/ecosystem/data/roster';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * Serves the knowledge model to the map.
+ * Serves the certified-women roster to the map.
  *
- * In `password` mode this is the real gate: the data lives outside public/ and is returned only
- * to a request carrying a valid signed session cookie, so an unauthenticated browser never
- * receives it. In `public` mode it is served to anyone with the URL, which is the deliberate
- * current setting — see docs/ECOSYSTEM_MAP.md.
+ * In `password` mode this is the real gate. The roster is deliberately fetched
+ * rather than imported into the view: importing it would bundle the names and
+ * headcounts of every community into a client chunk, where an unauthenticated
+ * browser would receive them whatever the gate said.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const access = resolveEcosystemAccess();
@@ -28,11 +28,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  return NextResponse.json(graph, {
-    headers: {
-      'Cache-Control':
-        access.mode === 'public' ? 'public, max-age=300' : 'private, no-store, max-age=0',
-      'X-Robots-Tag': 'noindex, nofollow',
+  return NextResponse.json(
+    { centres: CENTRES, totals: TOTALS, bands: BANDS },
+    {
+      headers: {
+        'Cache-Control':
+          access.mode === 'public' ? 'public, max-age=300' : 'private, no-store, max-age=0',
+        'X-Robots-Tag': 'noindex, nofollow',
+      },
     },
-  });
+  );
 }
