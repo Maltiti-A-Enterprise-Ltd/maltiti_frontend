@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { formatOrderAmount } from '@/lib/sale-money';
 
 type PaymentHistoryModalProps = {
   saleId: string;
@@ -80,8 +81,11 @@ const paymentMethodIcons: Record<PaymentMethodEnum, string> = {
   [PaymentMethodEnum.OTHER]: 'ph:dots-three-circle-duotone',
 };
 
-const formatAmount = (amount: number): string =>
-  new Intl.NumberFormat('en-GH', { style: 'currency', currency: 'GHS' }).format(amount);
+/* The summary and every payment are in the order's own currency — an export
+   is settled in the money it was agreed in, so this labels rather than
+   converts. */
+const formatAmount = (amount: number, currency?: string | null): string =>
+  formatOrderAmount(amount, { currency });
 
 const formatDate = (dateStr: string): string =>
   new Date(dateStr).toLocaleDateString('en-GB', {
@@ -139,7 +143,9 @@ const PaymentRow = ({
           </div>
         </div>
         <div className="shrink-0 text-right">
-          <p className="text-base font-bold text-gray-900">{formatAmount(payment.amount)}</p>
+          <p className="text-base font-bold text-gray-900">
+            {formatAmount(payment.amount, payment.currency)}
+          </p>
         </div>
       </div>
     </motion.div>
@@ -262,13 +268,13 @@ export const PaymentHistoryModal = ({
                   <div className="rounded-xl bg-gray-50 p-3 text-center">
                     <p className="text-xs font-medium text-gray-500">Order Total</p>
                     <p className="mt-1 text-sm font-bold text-gray-900">
-                      {formatAmount(summary.saleTotal)}
+                      {formatAmount(summary.saleTotal, summary.currency)}
                     </p>
                   </div>
                   <div className="rounded-xl bg-green-50 p-3 text-center">
                     <p className="text-xs font-medium text-green-600">Total Paid</p>
                     <p className="mt-1 text-sm font-bold text-green-700">
-                      {formatAmount(summary.totalPaid)}
+                      {formatAmount(summary.totalPaid, summary.currency)}
                     </p>
                   </div>
                   <div
@@ -284,7 +290,7 @@ export const PaymentHistoryModal = ({
                     >
                       {summary.balanceRemaining <= 0
                         ? 'Fully Paid'
-                        : formatAmount(summary.balanceRemaining)}
+                        : formatAmount(summary.balanceRemaining, summary.currency)}
                     </p>
                   </div>
                 </div>

@@ -72,7 +72,9 @@ export function OrderCard({ order, index, onClick }: Readonly<OrderCardProps>): 
             <div className="flex items-center gap-4 sm:flex-col sm:items-end">
               <div className="flex-1 sm:flex-none">
                 <p className="text-sm text-gray-500">Total</p>
-                <p className="text-2xl font-bold text-green-600">{formatPrice(order.amount)}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatPrice(order.amount, order)}
+                </p>
               </div>
               <ChevronRight className="h-6 w-6 shrink-0 text-gray-400 transition-transform group-hover:translate-x-1 group-hover:text-green-600" />
             </div>

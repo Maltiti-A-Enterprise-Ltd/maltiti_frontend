@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Calendar, ShieldCheck, Info } from 'lucide-react';
 import { SaleResponseDto } from '@/app/api';
+import { formatOrderAmount } from '@/lib/sale-money';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -28,6 +29,16 @@ export const OrderDetailsCard = ({ orderDetails }: OrderDetailsCardProps): JSX.E
   );
 
   const subtotal = useMemo(() => Number(orderDetails.amount ?? 0), [orderDetails.amount]);
+
+  /* Every figure below is in the order's own currency — an export is agreed
+     in the buyer's money and stored in it, so labelling these "GHS" would
+     name the wrong currency against a perfectly plausible number. */
+  const money = useMemo(
+    () =>
+      (amount: number): string =>
+        formatOrderAmount(amount, orderDetails),
+    [orderDetails],
+  );
 
   // Use backend serviceFee if available, else calculate it from our frontend constant
   const serviceFee = useMemo(
@@ -77,7 +88,7 @@ export const OrderDetailsCard = ({ orderDetails }: OrderDetailsCardProps): JSX.E
                   {item.productName} x{item.requestedQuantity}
                 </span>
                 <span className="font-medium text-gray-900">
-                  GHS {(item.finalPrice * item.requestedQuantity).toFixed(2)}
+                  {money(item.finalPrice * item.requestedQuantity)}
                 </span>
               </div>
             ))}
@@ -88,7 +99,7 @@ export const OrderDetailsCard = ({ orderDetails }: OrderDetailsCardProps): JSX.E
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium text-gray-900">GHS {subtotal.toFixed(2)}</span>
+              <span className="font-medium text-gray-900">{money(subtotal)}</span>
             </div>
             {orderDetails.deliveryFee == null ? (
               <div className="flex justify-between text-sm">
@@ -98,7 +109,7 @@ export const OrderDetailsCard = ({ orderDetails }: OrderDetailsCardProps): JSX.E
             ) : (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Delivery</span>
-                <span className="font-medium text-gray-900">GHS {deliveryFee.toFixed(2)}</span>
+                <span className="font-medium text-gray-900">{money(deliveryFee)}</span>
               </div>
             )}
 
@@ -126,14 +137,14 @@ export const OrderDetailsCard = ({ orderDetails }: OrderDetailsCardProps): JSX.E
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <span className="font-medium text-gray-900">GHS {serviceFee.toFixed(2)}</span>
+              <span className="font-medium text-gray-900">{money(serviceFee)}</span>
             </div>
 
             <Separator />
             <div className="flex justify-between">
               <span className="font-semibold text-gray-900">Total</span>
               <span className="text-lg font-bold text-green-600">
-                {subtotal ? `GHS ${total.toFixed(2)}` : 'Pending'}
+                {subtotal ? money(total) : 'Pending'}
               </span>
             </div>
           </div>
