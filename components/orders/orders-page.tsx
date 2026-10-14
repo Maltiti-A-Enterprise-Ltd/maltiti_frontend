@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { checkoutControllerGetOrders, type CheckoutDto } from '@/app/api';
 import { toast } from 'sonner';
 import { REFUND_TIMELINE } from '@/lib/constants/refund-config';
+import { formatOrderAmount } from '@/lib/sale-money';
 
 const OrdersPage = (): JSX.Element => {
   const router = useRouter();
@@ -253,7 +254,7 @@ const OrdersPage = (): JSX.Element => {
                         <div>
                           <p className="text-sm text-gray-600">Order Total</p>
                           <p className="text-2xl font-bold text-[#0F6938]">
-                            GH₵ {Number(order.sale.total).toFixed(2)}
+                            {formatOrderAmount(order.sale.total, order.sale)}
                           </p>
                         </div>
                         {order.sale.lineItems && order.sale.lineItems.length > 0 && (
