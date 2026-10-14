@@ -1326,6 +1326,7 @@ export type SaleDto = {
     checkout: CheckoutDto;
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
+    currency?: AccountCurrency;
     /**
      * Product total (excluding delivery)
      */
@@ -1473,6 +1474,10 @@ export enum PaymentStatus {
 export type UpdateSaleStatusDto = {
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
+    /**
+     * Email the customer about this change — the status update, and the invoice or receipt where the payment status calls for one. Opt-in: changing a status is silent unless this is true, so a sale recorded after the fact can be brought up to date without the customer receiving a receipt for something they settled weeks ago. Describes the action, not the sale — it is not stored.
+     */
+    notifyCustomer?: boolean;
 };
 
 export type SaleResponseDto = {
@@ -1480,10 +1485,52 @@ export type SaleResponseDto = {
      * Sale/Order ID
      */
     id: string;
+    currency: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency`, pinned when the sale was agreed and fixed thereafter. 1 for a cedi sale.
+     */
+    exchangeRate: number;
+    /**
+     * `total` restated in cedis at the pinned rate. Use this rather than `total` when adding sales together — a revenue figure that mixes currencies is wrong in a way nobody notices until it is in a report.
+     */
+    totalGhs?: number;
+    /**
+     * `balanceRemaining` restated in cedis at the pinned rate.
+     */
+    balanceRemainingGhs?: number;
     /**
      * Customer information
      */
     customer: SaleCustomerDto;
+    attention: SchemaEnum4;
+    /**
+     * Whether this sale is waiting on us. False while the ball is with the customer and still within terms.
+     */
+    needsAttention: boolean;
+    /**
+     * How long it has been waiting in its current bucket, for sorting the worst first.
+     */
+    waitingDays: number;
+    /**
+     * When an admin flagged this sale. Absent when it is not flagged. Independent of `needsAttention`: that is derived and moves as the sale moves, while this records a person's judgement the rules cannot make.
+     */
+    flaggedAt?: string;
+    /**
+     * Why an admin flagged it. Cleared when the flag is cleared.
+     */
+    flagReason?: string;
+    /**
+     * The customer's address as one line, ready to hand to a courier. Assembled from the customer's address, city, region and country, skipping any part already contained in an earlier one — web-checkout customers have their city, region and country flattened into the address field. Absent when the customer has recorded no address at all.
+     */
+    deliveryAddress?: string;
+    /**
+     * What the whole order weighs in kilograms, for quoting delivery. Grams and pounds convert by definition; volume converts by the company rule that one litre is declared as one kilogram. Absent when no line item could be weighed — that is, when no product on the order records a size and unit — and only populated on endpoints that load the products: listing sales and fetching one.
+     */
+    totalWeightKg?: number;
+    /**
+     * How many line items are missing from `totalWeightKg`, because their product records no size or no unit of measurement. Anything above zero means the weight is partial and must not be quoted as the full shipment.
+     */
+    unweighedLineItems?: number;
     /**
      * Checkout information (null for admin-created orders)
      */
@@ -1506,6 +1553,11 @@ export type SaleResponseDto = {
      * Date when delivery was confirmed (null if not confirmed)
      */
     confirmedDeliveryDate?: string;
+    invoiceCurrency?: AccountCurrency;
+    /**
+     * Cedis per one unit of `invoiceCurrency`, as used on the last invoice issued for this sale.
+     */
+    invoiceExchangeRate?: number;
     /**
      * Grand total payable amount (amount + deliveryFee + serviceFee). This is the exact amount charged to the customer.
      */
@@ -1669,6 +1721,11 @@ export type CreateSaleDto = {
      * Delivery fee in GHS
      */
     deliveryFee?: number;
+    currency?: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency`, as a rate is quoted — 1 USD = 11.8126 GHS. Required when `currency` is not GHS; pinned at this value for the life of the sale.
+     */
+    exchangeRate?: number;
     orderStatus?: OrderStatus;
     paymentStatus?: PaymentStatus;
     lineItems: Array<SaleLineItemDto>;
@@ -1687,6 +1744,10 @@ export type SaleCustomerDto = {
      * Customer name
      */
     name: string;
+    /**
+     * Trading name, where the customer buys as a business. Preferred over `name` when labelling the sale.
+     */
+    organizationName?: string;
     /**
      * Customer phone number
      */
@@ -1784,6 +1845,7 @@ export type SaleLineItemResponseDto = {
      * Product category
      */
     category?: string;
+    quantityUnit?: QuantityUnitEnum;
     /**
      * Batch allocations for this line item
      */
@@ -1819,6 +1881,11 @@ export type SalePaymentResponseDto = {
      * The amount paid in this transaction.
      */
     amount: number;
+    currency: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency` at the moment the money arrived. The settlement rate, not the sale's pinned rate — the gap between the two is the FX gain or loss.
+     */
+    exchangeRate: number;
     paymentMethod: PaymentMethodEnum;
     status: StatusEnum2;
     /**
@@ -1833,6 +1900,14 @@ export type SalePaymentResponseDto = {
      * Whether this payment was initiated by the customer (true) or recorded manually by admin (false).
      */
     isCustomerInitiated: boolean;
+    /**
+     * Which account received this money, if one was recorded.
+     */
+    paymentAccountId?: string | null;
+    /**
+     * How that account reads on screen, e.g. "Société Générale Ghana PLC — 0600026146400 (USD)". Resolved server-side so a payment still names its account after the account is retired.
+     */
+    paymentAccountLabel?: string | null;
     /**
      * Date and time this payment record was created.
      */
@@ -1858,11 +1933,89 @@ export type UpdateSaleDto = {
      * Delivery fee in GHS
      */
     deliveryFee?: number;
+    currency?: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency`, as a rate is quoted — 1 USD = 11.8126 GHS. Required when `currency` is not GHS; pinned at this value for the life of the sale.
+     */
+    exchangeRate?: number;
     /**
      * Service processing fee in GHS. If not provided, it will be automatically recalculated as 1.95% of (amount + deliveryFee) whenever the delivery fee is updated.
      */
     serviceFee?: number;
     lineItems?: Array<UpdateSaleLineItemDto>;
+    /**
+     * Email the customer about this edit — the status update, and the invoice or receipt where the payment status calls for one. Only has any effect when a status actually changes. Opt-in: editing a sale is silent unless this is true, so a sale recorded after the fact can be corrected without the customer receiving a receipt for something they settled weeks ago. Describes the action, not the sale — it is not stored.
+     */
+    notifyCustomer?: boolean;
+    /**
+     * Edit a sale that is in transit or delivered, which is otherwise refused. **Super admins only** — any other role sending this is rejected rather than quietly ignored, so nobody is left believing a correction was applied when it was not. Not needed to change the order or payment status: those are always editable, because a delivered order still has to be marked delivered. This is for correcting a mistake in the sale itself — its line items, customer, or fees — after the goods have left. Describes the action, not the sale: it is not stored, though the edit it permits is recorded in the audit log like any other.
+     */
+    overrideStatusLock?: boolean;
+};
+
+export type SaleAttentionSummaryDto = {
+    /**
+     * How many open sales sit in each bucket. Includes the ones that are counted but not flagged — `paid_not_delivered` and `awaiting_payment` — since being able to see those is the point.
+     */
+    buckets: {
+        [key: string]: unknown;
+    };
+    /**
+     * Open sales waiting on us, across every bucket.
+     */
+    needsAttention: number;
+    /**
+     * Open sales an admin has flagged by hand.
+     */
+    flagged: number;
+};
+
+export type SalesMetricsDto = {
+    /**
+     * Owed to us on goods already dispatched or delivered, split by whether it is past the payment terms printed on the invoice.
+     */
+    owed: {
+        [key: string]: unknown;
+    };
+    /**
+     * Unpaid sales still on our shelf. Counted apart from `owed` because we have not performed yet, so this is not collectable.
+     */
+    awaitingDispatch: {
+        [key: string]: unknown;
+    };
+    /**
+     * Value of sales paid for but not yet confirmed delivered — the debt running the other way. Usually still in transit.
+     */
+    paidAwaitingDelivery: {
+        [key: string]: unknown;
+    };
+    /**
+     * The customers owing most, largest first. `daysOverdue` is the worst of that customer's sales, and 0 where none is due yet.
+     */
+    topDebtors: Array<string>;
+    /**
+     * Debtors beyond those listed, so the list is not read as complete.
+     */
+    otherDebtorCount: number;
+    thisMonth: {
+        sales: number;
+        collected: number;
+    };
+    /**
+     * Sales booked last month up to the same day, so the two are comparable rather than a part month against a whole one.
+     */
+    lastMonthSales: number;
+};
+
+export type FlagSaleDto = {
+    /**
+     * True to flag the sale, false to clear an existing flag. Sent explicitly rather than toggling, so two admins acting on the same queue cannot flip each other's decision by accident.
+     */
+    flagged: boolean;
+    /**
+     * Why it is being flagged, for whoever picks it up next. Ignored when clearing a flag, and the stored reason is cleared with it.
+     */
+    reason?: string;
 };
 
 export type AddLineItemDto = {
@@ -1919,6 +2072,15 @@ export type PaginatedSaleResponseDto = {
 };
 
 export type GenerateInvoiceDto = {
+    currency?: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency`, the way a rate is quoted — 11.8126 means 1 USD = 11.8126 GHS. Required whenever `currency` is not GHS.
+     */
+    exchangeRate?: number;
+    /**
+     * List the confirmed payments received for this sale, with an amount paid and a balance due. Off by default, so a plain bill stays a plain bill. Has no effect when nothing has been confirmed yet.
+     */
+    includePayments?: boolean;
     /**
      * Discount amount
      */
@@ -1927,13 +2089,30 @@ export type GenerateInvoiceDto = {
      * Transportation cost
      */
     transportation?: number;
+    /**
+     * Which payment accounts to print. Leave the property out to use the accounts marked as defaults; send an empty array to print none at all.
+     */
+    paymentAccountIds?: Array<string>;
 };
 
 export type SendInvoiceEmailDto = {
+    currency?: AccountCurrency;
+    /**
+     * Cedis per one unit of `currency`, the way a rate is quoted — 11.8126 means 1 USD = 11.8126 GHS. Required whenever `currency` is not GHS.
+     */
+    exchangeRate?: number;
+    /**
+     * List the confirmed payments received for this sale, with an amount paid and a balance due. Off by default, so a plain bill stays a plain bill. Has no effect when nothing has been confirmed yet.
+     */
+    includePayments?: boolean;
     /**
      * Where to send it. Defaults to the address on the customer record. Supplying one here does not change that record.
      */
     email?: string;
+    /**
+     * Which payment accounts to print, matching what was previewed. Leave the property out to use the accounts marked as defaults; send an empty array to print none at all.
+     */
+    paymentAccountIds?: Array<string>;
 };
 
 export type GenerateReceiptDto = {
@@ -2045,6 +2224,10 @@ export type RecordSalePaymentDto = {
      * The amount paid in this payment transaction.
      */
     amount: number;
+    /**
+     * Cedis per one unit of the sale's currency at the moment this money arrived — the settlement rate, not the rate the sale was agreed at. Defaults to the sale's pinned rate.
+     */
+    exchangeRate?: number;
     paymentMethod: PaymentMethodEnum;
     status: StatusEnum2;
     /**
@@ -2055,6 +2238,10 @@ export type RecordSalePaymentDto = {
      * Optional note or description for this payment (e.g., 'First instalment', 'Final payment').
      */
     note?: string;
+    /**
+     * Which of the business's accounts received this money. Optional — cash takes no account. Must be an account that is still in use.
+     */
+    paymentAccountId?: string | null;
     /**
      * Whether this payment was initiated by the customer (true) or recorded manually by admin (false).
      */
@@ -2077,6 +2264,7 @@ export type SalePaymentSummaryResponseDto = {
      * The sale ID these payments belong to.
      */
     saleId: string;
+    currency: AccountCurrency;
     /**
      * The grand total amount of the sale (amount + delivery + service fee).
      */
@@ -2110,12 +2298,148 @@ export type SalePaymentSummaryResponseWrapperDto = {
     data: SalePaymentSummaryResponseDto;
 };
 
+export type UpdateSalePaymentDto = {
+    /**
+     * Corrected amount. Must still be greater than zero.
+     */
+    amount?: number;
+    paymentMethod?: PaymentMethodEnum;
+    status?: StatusEnum2;
+    /**
+     * Corrected reference. Send null to clear it.
+     */
+    reference?: string | null;
+    /**
+     * Corrected note. Send null to clear it.
+     */
+    note?: string | null;
+    /**
+     * Which account received the money. Send null to detach it. An account that is no longer in use cannot be attached, but one the payment is already linked to can be left in place.
+     */
+    paymentAccountId?: string | null;
+};
+
 export type UpdatePaymentRecordStatusDto = {
     status: StatusEnum2;
     /**
      * Optional reason or note for the status change.
      */
     note?: string;
+};
+
+export enum PaymentAccountType {
+    BANK = 'bank',
+    MOBILE_MONEY = 'mobile_money'
+}
+
+/**
+ * Defaults to cedis. Forced to cedis for mobile money.
+ */
+export enum AccountCurrency {
+    GHS = 'GHS',
+    USD = 'USD',
+    CAD = 'CAD'
+}
+
+/**
+ * Required for mobile money accounts
+ */
+export enum MobileMoneyNetwork {
+    MTN = 'mtn',
+    TELECEL = 'telecel',
+    AIRTELTIGO = 'airteltigo'
+}
+
+export type CreatePaymentAccountDto = {
+    type: PaymentAccountType;
+    /**
+     * The name the account is held in
+     */
+    accountName: string;
+    /**
+     * Account number for a bank, phone number for mobile money
+     */
+    accountNumber: string;
+    /**
+     * Defaults to cedis. Forced to cedis for mobile money.
+     */
+    currency?: AccountCurrency;
+    /**
+     * Retired accounts stay on past invoices but are not offered for new ones
+     */
+    isActive?: boolean;
+    /**
+     * Pre-tick this account when generating an invoice
+     */
+    includeOnInvoiceByDefault?: boolean;
+    /**
+     * Order the account appears in
+     */
+    displayOrder?: number;
+    bankName?: string | null;
+    branchName?: string | null;
+    branchCode?: string | null;
+    swiftCode?: string | null;
+    iban?: string | null;
+    bankAddress?: string | null;
+    /**
+     * The bank a foreign transfer is routed through
+     */
+    correspondentBankName?: string | null;
+    correspondentSwiftCode?: string | null;
+    correspondentIban?: string | null;
+    correspondentBankAddress?: string | null;
+    /**
+     * Required for mobile money accounts
+     */
+    mobileMoneyNetwork?: MobileMoneyNetwork | null;
+    merchantId?: string | null;
+};
+
+export type UpdatePaymentAccountDto = {
+    type?: PaymentAccountType;
+    /**
+     * The name the account is held in
+     */
+    accountName?: string;
+    /**
+     * Account number for a bank, phone number for mobile money
+     */
+    accountNumber?: string;
+    /**
+     * Defaults to cedis. Forced to cedis for mobile money.
+     */
+    currency?: AccountCurrency;
+    /**
+     * Retired accounts stay on past invoices but are not offered for new ones
+     */
+    isActive?: boolean;
+    /**
+     * Pre-tick this account when generating an invoice
+     */
+    includeOnInvoiceByDefault?: boolean;
+    /**
+     * Order the account appears in
+     */
+    displayOrder?: number;
+    bankName?: string | null;
+    branchName?: string | null;
+    branchCode?: string | null;
+    swiftCode?: string | null;
+    iban?: string | null;
+    bankAddress?: string | null;
+    /**
+     * The bank a foreign transfer is routed through
+     */
+    correspondentBankName?: string | null;
+    correspondentSwiftCode?: string | null;
+    correspondentIban?: string | null;
+    correspondentBankAddress?: string | null;
+    /**
+     * Required for mobile money accounts
+     */
+    mobileMoneyNetwork?: MobileMoneyNetwork | null;
+    merchantId?: string | null;
 };
 
 export type CustomerResponseDto = {
@@ -2139,6 +2463,14 @@ export type CustomerResponseDto = {
      * The email address of the customer
      */
     email?: string;
+    /**
+     * A second address to reach the customer on
+     */
+    alternativeEmail?: string;
+    /**
+     * The customer's website
+     */
+    website?: string;
     /**
      * The address of the customer
      */
@@ -2206,6 +2538,14 @@ export type CreateCustomerDto = {
      */
     email?: string;
     /**
+     * A second address to reach the customer on. Unlike `email` this is not unique — a shared company inbox is routinely one contact's alternative address and another's primary.
+     */
+    alternativeEmail?: string | null;
+    /**
+     * The customer's website.
+     */
+    website?: string | null;
+    /**
      * The full address of the customer
      */
     address?: string;
@@ -2252,6 +2592,14 @@ export type UpdateCustomerDto = {
      * The email address of the customer
      */
     email?: string;
+    /**
+     * A second address to reach the customer on. Unlike `email` this is not unique — a shared company inbox is routinely one contact's alternative address and another's primary.
+     */
+    alternativeEmail?: string | null;
+    /**
+     * The customer's website.
+     */
+    website?: string | null;
     /**
      * The full address of the customer
      */
@@ -2517,6 +2865,7 @@ export enum SchemaEnum {
     ORDER_STATUS_UPDATED = 'ORDER_STATUS_UPDATED',
     PAYMENT_RECORDED = 'PAYMENT_RECORDED',
     PAYMENT_STATUS_UPDATED = 'PAYMENT_STATUS_UPDATED',
+    PAYMENT_UPDATED = 'PAYMENT_UPDATED',
     CONFIGURATION_CHANGED = 'CONFIGURATION_CHANGED',
     SYSTEM_ACTION = 'SYSTEM_ACTION',
     USER_CREATED = 'USER_CREATED',
@@ -2555,6 +2904,17 @@ export enum SchemaEnum3 {
 }
 
 export enum SchemaEnum4 {
+    PAYMENT_OVERDUE = 'payment_overdue',
+    NEEDS_INVOICE = 'needs_invoice',
+    READY_TO_PACK = 'ready_to_pack',
+    CONFIRM_DELIVERY = 'confirm_delivery',
+    STALLED = 'stalled',
+    PAID_NOT_DELIVERED = 'paid_not_delivered',
+    AWAITING_PAYMENT = 'awaiting_payment',
+    SETTLED = 'settled'
+}
+
+export enum SchemaEnum5 {
     NAME = 'name',
     ORGANIZATION_NAME = 'organizationName',
     CREATED_AT = 'createdAt',
@@ -2562,14 +2922,14 @@ export enum SchemaEnum4 {
     CITY = 'city'
 }
 
-export enum SchemaEnum5 {
+export enum SchemaEnum6 {
     DAILY = 'daily',
     WEEKLY = 'weekly',
     MONTHLY = 'monthly',
     YEARLY = 'yearly'
 }
 
-export enum SchemaEnum6 {
+export enum SchemaEnum7 {
     _7 = '7',
     _30 = '30',
     _90 = '90'
@@ -2601,7 +2961,8 @@ export enum QuantityUnitEnum {
     TUB = 'tub',
     DRUM = 'drum',
     KEG = 'keg',
-    PALLET = 'pallet'
+    PALLET = 'pallet',
+    BUCKET = 'bucket'
 }
 
 /**
@@ -4786,6 +5147,18 @@ export type SalesControllerListSalesData = {
         paymentStatus?: PaymentStatus;
         customerId?: string;
         customerName?: string;
+        /**
+         * Only sales waiting on us — derived from status, balance and age rather than stored. Excludes sales that are merely open: a consignment at sea or an invoice still within terms is counted elsewhere, not flagged.
+         */
+        needsAttention?: boolean;
+        /**
+         * Only sales an admin has flagged by hand. Independent of `needsAttention` — combine them to see sales that are both.
+         */
+        flagged?: boolean;
+        /**
+         * Only sales sitting in one particular bucket.
+         */
+        attention?: SchemaEnum4;
         page?: number;
         limit?: number;
     };
@@ -4857,6 +5230,47 @@ export type SalesControllerUpdateSaleResponses = {
 };
 
 export type SalesControllerUpdateSaleResponse = SalesControllerUpdateSaleResponses[keyof SalesControllerUpdateSaleResponses];
+
+export type SalesControllerGetAttentionSummaryData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/sales/attention-summary';
+};
+
+export type SalesControllerGetAttentionSummaryResponses = {
+    200: SaleAttentionSummaryDto;
+};
+
+export type SalesControllerGetAttentionSummaryResponse = SalesControllerGetAttentionSummaryResponses[keyof SalesControllerGetAttentionSummaryResponses];
+
+export type SalesControllerGetMetricsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/sales/metrics';
+};
+
+export type SalesControllerGetMetricsResponses = {
+    200: SalesMetricsDto;
+};
+
+export type SalesControllerGetMetricsResponse = SalesControllerGetMetricsResponses[keyof SalesControllerGetMetricsResponses];
+
+export type SalesControllerSetSaleFlagData = {
+    body: FlagSaleDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/sales/{id}/flag';
+};
+
+export type SalesControllerSetSaleFlagResponses = {
+    200: SaleResponseDto;
+};
+
+export type SalesControllerSetSaleFlagResponse = SalesControllerSetSaleFlagResponses[keyof SalesControllerSetSaleFlagResponses];
 
 export type SalesControllerUpdateSaleStatusData = {
     body: UpdateSaleStatusDto;
@@ -5256,6 +5670,42 @@ export type SalePaymentControllerGetPaymentRecordResponses = {
 
 export type SalePaymentControllerGetPaymentRecordResponse = SalePaymentControllerGetPaymentRecordResponses[keyof SalePaymentControllerGetPaymentRecordResponses];
 
+export type SalePaymentControllerUpdatePaymentData = {
+    body: UpdateSalePaymentDto;
+    path: {
+        /**
+         * ID of the sale
+         */
+        saleId: string;
+        /**
+         * ID of the payment record
+         */
+        paymentId: string;
+    };
+    query?: never;
+    url: '/sales/{saleId}/payments/{paymentId}';
+};
+
+export type SalePaymentControllerUpdatePaymentErrors = {
+    /**
+     * Invalid amount, or an account that is no longer in use.
+     */
+    400: unknown;
+    /**
+     * Sale, payment record or payment account not found.
+     */
+    404: unknown;
+};
+
+export type SalePaymentControllerUpdatePaymentResponses = {
+    /**
+     * Payment record updated successfully.
+     */
+    200: SalePaymentResponseWrapperDto;
+};
+
+export type SalePaymentControllerUpdatePaymentResponse = SalePaymentControllerUpdatePaymentResponses[keyof SalePaymentControllerUpdatePaymentResponses];
+
 export type SalePaymentControllerUpdatePaymentStatusData = {
     body: UpdatePaymentRecordStatusDto;
     path: {
@@ -5287,6 +5737,142 @@ export type SalePaymentControllerUpdatePaymentStatusResponses = {
 };
 
 export type SalePaymentControllerUpdatePaymentStatusResponse = SalePaymentControllerUpdatePaymentStatusResponses[keyof SalePaymentControllerUpdatePaymentStatusResponses];
+
+export type PaymentAccountControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Leave out retired accounts
+         */
+        activeOnly?: boolean;
+    };
+    url: '/payment-accounts';
+};
+
+export type PaymentAccountControllerFindAllResponses = {
+    /**
+     * Accounts retrieved successfully
+     */
+    200: unknown;
+};
+
+export type PaymentAccountControllerCreateData = {
+    body: CreatePaymentAccountDto;
+    path?: never;
+    query?: never;
+    url: '/payment-accounts';
+};
+
+export type PaymentAccountControllerCreateErrors = {
+    /**
+     * A bank account is missing its bank name, or a mobile money account is missing its network
+     */
+    400: unknown;
+};
+
+export type PaymentAccountControllerCreateResponses = {
+    /**
+     * Account created successfully
+     */
+    201: unknown;
+};
+
+export type PaymentAccountControllerDownloadAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/payment-accounts/download';
+};
+
+export type PaymentAccountControllerDownloadAllErrors = {
+    /**
+     * No accounts are in use
+     */
+    404: unknown;
+};
+
+export type PaymentAccountControllerDownloadAllResponses = {
+    /**
+     * PDF generated successfully
+     */
+    200: unknown;
+};
+
+export type PaymentAccountControllerDownloadOneData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/payment-accounts/{id}/download';
+};
+
+export type PaymentAccountControllerDownloadOneErrors = {
+    /**
+     * Account not found
+     */
+    404: unknown;
+};
+
+export type PaymentAccountControllerDownloadOneResponses = {
+    /**
+     * PDF generated successfully
+     */
+    200: unknown;
+};
+
+export type PaymentAccountControllerRemoveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/payment-accounts/{id}';
+};
+
+export type PaymentAccountControllerRemoveResponses = {
+    /**
+     * Account deleted successfully
+     */
+    200: unknown;
+};
+
+export type PaymentAccountControllerFindOneData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/payment-accounts/{id}';
+};
+
+export type PaymentAccountControllerFindOneErrors = {
+    /**
+     * Account not found
+     */
+    404: unknown;
+};
+
+export type PaymentAccountControllerFindOneResponses = {
+    200: unknown;
+};
+
+export type PaymentAccountControllerUpdateData = {
+    body: UpdatePaymentAccountDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/payment-accounts/{id}';
+};
+
+export type PaymentAccountControllerUpdateResponses = {
+    /**
+     * Account updated successfully
+     */
+    200: unknown;
+};
 
 export type CustomerControllerGetAllCustomersData = {
     body?: never;
@@ -5339,7 +5925,7 @@ export type CustomerControllerGetAllCustomersData = {
         /**
          * Field to sort by
          */
-        sortBy?: SchemaEnum4;
+        sortBy?: SchemaEnum5;
         /**
          * Sort order
          */
@@ -5476,6 +6062,33 @@ export type CustomerControllerGetCustomerResponses = {
     200: unknown;
 };
 
+export type ExchangeRateControllerGetRateData = {
+    body?: never;
+    path: {
+        currency: AccountCurrency;
+    };
+    query?: never;
+    url: '/exchange-rates/{currency}';
+};
+
+export type ExchangeRateControllerGetRateErrors = {
+    /**
+     * Not a currency we invoice in
+     */
+    400: unknown;
+    /**
+     * The rate source could not be reached — enter one manually
+     */
+    503: unknown;
+};
+
+export type ExchangeRateControllerGetRateResponses = {
+    /**
+     * Rate retrieved
+     */
+    200: unknown;
+};
+
 export type ReportsControllerGetSalesReportData = {
     body?: never;
     path?: never;
@@ -5503,7 +6116,7 @@ export type ReportsControllerGetSalesReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
         /**
          * Include sales trends
          */
@@ -5546,7 +6159,7 @@ export type ReportsControllerGetSalesByProductData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/sales/by-product';
 };
@@ -5585,7 +6198,7 @@ export type ReportsControllerGetSalesByCategoryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/sales/by-category';
 };
@@ -5624,7 +6237,7 @@ export type ReportsControllerGetTopProductsData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
         /**
          * Number of top products to return
          */
@@ -5668,7 +6281,7 @@ export type ReportsControllerGetRevenueDistributionData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/products/revenue-distribution';
 };
@@ -5707,7 +6320,7 @@ export type ReportsControllerGetBatchReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/batches';
 };
@@ -5746,7 +6359,7 @@ export type ReportsControllerGetBatchAgingReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/batches/aging';
 };
@@ -5813,7 +6426,7 @@ export type ReportsControllerGetStockMovementReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/stock-movement';
 };
@@ -5884,7 +6497,7 @@ export type ReportsControllerGetDeliveryReportData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/delivery';
 };
@@ -5923,7 +6536,7 @@ export type ReportsControllerGetDashboardSummaryData = {
         /**
          * Time aggregation level
          */
-        aggregation?: SchemaEnum5;
+        aggregation?: SchemaEnum6;
     };
     url: '/reports/dashboard-summary';
 };
@@ -5969,7 +6582,7 @@ export type DashboardControllerGetTrendsData = {
         /**
          * Period for trend data
          */
-        period?: SchemaEnum6;
+        period?: SchemaEnum7;
     };
     url: '/dashboard/trends';
 };
